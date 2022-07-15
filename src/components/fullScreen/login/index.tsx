@@ -3,7 +3,6 @@ import Taro, { hideLoading, showLoading, showToast } from '@tarojs/taro'
 import { MiniPhoneButton } from '@antmjs/vantui'
 import { useEffect, useState } from 'react'
 import { cacheSetSync } from '@/cache'
-import { loginCommon } from '@/actions/simple/common'
 import './index.less'
 interface IProps {
   setLoginStatus: React.Dispatch<React.SetStateAction<boolean>>
@@ -53,9 +52,9 @@ export default function Index(props: IProps) {
     showLoading({
       title: '登录中...',
     })
-    const res = await loginCommon(_params)
-    hideLoading()
-    cacheSetSync('token', res.token)
+    // const res = await loginCommon(_params)
+    // hideLoading()
+    // cacheSetSync('token', res.token)
     setError(undefined)
     setLoginStatus(false)
     onRefresh()

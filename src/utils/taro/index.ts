@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-26 10:50:22
- * @LastEditTime: 2022-07-14 18:55:34
+ * @LastEditTime: 2022-07-15 16:59:15
  * @LastEditors: Derek Xu
  */
 import Taro from '@tarojs/taro'
@@ -26,21 +26,11 @@ export interface BackOption {
 /**
  * 清除所有登录信息
  */
-// export const pageCleanToLogin = () => {
-//   const dispatch = dva.getDispatch()
-//   dispatch({
-//     type: 'common/removeStoreSync',
-//     payload: {
-//       accessToken: '',
-//       refreshToken: '',
-//       userInfo: null,
-//       auths: null,
-//     },
-//   })
-//   Taro.switchTab({
-//     url: '/pages/index/index',
-//   })
-// }
+export const pageCleanToLogin = () => {
+  Taro.switchTab({
+    url: '/pages/index/index',
+  })
+}
 
 /**
  *

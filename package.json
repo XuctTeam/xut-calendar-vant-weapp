@@ -148,6 +148,7 @@
     "react-dom": "^17.0.0",
     "recoil": "^0.6.1",
     "solarlunar-es": "^1.0.9",
+    "taro-hooks": "^1.5.8",
     "tarojs-router-next": "^2.8.1",
     "tarojs-router-next-plugin": "^2.8.1"
   },

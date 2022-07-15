@@ -2,14 +2,16 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-12 12:49:07
- * @LastEditTime: 2022-07-15 16:26:57
+ * @LastEditTime: 2022-07-15 20:05:37
  * @LastEditors: Derek Xu
  */
-import dva from '@/utils/dva'
 import { tokenRefresh } from '@/api/login'
 import dayjs from 'dayjs'
-import http from './request'
-import { storage, pageCleanToLogin, toast } from '../taro'
+import httpRequest from './index'
+import { pageCleanToLogin } from '../../taro'
+import { cacheSetSync, cacheGetSync } from '@/cache'
+import { useToast } from 'taro-hooks'
+import { useCallback } from 'react'
 
 interface ITask<T> {
   url: string
@@ -17,6 +19,20 @@ interface ITask<T> {
   resolve: (value: unknown) => void
   reject: (value: unknown) => void
 }
+
+const [show] = useToast({
+  title: '提示',
+  icon: 'error'
+})
+
+const error = useCallback(
+  (message: string) => {
+    show({
+      title: message
+    })
+  },
+  [show]
+)
 
 class RefreshSubscribers {
   private _refresh: number = 0
@@ -58,35 +74,21 @@ class RefreshSubscribers {
   /**
    * @description 进行刷新
    */
-  pageRefreshToken() {
-    const reToken: string = storage('refreshToken')
-    const dispatch = dva.getDispatch()
-    tokenRefresh(reToken.replace('Bearer ', ''))
-      .then((res) => {
-        console.log(
-          'taro util:: refresh token success , refreshToken  = ' + reToken,
-        )
-        /**1. 更新缓存 */
-        dispatch({
-          type: 'common/saveStorageSync',
-          payload: {
-            accessToken: 'Bearer ' + res.access_token,
-            refreshToken: 'Bearer ' + res.refresh_token,
-          },
-        })
-        this._refresh = dayjs().unix()
-        setTimeout(() => {
-          this.onRrefreshed()
-        }, 200)
-      })
-      .catch((error: any) => {
-        console.log(error)
-        toast({ title: '获取登录信息失败' })
-        this.cleanTask()
-        setTimeout(() => {
-          pageCleanToLogin()
-        }, 500)
-      })
+  async pageRefreshToken() {
+    const reToken: string | undefined = cacheGetSync('refreshToken')
+    if (!reToken) {
+      return this.fail()
+    }
+    const result: any = await tokenRefresh(reToken.replace('Bearer ', ''))
+    if (!result) return
+    cacheSetSync('accessToken', 'Bearer ' + result.access_token)
+    cacheSetSync('refreshToken', 'Bearer ' + result.refresh_token)
+    console.log('taro util:: refresh token success , refreshToken  = ' + reToken)
+    this._refresh = dayjs().unix()
+    setTimeout(() => {
+      this.onRrefreshed()
+    }, 200)
+    return true
   }
 
   /**
@@ -95,11 +97,20 @@ class RefreshSubscribers {
   onRrefreshed() {
     if (this._refreshSubscribers.length > 0) {
       this._refreshSubscribers.forEach((task) => {
-        task.resolve(http.exchage(task.url, task.opt))
+        task.resolve(httpRequest.exchage(task.url, task.opt))
       })
       this._isRefreshing = false
       this._refreshSubscribers.length = 0
     }
+  }
+
+  fail() {
+    error('获取登录信息失败')
+    this.cleanTask()
+    setTimeout(() => {
+      pageCleanToLogin()
+    }, 500)
+    return false
   }
 
   /**
@@ -107,13 +118,13 @@ class RefreshSubscribers {
    * @param response
    * @returns
    */
-  async convertError(response) {
+  async convertError(response: any) {
     if (!response.status || response.source) return response
-    return await response.json().then((json) => {
+    return await response.json().then((json: any) => {
       return {
         status: response.status,
         code: json.code,
-        statusText: json.msg ? json.msg : json.error ? json.error : '',
+        statusText: json.msg ? json.msg : json.error ? json.error : ''
       }
     })
   }

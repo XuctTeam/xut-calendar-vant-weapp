@@ -1,228 +1,223 @@
-import type { ActionSheetItem } from '@antmjs/vantui/types/action-sheet'
-import { useRecoilState } from 'recoil'
-import { Unite, Button, ActionSheet } from '@antmjs/vantui'
-import { View } from '@tarojs/components'
-import { useReachBottom, showModal, navigateTo } from '@tarojs/taro'
+/*
+ * @Author: Derek Xu
+ * @Date: 2022-07-14 15:50:29
+ * @LastEditors: Derek Xu
+ * @LastEditTime: 2022-07-15 20:02:11
+ * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
+ */
+import React from 'react'
+import { Button, Icon, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
-import DatetimePicker from '@/components/datetimePicker'
-import Picker from '@/components/picker'
-import Popup from '@/components/popup'
-import Area from '@/components/area'
-import { getRoleListCommon } from '@/actions/simple/common'
-// import { petClient } from '@/actions/swagger/petstore'
-import { menuButtonStore } from '@/store'
+import { View } from '@tarojs/components'
+import { useRecoilState } from 'recoil'
+import { Collapse, CollapseItem } from '@antmjs/vantui'
 import Header from '@/components/header'
+import dayjs from 'dayjs'
+import { ICurrentDay } from '~/../@types/date'
+import { getToday } from '@/utils'
+import { componentRefreshTimeStore } from '@/store'
+import { IDavCalendar, ICalendarComponent, IDavComponent, IDvaCalendarProps, IDvaComponentProps } from '~/../@types/calendar'
+import CalendarTypes from '@/components/calendar/types/calendar'
+import { Picker } from './ui'
+import { componentsDaysById } from '@/api/component'
+
 import './index.less'
+
+const day: ICurrentDay = getToday()
 
 export default Unite(
   {
     state: {
-      title: '日程管理',
-      info: null,
-      popShow: false,
-      pickerShow: false,
-      datepickerShow: false,
-      areaShow: false,
-      actionsheetShow: false,
-      actions: [
-        {
-          name: '选项',
-        },
-        {
-          name: '选项',
-        },
-        {
-          name: '选项',
-          subname: '描述信息',
-          openType: 'share',
-        },
-      ],
+      collapse: ['1'],
+      selectedDay: day.current,
+      componentLoading: false,
+      calendarComponents: [],
+      componentRefreshLocalTime: 0,
+      marks: []
     },
+
     async onLoad() {
       // const datap = await petClient.addPet({
       //   body: { name: 'xx', photoUrls: ['xxx'] },
       // })
-      const data = await getRoleListCommon({})
+    },
+
+    /**
+     * 日历月份改变
+     *
+     * @param value
+     */
+    selectMonthChage(value: string) {
+      this._queryComponent(calendars, dayjs(value).startOf('month').format('YYYY-MM-DD HH:mm:ss'), dayjs(value).endOf('month').format('YYYY-MM-DD HH:mm:ss'))
+    },
+
+    /**
+     * 日期长按住
+     * @param item
+     * @returns
+     */
+    selectDayLongClick(item: { value: string }): void {
+      console.log(item.value)
+    },
+
+    selectDayClickHadnle(item: { value: CalendarTypes.SelectedDate }) {
       this.setState({
-        info: data,
+        selectedDay: item.value.start.toString()
       })
     },
+
+    /**
+     * @description 日程列表刷新
+     */
+    componentRefresh() {
+      this._queryComponent(
+        calendars,
+        dayjs(this.state.selectedDay).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+        dayjs(this.state.selectedDay).endOf('month').format('YYYY-MM-DD HH:mm:ss')
+      )
+    },
+
+    collapseChage(value: any) {
+      this.setState({
+        collapse: value
+      })
+    },
+
+    /**
+     * @description 查询日历下所有日程
+     *
+     * @param calList
+     * @param start
+     * @param end
+     */
+    _queryComponent(calList: Array<IDavCalendar> | unknown, start: string, end: string) {
+      if (!calList || !(calList instanceof Array)) return
+      this.setState({
+        componentLoading: true,
+        calendarComponents: [],
+        marks: []
+      })
+
+      let pList: Array<Promise<any>> = []
+      calList.forEach((calendar) => {
+        pList.push(
+          new Promise(function (resolve, reject) {
+            componentsDaysById(calendar.calendarId, start, end)
+              .then((res: any) => {
+                resolve(res)
+              })
+              .catch((err: any) => {
+                reject(err)
+              })
+          })
+        )
+      })
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      let calendarComponents: Array<ICalendarComponent> = []
+      Promise.all(
+        pList.map((p) => {
+          return p.catch((error) => error)
+        })
+      )
+        .then((res) => {
+          if (!(res instanceof Array)) return
+          res.forEach((i) => (calendarComponents = calendarComponents.concat(i)))
+          this._fillMarkDay(calendarComponents)
+          const now: number = dayjs().unix()
+          this.setState({
+            calendarComponents: calendarComponents,
+            componentLoading: false,
+            componentRefreshLocalTime: now
+          })
+        })
+        .catch((error) => {
+          console.log(error, 'error')
+          this.setState({
+            componentLoading: false
+          })
+        })
+    },
+
+    /**
+     * @description 补充日历上有日程的天
+     *
+     * @param components
+     * @returns
+     */
+    _fillMarkDay(components: Array<ICalendarComponent>) {
+      if (components.length === 0) return
+      const daySet: Set<string> = new Set<string>([])
+      components.forEach((comp) => {
+        daySet.add(dayjs(comp.day).format('YYYY/MM/DD'))
+      })
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const marks: Array<CalendarTypes.Mark> = Array.from(daySet).map((i) => {
+        return { value: i }
+      })
+      this.setState({
+        marks: marks
+      })
+    }
   },
+
   function ({ state, events }) {
-    useReachBottom(() => {
-      console.log(999)
-    })
-    const { setHooks, setState } = events
-    const {
-      info,
-      popShow,
-      pickerShow,
-      datepickerShow,
-      areaShow,
-      actionsheetShow,
-      actions,
-    } = state
-    const [menuButton, setMenuButton]: any = useRecoilState(menuButtonStore)
-    // 可以将hooks的数据传递到实例上面，可以通过this.hooks['xxx']获取到，不过hooks是异步的，所以在不同的阶段取值有可能取不到，这是由业务决定的
-    setHooks({
-      xxx: menuButton,
-      yyy: setMenuButton,
-    })
+    const { collapse } = state
+    const { selectMonthChage, selectDayLongClick, selectDayClickHadnle, collapseChage } = events
+
+    const calRef = React.createRef()
+    const lunar = true
+    const monday = true
+
     return (
       <Container
-        navTitle={state.title}
-        className="pages-index-index"
-        enablePagePullDownRefresh={false}
-        loading={!info}
+        navTitle='日程管理'
+        className='pages-index-index'
+        enablePagePullDownRefresh={true}
         renderPageTopHeader={() => {
-          return <Header title={state.title} to={1} left={false}></Header>
+          return <Header title='日程管理' left={false} to={1}></Header>
         }}
       >
-        {info && (
-          <>
-            <View className="btn-panel">
-              <Button
-                type="primary"
-                size="normal"
-                onClick={() => navigateTo({ url: '/pages/pagination/index' })}
-              >
-                分页模版页
-              </Button>
-            </View>
-            <View className="btn-panel">
-              <Button
-                type="primary"
-                size="normal"
-                onClick={() =>
-                  navigateTo({ url: '/pages/tabAndSearchPagination/index' })
-                }
-              >
-                带tab和search的分页模版页
-              </Button>
-            </View>
-            <View className="btn-panel">
-              <Button
-                type="primary"
-                size="normal"
-                onClick={() => setState({ datepickerShow: true })}
-              >
-                DateTimerPicker组件
-              </Button>
-            </View>
-            <View className="btn-panel">
-              <Button
-                type="primary"
-                size="normal"
-                onClick={() => setState({ pickerShow: true })}
-              >
-                Picker组件
-              </Button>
-            </View>
-            <View className="btn-panel">
-              <Button
-                type="primary"
-                size="normal"
-                onClick={() => setState({ popShow: true })}
-              >
-                Popup组件
-              </Button>
-            </View>
-            <View className="btn-panel">
-              <Button
-                type="primary"
-                size="normal"
-                onClick={() => setState({ areaShow: true })}
-              >
-                Area组件
-              </Button>
-            </View>
-            <View className="btn-panel">
-              <Button
-                type="primary"
-                size="normal"
-                onClick={() => setState({ actionsheetShow: true })}
-              >
-                ActionSheet组件
-              </Button>
-            </View>
-            <View className="btn-panel">
-              <Button
-                type="primary"
-                size="normal"
-                onClick={() => {
-                  showModal({
-                    title: '标题',
-                    content: '内容',
-                    confirmText: '确认',
-                    cancelText: '取消',
-                  })
+        <Collapse value={collapse} onChange={collapseChage}>
+          <CollapseItem
+            name='1'
+            renderTitle={
+              <Icon
+                classPrefix='page-icon'
+                name='rili'
+                size={50}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  console.log(22222222222)
                 }}
-              >
-                确认组件
-              </Button>
-            </View>
-          </>
-        )}
-
-        <Popup
-          show={popShow}
-          title={'查看'}
-          onClose={() => {
-            setState({ popShow: false })
-          }}
-        >
-          <View>Hello world!1112</View>
-          <View>Hello world!1112</View>
-        </Popup>
-        <DatetimePicker
-          show={datepickerShow}
-          onConfirm={(e) => {
-            console.log(e)
-            setState({ datepickerShow: false })
-          }}
-          onCancel={() => {
-            setState({ datepickerShow: false })
-          }}
-        />
-        <Picker
-          show={pickerShow}
-          columns={['杭州', '宁波', '温州', '嘉兴', '湖州']}
-          onConfirm={(e) => {
-            console.log(e)
-            setState({ pickerShow: false })
-          }}
-          onCancel={() => {
-            setState({ pickerShow: false })
-          }}
-        />
-        <Area
-          show={areaShow}
-          onConfirm={(e) => {
-            console.log(e)
-            setState({ areaShow: false })
-          }}
-          onCancel={() => {
-            setState({ areaShow: false })
-          }}
-        />
-        <ActionSheet
-          show={actionsheetShow}
-          // 可以不加
-          title="标题"
-          // 可以不加
-          cancelText="取消"
-          actions={actions as ActionSheetItem[]}
-          onClose={() => setState({ actionsheetShow: false })}
-          onCancel={() => setState({ actionsheetShow: false })}
-          onSelect={(e) => console.log(e)}
-        />
+              ></Icon>
+            }
+          >
+            <Picker
+              ref={calRef}
+              currentDay={dayjs(state.selectedDay).format('YYYY/MM/DD')}
+              marks={state.marks}
+              isLunar={!!lunar}
+              isMonfirst={!!monday}
+              selectMonthChage={selectMonthChage}
+              selectDayLongClick={selectDayLongClick}
+              selectDayClick={selectDayClickHadnle}
+            ></Picker>
+          </CollapseItem>
+          <CollapseItem title='有赞微商城' name='2'>
+            sdfsdf
+          </CollapseItem>
+        </Collapse>
       </Container>
     )
   },
-  { page: true },
+  { page: true }
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: '',
+  navigationBarTitleText: ''
 })

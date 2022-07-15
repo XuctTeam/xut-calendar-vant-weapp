@@ -1,10 +1,20 @@
+/*
+ * @Author: Derek Xu
+ * @Date: 2022-07-14 18:15:14
+ * @LastEditors: Derek Xu
+ * @LastEditTime: 2022-07-15 17:23:03
+ * @FilePath: \xut-calendar-vant-weapp\src\components\header.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
+ */
 import { Fragment } from 'react'
 import { cacheGetSync } from '@/cache'
 import { useWebEnv } from '@/hooks'
 import { useBack } from '@/utils/taro'
 import './header.less'
 
-import { NavBar, MiniNavBar, Toast } from '@antmjs/vantui'
+import { NavBar } from '@antmjs/vantui'
 
 interface IPageOption {
   title: string

@@ -2,8 +2,8 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-14 19:32:40
- * @FilePath: \temptaro\src\cache.ts
+ * @LastEditTime: 2022-07-15 17:00:55
+ * @FilePath: \xut-calendar-vant-weapp\src\cache.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.

@@ -1,3 +1,13 @@
+/*
+ * @Author: Derek Xu
+ * @Date: 2022-07-14 15:50:29
+ * @LastEditors: Derek Xu
+ * @LastEditTime: 2022-07-15 20:05:41
+ * @FilePath: \xut-calendar-vant-weapp\src\store.ts
+ * @Description:
+ *
+ * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
+ */
 import { atom, RecoilState } from 'recoil'
 
 export interface IMenuButton {
@@ -17,5 +27,11 @@ export interface IMenuButton {
 
 export const menuButtonStore = atom({
   key: 'menuButtonStore',
-  default: undefined,
+  default: undefined
 }) as RecoilState<IMenuButton | undefined>
+
+//组件刷新时间
+export const componentRefreshTimeStore = atom({
+  key: 'componentRefreshTime',
+  default: 0
+})

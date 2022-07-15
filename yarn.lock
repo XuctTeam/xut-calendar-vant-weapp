@@ -1262,7 +1262,7 @@
     "core-js-pure" "^3.20.2"
     "regenerator-runtime" "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.12.5", "@babel/runtime@^7.14.5", "@babel/runtime@^7.7.6", "@babel/runtime@^7.7.7", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.12.5", "@babel/runtime@^7.14.5", "@babel/runtime@^7.14.6", "@babel/runtime@^7.7.6", "@babel/runtime@^7.7.7", "@babel/runtime@^7.8.4":
   "integrity" "sha512-hzeyJyMA1YGdJTuWU0e/j4wKXrU4OMFvY2MSlaI9B7VQb0r5cxTE3EAIS2Q7Tn2RIcDkRvTA/v2JsAEhxe99uw=="
   "resolved" "https://registry.npmmirror.com/@babel/runtime/-/runtime-7.17.2.tgz"
   "version" "7.17.2"
@@ -2361,7 +2361,7 @@
     "@tarojs/taro" "3.4.13"
     "loader-utils" "^1.2.3"
 
-"@tarojs/taro@>=3.3.0", "@tarojs/taro@3.4.13":
+"@tarojs/taro@>= 3.x", "@tarojs/taro@>=3.3.0", "@tarojs/taro@3.4.13":
   "integrity" "sha512-TmBDXCxf7/tM4oJ+FOZuJrxmdSR8GDt0qHRVvo4VcHdvqiCeohXNEONExT9FpFxfqyGLkkMq/DCIplyh1+9u2Q=="
   "resolved" "https://registry.npmmirror.com/@tarojs/taro/-/taro-3.4.13.tgz"
   "version" "3.4.13"
@@ -4088,6 +4088,11 @@
   "resolved" "https://registry.npmmirror.com/bluebird/-/bluebird-3.7.2.tgz"
   "version" "3.7.2"
 
+"blueimp-canvas-to-blob-global@^3.29.1":
+  "integrity" "sha512-7iiAoFX7nEdm8H8ErlewkvUvNZTMH47jro1sVOuvzCn3xcfNGsYBItmE/N/tcjADgOvCW9juiU/LFJjHUKw5fw=="
+  "resolved" "https://registry.npmmirror.com/blueimp-canvas-to-blob-global/-/blueimp-canvas-to-blob-global-3.29.1.tgz"
+  "version" "3.29.1"
+
 "bn.js@^4.0.0", "bn.js@^4.1.0", "bn.js@^4.11.9":
   "integrity" "sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA=="
   "resolved" "https://registry.npmmirror.com/bn.js/-/bn.js-4.12.0.tgz"
@@ -5054,6 +5059,14 @@
     "on-headers" "~1.0.2"
     "safe-buffer" "5.1.2"
     "vary" "~1.1.2"
+
+"compressorjs-global@^1.1.2":
+  "integrity" "sha512-f1p8JE5GcCHvq+WgKOKg8ER2dUU0ziOkS4adeBZhEOJdDk9u4VwI01zuL+Bpgk0CPwVTMOomPDeGfJUcyU4V3A=="
+  "resolved" "https://registry.npmmirror.com/compressorjs-global/-/compressorjs-global-1.1.2.tgz"
+  "version" "1.1.2"
+  dependencies:
+    "blueimp-canvas-to-blob-global" "^3.29.1"
+    "is-blob" "^2.1.0"
 
 "concat-map@0.0.1":
   "integrity" "sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg=="
@@ -8789,6 +8802,11 @@
   dependencies:
     "binary-extensions" "^2.0.0"
 
+"is-blob@^2.1.0":
+  "integrity" "sha512-SZ/fTft5eUhQM6oF/ZaASFDEdbFVe89Imltn9uZr03wdKMcWNVYSMjQPFtg05QuNkt5l5c135ElvXEQG0rk4tw=="
+  "resolved" "https://registry.npmmirror.com/is-blob/-/is-blob-2.1.0.tgz"
+  "version" "2.1.0"
+
 "is-boolean-object@^1.1.0":
   "integrity" "sha512-gDYaKHJmnj4aWxyj6YHyXVpdQawtVLHU5cb+eztPGczf6cjuTdwve5ZIEfgXqH4e57An1D1AKf8CZ3kYrQRqYA=="
   "resolved" "https://registry.npmmirror.com/is-boolean-object/-/is-boolean-object-1.1.2.tgz"
@@ -9847,6 +9865,11 @@
   "resolved" "https://registry.npmmirror.com/lodash-es/-/lodash-es-4.17.15.tgz"
   "version" "4.17.15"
 
+"lodash-wechat@^1.0.0":
+  "integrity" "sha512-QoUc/QbEXNu1PsoWXRehZnfSZf5VznHRth5iUteq4qdM9myuKlhGIxSrFl9vhtDfqyUVuprPxXFbUGZ3oGM0JQ=="
+  "resolved" "https://registry.npmmirror.com/lodash-wechat/-/lodash-wechat-1.0.0.tgz"
+  "version" "1.0.0"
+
 "lodash.clonedeep@^4.5.0":
   "integrity" "sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ=="
   "resolved" "https://registry.npmmirror.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz"
@@ -9886,6 +9909,11 @@
   "integrity" "sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw=="
   "resolved" "https://registry.npmmirror.com/lodash.truncate/-/lodash.truncate-4.4.2.tgz"
   "version" "4.4.2"
+
+"lodash.uniq@^4.5.0":
+  "integrity" "sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ=="
+  "resolved" "https://registry.npmmirror.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz"
+  "version" "4.5.0"
 
 "lodash@^4.17.10", "lodash@^4.17.11", "lodash@^4.17.12", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.17.20", "lodash@^4.17.21", "lodash@^4.17.3", "lodash@^4.17.4", "lodash@^4.17.5", "lodash@^4.2.0", "lodash@^4.3.0", "lodash@^4.7.0", "lodash@4.6.1 || ^4.16.1":
   "integrity" "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
@@ -12162,6 +12190,11 @@
   "resolved" "https://registry.npmmirror.com/querystring/-/querystring-0.2.1.tgz"
   "version" "0.2.1"
 
+"querystring@^0.2.1":
+  "integrity" "sha512-wkvS7mL/JMugcup3/rMitHmd9ecIGd2lhFhK9N3UUQ450h66d1r3Y9nvXzQAW1Lq+wyx61k/1pfKS5KuKiyEbg=="
+  "resolved" "https://registry.npmmirror.com/querystring/-/querystring-0.2.1.tgz"
+  "version" "0.2.1"
+
 "querystring@0.2.0":
   "integrity" "sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g=="
   "resolved" "https://registry.npmmirror.com/querystring/-/querystring-0.2.0.tgz"
@@ -12269,7 +12302,7 @@
   "resolved" "https://registry.npmmirror.com/react-refresh/-/react-refresh-0.9.0.tgz"
   "version" "0.9.0"
 
-"react@^16.8.0  || ^17.0.0", "react@^17.0.0", "react@^17.0.1", "react@>=16.13", "react@>=16.13.1", "react@>=16.8.0", "react@>=16.9.0", "react@>=17.0.0", "react@17.0.2":
+"react@^16.8.0  || ^17.0.0", "react@^17.0.0", "react@^17.0.1", "react@>=16.13", "react@>=16.13.1", "react@>=16.8.0", "react@>=16.9", "react@>=16.9.0", "react@>=17.0.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmmirror.com/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -14222,6 +14255,17 @@
     "css-color-keywords" "^1.0.0"
     "css-mediaquery" "^0.1.2"
     "postcss-value-parser" "^3.3.0"
+
+"taro-hooks@^1.5.8":
+  "integrity" "sha512-Vhd9yoWvocVJGesuBMVRuPHj2u1t9FKevhzenJcXgEb71fjHa8LM8nsh+9/nGmpPmJDHZWvPb3qTXn6E+X+1+g=="
+  "resolved" "https://registry.npmmirror.com/taro-hooks/-/taro-hooks-1.5.8.tgz"
+  "version" "1.5.8"
+  dependencies:
+    "@babel/runtime" "^7.14.6"
+    "compressorjs-global" "^1.1.2"
+    "lodash-wechat" "^1.0.0"
+    "lodash.uniq" "^4.5.0"
+    "querystring" "^0.2.1"
 
 "tarojs-router-next-plugin@^2.8.1":
   "integrity" "sha512-K1W5QD5n0mSYYMcONVLKGaUQ10tRiBDaWkIJYEQ3xUbrQLHaGNebkSJsemW3qcvoSTyexNPry32yzevjug31Yg=="

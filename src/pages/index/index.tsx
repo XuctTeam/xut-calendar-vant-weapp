@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-16 17:56:01
+ * @LastEditTime: 2022-07-18 15:09:37
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -12,19 +12,22 @@ import React from 'react'
 import { Button, Icon, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
 import { Collapse, CollapseItem } from '@antmjs/vantui'
 import Header from '@/components/header'
 import dayjs from 'dayjs'
 import { ICurrentDay } from '~/../@types/date'
 import { getToday } from '@/utils'
 import { calendarState, componentRefreshTimeStore } from '@/store'
+import { cacheGetSync } from '@/cache'
 import { IDavCalendar, ICalendarComponent, IDavComponent, IDvaCalendarProps, IDvaComponentProps } from '~/../@types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
-import { Calendar } from './ui'
+import { Calendar, CalendarPop, EventList } from './ui'
 import { componentsDaysById } from '@/api/component'
 
 import './index.less'
+import { useWebEnv } from '@/hooks'
+import Router from 'tarojs-router-next'
 
 const day: ICurrentDay = getToday()
 
@@ -32,6 +35,7 @@ export default Unite(
   {
     state: {
       collapse: ['1'],
+      popOpen: false,
       selectedDay: day.current,
       componentLoading: false,
       calendarComponents: [],
@@ -51,6 +55,7 @@ export default Unite(
      * @param value
      */
     selectMonthChage(value: string) {
+      console.log(this.hooks)
       this._queryComponent(
         this.hooks['calendars'],
         dayjs(value).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
@@ -87,6 +92,52 @@ export default Unite(
     collapseChage(value: any) {
       this.setState({
         collapse: value
+      })
+    },
+
+    /**
+     * 今日图标点击
+     */
+    currentClickHandle() {
+      const today: string = day.current
+      //@ts-ignore
+      this.hooks['calRef'].current.reset(today)
+      this.setState({
+        selectedDay: today
+      })
+    },
+
+    /**
+     * 日历选择点击
+     */
+    calendarPopOpen() {
+      this.setState({
+        popOpen: true
+      })
+    },
+    /**
+     * 日历选择关闭
+     */
+    calendarPopClose() {
+      this.setState({
+        popOpen: false
+      })
+    },
+
+    calendarSelected() {},
+
+    /**
+     * @description 日程查看
+     */
+    async viewComponent(component: IDavComponent) {
+      Router.toComponentview({
+        params: {
+          componentId: component.id,
+          add: false
+        },
+        data: {
+          component: component
+        }
       })
     },
 
@@ -165,20 +216,35 @@ export default Unite(
   },
 
   function ({ state, events }) {
-    const { collapse } = state
-    const { selectMonthChage, selectDayLongClick, selectDayClickHadnle, collapseChage } = events
+    const { popOpen, collapse, selectedDay, marks, calendarComponents } = state
+    const {
+      selectMonthChage,
+      selectDayLongClick,
+      selectDayClickHadnle,
+      collapseChage,
+      currentClickHandle,
+      calendarPopOpen,
+      calendarPopClose,
+      calendarSelected,
+      viewComponent
+    } = events
+    const env = useWebEnv()
     const calendars = useRecoilValue(calendarState)
-    const [componentRefresh, setComponentRefresh] = useRecoilState(componentRefreshTimeStore)
+    const accessToken = cacheGetSync('accessToken')
+    const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(componentRefreshTimeStore)
+    const calRef = React.createRef()
 
     events.setHooks({
-      componentRefresh: componentRefresh,
-      setComponentRefresh: setComponentRefresh
+      calRef: calRef,
+      setComponentRefresh: setComponentRefreshTime,
+      calendars: calendars,
+      componentRefresh: componentRefreshTime
     })
-    events.setHooks(calendars)
+    events.setHooks({ calendars: calendars })
 
-    const calRef = React.createRef()
     const lunar = true
     const monday = true
+    const view = '1'
 
     return (
       <Container
@@ -189,7 +255,7 @@ export default Unite(
           return <Header title='日程管理' left={false} to={1}></Header>
         }}
       >
-        <Collapse value={collapse} onChange={collapseChage}>
+        <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
           <CollapseItem
             name='1'
             renderTitle={
@@ -200,15 +266,15 @@ export default Unite(
                 onClick={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
-                  console.log(22222222222)
+                  calendarPopOpen()
                 }}
               ></Icon>
             }
           >
             <Calendar
               ref={calRef}
-              currentDay={dayjs(state.selectedDay).format('YYYY/MM/DD')}
-              marks={state.marks}
+              currentDay={dayjs(selectedDay).format('YYYY/MM/DD')}
+              marks={marks}
               isLunar={!!lunar}
               isMonfirst={!!monday}
               selectMonthChage={selectMonthChage}
@@ -218,6 +284,36 @@ export default Unite(
           </CollapseItem>
           <CollapseItem title='有赞微商城' name='2'></CollapseItem>
         </Collapse>
+
+        <EventList
+          loading={false}
+          accessToken={accessToken || ''}
+          wxBrower={false}
+          today={day.current}
+          view={view && view + '' === '1' ? 1 : 0}
+          selectedDay={selectedDay}
+          calendars={calendars}
+          calendarComponents={calendarComponents}
+          viewComponent={viewComponent}
+        ></EventList>
+
+        <CalendarPop
+          hasLogin={!!accessToken}
+          open={popOpen}
+          calendars={calendars && calendars instanceof Array ? calendars : []}
+          closePopup={calendarPopClose}
+          selected={calendarSelected}
+        ></CalendarPop>
+
+        {selectedDay !== day.current && (
+          <View className='pages-index_today-icon' style={{ bottom: env ? '70px' : '10px' }} onClick={currentClickHandle}>
+            今
+          </View>
+        )}
+
+        <View className='pages-index_home-fab' style={{ bottom: env ? '80px' : '20px' }}>
+          {!!accessToken && <Button size='small' color='primary' />}
+        </View>
       </Container>
     )
   },

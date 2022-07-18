@@ -2,13 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-16 17:12:09
+ * @LastEditTime: 2022-07-18 11:26:58
  * @FilePath: \xut-calendar-vant-weapp\src\app.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import * as dayjs from 'dayjs'
 import isLeapYear from 'dayjs/plugin/isLeapYear' // import plugin
 import 'dayjs/locale/zh-cn' // import locale
@@ -85,6 +85,8 @@ export default function App(props: IProps) {
 
   return (
     // 在入口组件不会渲染任何内容，但我们可以在这里做类似于状态管理的事情
-    <RecoilRoot>{props.children}</RecoilRoot>
+    <RecoilRoot>
+      <Suspense fallback={<div>Loading whale types...</div>}>{props.children}</Suspense>
+    </RecoilRoot>
   )
 }

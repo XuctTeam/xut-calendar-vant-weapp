@@ -1,10 +1,4 @@
-import {
-  PureComponent,
-  ReactNode,
-  useState,
-  useContext,
-  useEffect,
-} from 'react'
+import { PureComponent, ReactNode, useState, useContext, useEffect } from 'react'
 import { showToast, usePageScroll } from '@tarojs/taro'
 import { UniteContext, Popup } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
@@ -30,19 +24,19 @@ class ErrorBoundary extends PureComponent<{ setError: any }> {
     monitor(EMlf.js, {
       d1: 'componentDidCatch',
       d2: JSON.stringify(error || ''),
-      d3: JSON.stringify(errorInfo || ''),
+      d3: JSON.stringify(errorInfo || '')
     })
     const showError = {
       code: 'BoundaryError',
       message: '渲染出现了小故障',
-      data: { error, errorInfo },
+      data: { error, errorInfo }
     }
     this.props.setError(showError)
   }
 
   clearError() {
     this.setState({
-      error: null,
+      error: null
     })
   }
 
@@ -60,24 +54,11 @@ type IProps = {
   loading?: any
   ignoreError?: boolean
   enablePagePullDownRefresh?: boolean
-  renderPageTopHeader?: (
-    navHeight: number,
-    statusBarHeight: number,
-    safeRight: number,
-  ) => void
+  renderPageTopHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
 }
 
 export default function Index(props: IProps) {
-  const {
-    useNav = true,
-    navTitle,
-    navClassName,
-    className,
-    loading,
-    ignoreError,
-    renderPageTopHeader,
-    enablePagePullDownRefresh = true,
-  } = props
+  const { useNav = true, navTitle, navClassName, className, loading, ignoreError, renderPageTopHeader, enablePagePullDownRefresh = true } = props
   const ctx = useContext(UniteContext)
   const [canPull, setCanPull] = useState(true)
   const [springStyles, api] = useSpring(() => ({
@@ -85,31 +66,22 @@ export default function Index(props: IProps) {
     config: {
       tension: 300,
       friction: 30,
-      clamp: true,
-    },
+      clamp: true
+    }
   }))
-  const [pullDownRefreshStatus, setPullDownRefreshStatus] = useState(
-    'pulling',
-  ) as [
+  const [pullDownRefreshStatus, setPullDownRefreshStatus] = useState('pulling') as [
     'pulling' | 'refreshing' | 'complete' | 'canRelease',
-    React.Dispatch<
-      React.SetStateAction<'pulling' | 'refreshing' | 'complete' | 'canRelease'>
-    >,
+    React.Dispatch<React.SetStateAction<'pulling' | 'refreshing' | 'complete' | 'canRelease'>>
   ]
   const [loginStatus, setLoginStatus] = useState(false)
 
   // 异常来自于三个部分 1: Request Code 2 JSError 3: BoundaryError
   useEffect(() => {
-    if (
-      !loading &&
-      ctx.error &&
-      ctx.error.code !== 'JSError' &&
-      ctx.error.code !== 'BoundaryError'
-    ) {
+    if (!loading && ctx.error && ctx.error.code !== 'JSError' && ctx.error.code !== 'BoundaryError') {
       if (!ignoreError) {
         showToast({
           title: ctx.error.message,
-          icon: 'none',
+          icon: 'none'
         })
       }
       ctx.setError(undefined)
@@ -133,21 +105,10 @@ export default function Index(props: IProps) {
   }, [loading, ctx, ignoreError])
 
   function render() {
-    if (
-      loading ||
-      ctx.error?.code === 'JSError' ||
-      ctx.error?.code === 'BoundaryError'
-    ) {
+    if (loading || ctx.error?.code === 'JSError' || ctx.error?.code === 'BoundaryError') {
       if (ctx.error) {
         if (ignoreError) return <></>
-        if (ctx.error.code !== LOGIN_CODE)
-          return (
-            <Error
-              setError={ctx.setError as any}
-              onRefresh={ctx.onRefresh}
-              error={ctx.error}
-            />
-          )
+        if (ctx.error.code !== LOGIN_CODE) return <Error setError={ctx.setError as any} onRefresh={ctx.onRefresh} error={ctx.error} />
       } else {
         return <Loading />
       }
@@ -155,9 +116,7 @@ export default function Index(props: IProps) {
     return (
       <>
         <PullDownRefresh
-          canPull={
-            !!(ctx.uniteConfig.page && enablePagePullDownRefresh && canPull)
-          }
+          canPull={!!(ctx.uniteConfig.page && enablePagePullDownRefresh && canPull)}
           onRefresh={ctx.onRefresh}
           setStatus={setPullDownRefreshStatus}
           status={pullDownRefreshStatus}
@@ -167,13 +126,13 @@ export default function Index(props: IProps) {
         </PullDownRefresh>
         <Popup
           show={loginStatus}
-          className="popup-with-login"
-          closeIconPosition="top-left"
-          position="bottom"
+          className='popup-with-login'
+          closeIconPosition='top-left'
+          position='bottom'
           closeable
           safeAreaInsetTop
           style={{
-            height: '100vh',
+            height: '100vh'
           }}
           onClose={async () => {
             setLoginStatus(false)
@@ -181,11 +140,7 @@ export default function Index(props: IProps) {
             ctx.onRefresh()
           }}
         >
-          <Login
-            setLoginStatus={setLoginStatus}
-            setError={ctx.setError as any}
-            onRefresh={ctx.onRefresh}
-          />
+          <Login setLoginStatus={setLoginStatus} setError={ctx.setError as any} onRefresh={ctx.onRefresh} />
         </Popup>
       </>
     )
@@ -195,7 +150,7 @@ export default function Index(props: IProps) {
     <ErrorBoundary setError={ctx.setError}>
       {ctx.uniteConfig.page ? (
         <Navigation
-          homeUrl="pages/index/index"
+          homeUrl='pages/index/index'
           navTitle={navTitle}
           navClassName={navClassName}
           useNav={useNav}

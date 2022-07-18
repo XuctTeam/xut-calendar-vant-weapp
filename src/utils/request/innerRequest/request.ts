@@ -2,8 +2,8 @@
  * @Author: Derek Xu
  * @Date: 2022-07-15 14:52:03
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-15 16:26:23
- * @FilePath: \temptaro\src\utils\request\innerRequest\request.ts
+ * @LastEditTime: 2022-07-18 13:11:53
+ * @FilePath: \xut-calendar-vant-weapp\src\utils\request\innerRequest\request.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -26,16 +26,10 @@ export default class httpRequest<T> {
   baseOptions(url: string, options: RequestOpts): Taro.RequestTask<T> {
     const header: IAnyObject = {
       'Content-Type': 'application/json',
-      ...options?.header,
+      ...options?.header
     }
 
-    if (
-      !(
-        url.includes('/uaa/sms') ||
-        url.includes('/uaa/captcha') ||
-        url.includes('/register')
-      )
-    ) {
+    if (!(url.includes('/uaa/sms') || url.includes('/uaa/captcha') || url.includes('/register'))) {
       /* 非登录接口都要通过token请求 */
       if (!url.includes('/oauth/token')) {
         header['Authorization'] = cacheGetSync('accessToken')
@@ -48,26 +42,19 @@ export default class httpRequest<T> {
       url: BASE_URL + url,
       method: 'GET',
       ...options,
-      header,
+      header
     })
   }
 
   get(url: string, data?: IReqData): Taro.RequestTask<T> {
-    return this.baseOptions(
-      url,
-      data ? { method: 'GET', data } : { method: 'GET' },
-    )
+    return this.baseOptions(url, data ? { method: 'GET', data } : { method: 'GET' })
   }
 
-  post(
-    url: string,
-    data: IReqData,
-    contentType: string = 'application/json',
-  ): Taro.RequestTask<T> {
+  post(url: string, data: IReqData, contentType: string = 'application/json'): Taro.RequestTask<T> {
     return this.baseOptions(url, {
       method: 'POST',
       data,
-      header: { 'Content-Type': contentType },
+      header: { 'Content-Type': contentType }
     })
   }
 
@@ -76,10 +63,7 @@ export default class httpRequest<T> {
   }
 
   delete(url: string, data?: IReqData): Taro.RequestTask<T> {
-    return this.baseOptions(
-      url,
-      data ? { method: 'DELETE', data } : { method: 'DELETE' },
-    )
+    return this.baseOptions(url, data ? { method: 'DELETE', data } : { method: 'DELETE' })
   }
 
   exchage(url: string, opt: RequestOpts): Taro.RequestTask<T> {
@@ -87,11 +71,6 @@ export default class httpRequest<T> {
   }
 
   _clientAuth = () => {
-    return (
-      'Basic ' +
-      base64(
-        process.env.CLIENT.CLIENT_ID + ':' + process.env.CLIENT.CLIENT_SECURITY,
-      )
-    )
+    return 'Basic ' + base64(process.env.CLIENT.CLIENT_ID + ':' + process.env.CLIENT.CLIENT_SECURITY)
   }
 }

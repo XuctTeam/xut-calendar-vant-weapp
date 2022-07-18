@@ -1,7 +1,99 @@
 .pages-index-index{
   padding: 10px;
+  background: #f7f8fa;
+
+  .van-cell{
+    background: #fff;
+  }
+
+  .content-class{
+    background: #fff;
+  }
 
   .page-icon{
     width: 40px;
   }
+
+  /* 日历弹出样式 */
+.pages-index-calendar_popup {
+
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+
+
+  .title {
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    font-size: 32px;
+    color: grey;
+    border-bottom: 10px solid rgb(242, 242, 242);
+  }
+
+  .content {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .button {
+    padding: 30px;
+  }
+
+  // .taroify-popup {
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: space-between;
+
+  //   .taroify-image {
+  //     width: 240px;
+  //     height: 240px;
+  //   }
+    
+
+  //   .taro-checkbox_checked {
+  //     width: 44px;
+  //     height: 44px;
+  //   }
+}
+
+  /* 左侧今日按钮 */
+.pages-index_today-icon {
+  position: fixed;
+  left: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  box-shadow: 0 0.53vmin 1.33vmin 0 rgb(51 51 51 / 20%);
+  background: #fff;
+  font-size: 30px;
+  color: #2e2e39;
+  font-weight: 600;
+}
+
+/* 右侧悬浮按钮 */
+.pages-index_home-fab {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  right: 50px;
+
+  .taroify-button {
+    width: 100%;
+    height: 100%;
+  }
+
+  .taroify-button__content {
+    .van-icon {
+      padding-left: 6px;
+    }
+  }
+}
 }

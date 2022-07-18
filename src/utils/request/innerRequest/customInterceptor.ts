@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-07-15 16:07:19
+ * @LastEditTime: 2022-07-18 09:35:25
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -11,6 +11,7 @@ import { HTTP_STATUS } from './statusCode'
 import codeMessage from './codeMessage'
 import refreshSubscribers from './refreshSubscribers'
 import { IRequestResponse } from '../constants'
+import { cacheGetSync } from '@/cache'
 
 const OAUTHTOKEN_URL: string = '/oauth/token'
 const codeKeys = codeMessage as { [key: string]: any }
@@ -19,25 +20,18 @@ const customInterceptor = (chain: Chain): Promise<any> => {
   const requestParams = chain.requestParams
   const url = chain.requestParams.url
   let p
-  const result = new Promise(function (
-    resolve: (res: IRequestResponse) => void,
-    reject,
-  ) {
+  const result = new Promise(function (resolve: (res: IRequestResponse) => void, reject) {
     p = chain.proceed(requestParams)
     p.then((res: Taro.request.SuccessCallbackResult<IRequestResponse>) => {
       if (!res) {
         reject()
         return
       }
-      if (
-        res.statusCode === HTTP_STATUS.NOT_FOUND ||
-        res.statusCode === HTTP_STATUS.BAD_GATEWAY ||
-        res.statusCode === HTTP_STATUS.CLIENT_ERROR
-      ) {
+      if (res.statusCode === HTTP_STATUS.NOT_FOUND || res.statusCode === HTTP_STATUS.BAD_GATEWAY || res.statusCode === HTTP_STATUS.CLIENT_ERROR) {
         return Promise.reject({
           source: 'interceptor',
           status: res.statusCode,
-          statusText: codeMessage[res.statusCode],
+          statusText: codeMessage[res.statusCode]
         })
       }
       if (res.statusCode === HTTP_STATUS.SUCCESS) {
@@ -48,7 +42,7 @@ const customInterceptor = (chain: Chain): Promise<any> => {
           return Promise.reject({
             source: 'interceptor',
             status: res.statusCode,
-            statusText: res.data.message || codeKeys[res.data.code],
+            statusText: res.data.message || codeKeys[res.data.code]
           })
         }
         return resolve(res.data.data)
@@ -57,17 +51,16 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         source: 'interceptor',
         status: res.statusCode,
         code: res.data.code,
-        statusText: res.data.message || codeKeys[res.data.code],
+        statusText: res.data.message || codeKeys[res.data.code]
       })
     }).catch(async (error: any) => {
-      const { status, statusText, code, errMsg } =
-        await refreshSubscribers.convertError(error)
+      const { status, statusText, code, errMsg } = await refreshSubscribers.convertError(error)
       /** 非认证失败 */
       if (!status) {
         Taro.showToast({
           icon: 'error',
           title: '请求异常',
-          duration: 1500,
+          duration: 1500
         })
         return reject(error)
       }
@@ -76,10 +69,7 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         if (!toastMsg && errMsg) {
           toastMsg = errMsg
         }
-        if (
-          !toastMsg &&
-          (status === 500 || status === 502 || status === 503 || status === 504)
-        ) {
+        if (!toastMsg && (status === 500 || status === 502 || status === 503 || status === 504)) {
           toastMsg = codeKeys[status]
         }
         /** 兼容刷新token 异常情况*/
@@ -89,7 +79,7 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         Taro.showToast({
           icon: 'error',
           title: toastMsg,
-          duration: 1500,
+          duration: 1500
         })
         return reject(error)
       }
@@ -108,25 +98,22 @@ const customInterceptor = (chain: Chain): Promise<any> => {
       // }
 
       /* 2.认证失败且不是token过期 */
-      if (
-        status === HTTP_STATUS.AUTHENTICATE &&
-        code !== HTTP_STATUS.AUTHENTICATE
-      ) {
+      if (status === HTTP_STATUS.AUTHENTICATE && code !== HTTP_STATUS.AUTHENTICATE) {
         Taro.showToast({
           icon: 'error',
           title: codeKeys[code],
-          duration: 1500,
+          duration: 1500
         })
         return reject(error)
       }
-      let refreshToken = Taro.getStorageSync('refreshToken')
+      let refreshToken = cacheGetSync('refreshToken')
       const now = dayjs().unix()
       /* 3. 刷新token时间不小于2个小时 或 不存在刷新token  */
       if (now - refreshSubscribers.refresh < 7200 || !refreshToken) {
         Taro.showToast({
           icon: 'error',
           title: codeKeys[status],
-          duration: 1500,
+          duration: 1500
         })
         return reject(error)
       }
@@ -140,7 +127,7 @@ const customInterceptor = (chain: Chain): Promise<any> => {
           resolve: rev,
           reject: rej,
           url: url,
-          opt: requestParams,
+          opt: requestParams
         })
       })
         .then((rs: any) => {

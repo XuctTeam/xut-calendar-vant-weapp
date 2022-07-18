@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-15 22:30:18
+ * @LastEditTime: 2022-07-18 15:08:50
  * @FilePath: \xut-calendar-vant-weapp\src\store.ts
  * @Description:
  *
@@ -10,6 +10,8 @@
  */
 import { atom, RecoilState, selector } from 'recoil'
 import { list } from '@/api/calendar'
+import { cacheGetSync } from './cache'
+import { IDavCalendar } from '@types/calendar'
 
 export interface IMenuButton {
   // 用来判断是否同时通过systemInfo+menuButton得出来的数据
@@ -52,8 +54,16 @@ export const calendarState = selector({
   key: 'calendarStore',
   get: async ({ get }) => {
     get(forceUpdateState) // 我们可以将forceUpdateState作为依赖，当forceUpdateState值变化时，重新计算msgListState的值
-    const _calendarList = await list()
-    return _calendarList
+    if (!cacheGetSync('accessToken')) {
+      return []
+    }
+    try {
+      const array = await list()
+      return array as any as IDavCalendar[]
+    } catch (err) {
+      console.log(err)
+    }
+    return []
   }
 })
 

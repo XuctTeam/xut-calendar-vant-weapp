@@ -2,10 +2,10 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-02 17:45:23
- * @LastEditTime: 2022-05-02 21:52:05
+ * @LastEditTime: 2022-07-15 22:29:35
  * @LastEditors: Derek Xu
  */
-import http from '@/utils/request'
+import httpRequest from '@/utils/request/innerRequest'
 
 import { IDavCalendar } from '~/../@types/calendar'
 
@@ -16,7 +16,7 @@ import { IDavCalendar } from '~/../@types/calendar'
  * @author: Derek Xu
  */
 export const list = () => {
-  return http.get('/cms/api/app/v1/calendar/list')
+  return httpRequest.get('/cms/api/app/v1/calendar/list')
 }
 
 /**
@@ -26,7 +26,7 @@ export const list = () => {
  * @author: Derek Xu
  */
 export const colorsList = () => {
-  return http.get('/cms/api/app/v1/calendar/color')
+  return httpRequest.get('/cms/api/app/v1/calendar/color')
 }
 
 /**
@@ -36,7 +36,7 @@ export const colorsList = () => {
  * @author: Derek Xu
  */
 export const get = (id: string) => {
-  return http.get('/cms/api/app/v1/calendar', { id })
+  return httpRequest.get('/cms/api/app/v1/calendar', { id })
 }
 
 /**
@@ -46,7 +46,7 @@ export const get = (id: string) => {
  * @author: Derek Xu
  */
 export const update = (data: IDavCalendar) => {
-  return http.put('/cms/api/app/v1/calendar', data)
+  return httpRequest.put('/cms/api/app/v1/calendar', data)
 }
 
 /**
@@ -56,7 +56,7 @@ export const update = (data: IDavCalendar) => {
  * @author: Derek Xu
  */
 export const create = (data: IDavCalendar) => {
-  return http.post('/cms/api/app/v1/calendar', data)
+  return httpRequest.post('/cms/api/app/v1/calendar', data)
 }
 
 /**
@@ -66,5 +66,5 @@ export const create = (data: IDavCalendar) => {
  * @author: Derek Xu
  */
 export const remove = (calendarId: string) => {
-  return http.delete('/cms/api/app/v1/calendar?calendarId=' + calendarId)
+  return httpRequest.delete('/cms/api/app/v1/calendar?calendarId=' + calendarId)
 }

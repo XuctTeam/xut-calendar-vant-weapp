@@ -4,9 +4,9 @@
  * @Autor: Derek Xu
  * @Date: 2022-02-08 09:36:26
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-07 11:51:55
+ * @LastEditTime: 2022-07-16 17:03:43
  */
-import http from '@/utils/request'
+import httpRequest from '@/utils/request/innerRequest'
 
 /**
  * @description: 查询会员所在群组（包括人数）
@@ -16,7 +16,7 @@ import http from '@/utils/request'
  * @author: Derek Xu
  */
 export const groupList = (): Promise<any> => {
-  return http.get('/ums/api/app/v1/group')
+  return httpRequest.get('/ums/api/app/v1/group')
 }
 
 /**
@@ -26,7 +26,7 @@ export const groupList = (): Promise<any> => {
  * @author: Derek Xu
  */
 export const getGroupInfo = (id: string): Promise<any> => {
-  return http.get('/ums/api/app/v1/group/get', { id })
+  return httpRequest.get('/ums/api/app/v1/group/get', { id })
 }
 
 /**
@@ -40,7 +40,7 @@ export const getGroupInfo = (id: string): Promise<any> => {
  * @author: Derek Xu
  */
 export const addGroup = (id: string, name: string, imageUrl: string, password: string, power: string, num: number) => {
-  return http.post('/ums/api/app/v1/group', { id, name, imageUrl, power, password, num })
+  return httpRequest.post('/ums/api/app/v1/group', { id, name, imageUrl, power, password, num })
 }
 
 /**
@@ -50,7 +50,7 @@ export const addGroup = (id: string, name: string, imageUrl: string, password: s
  * @author: Derek Xu
  */
 export const deleteGroup = (id: string) => {
-  return http.post('/ums/api/app/v1/group/delete', { id })
+  return httpRequest.post('/ums/api/app/v1/group/delete', { id })
 }
 
 /**
@@ -60,5 +60,5 @@ export const deleteGroup = (id: string) => {
  * @author: Derek Xu
  */
 export const search = (word: string, page: number, limit: number) => {
-  return http.get('/ums/api/app/v1/group/search', { word, page, limit })
+  return httpRequest.get('/ums/api/app/v1/group/search', { word, page, limit })
 }

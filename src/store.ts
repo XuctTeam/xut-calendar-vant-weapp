@@ -2,13 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-15 20:05:41
+ * @LastEditTime: 2022-07-15 22:30:18
  * @FilePath: \xut-calendar-vant-weapp\src\store.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { atom, RecoilState } from 'recoil'
+import { atom, RecoilState, selector } from 'recoil'
+import { list } from '@/api/calendar'
 
 export interface IMenuButton {
   // 用来判断是否同时通过systemInfo+menuButton得出来的数据
@@ -25,12 +26,41 @@ export interface IMenuButton {
 
 // 和UI有关的全局数据存储在这里，和UI无关的全局数据存储在cache.ts文件中
 
+/**
+ * @description: 微信头部自定义按钮
+ * @return {*}
+ */
 export const menuButtonStore = atom({
   key: 'menuButtonStore',
   default: undefined
 }) as RecoilState<IMenuButton | undefined>
 
-//组件刷新时间
+/**
+ * @description: 日历强刷key
+ * @return {*}
+ */
+const uuid = () => Math.random() // 生成一个唯一的id即可
+const forceUpdateState = atom({
+  key: 'forceUpdateState',
+  default: uuid()
+})
+/**
+ * @description: 日历集合
+ * @return {*}
+ */
+export const calendarState = selector({
+  key: 'calendarStore',
+  get: async ({ get }) => {
+    get(forceUpdateState) // 我们可以将forceUpdateState作为依赖，当forceUpdateState值变化时，重新计算msgListState的值
+    const _calendarList = await list()
+    return _calendarList
+  }
+})
+
+/**
+ * @description: 事件刷新事件
+ * @return {*}
+ */
 export const componentRefreshTimeStore = atom({
   key: 'componentRefreshTime',
   default: 0

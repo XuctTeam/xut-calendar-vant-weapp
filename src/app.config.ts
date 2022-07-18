@@ -2,19 +2,15 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-14 18:03:23
- * @FilePath: \temptaro\src\app.config.ts
+ * @LastEditTime: 2022-07-16 17:55:04
+ * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 export default defineAppConfig({
-  pages: [
-    'pages/index/index',
-    'pages/pagination/index',
-    'pages/tabAndSearchPagination/index',
-  ],
+  pages: ['pages/index/index', 'pages/pagination/index', 'pages/tabAndSearchPagination/index'],
   window: {
     // @ts-ignore
     titleBarColor: '#ededed',
@@ -26,7 +22,7 @@ export default defineAppConfig({
     navigationStyle: 'custom',
     // 支付宝全局设置自定义导航栏
     transparentTitle: 'always',
-    titlePenetrate: 'YES',
+    titlePenetrate: 'YES'
   },
   tabBar: {
     list: [
@@ -34,14 +30,14 @@ export default defineAppConfig({
         pagePath: 'pages/index/index',
         text: '日程',
         iconPath: 'assets/icon/index.png',
-        selectedIconPath: 'assets/icon/index_focus.png',
+        selectedIconPath: 'assets/icon/index_focus.png'
       },
       {
         pagePath: 'pages/pagination/index',
         text: '通讯录',
         iconPath: 'assets/icon/group.png',
-        selectedIconPath: 'assets/icon/group_focus.png',
-      },
+        selectedIconPath: 'assets/icon/group_focus.png'
+      }
       // {
       //   pagePath: 'pages/messagemanager/index',
       //   text: '消息',
@@ -54,11 +50,11 @@ export default defineAppConfig({
       //   iconPath: 'assets/icon/mine.png',
       //   selectedIconPath: 'assets/icon/mine_focus.png',
       // },
-    ],
+    ]
   },
   permission: {
     'scope.userLocation': {
-      desc: '楚日历需获取您的地理位置',
-    },
-  },
+      desc: '楚日历需获取您的地理位置'
+    }
+  }
 })

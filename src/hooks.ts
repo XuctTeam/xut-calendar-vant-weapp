@@ -2,8 +2,8 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-14 19:25:28
- * @FilePath: \temptaro\src\hooks.ts
+ * @LastEditTime: 2022-07-16 16:59:46
+ * @FilePath: \xut-calendar-vant-weapp\src\hooks.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -18,7 +18,7 @@ export function useDebounce(fn: any, ms?: number): any {
   fRef.current = fn
   const result = useCallback(
     debounce((...args) => fRef.current(...args), ms ?? 300),
-    [],
+    []
   )
   return result
 }
@@ -29,7 +29,7 @@ export function useThrottle(fn: any, ms?: number): any {
   fRef.current = fn
   const result = useCallback(
     throttle((...args) => fRef.current(...args), ms ?? 300),
-    [],
+    []
   )
   return result
 }
@@ -43,10 +43,7 @@ export function useWebEnv(): boolean {
 export function useWxBrowser(): boolean {
   if (/(micromessenger)/i.test(navigator.userAgent)) {
     //是否电脑微信或者微信开发者工具
-    if (
-      /(WindowsWechat)/i.test(navigator.userAgent) ||
-      /(wechatdevtools)/i.test(navigator.userAgent)
-    ) {
+    if (/(WindowsWechat)/i.test(navigator.userAgent) || /(wechatdevtools)/i.test(navigator.userAgent)) {
       return true
     } else {
       //手机微信打开的浏览器

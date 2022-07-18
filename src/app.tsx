@@ -2,8 +2,8 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-14 18:55:52
- * @FilePath: \temptaro\src\app.tsx
+ * @LastEditTime: 2022-07-16 17:12:09
+ * @FilePath: \xut-calendar-vant-weapp\src\app.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -15,13 +15,7 @@ import 'dayjs/locale/zh-cn' // import locale
 import { RecoilRoot } from 'recoil'
 import { useWxBrowser } from '@/hooks'
 
-import {
-  useDidShow,
-  useDidHide,
-  getUpdateManager,
-  showModal,
-  nextTick,
-} from '@tarojs/taro'
+import { useDidShow, useDidHide, getUpdateManager, showModal, nextTick } from '@tarojs/taro'
 import './cache'
 import { setSysInfoAsync, setWxBrower } from '@/utils'
 
@@ -64,7 +58,7 @@ export default function App(props: IProps) {
             title: '更新提示',
             content: '新版本已经准备好，立即重启应用？',
             confirmText: '我知道了',
-            showCancel: false,
+            showCancel: false
           }).then(function (mRes: any): void {
             if (mRes.confirm) {
               updateManager.applyUpdate()
@@ -77,7 +71,7 @@ export default function App(props: IProps) {
             title: '更新失败',
             content: '请删除小程序后重新打开',
             confirmText: '我知道了',
-            showCancel: false,
+            showCancel: false
           }).then(function (): void {})
         })
       }

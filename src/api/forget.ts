@@ -2,10 +2,10 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-28 16:02:47
- * @LastEditTime: 2022-04-20 21:04:04
+ * @LastEditTime: 2022-07-16 17:03:30
  * @LastEditors: Derek Xu
  */
-import http from '@/utils/request'
+import httpRequest from '@/utils/request/innerRequest'
 
 /**
  * @description: 忘记密码 -> 发送验证码
@@ -16,7 +16,7 @@ import http from '@/utils/request'
  * @author: Derek Xu
  */
 export const sendForgetPasswordCode = (phone: string, email: string, type: number) => {
-  return http.post('/uaa/forget/password/code', { phone, email, type })
+  return httpRequest.post('/uaa/forget/password/code', { phone, email, type })
 }
 
 /**
@@ -29,7 +29,7 @@ export const sendForgetPasswordCode = (phone: string, email: string, type: numbe
  * @author: Derek Xu
  */
 export const forgetPasswordCheck = (phone: string, email: string, code: string, type: number) => {
-  return http.post('/uaa/forget/password/check', { phone, email, code, type })
+  return httpRequest.post('/uaa/forget/password/check', { phone, email, code, type })
 }
 
 /**
@@ -41,5 +41,5 @@ export const forgetPasswordCheck = (phone: string, email: string, code: string, 
  * @author: Derek Xu
  */
 export const forgetModify = (memberId: string, pwd: string, code: string) => {
-  return http.post('/uaa/forget/password/modify', { memberId, password: pwd, code })
+  return httpRequest.post('/uaa/forget/password/modify', { memberId, password: pwd, code })
 }

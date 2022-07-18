@@ -2,10 +2,10 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-10 19:52:50
- * @LastEditTime: 2022-05-04 17:25:10
+ * @LastEditTime: 2022-07-16 17:04:32
  * @LastEditors: Derek Xu
  */
-import http from '@/utils/request'
+import httpRequest from '@/utils/request/innerRequest'
 
 /**
  * 发送登录短信验证码
@@ -13,7 +13,7 @@ import http from '@/utils/request'
  * @returns
  */
 export const sendSmsCode = (phone: String): Promise<any> => {
-  return http.post('/uaa/sms', { phone, type: 0 })
+  return httpRequest.post('/uaa/sms', { phone, type: 0 })
 }
 
 /**
@@ -21,7 +21,7 @@ export const sendSmsCode = (phone: String): Promise<any> => {
  * @returns
  */
 export const logout = (): Promise<any> => {
-  return http.delete('/uaa/oauth/logout')
+  return httpRequest.delete('/uaa/oauth/logout')
 }
 
 /**
@@ -29,7 +29,7 @@ export const logout = (): Promise<any> => {
  * @returns
  */
 export const userInfo = (): Promise<any> => {
-  return http.get('/ums/api/app/v1/member/info/all')
+  return httpRequest.get('/ums/api/app/v1/member/info/all')
 }
 
 /**
@@ -38,7 +38,7 @@ export const userInfo = (): Promise<any> => {
  * @return {*}
  */
 export const baseUserInfo = (): Promise<any> => {
-  return http.get('/ums/api/app/v1/member/info/base')
+  return httpRequest.get('/ums/api/app/v1/member/info/base')
 }
 
 /**
@@ -47,7 +47,7 @@ export const baseUserInfo = (): Promise<any> => {
  * @return {*}
  */
 export const auths = (): Promise<any> => {
-  return http.get('/ums/api/app/v1/member/auths')
+  return httpRequest.get('/ums/api/app/v1/member/auths')
 }
 
 /**
@@ -56,7 +56,7 @@ export const auths = (): Promise<any> => {
  * @return {*}
  */
 export const getWechatAuth = (): Promise<any> => {
-  return http.get('/ums/api/app/v1/member/auth/wechat')
+  return httpRequest.get('/ums/api/app/v1/member/auth/wechat')
 }
 
 /**
@@ -65,7 +65,7 @@ export const getWechatAuth = (): Promise<any> => {
  * @return {*}
  */
 export const password = (pwd: string): Promise<any> => {
-  return http.post('/ums/api/app/v1/member/password', { password: pwd })
+  return httpRequest.post('/ums/api/app/v1/member/password', { password: pwd })
 }
 
 /**
@@ -74,7 +74,7 @@ export const password = (pwd: string): Promise<any> => {
  * @return {*}
  */
 export const updateName = (name: string): Promise<any> => {
-  return http.post('/ums/api/app/v1/member/name', { name })
+  return httpRequest.post('/ums/api/app/v1/member/name', { name })
 }
 
 /**
@@ -83,7 +83,7 @@ export const updateName = (name: string): Promise<any> => {
  * @return {*}
  */
 export const getName = (memberId: string): Promise<any> => {
-  return http.get('/ums/api/app/v1/member/name', { memberId })
+  return httpRequest.get('/ums/api/app/v1/member/name', { memberId })
 }
 
 /**
@@ -92,7 +92,7 @@ export const getName = (memberId: string): Promise<any> => {
  * @return {*}
  */
 export const updateAvatar = (avatar: string): Promise<any> => {
-  return http.post('/ums/api/app/v1/member/avatar', { avatar })
+  return httpRequest.post('/ums/api/app/v1/member/avatar', { avatar })
 }
 
 /**
@@ -102,7 +102,7 @@ export const updateAvatar = (avatar: string): Promise<any> => {
  * @return {*}
  */
 export const getPhoneNumber = (code: string): Promise<any> => {
-  return http.post('/ums/api/app/v1/member/phone/get', { code })
+  return httpRequest.post('/ums/api/app/v1/member/phone/get', { code })
 }
 
 /**
@@ -112,7 +112,7 @@ export const getPhoneNumber = (code: string): Promise<any> => {
  * @return {*}
  */
 export const bindPhone = (phone: string, code: string): Promise<any> => {
-  return http.post('/ums/api/app/v1/member/phone/bind', { phone, code })
+  return httpRequest.post('/ums/api/app/v1/member/phone/bind', { phone, code })
 }
 
 /**
@@ -122,7 +122,7 @@ export const bindPhone = (phone: string, code: string): Promise<any> => {
  * @return {*}
  */
 export const unbindPhone = (phone: string, code: string): Promise<any> => {
-  return http.post('/ums/api/app/v1/member/phone/unbind', { phone, code })
+  return httpRequest.post('/ums/api/app/v1/member/phone/unbind', { phone, code })
 }
 
 /**
@@ -131,7 +131,7 @@ export const unbindPhone = (phone: string, code: string): Promise<any> => {
  * @return {*}
  */
 export const bindUserName = (formData: any) => {
-  return http.post('/ums/api/app/v1/member/username/bind', formData)
+  return httpRequest.post('/ums/api/app/v1/member/username/bind', formData)
 }
 
 /**
@@ -141,7 +141,7 @@ export const bindUserName = (formData: any) => {
  * @return {*}
  */
 export const bindEmail = (email: string, code: string) => {
-  return http.post('/ums/api/app/v1/member/email/bind', { email, code })
+  return httpRequest.post('/ums/api/app/v1/member/email/bind', { email, code })
 }
 
 /**
@@ -151,7 +151,7 @@ export const bindEmail = (email: string, code: string) => {
  * @return {*}
  */
 export const unbindEmail = (email: string, code: string) => {
-  return http.post('/ums/api/app/v1/member/email/unbind', { email, code })
+  return httpRequest.post('/ums/api/app/v1/member/email/unbind', { email, code })
 }
 
 /**
@@ -162,7 +162,7 @@ export const unbindEmail = (email: string, code: string) => {
  * @return {*}
  */
 export const bindWx = (code: string, encryptedData: string, iv: string) => {
-  return http.post('/ums/api/app/v1/member/wx/bind', { code, encryptedData, iv })
+  return httpRequest.post('/ums/api/app/v1/member/wx/bind', { code, encryptedData, iv })
 }
 
 /**
@@ -171,7 +171,7 @@ export const bindWx = (code: string, encryptedData: string, iv: string) => {
  * @return {*}
  */
 export const updateWxInfo = () => {
-  return http.post('/ums/api/app/v1/member/wx/update/info', {})
+  return httpRequest.post('/ums/api/app/v1/member/wx/update/info', {})
 }
 
 /**
@@ -181,7 +181,7 @@ export const updateWxInfo = () => {
  * @author: Derek Xu
  */
 export const merge = (phone: string) => {
-  return http.post('/ums/api/app/v1/member/merge', { phone })
+  return httpRequest.post('/ums/api/app/v1/member/merge', { phone })
 }
 
 /**
@@ -190,7 +190,7 @@ export const merge = (phone: string) => {
  * @return {*}
  */
 export const captcha = (): Promise<any> => {
-  return http.get('/uaa/register/captcha')
+  return httpRequest.get('/uaa/register/captcha')
 }
 
 /**
@@ -199,7 +199,7 @@ export const captcha = (): Promise<any> => {
  * @return {*}
  */
 export const sendRegisterSms = (phone: string) => {
-  return http.post('/uaa/register/sms', { phone })
+  return httpRequest.post('/uaa/register/sms', { phone })
 }
 
 /**
@@ -208,7 +208,7 @@ export const sendRegisterSms = (phone: string) => {
  * @return {*}
  */
 export const sendRegisterEmail = (email: string) => {
-  return http.post('/uaa/register/email/code', { email })
+  return httpRequest.post('/uaa/register/email/code', { email })
 }
 
 /**
@@ -218,5 +218,5 @@ export const sendRegisterEmail = (email: string) => {
  * @author: Derek Xu
  */
 export const register = (formData: any) => {
-  return http.post('/uaa/register', formData)
+  return httpRequest.post('/uaa/register', formData)
 }

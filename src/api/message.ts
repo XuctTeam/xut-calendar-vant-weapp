@@ -2,10 +2,10 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-02-17 14:04:42
- * @LastEditTime: 2022-06-30 17:00:55
+ * @LastEditTime: 2022-07-16 17:04:22
  * @LastEditors: Derek Xu
  */
-import http from '@/utils/request'
+import httpRequest from '@/utils/request/innerRequest'
 
 /**
  * @description: 查询列表
@@ -16,7 +16,7 @@ import http from '@/utils/request'
  * @author: Derek Xu
  */
 export const list = (page: number, limit: number, title?: string) => {
-  return http.get('/ums/api/app/v1/message/list', { page, limit, title })
+  return httpRequest.get('/ums/api/app/v1/message/list', { page, limit, title })
 }
 
 /**
@@ -26,7 +26,7 @@ export const list = (page: number, limit: number, title?: string) => {
  * @author: Derek Xu
  */
 export const read = (id: string) => {
-  return http.post('/ums/api/app/v1/message', { id })
+  return httpRequest.post('/ums/api/app/v1/message', { id })
 }
 
 /**
@@ -36,7 +36,7 @@ export const read = (id: string) => {
  * @author: Derek Xu
  */
 export const get = (id: string) => {
-  return http.get('/ums/api/app/v1/message', { id })
+  return httpRequest.get('/ums/api/app/v1/message', { id })
 }
 
 /**
@@ -44,7 +44,7 @@ export const get = (id: string) => {
  * @return {*}
  */
 export const count = () => {
-  return http.get('/ums/api/app/v1/message/count')
+  return httpRequest.get('/ums/api/app/v1/message/count')
 }
 
 /**
@@ -52,7 +52,7 @@ export const count = () => {
  * @return {*}
  */
 export const clear = () => {
-  return http.post('/ums/api/app/v1/message/clear', {})
+  return httpRequest.post('/ums/api/app/v1/message/clear', {})
 }
 
 /**
@@ -61,7 +61,7 @@ export const clear = () => {
  * @return {*}
  */
 export const remove = (id) => {
-  return http.delete('/ums/api/app/v1/message/'.concat(id))
+  return httpRequest.delete('/ums/api/app/v1/message/'.concat(id))
 }
 
 /**
@@ -70,7 +70,7 @@ export const remove = (id) => {
  * @return {*}
  */
 export const removeAll = (ids: string[]) => {
-  return http.delete('/ums/api/app/v1/message/batch', { ids })
+  return httpRequest.delete('/ums/api/app/v1/message/batch', { ids })
 }
 
 /**
@@ -79,5 +79,5 @@ export const removeAll = (ids: string[]) => {
  * @return {*}
  */
 export const readAll = (ids: string[]) => {
-  return http.post('/ums/api/app/v1/message/batch', { ids })
+  return httpRequest.post('/ums/api/app/v1/message/batch', { ids })
 }

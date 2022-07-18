@@ -2,10 +2,10 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-02 08:59:45
- * @LastEditTime: 2022-04-20 21:03:48
+ * @LastEditTime: 2022-07-16 17:03:21
  * @LastEditors: Derek Xu
  */
-import http from '@/utils/request'
+import httpRequest from '@/utils/request/innerRequest'
 
 export const upload = (): string => {
   //@ts-ignore
@@ -20,7 +20,7 @@ export const upload = (): string => {
  * @author: Derek Xu
  */
 export const sendUmsSmsCode = (edit: boolean, phone: string): Promise<any> => {
-  return http.post('/ums/api/v1/common/sms', { type: edit ? 2 : 1, phone })
+  return httpRequest.post('/ums/api/v1/common/sms', { type: edit ? 2 : 1, phone })
 }
 
 /**
@@ -31,5 +31,5 @@ export const sendUmsSmsCode = (edit: boolean, phone: string): Promise<any> => {
  * @author: Derek Xu
  */
 export const sendUmsEmailCode = (email: string, type: number) => {
-  return http.post('/ums/api/v1/common/email', { email, type })
+  return httpRequest.post('/ums/api/v1/common/email', { email, type })
 }

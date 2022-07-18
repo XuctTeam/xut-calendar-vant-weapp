@@ -4,9 +4,9 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-09 22:14:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-06 21:06:21
+ * @LastEditTime: 2022-07-16 17:03:53
  */
-import http from '@/utils/request'
+import httpRequest from '@/utils/request/innerRequest'
 
 /**
  * @description: 我申请的列表
@@ -15,7 +15,7 @@ import http from '@/utils/request'
  * @author: Derek Xu
  */
 export const mineApplyList = () => {
-  return http.get('/ums/api/app/v1/group/mine/apply')
+  return httpRequest.get('/ums/api/app/v1/group/mine/apply')
 }
 
 /**
@@ -25,7 +25,7 @@ export const mineApplyList = () => {
  * @author: Derek Xu
  */
 export const applyMineList = () => {
-  return http.get('/ums/api/app/v1/group/apply/mine')
+  return httpRequest.get('/ums/api/app/v1/group/apply/mine')
 }
 
 /**
@@ -35,7 +35,7 @@ export const applyMineList = () => {
  * @author: Derek Xu
  */
 export const apply = (id: string, password: string) => {
-  return http.post('/ums/api/app/v1/mbr/group/apply', { id, password })
+  return httpRequest.post('/ums/api/app/v1/mbr/group/apply', { id, password })
 }
 
 /**
@@ -46,7 +46,7 @@ export const apply = (id: string, password: string) => {
  * @author: Derek Xu
  */
 export const applyAgreeJoinGroup = (id: string, action: number) => {
-  return http.post('/ums/api/app/v1/mbr/group/apply/agree', { id, action })
+  return httpRequest.post('/ums/api/app/v1/mbr/group/apply/agree', { id, action })
 }
 
 /**
@@ -57,7 +57,7 @@ export const applyAgreeJoinGroup = (id: string, action: number) => {
  * @author: Derek Xu
  */
 export const applyRefuseJoinGroup = (id: string, action: number) => {
-  return http.post('/ums/api/app/v1/mbr/group/apply/refuse', { id, action })
+  return httpRequest.post('/ums/api/app/v1/mbr/group/apply/refuse', { id, action })
 }
 
 /**
@@ -67,7 +67,7 @@ export const applyRefuseJoinGroup = (id: string, action: number) => {
  * @author: Derek Xu
  */
 export const groupMemberPinYinList = () => {
-  return http.get('/ums/api/app/v1/mbr/group')
+  return httpRequest.get('/ums/api/app/v1/mbr/group')
 }
 
 /**
@@ -77,7 +77,7 @@ export const groupMemberPinYinList = () => {
  * @author: Derek Xu
  */
 export const groupMemberList = (id: string) => {
-  return http.get('/ums/api/app/v1/mbr/group/query', { groupId: id })
+  return httpRequest.get('/ums/api/app/v1/mbr/group/query', { groupId: id })
 }
 
 /**
@@ -89,7 +89,7 @@ export const groupMemberList = (id: string) => {
  * @author: Derek Xu
  */
 export const groupMemberLeave = (groupId: string, action: number, memberId?: string) => {
-  return http.post('/ums/api/app/v1/mbr/group/leave', { groupId, action, memberId })
+  return httpRequest.post('/ums/api/app/v1/mbr/group/leave', { groupId, action, memberId })
 }
 
 /**
@@ -99,5 +99,5 @@ export const groupMemberLeave = (groupId: string, action: number, memberId?: str
  * @author: Derek Xu
  */
 export const distinctMemberList = () => {
-  return http.get('/ums/api/app/v1/mbr/group/distinct')
+  return httpRequest.get('/ums/api/app/v1/mbr/group/distinct')
 }

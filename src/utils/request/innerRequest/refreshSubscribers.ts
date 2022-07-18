@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-12 12:49:07
- * @LastEditTime: 2022-07-15 20:05:37
+ * @LastEditTime: 2022-07-16 17:05:06
  * @LastEditors: Derek Xu
  */
 import { tokenRefresh } from '@/api/login'
@@ -10,8 +10,7 @@ import dayjs from 'dayjs'
 import httpRequest from './index'
 import { pageCleanToLogin } from '../../taro'
 import { cacheSetSync, cacheGetSync } from '@/cache'
-import { useToast } from 'taro-hooks'
-import { useCallback } from 'react'
+import Taro from '@tarojs/taro'
 
 interface ITask<T> {
   url: string
@@ -19,20 +18,6 @@ interface ITask<T> {
   resolve: (value: unknown) => void
   reject: (value: unknown) => void
 }
-
-const [show] = useToast({
-  title: '提示',
-  icon: 'error'
-})
-
-const error = useCallback(
-  (message: string) => {
-    show({
-      title: message
-    })
-  },
-  [show]
-)
 
 class RefreshSubscribers {
   private _refresh: number = 0
@@ -105,7 +90,10 @@ class RefreshSubscribers {
   }
 
   fail() {
-    error('获取登录信息失败')
+    Taro.showToast({
+      title: '获取登录信息失败',
+      icon: 'success'
+    })
     this.cleanTask()
     setTimeout(() => {
       pageCleanToLogin()

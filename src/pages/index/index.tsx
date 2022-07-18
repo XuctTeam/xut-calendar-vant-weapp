@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-15 20:02:11
+ * @LastEditTime: 2022-07-16 17:56:01
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -12,16 +12,16 @@ import React from 'react'
 import { Button, Icon, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { Collapse, CollapseItem } from '@antmjs/vantui'
 import Header from '@/components/header'
 import dayjs from 'dayjs'
 import { ICurrentDay } from '~/../@types/date'
 import { getToday } from '@/utils'
-import { componentRefreshTimeStore } from '@/store'
+import { calendarState, componentRefreshTimeStore } from '@/store'
 import { IDavCalendar, ICalendarComponent, IDavComponent, IDvaCalendarProps, IDvaComponentProps } from '~/../@types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
-import { Picker } from './ui'
+import { Calendar } from './ui'
 import { componentsDaysById } from '@/api/component'
 
 import './index.less'
@@ -51,7 +51,11 @@ export default Unite(
      * @param value
      */
     selectMonthChage(value: string) {
-      this._queryComponent(calendars, dayjs(value).startOf('month').format('YYYY-MM-DD HH:mm:ss'), dayjs(value).endOf('month').format('YYYY-MM-DD HH:mm:ss'))
+      this._queryComponent(
+        this.hooks['calendars'],
+        dayjs(value).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+        dayjs(value).endOf('month').format('YYYY-MM-DD HH:mm:ss')
+      )
     },
 
     /**
@@ -74,7 +78,7 @@ export default Unite(
      */
     componentRefresh() {
       this._queryComponent(
-        calendars,
+        this.hooks['calendars'],
         dayjs(this.state.selectedDay).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
         dayjs(this.state.selectedDay).endOf('month').format('YYYY-MM-DD HH:mm:ss')
       )
@@ -93,8 +97,7 @@ export default Unite(
      * @param start
      * @param end
      */
-    _queryComponent(calList: Array<IDavCalendar> | unknown, start: string, end: string) {
-      if (!calList || !(calList instanceof Array)) return
+    _queryComponent(calList: Array<IDavCalendar>, start: string, end: string) {
       this.setState({
         componentLoading: true,
         calendarComponents: [],
@@ -115,7 +118,6 @@ export default Unite(
           })
         )
       })
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       let calendarComponents: Array<ICalendarComponent> = []
       Promise.all(
         pList.map((p) => {
@@ -123,7 +125,6 @@ export default Unite(
         })
       )
         .then((res) => {
-          if (!(res instanceof Array)) return
           res.forEach((i) => (calendarComponents = calendarComponents.concat(i)))
           this._fillMarkDay(calendarComponents)
           const now: number = dayjs().unix()
@@ -166,6 +167,14 @@ export default Unite(
   function ({ state, events }) {
     const { collapse } = state
     const { selectMonthChage, selectDayLongClick, selectDayClickHadnle, collapseChage } = events
+    const calendars = useRecoilValue(calendarState)
+    const [componentRefresh, setComponentRefresh] = useRecoilState(componentRefreshTimeStore)
+
+    events.setHooks({
+      componentRefresh: componentRefresh,
+      setComponentRefresh: setComponentRefresh
+    })
+    events.setHooks(calendars)
 
     const calRef = React.createRef()
     const lunar = true
@@ -196,7 +205,7 @@ export default Unite(
               ></Icon>
             }
           >
-            <Picker
+            <Calendar
               ref={calRef}
               currentDay={dayjs(state.selectedDay).format('YYYY/MM/DD')}
               marks={state.marks}
@@ -205,11 +214,9 @@ export default Unite(
               selectMonthChage={selectMonthChage}
               selectDayLongClick={selectDayLongClick}
               selectDayClick={selectDayClickHadnle}
-            ></Picker>
+            ></Calendar>
           </CollapseItem>
-          <CollapseItem title='有赞微商城' name='2'>
-            sdfsdf
-          </CollapseItem>
+          <CollapseItem title='有赞微商城' name='2'></CollapseItem>
         </Collapse>
       </Container>
     )

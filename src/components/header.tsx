@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 18:15:14
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-15 17:23:03
+ * @LastEditTime: 2022-07-16 16:23:45
  * @FilePath: \xut-calendar-vant-weapp\src\components\header.tsx
  * @Description:
  *
@@ -27,25 +27,19 @@ interface IPageOption {
 export default function Index(props: IPageOption): JSX.Element {
   const webEnv = useWebEnv()
   const wxBrower = cacheGetSync('wxBrower')
-  const [back] = useBack({})
+  const [back] = useBack()
 
   const routerToBack = () => {
     if (!props.to) props.to = 1
     back({
       to: props.to,
       data: props.data,
-      delta: props.delta,
+      delta: props.delta
     })
   }
 
   return webEnv && !wxBrower ? (
-    <NavBar
-      title={props.title}
-      safeAreaInsetTop={false}
-      leftArrow={props.left}
-      leftText={props.left ? '返回' : ''}
-      onClickLeft={routerToBack}
-    ></NavBar>
+    <NavBar title={props.title} safeAreaInsetTop={false} leftArrow={props.left} leftText={props.left ? '返回' : ''} onClickLeft={routerToBack}></NavBar>
   ) : (
     <Fragment></Fragment>
   )

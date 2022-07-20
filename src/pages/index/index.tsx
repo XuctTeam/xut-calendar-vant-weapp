@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-18 15:09:37
+ * @LastEditTime: 2022-07-20 10:24:52
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -259,16 +259,19 @@ export default Unite(
           <CollapseItem
             name='1'
             renderTitle={
-              <Icon
-                classPrefix='page-icon'
-                name='rili'
-                size={50}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                  calendarPopOpen()
-                }}
-              ></Icon>
+              <View className='calendar-title'>
+                <Icon
+                  classPrefix='page-icon'
+                  name='rili'
+                  size={50}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    calendarPopOpen()
+                  }}
+                ></Icon>
+                <View className='label'>{selectedDay}</View>
+              </View>
             }
           >
             <Calendar

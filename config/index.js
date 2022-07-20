@@ -50,6 +50,9 @@ const config = {
   defineConstants: {
     // 解决Recoil报错问题
     Window: 'function () {}',
+
+     /* 图片服务器 */
+     SERVICES_IMAGES: JSON.stringify('https://images.xuct.net.cn/'),
   },
   copy: {
     patterns: [],

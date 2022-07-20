@@ -2,15 +2,15 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-02-22 16:22:05
- * @LastEditTime: 2022-02-22 16:33:33
+ * @LastEditTime: 2022-07-20 13:49:01
  * @LastEditors: Derek Xu
  */
-import Taro from '@tarojs/taro'
 import { registerMiddleware, RouteContext, Router } from 'tarojs-router-next'
+import { cacheGetSync } from '@/cache'
 
 registerMiddleware(
   async (_, next) => {
-    const token = Taro.getStorageSync('accessToken')
+    const token = cacheGetSync('accessToken')
     if (!token) {
       Router.toLogin()
       // 直接返回，不执行 next 即可打断中间件向下执行

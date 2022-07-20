@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-10-27 17:12:27
- * @LastEditTime: 2022-07-18 14:49:41
+ * @LastEditTime: 2022-07-20 09:20:19
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useState } from 'react'
@@ -74,7 +74,7 @@ const EventList: FunctionComponent<IPageOption> = (props) => {
   return (
     <View className='vi-index-wrapper_event'>
       {componentList.length == 0 ? (
-        <Empty description='描述文字' />
+        <Empty description='~暂无数据~' />
       ) : (
         <View>
           {props.view === 0 ? (

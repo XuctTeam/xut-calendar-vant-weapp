@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-16 17:55:04
+ * @LastEditTime: 2022-07-20 09:29:04
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 export default defineAppConfig({
-  pages: ['pages/index/index', 'pages/pagination/index', 'pages/tabAndSearchPagination/index'],
+  pages: ['pages/index/index', 'pages/memberuserinfo/index', 'pages/tabAndSearchPagination/index'],
   window: {
     // @ts-ignore
     titleBarColor: '#ededed',
@@ -33,23 +33,23 @@ export default defineAppConfig({
         selectedIconPath: 'assets/icon/index_focus.png'
       },
       {
-        pagePath: 'pages/pagination/index',
+        pagePath: 'pages/tabAndSearchPagination/index',
         text: '通讯录',
         iconPath: 'assets/icon/group.png',
         selectedIconPath: 'assets/icon/group_focus.png'
-      }
+      },
       // {
       //   pagePath: 'pages/messagemanager/index',
       //   text: '消息',
       //   iconPath: 'assets/icon/message.png',
       //   selectedIconPath: 'assets/icon/message_focus.png',
       // },
-      // {
-      //   pagePath: 'pages/membermine/index',
-      //   text: '我的',
-      //   iconPath: 'assets/icon/mine.png',
-      //   selectedIconPath: 'assets/icon/mine_focus.png',
-      // },
+      {
+        pagePath: 'pages/memberuserinfo/index',
+        text: '我的',
+        iconPath: 'assets/icon/mine.png',
+        selectedIconPath: 'assets/icon/mine_focus.png'
+      }
     ]
   },
   permission: {

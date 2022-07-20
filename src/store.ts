@@ -9,9 +9,9 @@
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { atom, RecoilState, selector } from 'recoil'
-import { list } from '@/api/calendar'
 import { cacheGetSync } from './cache'
-import { IDavCalendar } from '@types/calendar'
+import { IDavCalendar } from '~/../@types/calendar'
+import { list } from '@/api/calendar'
 
 export interface IMenuButton {
   // 用来判断是否同时通过systemInfo+menuButton得出来的数据

@@ -11,11 +11,7 @@ export type PullToRefreshProps = {
   canPull: boolean
   children: ReactNode
   threshold?: number
-  onRefresh: <T extends boolean>(
-    catchRefresh?: T,
-  ) => T extends true
-    ? Promise<{ code: string; message: string; data: any }>
-    : void
+  onRefresh: <T extends boolean>(catchRefresh?: T) => T extends true ? Promise<{ code: string; message: string; data: any }> : void
   setStatus: any
   status: any
   api: any
@@ -39,7 +35,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
       if (res.code !== '200') {
         showToast({
           title: res.message,
-          icon: 'none',
+          icon: 'none'
         })
       }
       setStatus('complete')
@@ -56,7 +52,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
           .catch(() => {
             setStatus('pulling')
           })
-      },
+      }
     })
   }
 
@@ -84,12 +80,11 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
 
     // event?.preventDefault?.()
     // event?.stopPropagation?.()
-    const height =
-      Math.max(rubberbandIfOutOfBounds(y, 0, 0, headHeight * 5, 0.5), 0) / 1.1
+    const height = Math.max(rubberbandIfOutOfBounds(y, 0, 0, headHeight * 5, 0.5), 0) / 1.1
     const rate = height / threshold
     api.start({
       transform: `scale(${rate > 1 ? 1 : rate})`,
-      opacity: rate > 1 ? 1 : rate,
+      opacity: rate > 1 ? 1 : rate
     })
     setStatus(height > threshold ? 'canRelease' : 'pulling')
   }
@@ -100,7 +95,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
       common({
         first: true,
         last: false,
-        event: e.changedTouches[0],
+        event: e.changedTouches[0]
       })
     }
   }
@@ -111,7 +106,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
       common({
         first: true,
         last: false,
-        event: e.changedTouches[0],
+        event: e.changedTouches[0]
       })
     }
   }
@@ -120,7 +115,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
       common({
         first: false,
         last: true,
-        event: e.changedTouches[0],
+        event: e.changedTouches[0]
       })
       yRef.current = 0
     }

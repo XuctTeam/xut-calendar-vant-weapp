@@ -2,18 +2,20 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:26:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-20 13:49:11
+ * @LastEditTime: 2022-07-20 14:55:27
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberuserinfo\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { Unite } from '@antmjs/vantui'
-import { View } from '@tarojs/components'
 import { useReachBottom } from '@tarojs/taro'
+import { useRecoilValue } from 'recoil'
 import Container from '@/components/container'
 import { cacheGetSync } from '@/cache'
 import Images from '@/constants/images'
+import { userInfoStore } from '@/store'
+import { IUserInfo } from '~/../@types/user'
 import { User, Menu } from './ui'
 import './index.less'
 
@@ -24,7 +26,7 @@ export default Unite(
   },
   function ({}) {
     const accessToken = cacheGetSync('accessToken')
-    const userInfo = cacheGetSync('userInfo')
+    const userInfo: IUserInfo | undefined = useRecoilValue(userInfoStore)
 
     useReachBottom(() => {})
     return (

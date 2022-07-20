@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-20 10:40:36
+ * @LastEditTime: 2022-07-20 14:47:44
  * @FilePath: \xut-calendar-vant-weapp\src\cache.ts
  * @Description:
  *
@@ -21,8 +21,7 @@ const { cacheGetSync, cacheGet, cacheSetSync, cacheSet, cacheRemoveSync, cacheRe
     location: undefined,
     wxBrower: false,
     accessToken: '',
-    refreshToken: '',
-    userInfo: undefined
+    refreshToken: ''
   }
 })
 

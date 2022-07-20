@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-20 10:24:52
+ * @LastEditTime: 2022-07-20 14:26:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -12,7 +12,7 @@ import React from 'react'
 import { Button, Icon, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
-import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { Collapse, CollapseItem } from '@antmjs/vantui'
 import Header from '@/components/header'
 import dayjs from 'dayjs'
@@ -20,7 +20,7 @@ import { ICurrentDay } from '~/../@types/date'
 import { getToday } from '@/utils'
 import { calendarState, componentRefreshTimeStore } from '@/store'
 import { cacheGetSync } from '@/cache'
-import { IDavCalendar, ICalendarComponent, IDavComponent, IDvaCalendarProps, IDvaComponentProps } from '~/../@types/calendar'
+import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../@types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
 import { Calendar, CalendarPop, EventList } from './ui'
 import { componentsDaysById } from '@/api/component'

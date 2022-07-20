@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-18 15:08:50
+ * @LastEditTime: 2022-07-20 14:50:21
  * @FilePath: \xut-calendar-vant-weapp\src\store.ts
  * @Description:
  *
@@ -11,6 +11,7 @@
 import { atom, RecoilState, selector } from 'recoil'
 import { cacheGetSync } from './cache'
 import { IDavCalendar } from '~/../@types/calendar'
+import { IUserInfo } from '~/../@types/user'
 import { list } from '@/api/calendar'
 
 export interface IMenuButton {
@@ -38,10 +39,20 @@ export const menuButtonStore = atom({
 }) as RecoilState<IMenuButton | undefined>
 
 /**
+ * @description: 用户基础信息缓存
+ * @return {*}
+ */
+export const userInfoStore = atom({
+  key: 'userInfoStore',
+  default: undefined
+}) as RecoilState<IUserInfo | undefined>
+
+/**
  * @description: 日历强刷key
  * @return {*}
  */
 const uuid = () => Math.random() // 生成一个唯一的id即可
+
 const forceUpdateState = atom({
   key: 'forceUpdateState',
   default: uuid()

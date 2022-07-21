@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-26 10:50:22
- * @LastEditTime: 2022-07-16 16:42:58
+ * @LastEditTime: 2022-07-21 13:48:07
  * @LastEditors: Derek Xu
  */
 import Taro from '@tarojs/taro'
@@ -54,7 +54,7 @@ const back = (backOption: BackOption): Promise<TaroGeneral.CallbackResult> => {
       //return Router.toMessagemanager({ type: NavigateType.switchTab })
       case 4:
         if (backOption.data && backOption.data.isLogin) {
-          return Router.navigate({ url: '/pages/membermine/index' }, { type: NavigateType.redirectTo })
+          return Router.navigate({ url: '/pages/memberuserinfo/index' }, { type: NavigateType.redirectTo })
         }
       //return Router.toMembermine({ type: NavigateType.switchTab })
       case 5:

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:26:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-20 14:55:27
+ * @LastEditTime: 2022-07-21 15:21:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberuserinfo\index.tsx
  * @Description:
  *
@@ -30,7 +30,7 @@ export default Unite(
 
     useReachBottom(() => {})
     return (
-      <Container navTitle='下拉上滑列表页面' enablePagePullDownRefresh={false} className='pages-member-info-index'>
+      <Container navTitle='个人信息' enablePagePullDownRefresh={false} className='pages-member-info-index'>
         <User
           hasLogin={!!accessToken}
           nickname={userInfo ? userInfo.name : ''}

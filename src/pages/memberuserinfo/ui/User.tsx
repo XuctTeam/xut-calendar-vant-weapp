@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 13:27:57
- * @LastEditTime: 2022-07-20 11:21:20
+ * @LastEditTime: 2022-07-21 15:24:57
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent } from 'react'
@@ -22,7 +22,7 @@ const User: FunctionComponent<IPageOption> = (props) => {
       <Avatar src={props.avatar} size='large' round />
       <View className='top'>
         {!props.hasLogin ? (
-          <View className='top-info'>
+          <View className='top-info' onClick={() => Router.toLogin()}>
             <View className='top-info_need'>立即登录</View>
             <View className='top-info_text'>登录后才可以创建、管理日程</View>
           </View>

@@ -2,16 +2,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
-
-  .taroify-form-label {
-    align-items: center;
-  }
-  .taroify-checkbox__label {
-    display: flex;
-    flex-direction: row;
-    font-size: 28px;
-  }
 
   .right-top-sign {
     position: absolute;
@@ -43,38 +33,47 @@
     background: #b4f3e2;
   }
 
+
   .section {
     display: flex;
     flex-direction: column;
     position: relative;
     flex: 1 0 auto;
+    padding: 20px;
 
     .back-btn {
       position: absolute;
+      top: 90px;
       left: 30px;
-      padding-top: 0;
-      top: 20px;
-      color: #303133;
+      cursor: pointer;
     }
   }
 
-  &_logo {
+  .logo {
     align-items: center;
     justify-content: center;
     text-align: center;
     padding-top: 60px;
   }
 
-  &_form {
+  .login-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 460px;
     padding: 30px;
-    box-sizing: border-box;
+    margin: 20px @padding-sm @padding-sm;
+    box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
+    border-radius: @border-radius-lg;
+    padding: @padding-sm;
+
 
     .form {
       flex: 1;
+
+      .van-button{
+        background: none !important;
+      }
     }
 
     .btn {
@@ -90,21 +89,17 @@
     }
   }
 
-  &_self {
-    padding-left: 36px;
-    box-sizing: border-box;
-
-    .custom-color {
-      .taroify-checkbox__icon--checked {
-        .taroify-icon {
-          border-color: #ee0a24;
-          background: #ee0a24;
-        }
-      }
-    }
-
+  .self {
+    display: flex;
+    justify-content: center;
+    
     navigator {
       color: blue;
+    }
+
+    .van-checkbox__label{
+      display: flex;
+      flex-direction: row;
     }
   }
 
@@ -118,7 +113,7 @@
     background-repeat: no-repeat;
     .btn {
       position: absolute;
-      bottom: 50px;
+      bottom: 80px;
       font-size: 20px;
     }
     .label {

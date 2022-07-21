@@ -1,20 +1,19 @@
 import { PureComponent, ReactNode, useState, useContext, useEffect } from 'react'
 import { showToast, usePageScroll } from '@tarojs/taro'
-import { UniteContext, Popup } from '@antmjs/vantui'
+import { UniteContext } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { EMlf } from '@antmjs/trace'
 import { useSpring } from '@react-spring/web'
 import { monitor } from '@/trace'
-import classNames from 'classnames'
 import Error from '../fullScreen/error'
-import Login from '../fullScreen/login'
 import Loading from '../fullScreen/loading'
 import PullDownRefresh from './pullDownRefresh'
 import Navigation from './navigation'
 
 import './index.less'
+import Router from 'tarojs-router-next'
 
-const LOGIN_CODE = '206'
+const LOGIN_CODE = '401'
 class ErrorBoundary extends PureComponent<{ setError: any }> {
   constructor(props: any) {
     super(props)
@@ -75,7 +74,6 @@ export default function Index(props: IProps) {
     'pulling' | 'refreshing' | 'complete' | 'canRelease',
     React.Dispatch<React.SetStateAction<'pulling' | 'refreshing' | 'complete' | 'canRelease'>>
   ]
-  const [loginStatus, setLoginStatus] = useState(false)
 
   // 异常来自于三个部分 1: Request Code 2 JSError 3: BoundaryError
   useEffect(() => {
@@ -102,7 +100,7 @@ export default function Index(props: IProps) {
 
   useEffect(() => {
     if (loading && ctx.error && !ignoreError && ctx.error.code === LOGIN_CODE) {
-      setLoginStatus(true)
+      Router.toLogin()
     }
   }, [loading, ctx, ignoreError])
 
@@ -126,24 +124,6 @@ export default function Index(props: IProps) {
         >
           <View className={className}>{props.children}</View>
         </PullDownRefresh>
-        <Popup
-          show={loginStatus}
-          className='popup-with-login'
-          closeIconPosition='top-left'
-          position='bottom'
-          closeable
-          safeAreaInsetTop
-          style={{
-            height: '100vh'
-          }}
-          onClose={async () => {
-            setLoginStatus(false)
-            ctx.setError(undefined)
-            ctx.onRefresh()
-          }}
-        >
-          <Login setLoginStatus={setLoginStatus} setError={ctx.setError as any} onRefresh={ctx.onRefresh} />
-        </Popup>
       </>
     )
   }

@@ -2,16 +2,13 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 17:04:12
- * @LastEditTime: 2022-07-20 13:39:47
+ * @LastEditTime: 2022-07-21 18:10:17
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useCallback } from 'react'
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { Icon, Cell } from '@antmjs/vantui'
-
-import Router from 'tarojs-router-next'
-import { IDvaCommonProps } from '~/../@types/dva'
+import { Cell } from '@antmjs/vantui'
 import { useThrottle, useWebEnv } from '@/hooks'
 import { useRequestSubscribeMessage, useToast } from 'taro-hooks'
 
@@ -91,7 +88,7 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
 
   return (
     <View className='vi-aboutme-wrapper_setting'>
-      {!env && <Cell title='消息订阅' isLink onClick={atListItemClickHandle.bind(this, 6)}></Cell>}
+      {!env && <Cell icon='guide-o' title='消息订阅' isLink onClick={atListItemClickHandle.bind(this, 6)}></Cell>}
       <Cell title='我的日历' icon='calendar-o' isLink onClick={atListItemClickHandle.bind(this, 1)}></Cell>
       <Cell title='电脑版' icon='tv-o' isLink onClick={atListItemClickHandle.bind(this, 3)}>
         xuct.com.cn

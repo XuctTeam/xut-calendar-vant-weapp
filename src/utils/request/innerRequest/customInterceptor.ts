@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-07-18 09:35:25
+ * @LastEditTime: 2022-07-21 09:48:53
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -20,7 +20,7 @@ const customInterceptor = (chain: Chain): Promise<any> => {
   const requestParams = chain.requestParams
   const url = chain.requestParams.url
   let p
-  const result = new Promise(function (resolve: (res: IRequestResponse) => void, reject) {
+  const result = new Promise(function (resolve: (res: any) => void, reject) {
     p = chain.proceed(requestParams)
     p.then((res: Taro.request.SuccessCallbackResult<IRequestResponse>) => {
       if (!res) {

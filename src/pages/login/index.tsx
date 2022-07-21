@@ -2,23 +2,25 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 13:53:15
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-20 17:40:39
+ * @LastEditTime: 2022-07-21 17:53:39
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { View, Navigator } from '@tarojs/components'
+import { View, Navigator, ITouchEvent } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import { useReachBottom } from '@tarojs/taro'
-import { Button, Checkbox, Icon, Unite, Image, CellGroup, Field, Toast } from '@antmjs/vantui'
-import Container from '@/components/container'
+import { Button, Checkbox, Icon, Image, CellGroup, Field } from '@antmjs/vantui'
+
 import { back } from '@/utils/taro'
 import { useRecoilState } from 'recoil'
-import { useEnv, useLogin, useUserInfo } from 'taro-hooks'
+import { useEnv, useLogin, useUserInfo, useToast } from 'taro-hooks'
 import { IUserInfo } from 'taro-hooks/dist/useUserInfo'
 import { cacheSetSync } from '@/cache'
+import { IUserAuth, IUserInfo as IMemberInfo } from '~/../@types/user'
 import Images from '@/constants/images'
+import Container from '@/components/container'
 import { wechatLogin, phoneLogin, usernameLogin } from '@/api/login'
 import { sendSmsCode, userInfo } from '@/api/user'
 
@@ -26,361 +28,358 @@ import './index.less'
 
 import dayjs from 'dayjs'
 import { checkMobile } from '@/utils'
-import { useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useSpring } from '@react-spring/web'
 
 interface ICode {
   code: string
   ts: number
 }
 
-const smsBtnLoadingTime: number = 120
+export default function Index() {
+  const smsBtnLoadingTime: number = 120
+  const [icode, setIcode] = useState<ICode | null>(null)
+  const env = useEnv()
+  const [login] = useLogin()
+  const [, { getUserProfile }] = useUserInfo()
+  const [self, setSelf] = useState<boolean>(false)
+  const [phoneForm, setPhoneForm] = useState<boolean>(false)
+  const [username, setUsername] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [phone, setPhone] = useState<string>('')
+  const [smsCode, setSmsCode] = useState<string>('')
+  const [smsText, setSmsText] = useState<string>('发送短信')
+  const [smsLoading, setSmsLoading] = useState<boolean>(false)
+  const timerRef = useRef<number>(0)
+  const [show] = useToast({
+    icon: 'error'
+  })
 
-export default Unite(
-  {
-    state: {
-      icode: undefined,
-      phoneForm: false,
-      self: false,
-      username: '',
-      password: '',
-      phone: '',
-      smsCode: '',
-      smsText: '发送短信',
-      smsLoading: false
-    },
-
-    async onLoad() {
-      if (this.hooks['env'] === 'WEAPP') {
-        this.handleLogin()
-      }
-    },
-
-    onUnload() {
-      if (this.hooks['timerRef'].current > 0) {
-        this._stopSmsCode()
-      }
-    },
-
-    setIcode(val: ICode) {
-      this.setState({
-        icode: val
-      })
-    },
-
-    setPhoneForm(val: boolean) {
-      this.setState({
-        phoneForm: val
-      })
-    },
-
-    setUsername(val: string) {
-      this.setState({
-        username: val
-      })
-    },
-
-    setPassword(val: string) {
-      this.setState({
-        password: val
-      })
-    },
-
-    setPhone(val: string) {
-      this.setState({
-        phone: val
-      })
-    },
-
-    setSmsCode(val: string) {
-      this.setState({
-        smsCode: val
-      })
-    },
-
-    setSelf(val: boolean) {
-      this.setState({
-        self: val
-      })
-    },
-
-    handleLogin() {
-      this.hooks['login'](true)
-        .then((code: string) => this.setIcode({ code: code, ts: dayjs().valueOf() }))
-        .catch(() => {
-          this.hooks['login'](false)
-            .then((code: string) => {
-              this.setIcode({ code: code, ts: dayjs().valueOf() })
-            })
-            .catch((err: any) => {
-              Toast.fail({
-                message: '失败文案'
-              })
-              console.log(err)
-            })
-        })
-    },
-
-    /**
-     * 微信授权登录
-     * @param res
-     * @returns
-     */
-    async loginByCode() {
-      if (!self) {
-        Toast.fail({ message: '请先勾选协议' })
-        return
-      }
-      if (!this.state.icode) {
-        Toast.fail({ message: '微信登录失败' })
-        return
-      }
-      if (this.state.icode.ts - dayjs().valueOf() > 1000 * 60 * 5) {
-        Toast.fail({ message: '请在规定时间内完成授权' })
-        return
-      }
-      // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认
-      const code: string = this.state.icode.code
-
-      this.hooks['getUserProfile']({ lang: 'zh_CN', desc: '用于完善会员资料' })
-        .then((res: IUserInfo) => {
-          const { iv, encryptedData } = res
-          if (!iv || !encryptedData) {
-            Toast.fail({ message: '微信登陆失败' })
-            return
-          }
-          wechatLogin(code, iv, encryptedData)
-            .then((rs) => {
-              this._saveTokenToCache(rs.access_token, rs.refresh_token)
-            })
-            .catch((err: any) => {
-              console.log(err)
-            })
-        })
-        .catch((err: any) => {
-          Toast.fail({ message: '授权失败' })
-          console.log(err)
-        })
-    },
-
-    /**
-     * 使用手机号登录
-     * @param phone
-     * @param smsCode
-     */
-    async loginByPhoneOrUsername() {
-      if (!this.state.self) {
-        Toast.fail({ message: '请先勾选协议' })
-        return
-      }
-      /* 电话登录 */
-      if (this.state.phoneForm) {
-        if (!this.state.phone) {
-          Toast.fail({ message: '手机号码不能为空' })
-          return
-        }
-        if (!this.state.smsCode) {
-          Toast.fail({ message: '验证码不能为空' })
-          return
-        }
-        this._phoneLogin()
-        return
-      }
-      if (!this.state.username) {
-        Toast.fail({ message: '账号不能为空' })
-        return
-      }
-      if (!this.state.password) {
-        Toast.fail({ message: '验证码不能为空' })
-        return
-      }
-      this._usernameLogin()
-    },
-
-    _phoneLogin() {
-      return phoneLogin(this.state.phone, this.state.smsCode)
-        .then((res) => {
-          this._saveTokenToCache(res.access_token, res.refresh_token)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-
-    _usernameLogin() {
-      return usernameLogin(this.state.username, this.state.password)
-        .then((res) => {
-          this._saveTokenToCache(res.access_token, res.refresh_token)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-
-    _saveTokenToCache(accessToken: string, refreshToken: string) {
-      cacheSetSync('accessToken', 'Bearer ' + accessToken)
-      cacheSetSync('refreshToken', 'Bearer ' + refreshToken)
-    },
-
-    /**
-     * 发送短信验证码
-     */
-    pushCode() {
-      if (!checkMobile(this.state.phone)) {
-        Toast.fail({ message: '手机号错误' })
-        return
-      }
-      this._startSmsCode()
-      sendSmsCode(this.state.phone)
-        .then((res) => {
-          console.log(res)
-        })
-        .catch((error) => {
-          console.log(error)
-          this._stopSmsCode()
-        })
-    },
-
-    _startSmsCode() {
-      this.setState({
-        smsLoading: true
-      })
-      this._setTimeOut(smsBtnLoadingTime - 1)
-    },
-
-    _stopSmsCode() {
-      this.setState({
-        smsText: '发送短信',
-        smsLoading: false
-      })
-      if (this.hooks['timerRef'].current > 0) {
-        window.clearTimeout(this.hooks['timerRef'].current)
-        this.hooks['timerRef'].current = 0
-      }
-    },
-
-    _setTimeOut(sec: number) {
-      if (sec === 0) {
-        this._stopSmsCode()
-        return
-      }
-      this.setState({
-        smsText: '重发(' + sec + ')'
-      })
-      this.hooks['timerRef'].current = window.setTimeout(() => {
-        this._setTimeOut(sec - 1)
-      }, 1000)
+  useEffect(() => {
+    if (env === 'WEAPP') {
+      handleLogin()
     }
-  },
-  function ({ state, events }) {
-    const { phoneForm, username, password, phone, smsCode, smsText, smsLoading } = state
-    const { setPhoneForm, setUsername, setPassword, setPhone, setSmsCode, setSelf, loginByPhoneOrUsername, pushCode, loginByCode } = events
-    const env = useEnv()
-    const timerRef = useRef<number>(0)
-    const [login] = useLogin()
-    const [, { getUserProfile }] = useUserInfo()
+    return () => {
+      if (timerRef.current > 0) {
+        _stopSmsCode()
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [env])
 
-    events.setHooks({
-      env: env,
-      timerRef: timerRef,
-      login: login,
-      getUserProfile: getUserProfile
-    })
-    useReachBottom(() => {})
-    return (
-      <Container enablePagePullDownRefresh={false} className='pages-login-index'>
-        <View className='section'>
-          {env !== 'WEAPP' && <Icon name='arrow-left' onClick={() => back({ to: 4, data: { isLogin: true } })}></Icon>}
-          <View className='right-top-sign' />
-          <View className='vi-login-wrapper_logo'>
-            <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '140px', height: '120px' }}></Image>
-          </View>
-          <View className='vi-login-wrapper_form'>
-            <View className='form'>
-              {!phoneForm ? (
-                <CellGroup>
-                  <Field label='账号' placeholder='支持账号/邮箱/手机号' value={username} onChange={(e: any) => setUsername(e.detail.value)} />
-                  <Field
-                    label='密码'
-                    password
-                    placeholder='请输入密码'
-                    value={password}
-                    onChange={(e: any) => setPassword(e.detail.value)}
-                    renderButton={
-                      <Button size='small' color='primary'>
-                        忘记密码
-                      </Button>
-                    }
-                  ></Field>
-                </CellGroup>
-              ) : (
-                <CellGroup>
-                  <Field
-                    label='手机号'
-                    placeholder='请输入手机号'
-                    value={phone}
-                    maxlength={11}
-                    type='number'
-                    onChange={(e: any) => setPhone(e.detail.value)}
-                  ></Field>
-                  <Field
-                    label='验证码'
-                    placeholder='请输入验证码'
-                    maxlength={4}
-                    type='number'
-                    value={smsCode}
-                    onChange={(e: any) => setSmsCode(e.detail.value)}
-                    renderButton={
-                      <Button size='small' color='primary' disabled={smsLoading} onClick={pushCode}>
-                        {smsText}
-                      </Button>
-                    }
-                  ></Field>
-                </CellGroup>
-              )}
-              <View className='btn'>
-                <View onClick={() => setPhoneForm(!phoneForm)}>{phoneForm ? '账号密码登录' : '验证码登录'}</View>
-                <View>立即注册</View>
-              </View>
-            </View>
+  const handleLogin = useCallback(() => {
+    login(true)
+      .then((code: any) => setIcode({ code: code, ts: dayjs().valueOf() }))
+      .catch(() => {
+        login(false)
+          .then((code: any) => {
+            setIcode({ code: code, ts: dayjs().valueOf() })
+          })
+          .catch((err) => {
+            _error('获取code失败')
+            console.log(err)
+          })
+      })
+  }, [login])
 
-            <Button color='danger' block onClick={loginByPhoneOrUsername}>
-              登录
-            </Button>
-          </View>
-          <View className='vi-login-wrapper_self'>
-            <Checkbox className='custom-color' onChange={(e: any) => setSelf(e)}>
-              登录即已同意
-              {env === 'WEAPP' ? (
-                <Navigator url='/pages/selfprivacy/index'>《隐私保护政策》</Navigator>
-              ) : (
-                <a
-                  href='#!'
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
+  /**
+   * 发送短信验证码
+   */
+  const pushCode = () => {
+    if (!checkMobile(phone)) {
+      _error('手机号错误')
+      return
+    }
+    _startSmsCode()
+    sendSmsCode(phone)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((error) => {
+        console.log(error)
+        _stopSmsCode()
+      })
+  }
+
+  /**
+   * 微信授权登录
+   * @param res
+   * @returns
+   */
+  const loginByCode = async () => {
+    if (!self) {
+      _error('请先勾选协议')
+      return
+    }
+    if (!icode) {
+      _error('微信登录失败')
+      return
+    }
+    if (icode.ts - dayjs().valueOf() > 1000 * 60 * 5) {
+      _error('请在规定时间内完成授权')
+      return
+    }
+    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认
+    const code: string = icode.code
+
+    getUserProfile({ lang: 'zh_CN', desc: '用于完善会员资料' })
+      .then((res) => {
+        const { iv, encryptedData } = res as any as IUserInfo
+        if (!iv || !encryptedData) {
+          _error('微信登陆失败')
+          return
+        }
+        wechatLogin(code, iv, encryptedData)
+          .then((rs) => {
+            _saveTokenToCache(rs.access_token, rs.refresh_token)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      })
+      .catch((err) => {
+        _error('授权失败')
+        console.log(err)
+      })
+  }
+
+  /**
+   * 使用手机号登录
+   * @param phone
+   * @param smsCode
+   */
+  const loginByPhoneOrUsername = async () => {
+    if (!self) {
+      _error('请先勾选协议')
+      return
+    }
+    /* 电话登录 */
+    if (phoneForm) {
+      if (!phone) {
+        _error('手机号码不能为空')
+        return
+      }
+      if (!smsCode) {
+        _error('验证码不能为空')
+        return
+      }
+      _phoneLogin()
+      return
+    }
+    if (!username) {
+      _error('账号不能为空')
+      return
+    }
+    if (!password) {
+      _error('密码不能为空')
+      return
+    }
+    _usernameLogin()
+  }
+
+  const _phoneLogin = () => {
+    return phoneLogin(phone, smsCode)
+      .then((res) => {
+        _saveTokenToCache(res.access_token, res.refresh_token)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  const _usernameLogin = () => {
+    return usernameLogin(username, password)
+      .then((res) => {
+        _saveTokenToCache(res.access_token, res.refresh_token)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  const _saveTokenToCache = (accessToken: string, refreshToken: string) => {
+    // dispatch({
+    //   type: 'common/saveStorageSync',
+    //   payload: {
+    //     accessToken: 'Bearer ' + accessToken,
+    //     refreshToken: 'Bearer ' + refreshToken
+    //   },
+    //   cb: () => {
+    //     _getUserInfo()
+    //   }
+    // })
+  }
+
+  const _startSmsCode = () => {
+    setSmsLoading(true)
+    _setTimeOut(smsBtnLoadingTime - 1)
+  }
+
+  const _stopSmsCode = () => {
+    setSmsText('发送短信')
+    setSmsLoading(false)
+    if (timerRef.current > 0) {
+      window.clearTimeout(timerRef.current)
+      timerRef.current = 0
+    }
+  }
+
+  const _setTimeOut = (sec: number) => {
+    if (sec === 0) {
+      _stopSmsCode()
+      return
+    }
+    setSmsText('重发(' + sec + ')')
+    timerRef.current = window.setTimeout(() => {
+      _setTimeOut(sec - 1)
+    }, 1000)
+  }
+
+  const _getUserInfo = () => {
+    userInfo()
+      .then((res) => {
+        const { member, auths } = res
+        const m: IMemberInfo = member as any as IMemberInfo
+        // dispatch({
+        //   type: 'common/saveStorageSync',
+        //   payload: {
+        //     userInfo: {
+        //       id: m.id,
+        //       name: m.name,
+        //       avatar: m.avatar
+        //     },
+        //     auths: auths as any as Array<IUserAuth>
+        //   },
+        //   cb: () => {
+        //     back({ to: 4 })
+        //   }
+        // })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const _error = useCallback(
+    (msg: string) => {
+      show({
+        icon: 'error',
+        title: msg
+      })
+    },
+    [show]
+  )
+
+  return (
+    <Container navTitle='登录' className='pages-login-index'>
+      <View className='section'>
+        <View
+          className='navigation_minibar_left_back back-btn'
+          style={{
+            width: `${34}px`,
+            height: `${34}px`,
+            marginRight: '10px'
+          }}
+          onClick={() => back({ to: 4, data: { isLogin: true } })}
+        >
+          <Icon name='arrow-left' />
+        </View>
+        <View className='right-top-sign' />
+        <View className='logo'>
+          <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '140px', height: '120px' }}></Image>
+        </View>
+        <View className='login-form'>
+          <View className='form'>
+            {!phoneForm ? (
+              <CellGroup>
+                <Field
+                  label='账号'
+                  placeholder='支持账号/邮箱/手机号'
+                  value={username}
+                  onChange={(e: ITouchEvent) => {
+                    setUsername(e.detail)
                   }}
-                >
-                  《隐私保护政策》
-                </a>
-              )}
-            </Checkbox>
-          </View>
-        </View>
-        <View className='footer'>
-          {env === 'WEAPP' && (
-            <View className='btn' onClick={loginByCode}>
-              <Image src={Images.DEFAULT_WECHAT_IMAGE} style={{ width: '36px', height: '36px' }} fit='heightFix' />
-              <View className='label'>微信</View>
+                />
+                <Field
+                  label='密码'
+                  password
+                  placeholder='请输入密码'
+                  value={password}
+                  onChange={(e: ITouchEvent) => setPassword(e.detail)}
+                  renderButton={
+                    <Button size='small' plain type='info'>
+                      忘记密码
+                    </Button>
+                  }
+                ></Field>
+              </CellGroup>
+            ) : (
+              <CellGroup>
+                <Field
+                  label='手机号'
+                  placeholder='请输入手机号'
+                  value={phone}
+                  maxlength={11}
+                  type='number'
+                  onChange={(e: ITouchEvent) => setPhone(e.detail)}
+                ></Field>
+                <Field
+                  label='验证码'
+                  placeholder='请输入验证码'
+                  maxlength={4}
+                  type='number'
+                  value={smsCode}
+                  onChange={(e: ITouchEvent) => setSmsCode(e.detail)}
+                  renderButton={
+                    <Button size='small' plain type='info' hairline={false} disabled={smsLoading} onClick={pushCode}>
+                      {smsText}
+                    </Button>
+                  }
+                ></Field>
+              </CellGroup>
+            )}
+            <View className='btn'>
+              <View onClick={() => setPhoneForm(!phoneForm)}>{phoneForm ? '账号密码登录' : '验证码登录'}</View>
+              <View>立即注册</View>
             </View>
-          )}
+          </View>
+
+          <Button type='danger' block onClick={loginByPhoneOrUsername}>
+            登录
+          </Button>
         </View>
-      </Container>
-    )
-  },
-  { page: false }
-)
+        <View className='self'>
+          <Checkbox value={self} checkedColor='red' onChange={(e: any) => setSelf(e.detail)}>
+            登录即已同意
+            {env === 'WEAPP' ? (
+              <Navigator url='/pages/selfprivacy/index'>《隐私保护政策》</Navigator>
+            ) : (
+              <a
+                href='#!'
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                }}
+              >
+                《隐私保护政策》
+              </a>
+            )}
+          </Checkbox>
+        </View>
+      </View>
+      <View className='footer'>
+        {env === 'WEAPP' && (
+          <View className='btn' onClick={loginByCode}>
+            <Image src={Images.DEFAULT_WECHAT_IMAGE} style={{ width: '36px', height: '36px' }} fit='heightFix' />
+            <View className='label'>微信</View>
+          </View>
+        )}
+      </View>
+    </Container>
+  )
+}
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: ''
+  navigationBarTitleText: '登录'
 })

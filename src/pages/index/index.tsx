@@ -285,7 +285,6 @@ export default Unite(
               selectDayClick={selectDayClickHadnle}
             ></Calendar>
           </CollapseItem>
-          <CollapseItem title='有赞微商城' name='2'></CollapseItem>
         </Collapse>
 
         <EventList

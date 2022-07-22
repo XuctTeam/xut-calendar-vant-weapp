@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-18 11:26:58
+ * @LastEditTime: 2022-07-22 17:37:05
  * @FilePath: \xut-calendar-vant-weapp\src\app.tsx
  * @Description:
  *
@@ -18,6 +18,7 @@ import { useWxBrowser } from '@/hooks'
 import { useDidShow, useDidHide, getUpdateManager, showModal, nextTick } from '@tarojs/taro'
 import './cache'
 import { setSysInfoAsync, setWxBrower } from '@/utils'
+import Loading from '@/components/fullScreen/loading'
 
 import './app.less'
 
@@ -86,7 +87,7 @@ export default function App(props: IProps) {
   return (
     // 在入口组件不会渲染任何内容，但我们可以在这里做类似于状态管理的事情
     <RecoilRoot>
-      <Suspense fallback={<div>Loading whale types...</div>}>{props.children}</Suspense>
+      <Suspense fallback={<Loading />}>{props.children}</Suspense>
     </RecoilRoot>
   )
 }

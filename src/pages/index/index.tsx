@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-20 14:26:19
+ * @LastEditTime: 2022-07-22 17:58:53
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -12,13 +12,13 @@ import React from 'react'
 import { Button, Icon, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { Collapse, CollapseItem } from '@antmjs/vantui'
 import Header from '@/components/header'
 import dayjs from 'dayjs'
 import { ICurrentDay } from '~/../@types/date'
 import { getToday } from '@/utils'
-import { calendarState, componentRefreshTimeStore } from '@/store'
+import { calendarStore, componentRefreshTimeStore } from '@/store'
 import { cacheGetSync } from '@/cache'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../@types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
@@ -124,7 +124,29 @@ export default Unite(
       })
     },
 
-    calendarSelected() {},
+    calendarSelected(value: string[]) {
+      const _calendars = this.hooks['calendars'].map((t: IDavCalendar) => {
+        const { id, name, color, major, display, memberId, calendarId, createMemberId, createMemberName, description, isShare, alarmTime, alarmType } = t
+        const checked = value.includes(calendarId) ? true : false
+        return {
+          id,
+          name,
+          color,
+          major,
+          display,
+          memberId,
+          checked,
+          calendarId,
+          createMemberId,
+          createMemberName,
+          description,
+          isShare,
+          alarmTime,
+          alarmType
+        }
+      })
+      this.hooks['setCalendars'](_calendars)
+    },
 
     /**
      * @description 日程查看
@@ -229,7 +251,7 @@ export default Unite(
       viewComponent
     } = events
     const env = useWebEnv()
-    const calendars = useRecoilValue(calendarState)
+    const [calendars, setCalendars] = useRecoilState(calendarStore)
     const accessToken = cacheGetSync('accessToken')
     const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(componentRefreshTimeStore)
     const calRef = React.createRef()
@@ -238,6 +260,7 @@ export default Unite(
       calRef: calRef,
       setComponentRefresh: setComponentRefreshTime,
       calendars: calendars,
+      setCalendars: setCalendars,
       componentRefresh: componentRefreshTime
     })
     events.setHooks({ calendars: calendars })
@@ -308,13 +331,13 @@ export default Unite(
         ></CalendarPop>
 
         {selectedDay !== day.current && (
-          <View className='pages-index_today-icon' style={{ bottom: env ? '70px' : '10px' }} onClick={currentClickHandle}>
+          <View className='pages-index_today-icon' style={{ bottom: env ? '80px' : '10px' }} onClick={currentClickHandle}>
             今
           </View>
         )}
 
         <View className='pages-index_home-fab' style={{ bottom: env ? '80px' : '20px' }}>
-          {!!accessToken && <Button size='small' color='primary' />}
+          {!!accessToken && <Button icon='plus' round />}
         </View>
       </Container>
     )

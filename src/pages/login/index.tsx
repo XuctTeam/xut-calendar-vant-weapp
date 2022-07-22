@@ -2,34 +2,28 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 13:53:15
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-21 17:53:39
+ * @LastEditTime: 2022-07-22 13:53:17
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { View, Navigator, ITouchEvent } from '@tarojs/components'
-import Router from 'tarojs-router-next'
-import { useReachBottom } from '@tarojs/taro'
 import { Button, Checkbox, Icon, Image, CellGroup, Field } from '@antmjs/vantui'
-
-import { back } from '@/utils/taro'
+import dayjs from 'dayjs'
 import { useRecoilState } from 'recoil'
 import { useEnv, useLogin, useUserInfo, useToast } from 'taro-hooks'
-import { IUserInfo } from 'taro-hooks/dist/useUserInfo'
+import { back } from '@/utils/taro'
+import { IUserInfo as IMemberInfo } from 'taro-hooks/dist/useUserInfo'
 import { cacheSetSync } from '@/cache'
-import { IUserAuth, IUserInfo as IMemberInfo } from '~/../@types/user'
-import Images from '@/constants/images'
 import Container from '@/components/container'
 import { wechatLogin, phoneLogin, usernameLogin } from '@/api/login'
-import { sendSmsCode, userInfo } from '@/api/user'
-
-import './index.less'
-
-import dayjs from 'dayjs'
+import { userForceUpdateState, userAuthForceUpdateState, calendarForceUpdateState } from '@/store'
+import { sendSmsCode } from '@/api/user'
 import { checkMobile } from '@/utils'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useSpring } from '@react-spring/web'
+import Images from '@/constants/images'
+import './index.less'
 
 interface ICode {
   code: string
@@ -51,6 +45,9 @@ export default function Index() {
   const [smsText, setSmsText] = useState<string>('发送短信')
   const [smsLoading, setSmsLoading] = useState<boolean>(false)
   const timerRef = useRef<number>(0)
+  const [, setCalendarForceUpdateState] = useRecoilState(calendarForceUpdateState)
+  const [, setUserForceUpdateState] = useRecoilState(userForceUpdateState)
+  const [, setUserAuthForceUpdateState] = useRecoilState(userAuthForceUpdateState)
   const [show] = useToast({
     icon: 'error'
   })
@@ -124,7 +121,7 @@ export default function Index() {
 
     getUserProfile({ lang: 'zh_CN', desc: '用于完善会员资料' })
       .then((res) => {
-        const { iv, encryptedData } = res as any as IUserInfo
+        const { iv, encryptedData } = res as any as IMemberInfo
         if (!iv || !encryptedData) {
           _error('微信登陆失败')
           return
@@ -198,16 +195,29 @@ export default function Index() {
   }
 
   const _saveTokenToCache = (accessToken: string, refreshToken: string) => {
-    // dispatch({
-    //   type: 'common/saveStorageSync',
-    //   payload: {
-    //     accessToken: 'Bearer ' + accessToken,
-    //     refreshToken: 'Bearer ' + refreshToken
-    //   },
-    //   cb: () => {
-    //     _getUserInfo()
-    //   }
-    // })
+    new Promise((resolve, reject) => {
+      try {
+        cacheSetSync('accessToken', 'Bearer ' + accessToken)
+        cacheSetSync('refreshToken', 'Bearer ' + refreshToken)
+        return resolve('')
+      } catch (err) {
+        console.log(err)
+        reject('save token to cache error')
+      }
+    })
+      .then(() => {
+        setCalendarForceUpdateState(Math.random())
+        setUserForceUpdateState(Math.random())
+        setUserAuthForceUpdateState(Math.random())
+        setTimeout(() => {
+          back({
+            to: 4
+          })
+        }, 500)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   const _startSmsCode = () => {
@@ -233,31 +243,6 @@ export default function Index() {
     timerRef.current = window.setTimeout(() => {
       _setTimeOut(sec - 1)
     }, 1000)
-  }
-
-  const _getUserInfo = () => {
-    userInfo()
-      .then((res) => {
-        const { member, auths } = res
-        const m: IMemberInfo = member as any as IMemberInfo
-        // dispatch({
-        //   type: 'common/saveStorageSync',
-        //   payload: {
-        //     userInfo: {
-        //       id: m.id,
-        //       name: m.name,
-        //       avatar: m.avatar
-        //     },
-        //     auths: auths as any as Array<IUserAuth>
-        //   },
-        //   cb: () => {
-        //     back({ to: 4 })
-        //   }
-        // })
-      })
-      .catch((err) => {
-        console.log(err)
-      })
   }
 
   const _error = useCallback(

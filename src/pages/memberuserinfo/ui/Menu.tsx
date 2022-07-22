@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 17:04:12
- * @LastEditTime: 2022-07-21 18:10:17
+ * @LastEditTime: 2022-07-22 17:50:05
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useCallback } from 'react'
@@ -11,6 +11,7 @@ import { View } from '@tarojs/components'
 import { Cell } from '@antmjs/vantui'
 import { useThrottle, useWebEnv } from '@/hooks'
 import { useRequestSubscribeMessage, useToast } from 'taro-hooks'
+import Router from 'tarojs-router-next'
 
 interface IPageOption {
   accessToken: string
@@ -31,7 +32,7 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
    */
   const atListItemClickHandle = useThrottle((params: any) => {
     if (params === 1) {
-      //Router.toCalendarmanager()
+      Router.toCalendarmanager()
     } else if (params === 2) {
       //Router.toSystemsetting()
     } else if (params === 3) {

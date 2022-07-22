@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-05 16:50:55
- * @LastEditTime: 2022-04-19 11:10:56
+ * @LastEditTime: 2022-07-22 14:22:31
  * @LastEditors: Derek Xu
  */
 
@@ -12,7 +12,7 @@ export interface IDavCalendar {
   color: string
   major: number
   display: number
-  checked?: boolean
+  checked: boolean
   memberId: string
   calendarId: string
   createMemberId: string

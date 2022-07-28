@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-07 10:37:56
- * @LastEditTime: 2022-07-22 18:13:26
+ * @LastEditTime: 2022-07-28 15:20:29
  * @LastEditors: Derek Xu
  */
 import React, { Fragment } from 'react'
@@ -12,7 +12,7 @@ import { Col, Icon, Row } from '@antmjs/vantui'
 
 interface IPageOption {
   item: IDavCalendar
-  editCalendar: (id: string | null) => void
+  editCalendar: (id: string) => void
 }
 
 const CalendarListBody: React.FC<IPageOption> = (props) => {

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-22 17:48:48
+ * @LastEditTime: 2022-07-28 15:18:18
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -10,7 +10,14 @@
  */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 export default defineAppConfig({
-  pages: ['pages/index/index', 'pages/memberuserinfo/index', 'pages/tabAndSearchPagination/index', 'pages/login/index', 'pages/calendarmanager/index'],
+  pages: [
+    'pages/index/index',
+    'pages/memberuserinfo/index',
+    'pages/tabAndSearchPagination/index',
+    'pages/login/index',
+    'pages/calendarmanager/index',
+    'pages/calendaredit/index'
+  ],
   window: {
     // @ts-ignore
     titleBarColor: '#ededed',

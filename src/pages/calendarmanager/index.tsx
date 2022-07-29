@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-28 16:27:50
+ * @LastEditTime: 2022-07-29 16:14:55
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -16,6 +16,8 @@ import { useRecoilValue } from 'recoil'
 import { calendarStore } from '@/store'
 import { IDavCalendar } from '~/../@types/calendar'
 import { CalendarListBody } from './ui'
+import classnames from 'classnames'
+import { brower } from '@/utils'
 
 import './index.less'
 import Router from 'tarojs-router-next'
@@ -50,21 +52,26 @@ export default Unite(
       <Container
         navTitle='日程管理'
         enablePagePullDownRefresh={false}
-        className='pages-calendar-manager-index'
+        h5Nav={true}
+        className={classnames('pages-calendar-manager-index', {
+          ['van-page-box']: brower()
+        })}
         renderPageTopHeader={() => {
           return <Header title='日程管理' left to={4}></Header>
         }}
       >
-        {calendars &&
-          calendars.length !== 0 &&
-          calendars?.map((item: IDavCalendar, index: number) => {
-            return (
-              <View className='li' key={index}>
-                <CalendarListBody item={item} editCalendar={editCalendar}></CalendarListBody>
-              </View>
-            )
-          })}
         {!calendars && <Empty description='暂无数据' />}
+        {calendars && calendars.length !== 0 && (
+          <View className='list'>
+            {calendars?.map((item: IDavCalendar, index: number) => {
+              return (
+                <View className='li' key={index}>
+                  <CalendarListBody item={item} editCalendar={editCalendar}></CalendarListBody>
+                </View>
+              )
+            })}
+          </View>
+        )}
       </Container>
     )
   },

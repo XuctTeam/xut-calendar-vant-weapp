@@ -1,59 +1,67 @@
-.pages-calendar-manager-index{
+.pages-calendar-manager-index {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
 
-  padding-bottom: 10px;
+  .list {
+    height: auto;
+    flex: 1;
+    overflow-y: auto;
+  }
 
-    .li {
-        min-height: 200px;
-        margin: 0 @padding-sm @padding-sm;
-        box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
-        border-radius: @border-radius-lg;
-        padding: @padding-sm;
-        &:first-child {
-          margin-top: @padding-sm;
-        }
-      }
+  .li {
+    min-height: 200px;
+    margin: 0 @padding-sm @padding-sm;
+    box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
+    border-radius: @border-radius-lg;
+    padding: @padding-sm;
+    &:first-child {
+      margin-top: @padding-sm;
+    }
+  }
 
-      .header {
-        padding-top: 10px;
+  .header {
+    padding-top: 10px;
+    line-height: 80px;
+    height: 60px;
+    border-color: honeydew;
+
+    .color {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .square {
+        width: 40%;
         line-height: 80px;
-        height: 60px;
-        border-color: honeydew;
-    
-        .color {
-          height: 80px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-    
-          .square {
-            width: 40%;
-            line-height: 80px;
-          }
-    
-          .square:after {
-            content: '';
-            display: block;
-            padding-bottom: 100%;
-          }
-        }
-    
-        .title {
-          font-size: 36px;
-        }
       }
-    
-      .content {
-        font-size: 24px;
-        color: #999;
-        font-weight: 400;
-        padding: 20px;
-    
-        .mark {
-          height: 80px;
-        }
-    
-        .ower {
-          text-align: right;
-        }
+
+      .square:after {
+        content: '';
+        display: block;
+        padding-bottom: 100%;
       }
+    }
+
+    .title {
+      font-size: 36px;
+    }
+  }
+
+  .content {
+    font-size: 24px;
+    color: #999;
+    font-weight: 400;
+    padding: 20px;
+
+    .mark {
+      height: 80px;
+    }
+
+    .ower {
+      text-align: right;
+    }
+  }
 }

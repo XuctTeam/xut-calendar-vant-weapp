@@ -4,7 +4,7 @@
  * @Autor: Derek Xu
  * @Date: 2021-12-02 22:46:09
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-22 16:15:36
+ * @LastEditTime: 2022-07-29 16:24:36
  */
 import { ITouchEvent, View } from '@tarojs/components'
 import { IDavCalendar } from '~/../@types/calendar'
@@ -60,7 +60,7 @@ const CalendarPop: React.FC<IPageOption> = (props) => {
             block
             onClick={() => {
               props.closePopup()
-              //Router.toCalendarcreate()
+              Router.toCalendaredit()
             }}
           >
             新增日历

@@ -2,26 +2,24 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-22 17:37:05
+ * @LastEditTime: 2022-07-29 11:23:39
  * @FilePath: \xut-calendar-vant-weapp\src\app.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import React, { Suspense, useEffect } from 'react'
+import { RecoilRoot } from 'recoil'
+import { useWxBrowser } from '@/hooks'
+import { useDidShow, useDidHide, getUpdateManager, showModal, nextTick } from '@tarojs/taro'
 import * as dayjs from 'dayjs'
 import isLeapYear from 'dayjs/plugin/isLeapYear' // import plugin
 import 'dayjs/locale/zh-cn' // import locale
-import { RecoilRoot } from 'recoil'
-import { useWxBrowser } from '@/hooks'
-
-import { useDidShow, useDidHide, getUpdateManager, showModal, nextTick } from '@tarojs/taro'
-import './cache'
 import { setSysInfoAsync, setWxBrower } from '@/utils'
+import './cache'
 import Loading from '@/components/fullScreen/loading'
-
+import Vconsole from 'vconsole'
 import './app.less'
-
 import './router'
 
 interface IProps {
@@ -31,6 +29,10 @@ interface IProps {
 /** 日期国际化 */
 dayjs.extend(isLeapYear) // use plugin
 dayjs.locale('zh-cn') // use locale
+
+if (process.env.NODE_ENV !== 'production') {
+  new Vconsole()
+}
 
 export default function App(props: IProps) {
   // 可以使用所有的 React Hooks

@@ -1,11 +1,18 @@
+<!--
+ * @Author: Derek Xu
+ * @Date: 2022-07-14 15:50:29
+ * @LastEditors: Derek Xu
+ * @LastEditTime: 2022-07-29 10:39:22
+ * @FilePath: \xut-calendar-vant-weapp\src\index.html
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by 楚恬商行, All Rights Reserved. 
+-->
 <!DOCTYPE html>
 <html>
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <meta
-      content="width=device-width,initial-scale=1,user-scalable=no"
-      name="viewport"
-    />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="format-detection" content="telephone=no,address=no" />
@@ -17,8 +24,7 @@
         function e() {
           var e = n.document.documentElement,
             t = e.getBoundingClientRect().width
-          e.style.fontSize =
-            t >= 640 ? '40px' : t <= 320 ? '20px' : (t / 320) * 20 + 'px'
+          e.style.fontSize = t >= 640 ? '40px' : t <= 320 ? '20px' : (t / 320) * 20 + 'px'
         }
         n.addEventListener('resize', function () {
           e()

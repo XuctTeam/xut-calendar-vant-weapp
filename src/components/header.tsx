@@ -2,19 +2,17 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 18:15:14
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-16 16:23:45
+ * @LastEditTime: 2022-07-29 13:18:17
  * @FilePath: \xut-calendar-vant-weapp\src\components\header.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { Fragment } from 'react'
-import { cacheGetSync } from '@/cache'
-import { useWebEnv } from '@/hooks'
 import { useBack } from '@/utils/taro'
-import './header.less'
-
 import { NavBar } from '@antmjs/vantui'
+import { brower } from '@/utils'
+import './header.less'
 
 interface IPageOption {
   title: string
@@ -25,9 +23,8 @@ interface IPageOption {
 }
 
 export default function Index(props: IPageOption): JSX.Element {
-  const webEnv = useWebEnv()
-  const wxBrower = cacheGetSync('wxBrower')
   const [back] = useBack()
+  const _brower = brower()
 
   const routerToBack = () => {
     if (!props.to) props.to = 1
@@ -38,8 +35,15 @@ export default function Index(props: IPageOption): JSX.Element {
     })
   }
 
-  return webEnv && !wxBrower ? (
-    <NavBar title={props.title} safeAreaInsetTop={false} leftArrow={props.left} leftText={props.left ? '返回' : ''} onClickLeft={routerToBack}></NavBar>
+  return _brower ? (
+    <NavBar
+      className='van-navbar'
+      title={props.title}
+      safeAreaInsetTop={false}
+      leftArrow={props.left}
+      leftText={props.left ? '返回' : ''}
+      onClickLeft={routerToBack}
+    ></NavBar>
   ) : (
     <Fragment></Fragment>
   )

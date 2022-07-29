@@ -1,7 +1,8 @@
 .pages-calendar-edit-index {
   display: flex;
   flex-direction: column;
-  border: 1px solid;
+  position: relative;
+  height: 100%;
 
   .van-cell,
   .van-grid-item__content {
@@ -15,22 +16,20 @@
   }
 
   .box {
-    flex-shrink: 1;
-    flex-basis: 0;
+    flex: 1;
     overflow: scroll;
-    margin-bottom: 100px;
   }
 
   .button {
-    height: 90px;
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    padding: 0px 20px;
+    justify-content: center;
     box-sizing: border-box;
-
+    padding: 30px;
+    .space {
+      width: 20px;
+    }
     .btn {
       width: 100%;
+      box-sizing: border-box;
       justify-content: flex-end;
       display: flex;
     }

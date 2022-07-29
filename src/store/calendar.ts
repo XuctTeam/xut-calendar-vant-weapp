@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 12:00:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-22 18:01:57
+ * @LastEditTime: 2022-07-29 18:14:34
  * @FilePath: \xut-calendar-vant-weapp\src\store\calendar.ts
  * @Description:
  *
@@ -30,8 +30,12 @@ export const calendarForceUpdateState = atom({
 
 const calendarQuery = selector({
   key: 'calendarQuery',
-  get: async ({}) => {
+  get: async ({ get }) => {
     // 我们可以将forceUpdateState作为依赖，当forceUpdateState值变化时，重新计算msgListState的值
+    get(calendarForceUpdateState)
+    if (!cacheGetSync('accessToken')) {
+      return calendars()
+    }
     return await list()
   }
 })
@@ -45,10 +49,6 @@ export const calendarStore = atom({
   default: selector({
     key: 'calendarStore/default',
     get: ({ get }) => {
-      get(calendarForceUpdateState)
-      if (!cacheGetSync('accessToken')) {
-        return calendars()
-      }
       return get(calendarQuery)
     }
   })

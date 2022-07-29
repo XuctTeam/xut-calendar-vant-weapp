@@ -1,6 +1,6 @@
 import { getSystemInfo, getMenuButtonBoundingClientRect } from '@tarojs/taro'
 import { SetterOrUpdater } from 'recoil'
-import { cacheGet, cacheSet } from '@/cache'
+import { cacheGet, cacheSet, cacheGetSync } from '@/cache'
 import { IMenuButton } from '@/store'
 import dayjs from 'dayjs'
 import { ICurrentDay } from '../../@types/date'
@@ -20,7 +20,7 @@ function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
           right: menuButton.right,
           marginRight: sysInfo.screenWidth - menuButton.right,
           top: menuButton.top,
-          statusBarHeight: sysInfo.statusBarHeight || menuButton.top - 4,
+          statusBarHeight: sysInfo.statusBarHeight || menuButton.top - 4
         })
       } else {
         setStore({
@@ -32,12 +32,12 @@ function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
           right: menuButton.right,
           marginRight: 7,
           top: menuButton.top,
-          statusBarHeight: menuButton.top - 4,
+          statusBarHeight: menuButton.top - 4
         })
       }
       cacheSet({
         key: 'menuButton',
-        data: menuButton,
+        data: menuButton
       })
     } else {
       setStore({
@@ -49,7 +49,7 @@ function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
         right: 368,
         marginRight: 7,
         top: 48,
-        statusBarHeight: sysInfo?.statusBarHeight || 48 - 4,
+        statusBarHeight: sysInfo?.statusBarHeight || 48 - 4
       })
     }
   } catch (error) {
@@ -62,16 +62,12 @@ function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
       right: 368,
       marginRight: 7,
       top: 48,
-      statusBarHeight: sysInfo?.statusBarHeight || 48 - 4,
+      statusBarHeight: sysInfo?.statusBarHeight || 48 - 4
     })
   }
 }
 
-function _setSysInfo(
-  menuButton: any,
-  setStore: SetterOrUpdater<IMenuButton>,
-  setMenuButton?: any,
-) {
+function _setSysInfo(menuButton: any, setStore: SetterOrUpdater<IMenuButton>, setMenuButton?: any) {
   getSystemInfo({
     success(sysInfo) {
       if (menuButton) {
@@ -84,14 +80,14 @@ function _setSysInfo(
           right: menuButton.right,
           marginRight: sysInfo.screenWidth - menuButton.right,
           top: menuButton.top,
-          statusBarHeight: sysInfo.statusBarHeight || menuButton.top - 4,
+          statusBarHeight: sysInfo.statusBarHeight || menuButton.top - 4
         })
       } else {
         setMenuButton(sysInfo, setStore)
       }
       cacheSet({
         key: 'sysInfo',
-        data: sysInfo,
+        data: sysInfo
       })
     },
     fail() {
@@ -105,12 +101,12 @@ function _setSysInfo(
           right: menuButton.right,
           marginRight: 7,
           top: menuButton.top,
-          statusBarHeight: menuButton.top - 4,
+          statusBarHeight: menuButton.top - 4
         })
       } else {
         setMenuButton(null, setStore)
       }
-    },
+    }
   })
 }
 
@@ -127,7 +123,7 @@ export function setMenuButtonAsync(setStore: SetterOrUpdater<IMenuButton>) {
           right: mb.right,
           marginRight: si.screenWidth - mb.right,
           top: mb.top,
-          statusBarHeight: si.statusBarHeight || mb.top - 4,
+          statusBarHeight: si.statusBarHeight || mb.top - 4
         })
       } else if (mb) {
         _setSysInfo(mb, setStore)
@@ -146,9 +142,9 @@ export function setSysInfoAsync(force = false) {
       success(sysInfo) {
         cacheSet({
           key: 'sysInfo',
-          data: sysInfo,
+          data: sysInfo
         })
-      },
+      }
     })
   } else {
     cacheGet({ key: 'sysInfo' }).then((si) => {
@@ -157,9 +153,9 @@ export function setSysInfoAsync(force = false) {
           success(sysInfo) {
             cacheSet({
               key: 'sysInfo',
-              data: sysInfo,
+              data: sysInfo
             })
-          },
+          }
         })
       }
     })
@@ -173,15 +169,11 @@ export function randomNum(min: number, max: number) {
 export function setWxBrower(is: boolean) {
   cacheSet({
     key: 'wxBrower',
-    data: is,
+    data: is
   })
 }
 
-export function bound(
-  position: number,
-  min: number | undefined,
-  max: number | undefined,
-) {
+export function bound(position: number, min: number | undefined, max: number | undefined) {
   let ret = position
   if (min !== undefined) {
     ret = Math.max(position, min)
@@ -192,31 +184,22 @@ export function bound(
   return ret
 }
 
-export function rubberband(
-  distance: number,
-  dimension: number,
-  constant: number,
-) {
+export function rubberband(distance: number, dimension: number, constant: number) {
   return (distance * dimension * constant) / (dimension + constant * distance)
 }
 
-export function rubberbandIfOutOfBounds(
-  position: number,
-  min: number,
-  max: number,
-  dimension: number,
-  constant = 0.15,
-) {
+export function rubberbandIfOutOfBounds(position: number, min: number, max: number, dimension: number, constant = 0.15) {
   if (constant === 0) return bound(position, min, max)
-  if (position < min)
-    return -rubberband(min - position, dimension, constant) + min
-  if (position > max)
-    return +rubberband(position - max, dimension, constant) + max
+  if (position < min) return -rubberband(min - position, dimension, constant) + min
+  if (position > max) return +rubberband(position - max, dimension, constant) + max
   return position
 }
 
-export const sleep = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time))
+export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
+
+export const brower = () => {
+  return process.env.TARO_ENV === 'h5' && !cacheGetSync('wxBrower')
+}
 
 /**
  * 获取当日日期
@@ -230,9 +213,9 @@ export const getToday = (): ICurrentDay => {
     detail: {
       year: day.year(),
       month: day.month() + 1,
-      day: day.day(),
+      day: day.day()
     },
-    lunar: lunarDay(day.toDate()),
+    lunar: lunarDay(day.toDate())
   }
 }
 
@@ -284,7 +267,7 @@ export const formatRepeatTime = (
   repeatByday: string,
   repeatBymonth: string,
   repeatBymonthday: string,
-  repeatInterval: number,
+  repeatInterval: number
 ): string => {
   switch (repeatType) {
     case 'DAILY':
@@ -292,12 +275,7 @@ export const formatRepeatTime = (
     case 'WEEKLY':
       return _formatWeeklyText(repeatInterval, repeatStatus, repeatByday)
     case 'MONTHLY':
-      return _formatMonthlyText(
-        repeatInterval,
-        repeatStatus,
-        repeatByday,
-        repeatBymonthday,
-      )
+      return _formatMonthlyText(repeatInterval, repeatStatus, repeatByday, repeatBymonthday)
     default:
       return _formatYearlyText(repeatInterval, repeatBymonth, repeatBymonthday)
   }
@@ -342,10 +320,7 @@ export const alarmCodeToType = (code: string) => {
  * @param alarm
  * @returns
  */
-export const formatAlarmText = (
-  alarmType: string,
-  alarmTimes: Array<string>,
-): string => {
+export const formatAlarmText = (alarmType: string, alarmTimes: Array<string>): string => {
   if (alarmType === '0') return '不提醒'
   if (alarmTimes.length === 0) return '不提醒'
   const formatTimes: Array<string> = alarmTimes.map((i) => {
@@ -375,38 +350,22 @@ export const formatAlarmText = (
  * @param dtend
  * @returns
  */
-export const formatSameDayTime = (
-  fullDay: number,
-  dtstart: Date,
-  dtend: Date,
-): string => {
-  const day: string =
-    dayjs(dtstart).format('YYYY年MM月DD日') +
-    '(' +
-    formatWeek(dayjs(dtend).get('day')) +
-    ')'
+export const formatSameDayTime = (fullDay: number, dtstart: Date, dtend: Date): string => {
+  const day: string = dayjs(dtstart).format('YYYY年MM月DD日') + '(' + formatWeek(dayjs(dtend).get('day')) + ')'
   if (fullDay === 1) return day
-  return (
-    day + dayjs(dtstart).format('HH:mm') + '-' + dayjs(dtend).format('HH:mm')
-  )
+  return day + dayjs(dtstart).format('HH:mm') + '-' + dayjs(dtend).format('HH:mm')
 }
 
 /**
  * 格式化相同时间区间的分、秒
  * @returns
  */
-export const formateSameDayDuration = (
-  fullDay: number,
-  dtstart: Date,
-  dtend: Date,
-): string => {
+export const formateSameDayDuration = (fullDay: number, dtstart: Date, dtend: Date): string => {
   if (fullDay === 1) return '全天'
   let days = dayjs(dtend)
   let daye = dayjs(dtstart)
-  const day1 =
-    days.format('YYYY-MM-DD') + ' ' + days.hour() + ':' + days.minute() + ':00'
-  const day2 =
-    daye.format('YYYY-MM-DD') + ' ' + daye.hour() + ':' + daye.minute() + ':00'
+  const day1 = days.format('YYYY-MM-DD') + ' ' + days.hour() + ':' + days.minute() + ':00'
+  const day2 = daye.format('YYYY-MM-DD') + ' ' + daye.hour() + ':' + daye.minute() + ':00'
   days = dayjs(day1)
   daye = dayjs(day2)
   const diff: number = days.diff(daye, 'minute')
@@ -423,23 +382,11 @@ export const formateSameDayDuration = (
  * @param date
  * @returns
  */
-export const formatDifferentDayTime = (
-  type: number,
-  fullDay: number,
-  date: Date,
-): string => {
+export const formatDifferentDayTime = (type: number, fullDay: number, date: Date): string => {
   if (type === 1) {
-    return (
-      dayjs(date).format(
-        fullDay === 0 ? 'YYYY年MM月DD日 HH:mm' : 'YYYY年MM月DD日',
-      ) + ' 开始'
-    )
+    return dayjs(date).format(fullDay === 0 ? 'YYYY年MM月DD日 HH:mm' : 'YYYY年MM月DD日') + ' 开始'
   }
-  return (
-    dayjs(date).format(
-      fullDay === 0 ? 'YYYY年MM月DD日 HH:mm' : 'YYYY年MM月DD日',
-    ) + ' 结束'
-  )
+  return dayjs(date).format(fullDay === 0 ? 'YYYY年MM月DD日 HH:mm' : 'YYYY年MM月DD日') + ' 结束'
 }
 
 /**
@@ -449,11 +396,7 @@ export const formatDifferentDayTime = (
  * @param repeatByday
  * @returns
  */
-const _formatWeeklyText = (
-  repeatInterval: number,
-  repeatStatus: string,
-  repeatByday: string,
-): string => {
+const _formatWeeklyText = (repeatInterval: number, repeatStatus: string, repeatByday: string): string => {
   switch (repeatStatus) {
     case '2':
       return '每周一至五'
@@ -469,10 +412,7 @@ const _formatWeeklyText = (
     if (!week) return
     return formatWeek(Number.parseInt(week))
   })
-  return (
-    (repeatInterval === 1 ? '每周' : '每' + repeatInterval + '周的') +
-    weeks.join(',')
-  )
+  return (repeatInterval === 1 ? '每周' : '每' + repeatInterval + '周的') + weeks.join(',')
 }
 
 /**
@@ -483,25 +423,14 @@ const _formatWeeklyText = (
  * @param repeatBymonthday
  * @param selectedDate
  */
-const _formatMonthlyText = (
-  repeatInterval: number,
-  repeatStatus: string,
-  repeatByday: string,
-  repeatBymonthday: string,
-): string => {
+const _formatMonthlyText = (repeatInterval: number, repeatStatus: string, repeatByday: string, repeatBymonthday: string): string => {
   const monthDays = repeatByday ? repeatByday.split(':') : []
   if (!monthDays[1]) return ''
   switch (repeatStatus) {
     case '5':
       return '每月（' + repeatBymonthday + '日）'
     case '6':
-      return (
-        '每月（第' +
-        monthDays[0] +
-        '个' +
-        formatWeek(Number.parseInt(monthDays[1])) +
-        ')'
-      )
+      return '每月（第' + monthDays[0] + '个' + formatWeek(Number.parseInt(monthDays[1])) + ')'
   }
   if (repeatBymonthday) {
     if (repeatInterval === 1) {
@@ -513,15 +442,7 @@ const _formatMonthlyText = (
   if (repeatInterval === 1) {
     return '每月（第' + monthDays[0] + '个' + monthDays[1] + ')'
   }
-  return (
-    '每' +
-    repeatInterval +
-    '月（第' +
-    monthDays[0] +
-    '个' +
-    formatWeek(Number.parseInt(monthDays[1])) +
-    ')'
-  )
+  return '每' + repeatInterval + '月（第' + monthDays[0] + '个' + formatWeek(Number.parseInt(monthDays[1])) + ')'
 }
 
 /**
@@ -530,23 +451,11 @@ const _formatMonthlyText = (
  * @param repeatBymonth
  * @param repeatBymonthday
  */
-const _formatYearlyText = (
-  repeatInterval: number,
-  repeatBymonth: string,
-  repeatBymonthday: string,
-) => {
+const _formatYearlyText = (repeatInterval: number, repeatBymonth: string, repeatBymonthday: string) => {
   if (repeatInterval === 1) {
     return '每年（' + repeatBymonth + '月' + repeatBymonthday + '日）'
   }
-  return (
-    '每' +
-    repeatInterval +
-    '年（' +
-    repeatBymonth +
-    '月' +
-    repeatBymonthday +
-    '日）'
-  )
+  return '每' + repeatInterval + '年（' + repeatBymonth + '月' + repeatBymonthday + '日）'
 }
 
 /**

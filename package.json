@@ -150,7 +150,8 @@
     "solarlunar-es": "^1.0.9",
     "taro-hooks": "^1.5.8",
     "tarojs-router-next": "^2.8.1",
-    "tarojs-router-next-plugin": "^2.8.1"
+    "tarojs-router-next-plugin": "^2.8.1",
+    "vconsole": "^3.14.6"
   },
   "devDependencies": {
     "@antmjs/babel-preset": "^1.9.12",

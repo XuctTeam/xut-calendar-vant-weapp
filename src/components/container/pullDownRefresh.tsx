@@ -3,7 +3,9 @@
 import { ReactNode, useRef } from 'react'
 import { showToast } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { sleep, rubberbandIfOutOfBounds } from '@/utils'
+import { sleep, rubberbandIfOutOfBounds, brower } from '@/utils'
+import classnames from 'classnames'
+import './pullDownRefresh.less'
 
 export type PullStatus = 'pulling' | 'canRelease' | 'refreshing' | 'complete'
 
@@ -11,6 +13,7 @@ export type PullToRefreshProps = {
   canPull: boolean
   children: ReactNode
   threshold?: number
+  h5Nav?: boolean
   onRefresh: <T extends boolean>(catchRefresh?: T) => T extends true ? Promise<{ code: string; message: string; data: any }> : void
   setStatus: any
   status: any
@@ -26,6 +29,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
   const threshold = props.threshold ?? 60
   const pullingRef = useRef(false)
   const yRef = useRef(0)
+  const _brower = brower()
 
   async function doRefresh() {
     api.start({ transform: `scale(1)`, opacity: 1 })
@@ -122,7 +126,14 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
   }
 
   return (
-    <View style={{ height: '100%' }} onTouchEnd={onEnd} onTouchMove={onMove} onTouchStart={onStart}>
+    <View
+      className={classnames('van-box', {
+        ['van-box--padding']: _brower && props.h5Nav
+      })}
+      onTouchEnd={onEnd}
+      onTouchMove={onMove}
+      onTouchStart={onStart}
+    >
       {props.children}
     </View>
   )

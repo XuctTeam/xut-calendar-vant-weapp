@@ -53,13 +53,14 @@ type IProps = {
   navTitle?: ReactNode
   navClassName?: string
   loading?: any
+  h5Nav?: boolean
   ignoreError?: boolean
   enablePagePullDownRefresh?: boolean
   renderPageTopHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
 }
 
 export default function Index(props: IProps) {
-  const { useNav = true, navTitle, navClassName, className, loading, ignoreError, renderPageTopHeader, enablePagePullDownRefresh = true } = props
+  const { useNav = true, navTitle, navClassName, className, loading, ignoreError, renderPageTopHeader, enablePagePullDownRefresh = true, h5Nav = false } = props
   const ctx = useContext(UniteContext)
   const [canPull, setCanPull] = useState(true)
   const [springStyles, api] = useSpring(() => ({
@@ -119,6 +120,7 @@ export default function Index(props: IProps) {
           canPull={!!(ctx.uniteConfig.page && enablePagePullDownRefresh && canPull)}
           onRefresh={ctx.onRefresh}
           setStatus={setPullDownRefreshStatus}
+          h5Nav={h5Nav}
           status={pullDownRefreshStatus}
           api={api}
         >

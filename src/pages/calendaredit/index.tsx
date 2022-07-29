@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-28 17:56:35
+ * @LastEditTime: 2022-07-29 18:15:41
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendaredit\index.tsx
  * @Description:
  *
@@ -10,36 +10,36 @@
  */
 import Router from 'tarojs-router-next'
 import { Button, Cell, CellGroup, Field, Switch, Unite } from '@antmjs/vantui'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { Textarea, View } from '@tarojs/components'
 import Container from '@/components/container'
 import Header from '@/components/header'
 import { get, update, create, remove } from '@/api/calendar'
-import { useNavigationBar } from 'taro-hooks'
+import { useToast } from 'taro-hooks'
+import { calendarForceUpdateState } from '@/store'
 import { IUserInfo } from '~/../@types/user'
 import { userInfoStore } from '@/store'
+import { back } from '@/utils/taro'
 import { ColorRadio, AlarmRadio } from './ui'
-import Fixedview from '@/components/fixedview'
 
 import './index.less'
 
 export default Unite(
   {
     state: {
-      id: undefined,
-      title: '新建日历',
-      name: undefined,
-      createMemberId: undefined,
+      id: '',
+      name: '',
+      createMemberId: '',
       color: 'ee0a24',
-      calendarId: undefined,
-      description: undefined,
+      calendarId: '',
+      description: '',
       major: 0,
       display: 1,
       alarmType: 1,
       alarmTime: 15,
       isShare: 0,
-      memberId: undefined,
-      loading: false
+      memberId: '',
+      disable: false
     },
 
     async onLoad() {
@@ -76,10 +76,8 @@ export default Unite(
         alarmType,
         alarmTime,
         isShare,
-        memberId,
-        title: '编辑日历'
+        memberId
       })
-      this.hooks['setTitle']('编辑日历')
     },
 
     setColor(color: string) {
@@ -122,31 +120,162 @@ export default Unite(
       this.setState({
         isShare
       })
+    },
+
+    commit() {
+      if (!this._checkForm()) {
+        return
+      }
+      this.setState({
+        disable: true
+      })
+      if (!this.state.id) {
+        create(
+          Object.assign({}, this.state, { id: '000', createMemberName: this.hooks['userInfo'].name, checked: true, alarmType: this.state.alarmType.toString() })
+        )
+          .then(() => {
+            this._success('新增成功')
+          })
+          .catch((err) => {
+            this._error(err)
+          })
+      }
+    },
+
+    removeCalendar() {
+      // .then((res) => {
+      //   if (res.cancel) return
+      //   remove(calendarId)
+      //     .then(() => {
+      //       _success('删除成功')
+      //     })
+      //     .catch((err) => {
+      //       console.log(err)
+      //     })
+      // })
+      // .catch((err) => {
+      //   console.log(err)
+      // })
+    },
+
+    _checkForm() {
+      if (!this.state.name) {
+        this.hooks['toast']({ title: '名称不能为空' })
+        return false
+      }
+      if (!this.state.description) {
+        this.hooks['toast']({ title: '描述不能为空' })
+        return false
+      }
+      return true
+    },
+
+    _success(msg: string) {
+      this.hooks['setCalendarForceUpdateState'](Math.random())
+      this.hooks['toast']({
+        title: msg,
+        icon: 'success'
+      })
+      window.setTimeout(() => {
+        this.setState({
+          disable: false
+        })
+        back({
+          to: 4,
+          data: {
+            data: '1'
+          }
+        })
+      }, 1500)
+    },
+
+    _error(err: string) {
+      this.hooks['toast']({
+        title: err,
+        icon: 'error'
+      })
+      return false
     }
   },
 
-  function ({ state, events }) {
-    console.log(state)
+  function ({ state, events, loading }) {
     const userInfo: IUserInfo | undefined = useRecoilValue(userInfoStore)
-    const { id, color, name, title, major, alarmType, createMemberId, alarmTime, display, isShare, description, loading } = state
-    const [, { setTitle }] = useNavigationBar({
-      title: title
+    const [, setCalendarForceUpdateState] = useRecoilState(calendarForceUpdateState)
+    const { id, color, name, major, alarmType, createMemberId, alarmTime, display, isShare, description, disable } = state
+    const { setName, setColor, setDescription, setAlarmType, setAlarmTime, setDisplay, setIsShare, commit } = events
+    const [toast] = useToast({
+      icon: 'error'
     })
-    const { setName, setColor, setDescription, setAlarmType, setAlarmTime, setDisplay, setIsShare } = events
     events.setHooks({
-      setTitle: setTitle
+      toast: toast,
+      loading: loading,
+      userInfo: userInfo,
+      setCalendarForceUpdateState: setCalendarForceUpdateState
     })
 
     return (
       <Container
-        navTitle={title}
+        navTitle='日历编辑'
         enablePagePullDownRefresh={false}
         className='pages-calendar-edit-index'
+        h5Nav={true}
         renderPageTopHeader={() => {
-          return <Header title={title} left to={4}></Header>
+          return <Header title='日历编辑' left to={4}></Header>
         }}
       >
-        dddd
+        <View className='box'>
+          <Cell>
+            <ColorRadio onChage={(e) => setColor(e)} defaultColor={color}></ColorRadio>
+          </Cell>
+          <Field label='名称' border={false} placeholder='请输入名称' maxlength={20} value={name} onChange={(e) => setName(e.detail)}></Field>
+          <CellGroup title='描述'>
+            <Cell>
+              <Textarea
+                style={{ width: '100%', height: '60px' }}
+                value={description}
+                maxlength={120}
+                onInput={(e) => {
+                  setDescription(e.detail.value)
+                }}
+              />
+            </Cell>
+          </CellGroup>
+          <Cell title='显示方式'>
+            <Switch checked={display === 1} onChange={(e) => setDisplay(e.detail ? 1 : 0)}></Switch>
+          </Cell>
+
+          <Cell title='共享方式'>
+            <Switch checked={isShare === 1} onChange={(e) => setIsShare(e.detail ? 1 : 0)} />
+          </Cell>
+          <CellGroup title='提醒方式'>
+            <Cell>
+              <AlarmRadio type='alarmType' defaultValue={alarmType.toString()} onChange={(e) => setAlarmType(Number.parseInt(e.detail))}></AlarmRadio>
+            </Cell>
+          </CellGroup>
+          <CellGroup title='提醒时间'>
+            <Cell>
+              <AlarmRadio
+                type='alarmTime'
+                disable={alarmType === 0}
+                defaultValue={alarmTime.toString()}
+                onChange={(e) => setAlarmTime(Number.parseInt(e.detail))}
+              ></AlarmRadio>
+            </Cell>
+          </CellGroup>
+        </View>
+        <View className='button'>
+          <View className='btn'>
+            {!!id && major !== 1 && !!userInfo && createMemberId === userInfo.id && (
+              <Button type='danger' block loading={disable} disabled={disable}>
+                删除
+              </Button>
+            )}
+            <View className='space'></View>
+            <Button type='primary' block loading={disable} disabled={disable} onClick={commit}>
+              保存
+            </Button>
+          </View>
+        </View>
       </Container>
     )
   },

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 17:04:12
- * @LastEditTime: 2022-07-22 17:50:05
+ * @LastEditTime: 2022-08-01 11:22:09
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useCallback } from 'react'
@@ -34,11 +34,11 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
     if (params === 1) {
       Router.toCalendarmanager()
     } else if (params === 2) {
-      //Router.toSystemsetting()
+      Router.toSystemsetting()
     } else if (params === 3) {
       _copy()
     } else if (params === 4) {
-      //Router.toCustomerservice()
+      Router.toOnlineservices()
     } else if (params === 5) {
       //Router.toMemberinfo()
     } else if (params === 6) {

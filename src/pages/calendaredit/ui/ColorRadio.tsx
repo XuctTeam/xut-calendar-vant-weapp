@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-13 10:03:33
- * @LastEditTime: 2022-07-28 16:56:05
+ * @LastEditTime: 2022-08-01 09:55:35
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent } from 'react'
@@ -21,7 +21,7 @@ const ColorRadio: FunctionComponent<IColorPropState> = (props) => {
         {colors.map((c, i) => {
           return (
             <GridItem key={i}>
-              <Radio key={i} name={c.value} checkedColor={`${c.code}`}></Radio>
+              <Radio key={i} name={c.value} checkedColor={`#${c.value}`}></Radio>
             </GridItem>
           )
         })}

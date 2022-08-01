@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-29 16:23:26
+ * @LastEditTime: 2022-08-01 13:28:14
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -12,13 +12,13 @@ import React from 'react'
 import { Button, Icon, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { Collapse, CollapseItem } from '@antmjs/vantui'
 import Header from '@/components/header'
 import dayjs from 'dayjs'
 import { ICurrentDay } from '~/../@types/date'
 import { getToday } from '@/utils'
-import { calendarStore, componentRefreshTimeStore } from '@/store'
+import { calendarStore, componentRefreshTimeStore, lunarStore, mondayStore } from '@/store'
 import { cacheGetSync } from '@/cache'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../@types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
@@ -252,8 +252,11 @@ export default Unite(
     } = events
     const env = useWebEnv()
     const [calendars, setCalendars] = useRecoilState(calendarStore)
+    const lunar = useRecoilValue(lunarStore)
+    const monday = useRecoilValue(mondayStore)
     const accessToken = cacheGetSync('accessToken')
     const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(componentRefreshTimeStore)
+
     const calRef = React.createRef()
 
     events.setHooks({
@@ -265,8 +268,6 @@ export default Unite(
     })
     events.setHooks({ calendars: calendars })
 
-    const lunar = true
-    const monday = true
     const view = '1'
 
     return (

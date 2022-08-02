@@ -1,0 +1,198 @@
+/*
+ * @Author: Derek Xu
+ * @Date: 2022-07-14 15:50:29
+ * @LastEditors: Derek Xu
+ * @LastEditTime: 2022-08-01 19:53:25
+ * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
+ * @Description:
+ *
+ * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
+ */
+import { Fragment } from 'react'
+import { Button, Cell, Dialog, Unite } from '@antmjs/vantui'
+import { View } from '@tarojs/components'
+import Container from '@/components/container'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import Avatar from '@/components/avatar'
+import { userInfoStore } from '@/store'
+import { IUserInfo } from '~/../@types/user'
+import { userForceUpdateState, userAuthForceUpdateState, calendarForceUpdateState, userAuthInfoStore } from '@/store'
+import Images from '@/constants/images'
+import Header from '@/components/header'
+import { cacheRemoveSync } from '@/cache'
+import { useBack } from '@/utils/taro'
+import { UploadHeader } from './ui'
+import { updateName, logout, updateAvatar } from '@/api/user'
+
+import './index.less'
+
+export default Unite(
+  {
+    state: {
+      headerOpen: false
+    },
+    async onLoad() {},
+
+    setHeaderOpen(headerOpen: boolean) {
+      this.setState({
+        headerOpen
+      })
+    },
+
+    modiftAvatar(url: string) {
+      updateAvatar(url)
+        .then((res) => {
+          //
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      this.setState({
+        headerOpen: false
+      })
+    },
+
+    logout() {
+      Dialog.confirm({
+        title: '提示',
+        message: '确认退出吗？',
+        selector: 'vanDialog2'
+      }).then((value) => {
+        if (value === 'cancel') return
+        this._logout()
+      })
+    },
+
+    _logout() {
+      logout()
+        .then(() => {
+          cacheRemoveSync('accessToken')
+          cacheRemoveSync('refreshToken')
+          cacheRemoveSync('userId')
+          const random = Math.random()
+          this.hooks['setUserAuthForceUpdateState'](random)
+          this.hooks['setUserForceUpdateState'](random)
+          this.hooks['setCalendarForceUpdateState'](random)
+          window.setTimeout(() => {
+            this.hooks['back']()
+          }, 500)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  },
+  function ({ state, events }) {
+    const [back] = useBack({
+      to: 4
+    })
+    const userAuths = useRecoilValue(userAuthInfoStore)
+    const userInfo: IUserInfo | undefined = useRecoilValue(userInfoStore)
+    const [, setCalendarForceUpdateState] = useRecoilState(calendarForceUpdateState)
+    const [, setUserForceUpdateState] = useRecoilState(userForceUpdateState)
+    const [, setUserAuthForceUpdateState] = useRecoilState(userAuthForceUpdateState)
+
+    const { avatar, name } = userInfo || { avatar: Images.DEFAULT_AVATAR, username: '' }
+    const { headerOpen } = state
+    const { setHeaderOpen, modiftAvatar, logout } = events
+    const phoneAuth =
+      userAuths && userAuths.length > 0
+        ? userAuths.find((i) => i.identityType === 'phone')
+        : {
+            memberId: (userInfo && userInfo.id) || '',
+            username: '',
+            nickName: '',
+            avatar: '',
+            identityType: 'phone'
+          }
+
+    const wxAuth =
+      userAuths && userAuths.length > 0
+        ? userAuths.find((i) => i.identityType === 'open_id')
+        : {
+            memberId: (userInfo && userInfo.id) || '',
+            username: '',
+            nickName: '',
+            avatar: '',
+            identityType: 'open_id'
+          }
+    const userNameAuth =
+      userAuths && userAuths.length > 0
+        ? userAuths.find((i) => i.identityType === 'user_name')
+        : {
+            memberId: (userInfo && userInfo.id) || '',
+            username: '',
+            nickName: '',
+            avatar: '',
+            identityType: 'user_name'
+          }
+    const emailAuth =
+      userAuths && userAuths.length > 0
+        ? userAuths.find((i) => i.identityType === 'email')
+        : {
+            memberId: (userInfo && userInfo.id) || '',
+            username: '',
+            nickName: '',
+            avatar: '',
+            identityType: 'email'
+          }
+
+    events.setHooks({
+      back: back,
+      setUserAuthForceUpdateState: setUserAuthForceUpdateState,
+      setUserForceUpdateState: setUserForceUpdateState,
+      setCalendarForceUpdateState: setCalendarForceUpdateState
+    })
+    return (
+      <Container
+        navTitle='账号与安全'
+        enablePagePullDownRefresh={false}
+        className='pages-member-account-index'
+        h5Nav={true}
+        renderPageTopHeader={() => {
+          return <Header title='账号与安全' left to={4}></Header>
+        }}
+      >
+        <View className='box'>
+          <Cell title='头像' size='large'>
+            <Avatar src={avatar || Images.DEFAULT_AVATAR} round size='large' onClick={() => setHeaderOpen(true)} />
+          </Cell>
+          <Cell title='名称' clickable onClick={() => setNameOpen(true)}>
+            {name}
+          </Cell>
+          <Cell title='登录账号' clickable onClick={() => to(2)}>
+            {userNameAuth ? userNameAuth.username : '未绑定'}
+          </Cell>
+          <Cell title='手机号' clickable onClick={() => to(3)}>
+            {phoneAuth ? phoneAuth.username : '未绑定'}
+          </Cell>
+          <Cell title='邮箱' clickable onClick={() => to(5)}>
+            {emailAuth ? emailAuth.username : '未绑定'}
+          </Cell>
+          <Cell title='微信' clickable onClick={() => to(6)}>
+            {wxAuth ? wxAuth.nickName : ''}
+          </Cell>
+          <Cell title='设置密码' clickable onClick={() => to(4)}></Cell>
+        </View>
+        <View className='button'>
+          <Button type='warning' block onClick={logout}>
+            退出登录
+          </Button>
+        </View>
+        <Dialog id='vanDialog2' />
+        <UploadHeader
+          open={headerOpen}
+          close={() => setHeaderOpen(false)}
+          updateAvatar={modiftAvatar}
+          avatar={userInfo && userInfo.avatar ? userInfo.avatar : Images.DEFAULT_AVATAR}
+        ></UploadHeader>
+      </Container>
+    )
+  },
+  { page: true }
+)
+
+definePageConfig({
+  // 这里不要设置标题，在Container组件上面设置
+  navigationBarTitleText: ''
+})

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:46:12
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-20 13:15:35
+ * @LastEditTime: 2022-08-01 19:51:43
  * @FilePath: \xut-calendar-vant-weapp\src\components\avatar\index.tsx
  * @Description:
  *
@@ -24,10 +24,20 @@ interface IPageOption {
   round?: boolean
   size?: AvatarSize
   children?: ReactNode
+  onClick?: () => void
 }
 
 function Index(props: IPageOption): JSX.Element {
-  const { className, src, round = false, size = 'medium', children, ...restProps } = props
+  const { className, src, round = false, size = 'medium', children } = props
+  console.log(src)
+
+  const click = () => {
+    if (props.onClick && props.onClick instanceof Function) {
+      props.onClick()
+      return
+    }
+    console.log('onclick')
+  }
 
   return (
     <View
@@ -39,9 +49,9 @@ function Index(props: IPageOption): JSX.Element {
           [prefixClassname('avatar--medium')]: size === 'medium',
           [prefixClassname('avatar--large')]: size === 'large'
         },
-
         className
       )}
+      onClick={click}
     >
       {src ? <Image round={round} src={src} /> : children}
     </View>

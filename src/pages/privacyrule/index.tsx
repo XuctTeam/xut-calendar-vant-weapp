@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 14:51:51
+ * @LastEditTime: 2022-08-01 14:55:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\privacyrule\index.tsx
  * @Description:
  *
@@ -23,6 +23,7 @@ export default Unite(
     return (
       <Container
         navTitle='隐私保护协议'
+        h5Nav={true}
         enablePagePullDownRefresh={true}
         renderPageTopHeader={() => {
           return <Header title='隐私保护协议' left to={4}></Header>

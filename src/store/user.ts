@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 13:13:28
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-22 13:15:09
+ * @LastEditTime: 2022-08-01 18:44:00
  * @FilePath: \xut-calendar-vant-weapp\src\store\user.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { atom, RecoilState, selector } from 'recoil'
-import { cacheGetSync } from '@/cache'
+import { cacheGetSync, cacheSet } from '@/cache'
 import { IUserInfo, IUserAuth } from '~/../@types/user'
 import { baseUserInfo, auths } from '@/api/user'
 
@@ -36,6 +36,7 @@ export const userInfoStore = selector({
     }
     try {
       const user: IUserInfo = await baseUserInfo()
+      cacheSet({ key: 'userId', data: user.id })
       return user
     } catch (err) {
       console.log(err)

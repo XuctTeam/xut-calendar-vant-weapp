@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 14:52:59
+ * @LastEditTime: 2022-08-01 14:54:14
  * @FilePath: \xut-calendar-vant-weapp\src\pages\aboutus\index.tsx
  * @Description:
  *
@@ -11,7 +11,7 @@
 import Router from 'tarojs-router-next'
 import { useWebEnv } from '@/hooks'
 import { Unite, Image } from '@antmjs/vantui'
-import { View } from '@tarojs/components'
+import { View, Navigator } from '@tarojs/components'
 import Container from '@/components/container'
 import Images from '@/constants/images'
 import './index.less'

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 17:04:12
- * @LastEditTime: 2022-08-01 11:22:09
+ * @LastEditTime: 2022-08-01 18:18:39
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useCallback } from 'react'
@@ -40,7 +40,7 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
     } else if (params === 4) {
       Router.toOnlineservices()
     } else if (params === 5) {
-      //Router.toMemberinfo()
+      Router.toMemberaccount()
     } else if (params === 6) {
       _submessageClickHandle()
     }

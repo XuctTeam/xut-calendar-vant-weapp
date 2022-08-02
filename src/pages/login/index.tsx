@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 13:53:15
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-22 13:53:17
+ * @LastEditTime: 2022-08-01 18:49:47
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -24,6 +24,7 @@ import { sendSmsCode } from '@/api/user'
 import { checkMobile } from '@/utils'
 import Images from '@/constants/images'
 import './index.less'
+import Router from 'tarojs-router-next'
 
 interface ICode {
   code: string
@@ -195,29 +196,17 @@ export default function Index() {
   }
 
   const _saveTokenToCache = (accessToken: string, refreshToken: string) => {
-    new Promise((resolve, reject) => {
-      try {
-        cacheSetSync('accessToken', 'Bearer ' + accessToken)
-        cacheSetSync('refreshToken', 'Bearer ' + refreshToken)
-        return resolve('')
-      } catch (err) {
-        console.log(err)
-        reject('save token to cache error')
-      }
-    })
-      .then(() => {
-        setCalendarForceUpdateState(Math.random())
-        setUserForceUpdateState(Math.random())
-        setUserAuthForceUpdateState(Math.random())
-        setTimeout(() => {
-          back({
-            to: 4
-          })
-        }, 500)
+    const random = Math.random()
+    cacheSetSync('accessToken', 'Bearer ' + accessToken)
+    cacheSetSync('refreshToken', 'Bearer ' + refreshToken)
+    setUserForceUpdateState(random)
+    setUserAuthForceUpdateState(random)
+    setCalendarForceUpdateState(random)
+    setTimeout(() => {
+      back({
+        to: 4
       })
-      .catch((err) => {
-        console.log(err)
-      })
+    }, 500)
   }
 
   const _startSmsCode = () => {
@@ -337,13 +326,14 @@ export default function Index() {
           <Checkbox value={self} checkedColor='red' onChange={(e: any) => setSelf(e.detail)}>
             登录即已同意
             {env === 'WEAPP' ? (
-              <Navigator url='/pages/selfprivacy/index'>《隐私保护政策》</Navigator>
+              <Navigator url='/pages/privacyrule/index'>《隐私保护政策》</Navigator>
             ) : (
               <a
                 href='#!'
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
+                  Router.toPrivacyrule()
                 }}
               >
                 《隐私保护政策》

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 19:53:25
+ * @LastEditTime: 2022-08-03 18:58:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -12,11 +12,10 @@ import { Fragment } from 'react'
 import { Button, Cell, Dialog, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import Avatar from '@/components/avatar'
-import { userInfoStore } from '@/store'
 import { IUserInfo } from '~/../@types/user'
-import { userForceUpdateState, userAuthForceUpdateState, calendarForceUpdateState, userAuthInfoStore } from '@/store'
+import { userInfoStore, userForceUpdateState, userAuthForceUpdateState, calendarForceUpdateState, userAuthInfoStore } from '@/store'
 import Images from '@/constants/images'
 import Header from '@/components/header'
 import { cacheRemoveSync } from '@/cache'
@@ -41,8 +40,8 @@ export default Unite(
 
     modiftAvatar(url: string) {
       updateAvatar(url)
-        .then((res) => {
-          //
+        .then(() => {
+          this.hooks['setUserInfoState']({ ...this.hooks['userInfo'], avatar: url })
         })
         .catch((err) => {
           console.log(err)
@@ -87,19 +86,19 @@ export default Unite(
       to: 4
     })
     const userAuths = useRecoilValue(userAuthInfoStore)
-    const userInfo: IUserInfo | undefined = useRecoilValue(userInfoStore)
-    const [, setCalendarForceUpdateState] = useRecoilState(calendarForceUpdateState)
-    const [, setUserForceUpdateState] = useRecoilState(userForceUpdateState)
-    const [, setUserAuthForceUpdateState] = useRecoilState(userAuthForceUpdateState)
+    const [userInfoState, setUserInfoState] = useRecoilState(userInfoStore)
+    const setCalendarForceUpdateState = useSetRecoilState(calendarForceUpdateState)
+    const setUserForceUpdateState = useSetRecoilState(userForceUpdateState)
+    const setUserAuthForceUpdateState = useSetRecoilState(userAuthForceUpdateState)
 
-    const { avatar, name } = userInfo || { avatar: Images.DEFAULT_AVATAR, username: '' }
+    const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, username: '' }
     const { headerOpen } = state
     const { setHeaderOpen, modiftAvatar, logout } = events
     const phoneAuth =
       userAuths && userAuths.length > 0
         ? userAuths.find((i) => i.identityType === 'phone')
         : {
-            memberId: (userInfo && userInfo.id) || '',
+            memberId: (userInfoState && userInfoState.id) || '',
             username: '',
             nickName: '',
             avatar: '',
@@ -110,7 +109,7 @@ export default Unite(
       userAuths && userAuths.length > 0
         ? userAuths.find((i) => i.identityType === 'open_id')
         : {
-            memberId: (userInfo && userInfo.id) || '',
+            memberId: (userInfoState && userInfoState.id) || '',
             username: '',
             nickName: '',
             avatar: '',
@@ -120,7 +119,7 @@ export default Unite(
       userAuths && userAuths.length > 0
         ? userAuths.find((i) => i.identityType === 'user_name')
         : {
-            memberId: (userInfo && userInfo.id) || '',
+            memberId: (userInfoState && userInfoState.id) || '',
             username: '',
             nickName: '',
             avatar: '',
@@ -130,7 +129,7 @@ export default Unite(
       userAuths && userAuths.length > 0
         ? userAuths.find((i) => i.identityType === 'email')
         : {
-            memberId: (userInfo && userInfo.id) || '',
+            memberId: (userInfoState && userInfoState.id) || '',
             username: '',
             nickName: '',
             avatar: '',
@@ -139,6 +138,8 @@ export default Unite(
 
     events.setHooks({
       back: back,
+      userInfo: userInfoState,
+      setUserInfoState: setUserInfoState,
       setUserAuthForceUpdateState: setUserAuthForceUpdateState,
       setUserForceUpdateState: setUserForceUpdateState,
       setCalendarForceUpdateState: setCalendarForceUpdateState
@@ -184,7 +185,7 @@ export default Unite(
           open={headerOpen}
           close={() => setHeaderOpen(false)}
           updateAvatar={modiftAvatar}
-          avatar={userInfo && userInfo.avatar ? userInfo.avatar : Images.DEFAULT_AVATAR}
+          avatar={userInfoState && userInfoState.avatar ? userInfoState.avatar : Images.DEFAULT_AVATAR}
         ></UploadHeader>
       </Container>
     )

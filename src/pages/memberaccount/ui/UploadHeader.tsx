@@ -4,10 +4,10 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-01 21:55:42
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 20:31:43
+ * @LastEditTime: 2022-08-03 18:59:27
  */
 import { FunctionComponent, useCallback, useEffect, useState } from 'react'
-import { useToast, useImage, useFile } from 'taro-hooks'
+import { useToast, useFile } from 'taro-hooks'
 import { Button, Popup, Uploader } from '@antmjs/vantui'
 import { cacheGetSync } from '@/cache'
 import { upload as uploadPath } from '@/api/common'
@@ -22,20 +22,20 @@ interface IPageOption {
   updateAvatar: (avatar: string) => void
 }
 
+type IUploadState = 'uploading' | 'failed' | 'done'
+
 interface IFile {
   url: string
-  status: 'uploading' | 'failed' | 'done'
+  status: IUploadState
   message?: string
 }
 
 const UploadHeader: FunctionComponent<IPageOption> = (props) => {
   const [files, setFiles] = useState<IFile[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
   const [toast] = useToast({
     icon: 'error'
   })
   const { upload } = useFile()
-  const [, { choose }] = useImage({})
 
   useEffect(() => {
     setFiles([
@@ -46,90 +46,45 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
     ])
   }, [props.avatar])
 
-  // const onUpload = async () => {
-  //   if (loading) {
-  //     //toast({ title: '正在上传' })
-  //     return
-  //   }
-  //   const assessToken = cacheGetSync('accessToken')
-  //   const fileInfo = await choose()
-  //   if (fileInfo?.tempFilePaths?.length) {
-  //     const updateFile = fileInfo.tempFiles[0]
-  //     const uploadFilePath = fileInfo.tempFilePaths[0]
-  //     setFiles([
-  //       {
-  //         type: updateFile.type,
-  //         url: uploadFilePath
-  //       }
-  //     ])
-  //     setLoading(true)
-  //     const uploadResult = await upload({
-  //       url: uploadPath(),
-  //       filePath: uploadFilePath,
-  //       name: 'smfile',
-  //       header: { Authorization: assessToken }
-  //     })
-  //     if (uploadResult?.statusCode !== 200) {
-  //       _uploadFail()
-  //       return
-  //     }
-  //     const result: IUploadInfo = JSON.parse(uploadResult?.data)
-  //     if (!result.success) {
-  //       _uploadFail()
-  //       return
-  //     }
-  //     setLoading(false)
-  //     setFiles([
-  //       {
-  //         type: updateFile.type,
-  //         url: result.data.url
-  //       }
-  //     ])
-  //   }
-  // }
-
   const afterRead = useCallback(
     async (event: any) => {
-      const { file, name } = event.detail
+      const { file } = event.detail
       // 可在此处新增云上传图片操作
-      if (loading) {
+      if (file[0].state === 'uploading') {
         toast({ title: '正在上传' })
         return
       }
+      if (!(file && file[0])) {
+        toast({ title: '获取上传文件失败' })
+        return
+      }
+      let _file: IFile = {
+        url: file[0].url,
+        status: 'uploading'
+      }
+      setFiles([_file])
       const assessToken = cacheGetSync('accessToken')
-      console.log(file)
-      setLoading(true)
-      upload({
+      const uploadResult = await upload({
         url: uploadPath(),
-        filePath: file.url.concat(name),
-        name: 'smfile',
+        filePath: file[0].url,
+        name: 'smsfile',
         header: { Authorization: assessToken }
-      }).then((res) => {
-        if (res.statusCode !== 200) {
-          _uploadFail()
-          return
-        }
-        const result: IUploadInfo = JSON.parse(res?.data)
-        if (!result.success) {
-          _uploadFail()
-          return
-        }
-        setLoading(false)
-        file['status'] = 'done'
-        setFiles(files.concat(file))
       })
-      // if (uploadResult?.statusCode !== 200) {
-      //   _uploadFail()
-      //   return
-      // }
-      // const result: IUploadInfo = JSON.parse(uploadResult?.data)
-      // if (!result.success) {
-      //   _uploadFail()
-      //   return
-      // }
-      // setLoading(false)
-      // file['status'] = 'done'
-      // setFiles(files.concat(file))
+      if (uploadResult.statusCode !== 200) {
+        _uploadFail()
+        return
+      }
+      const result: IUploadInfo = JSON.parse(uploadResult?.data)
+      if (!result.success) {
+        _uploadFail()
+        return
+      }
+      const { url } = result.data
+      _file = {
+        url: url,
+        status: 'done'
+      }
+      setFiles([_file])
     },
     [toast]
   )
@@ -143,19 +98,27 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
 
   const _uploadFail = () => {
     toast({ title: '上传失败' })
-    setLoading(false)
+    const _file: IFile = {
+      url: files[0]?.url || '',
+      status: 'failed'
+    }
+    setFiles([_file])
   }
 
   const updateAvatarHandle = () => {
-    if (loading) {
-      //toast({ title: '正在上传' })
+    if (!(files && files.length !== 0)) {
+      toast({ title: '上传文件为空' })
+      return
+    }
+    if (files[0]?.status === 'uploading') {
+      toast({ title: '正在上传' })
       return
     }
     if (files[0] && files[0].url && files[0].url !== props.avatar) {
       props.updateAvatar(files[0].url)
       return
     }
-    //toast({ title: '上传数据重复' })
+    toast({ title: '上传数据重复' })
   }
 
   return (

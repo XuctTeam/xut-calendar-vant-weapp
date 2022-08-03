@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 13:13:28
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 18:44:00
+ * @LastEditTime: 2022-08-03 19:08:37
  * @FilePath: \xut-calendar-vant-weapp\src\store\user.ts
  * @Description:
  *
@@ -23,26 +23,32 @@ export const userForceUpdateState = atom({
   key: 'userForceUpdateState',
   default: uuid()
 })
-/**
- * @description: 用户基础信息缓存
- * @return {*}
- */
-export const userInfoStore = selector({
-  key: 'userInfoStore',
+
+const userInfoQuery = selector({
+  key: 'userInQuery',
   get: async ({ get }) => {
     get(userForceUpdateState)
     if (!cacheGetSync('accessToken')) {
       return undefined
     }
-    try {
-      const user: IUserInfo = await baseUserInfo()
-      cacheSet({ key: 'userId', data: user.id })
-      return user
-    } catch (err) {
-      console.log(err)
-    }
-    return undefined
+    const user: IUserInfo = await baseUserInfo()
+    cacheSet({ key: 'userId', data: user.id })
+    return user
   }
+})
+
+/**
+ * @description: 用户缓存信息
+ * @return {*}
+ */
+export const userInfoStore = atom({
+  key: 'userInfoStore',
+  default: selector({
+    key: 'userInfoStore/default',
+    get: ({ get }) => {
+      return get(userInfoQuery)
+    }
+  })
 }) as RecoilState<IUserInfo | undefined>
 
 /**

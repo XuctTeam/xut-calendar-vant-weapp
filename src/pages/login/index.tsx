@@ -2,27 +2,27 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-03 19:55:35
+ * @LastEditTime: 2022-08-05 17:29:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { Unite } from '@antmjs/vantui'
-import { useReachBottom } from '@tarojs/taro'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { View, Navigator, ITouchEvent } from '@tarojs/components'
 import { Button, Checkbox, Icon, Image, CellGroup, Field } from '@antmjs/vantui'
 import dayjs from 'dayjs'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import { useEnv, useLogin, useUserInfo, useToast } from 'taro-hooks'
 import { back } from '@/utils/taro'
 import { IUserInfo as IMemberInfo } from 'taro-hooks/dist/useUserInfo'
-import { cacheSetSync } from '@/cache'
+import { cacheSetSync, cacheRemoveSync } from '@/cache'
 import Container from '@/components/container'
+import { IUserAuth, IUserInfo } from '~/../@types/user'
 import { wechatLogin, phoneLogin, usernameLogin } from '@/api/login'
-import { userForceUpdateState, userAuthForceUpdateState, calendarForceUpdateState } from '@/store'
-import { sendSmsCode } from '@/api/user'
+import { userInfoStore, userAuthInfoStore } from '@/store'
+import { sendSmsCode, baseUserInfo, auths } from '@/api/user'
 import { checkMobile } from '@/utils'
 import Images from '@/constants/images'
 import Router from 'tarojs-router-next'
@@ -40,8 +40,9 @@ export default Unite(
       password: '',
       phone: '',
       smsCode: '',
-      smsText: '',
-      smsLoading: false
+      smsText: '发送验证码',
+      smsLoading: false,
+      loginLoading: false
     },
     async onLoad() {
       if (this.hooks['env'] === 'WEAPP') {
@@ -112,6 +113,12 @@ export default Unite(
       })
     },
 
+    setLoginLoading(loginLoading: boolean) {
+      this.setState({
+        loginLoading
+      })
+    },
+
     /**
      * 使用手机号登录
      * @param phone
@@ -126,6 +133,10 @@ export default Unite(
       if (this.state.phoneForm) {
         if (!this.state.phone) {
           this._error('手机号码不能为空')
+          return
+        }
+        if (!checkMobile(this.state.phone)) {
+          this._error('手机号码错误')
           return
         }
         if (!this.state.smsCode) {
@@ -157,12 +168,14 @@ export default Unite(
     },
 
     _usernameLogin() {
+      this.setLoginLoading(true)
       return usernameLogin(this.state.username, this.state.password)
         .then((res) => {
           this._saveTokenToCache(res.access_token, res.refresh_token)
         })
         .catch((error) => {
           console.log(error)
+          this.setLoginLoading(false)
         })
     },
 
@@ -219,13 +232,25 @@ export default Unite(
         })
     },
 
-    _saveTokenToCache(accessToken: string, refreshToken: string) {
+    async _saveTokenToCache(accessToken: string, refreshToken: string) {
       cacheSetSync('accessToken', 'Bearer ' + accessToken)
       cacheSetSync('refreshToken', 'Bearer ' + refreshToken)
-      //this.hooks['setUserForceUpdateState'](Math.random())
-      this.hooks['setUserAuthForceUpdateState'](Math.random())
-      this.hooks['setCalendarForceUpdateState'](Math.random())
+      const result = await Promise.all([baseUserInfo(), auths()])
+      if (!(result[0] && result[1])) {
+        this._error('获取用户信息失败')
+        cacheRemoveSync('accessToken')
+        cacheRemoveSync('refreshToken')
+        return
+      }
+      this.hooks['setUserInfoState'](result[0] as IUserInfo)
+      this.hooks['setUserAuthState'](result[1] as IUserAuth[])
+      this.hooks['show']({
+        icon: 'success',
+        title: '登录成功',
+        duration: 1500
+      })
       setTimeout(() => {
+        this.setLoginLoading(false)
         back({
           to: 4
         })
@@ -271,7 +296,7 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const { self, phoneForm, username, password, phone, smsCode, smsText, smsLoading } = state
+    const { self, phoneForm, username, password, phone, smsCode, smsText, smsLoading, loginLoading } = state
     const { setUsername, setPassword, setPhone, setSmsCode, setPhoneForm, setSelf, pushCode, loginByPhoneOrUsername, loginByCode } = events
     const env = useEnv()
     const [login] = useLogin()
@@ -280,18 +305,16 @@ export default Unite(
       icon: 'error'
     })
     const timerRef = useRef<number>(0)
-    const setCalendarForceUpdateState = useSetRecoilState(calendarForceUpdateState)
-    const setUserForceUpdateState = useSetRecoilState(userForceUpdateState)
-    const setUserAuthForceUpdateState = useSetRecoilState(userAuthForceUpdateState)
+    const setUserInfoState = useSetRecoilState(userInfoStore)
+    const setUserAuthState = useSetRecoilState(userAuthInfoStore)
 
     events.setHooks({
       login: login,
       show: show,
       timerRef: timerRef,
       getUserProfile: getUserProfile,
-      setCalendarForceUpdateState: setCalendarForceUpdateState,
-      setUserForceUpdateState: setUserForceUpdateState,
-      setUserAuthForceUpdateState: setUserAuthForceUpdateState
+      setUserInfoState: setUserInfoState,
+      setUserAuthState: setUserAuthState
     })
 
     return (
@@ -323,7 +346,7 @@ export default Unite(
                     value={password}
                     onChange={(e: ITouchEvent) => setPassword(e.detail)}
                     renderButton={
-                      <Button size='small' plain type='info'>
+                      <Button size='small' plain type='info' onClick={() => Router.toMemberforgetpassword()}>
                         忘记密码
                       </Button>
                     }
@@ -347,7 +370,7 @@ export default Unite(
                     value={smsCode}
                     onChange={(e: ITouchEvent) => setSmsCode(e.detail)}
                     renderButton={
-                      <Button size='small' plain type='info' hairline={false} disabled={smsLoading} onClick={pushCode}>
+                      <Button size='small' plain type='info' disabled={smsLoading} onClick={pushCode}>
                         {smsText}
                       </Button>
                     }
@@ -356,11 +379,11 @@ export default Unite(
               )}
               <View className='btn'>
                 <View onClick={() => setPhoneForm(!phoneForm)}>{phoneForm ? '账号密码登录' : '验证码登录'}</View>
-                <View>立即注册</View>
+                <View onClick={() => Router.toMemberregister()}>立即注册</View>
               </View>
             </View>
 
-            <Button type='danger' block onClick={loginByPhoneOrUsername}>
+            <Button type='danger' block onClick={loginByPhoneOrUsername} disabled={loginLoading}>
               登录
             </Button>
           </View>

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 13:57:42
+ * @LastEditTime: 2022-08-05 13:32:52
  * @FilePath: \xut-calendar-vant-weapp\src\store.ts
  * @Description:
  *
@@ -11,7 +11,7 @@
 import { atom, RecoilState } from 'recoil'
 import { calendarForceUpdateState, calendarStore } from '@/store/calendar'
 import { componentRefreshTimeStore } from '@/store/component'
-import { userForceUpdateState, userInfoStore, userAuthForceUpdateState, userAuthInfoStore } from '@/store/user'
+import { userInfoStore, userAuthInfoStore } from '@/store/user'
 import { lunarStore, mondayStore, compViewStore } from '@/store/system'
 
 export interface IMenuButton {
@@ -42,9 +42,7 @@ export {
   calendarForceUpdateState,
   calendarStore,
   componentRefreshTimeStore,
-  userForceUpdateState,
   userInfoStore,
-  userAuthForceUpdateState,
   userAuthInfoStore,
   lunarStore,
   mondayStore,

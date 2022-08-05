@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-03 18:58:51
+ * @LastEditTime: 2022-08-05 13:44:56
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -15,7 +15,7 @@ import Container from '@/components/container'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import Avatar from '@/components/avatar'
 import { IUserInfo } from '~/../@types/user'
-import { userInfoStore, userForceUpdateState, userAuthForceUpdateState, calendarForceUpdateState, userAuthInfoStore } from '@/store'
+import { userInfoStore, userAuthInfoStore } from '@/store'
 import Images from '@/constants/images'
 import Header from '@/components/header'
 import { cacheRemoveSync } from '@/cache'
@@ -68,10 +68,8 @@ export default Unite(
           cacheRemoveSync('accessToken')
           cacheRemoveSync('refreshToken')
           cacheRemoveSync('userId')
-          const random = Math.random()
-          this.hooks['setUserAuthForceUpdateState'](random)
-          this.hooks['setUserForceUpdateState'](random)
-          this.hooks['setCalendarForceUpdateState'](random)
+          this.hooks['setUserInfoState'](undefined)
+          this.hooks['setUserAuthsState']([])
           window.setTimeout(() => {
             this.hooks['back']()
           }, 500)
@@ -85,11 +83,8 @@ export default Unite(
     const [back] = useBack({
       to: 4
     })
-    const userAuths = useRecoilValue(userAuthInfoStore)
+    const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const [userInfoState, setUserInfoState] = useRecoilState(userInfoStore)
-    const setCalendarForceUpdateState = useSetRecoilState(calendarForceUpdateState)
-    const setUserForceUpdateState = useSetRecoilState(userForceUpdateState)
-    const setUserAuthForceUpdateState = useSetRecoilState(userAuthForceUpdateState)
 
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, username: '' }
     const { headerOpen } = state
@@ -140,9 +135,7 @@ export default Unite(
       back: back,
       userInfo: userInfoState,
       setUserInfoState: setUserInfoState,
-      setUserAuthForceUpdateState: setUserAuthForceUpdateState,
-      setUserForceUpdateState: setUserForceUpdateState,
-      setCalendarForceUpdateState: setCalendarForceUpdateState
+      setUserAuthsState: setUserAuthsState
     })
     return (
       <Container

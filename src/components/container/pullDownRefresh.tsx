@@ -3,9 +3,7 @@
 import { ReactNode, useRef } from 'react'
 import { showToast } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { sleep, rubberbandIfOutOfBounds, brower } from '@/utils'
-import classnames from 'classnames'
-import './pullDownRefresh.less'
+import { sleep, rubberbandIfOutOfBounds } from '@/utils'
 
 export type PullStatus = 'pulling' | 'canRelease' | 'refreshing' | 'complete'
 
@@ -29,7 +27,6 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
   const threshold = props.threshold ?? 60
   const pullingRef = useRef(false)
   const yRef = useRef(0)
-  const _brower = brower()
 
   async function doRefresh() {
     api.start({ transform: `scale(1)`, opacity: 1 })
@@ -126,14 +123,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
   }
 
   return (
-    <View
-      className={classnames('van-box', {
-        ['van-box--padding']: _brower && props.h5Nav
-      })}
-      onTouchEnd={onEnd}
-      onTouchMove={onMove}
-      onTouchStart={onStart}
-    >
+    <View style={{ height: '100%' }} onTouchEnd={onEnd} onTouchMove={onMove} onTouchStart={onStart}>
       {props.children}
     </View>
   )

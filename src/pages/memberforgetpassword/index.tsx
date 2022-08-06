@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-05 17:49:32
+ * @LastEditTime: 2022-08-06 15:11:37
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberforgetpassword\index.tsx
  * @Description:
  *
@@ -14,6 +14,9 @@ import Header from '@/components/header'
 import { Auth, Password } from './ui'
 import { forgetPasswordCheck, forgetModify } from '@/api/forget'
 import './index.less'
+import { useRef } from 'react'
+import { useToast } from 'taro-hooks'
+import { useBack } from '@/utils/taro'
 
 export default Unite(
   {
@@ -25,9 +28,8 @@ export default Unite(
     checkMemberCode(phone: string, email: string, code: string, type: number) {
       forgetPasswordCheck(phone, email, code, type)
         .then((res) => {
-          debugger
-          //memberIdRef.current = res as any as string
-          //codeRef.current = code
+          this.hooks['memberIdRef'].current = res as any as string
+          this.hooks['codeRef'].current = code
           this.setState({
             step: 2
           })
@@ -38,25 +40,38 @@ export default Unite(
     },
 
     modifyPassword(password: string) {
-      //   forgetModify(memberIdRef.current, password, codeRef.current)
-      //     .then(() => {
-      //       toast({
-      //         title: '修改成功'
-      //       })
-      //       window.setTimeout(() => {
-      //         back({
-      //           to: 6
-      //         })
-      //       }, 500)
-      //     })
-      //     .catch((err) => {
-      //       console.log(err)
-      //     })
+      forgetModify(this.hooks['memberIdRef'].current, password, this.hooks['codeRef'].current)
+        .then(() => {
+          this.hooks['toast']({
+            title: '修改成功'
+          })
+          window.setTimeout(() => {
+            this.hooks['back']()
+          }, 1000)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   },
   function ({ state, events }) {
     const { step } = state
     const { checkMemberCode, modifyPassword } = events
+    const [toast] = useToast({
+      icon: 'success',
+      title: '修改成功'
+    })
+    const [back] = useBack({
+      to: 6
+    })
+    const memberIdRef = useRef<string>('')
+    const codeRef = useRef<number>(-1)
+    events.setHooks({
+      toast: toast,
+      back: back,
+      memberIdRef: memberIdRef,
+      codeRef: codeRef
+    })
 
     return (
       <Container

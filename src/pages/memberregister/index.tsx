@@ -2,23 +2,21 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-05 18:30:35
+ * @LastEditTime: 2022-08-06 15:11:44
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { useRef } from 'react'
 import Taro from '@tarojs/taro'
 import Header from '@/components/header'
-import { Button, Icon, Unite } from '@antmjs/vantui'
+import { Button, Icon, Unite, Form } from '@antmjs/vantui'
 import { Swiper, SwiperItem, View } from '@tarojs/components'
 import Container from '@/components/container'
-import { IFormInstanceAPI } from '@antmjs/vantui/types/form'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
 import { register, captcha as toGetCaptcha } from '@/api/user'
-import { UserNameRegister, PhoneRegister, EmailRegister, SimpleVerify } from './ui'
+import { UserNameRegister, PhoneRegister, EmailRegister } from './ui'
 
 import './index.less'
 
@@ -83,52 +81,36 @@ export default Unite(
       let ref
       switch (this.state.formType) {
         case 0:
-          ref = userRef
+          ref = this.hooks['userRef']
           break
         case 1:
-          ref = phoneRef
+          ref = this.hooks['phoneRef']
           break
         case 2:
-          ref = emailRef
+          ref = this.hooks['emailRef']
           break
       }
       if (!ref) return
-      ref.current
-        .validate()
-        .then((data: any) => {
-          if (this.state.formType === 0 && data.captcha.length !== 5) {
-            this.hooks['toast']({ title: '验证码格式错误' })
-            return
-          }
-          setOpen(true)
-        })
-        .catch((err: any) => {
-          console.log(err)
-        })
+      ref.validateFields((errorMessage: any, fieldValues: any) => {
+        if (errorMessage && errorMessage.length) {
+          return console.info('errorMessage', errorMessage)
+        }
+        this._setLoading(true)
+        switch (this.state.formType) {
+          case 0:
+            this._userNameRegister(fieldValues)
+            break
+          case 1:
+            this._phoneRegister(fieldValues)
+            break
+          case 2:
+            this._emailRegister(fieldValues)
+            break
+        }
+      })
     },
 
-    _verifySuccess() {
-      setOpen(false)
-      this._setLoading(true)
-      switch (this.state.formType) {
-        case 0:
-          this._userNameRegister()
-          break
-        case 1:
-          this._phoneRegister()
-          break
-        case 2:
-          this._emailRegister()
-          break
-      }
-    },
-
-    _userNameRegister() {
-      if (!this.hooks['userRef'].current) {
-        this._setLoading(false)
-        return
-      }
-      const data = this.hooks['userRef'].current.getFieldsValue()
+    _userNameRegister(data: IUserNameForm) {
       register({
         formType: this.state.formType,
         username: {
@@ -147,13 +129,7 @@ export default Unite(
         })
     },
 
-    _phoneRegister() {
-      if (!this.hooks['phoneRef'].current) {
-        this._setLoading(false)
-        return
-      }
-
-      const data = this.hooks['phoneRef'].current.getFieldsValue()
+    _phoneRegister(data: IPhoneForm) {
       register({
         formType: this.state.formType,
         phone: {
@@ -171,12 +147,7 @@ export default Unite(
         })
     },
 
-    _emailRegister() {
-      if (!this.hooks['emailRef'].current) {
-        this._setLoading(false)
-        return
-      }
-      const data = this.hooks['emailRef'].current.getFieldsValue()
+    _emailRegister(data: IEmailForm) {
       register({
         formType: this.state.formType,
         email: {
@@ -199,7 +170,7 @@ export default Unite(
       this.hooks['toast']({ title: '注册成功', icon: 'success' })
       setTimeout(() => {
         this.hooks['back']({ to: 4 })
-      }, 1000)
+      }, 2000)
     },
 
     _setLoading(loading: boolean) {
@@ -211,9 +182,9 @@ export default Unite(
   function ({ state, events }) {
     const { formType, image, loading } = state
     const { getCaptcha, setFormType, registerHandler } = events
-    const userRef = useRef<IFormInstanceAPI>()
-    const emailRef = useRef<IFormInstanceAPI>()
-    const phoneRef = useRef<IFormInstanceAPI>()
+    const userRef = Form.useForm()
+    const emailRef = Form.useForm()
+    const phoneRef = Form.useForm()
 
     const [toast] = useToast({
       icon: 'error'
@@ -233,7 +204,7 @@ export default Unite(
         enablePagePullDownRefresh={false}
         h5Nav
         renderPageTopHeader={() => {
-          return <Header title='忘记密码' left to={4}></Header>
+          return <Header title='用户注册' left to={4}></Header>
         }}
         className='pages-member-reigster-index'
       >
@@ -243,18 +214,18 @@ export default Unite(
             current={formType}
             style={{ height: '300px' }}
             onChange={(e) => {
-              console.log(e.detail.current)
+              if (e.detail.current === undefined) return
               setFormType(e.detail.current)
             }}
           >
             <SwiperItem>
-              <UserNameRegister ref={userRef} image={image} getCaptcha={getCaptcha}></UserNameRegister>
+              <UserNameRegister form={userRef} image={image} getCaptcha={getCaptcha}></UserNameRegister>
             </SwiperItem>
             <SwiperItem>
-              <PhoneRegister ref={phoneRef}></PhoneRegister>
+              <PhoneRegister form={phoneRef}></PhoneRegister>
             </SwiperItem>
             <SwiperItem>
-              <EmailRegister ref={emailRef}></EmailRegister>
+              <EmailRegister form={emailRef}></EmailRegister>
             </SwiperItem>
           </Swiper>
         </View>

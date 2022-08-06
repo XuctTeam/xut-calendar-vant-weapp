@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:26:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-28 13:46:18
+ * @LastEditTime: 2022-08-06 21:40:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberuserinfo\index.tsx
  * @Description:
  *
@@ -40,10 +40,10 @@ export default Unite(
       </Container>
     )
   },
-  { page: false }
+  { page: true }
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: '个人信息'
+  navigationBarTitleText: ''
 })

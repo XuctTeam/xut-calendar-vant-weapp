@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-27 03:47:42
- * @LastEditTime: 2022-08-05 15:43:10
+ * @LastEditTime: 2022-08-06 15:16:40
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
@@ -55,7 +55,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
     }
     sendForgetPasswordCode(phone, '', 1)
       .then(() => {
-        setPhoneSmsTextTime(60)
+        setPhoneSmsTextTime(120)
       })
       .catch((err) => {
         console.log(err)
@@ -90,7 +90,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
     }
     sendForgetPasswordCode('', mail, 2)
       .then(() => {
-        setEmailSmsTextTime(60)
+        setEmailSmsTextTime(120)
       })
       .catch((err) => {
         console.log(err)
@@ -161,7 +161,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
                 value={phoneSmsCode}
                 type='number'
                 maxlength={4}
-                onChange={(e) => setPhoneSmsCode(e.detail.value)}
+                onChange={(e) => setPhoneSmsCode(e.detail)}
                 renderButton={
                   <Button size='small' type='info' onClick={sendPhoneSmsCode} disabled={phoneDisable}>
                     {phoneSmsText}

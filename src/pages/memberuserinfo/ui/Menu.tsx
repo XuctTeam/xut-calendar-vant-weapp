@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 17:04:12
- * @LastEditTime: 2022-08-01 18:18:39
+ * @LastEditTime: 2022-08-06 22:05:39
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useCallback } from 'react'
@@ -47,7 +47,8 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
   }, 400)
 
   const _submessageClickHandle = useCallback(async () => {
-    if (!props.accessToken || !env) {
+    console.log(env)
+    if (!(props.accessToken && !env)) {
       toast({
         title: '请先登陆',
         icon: 'error'
@@ -56,8 +57,7 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
     }
     let content = '订阅失败！'
     let flag = false
-    //@ts-ignore
-    const subscribeIds = WX_TEMPLATE_ID.IDS
+    const subscribeIds = process.env.TEMPLATE_ID?.IDS
     try {
       const { [subscribeIds]: result } = await requestSubscribeMessage(subscribeIds)
       if (result === 'accept') {

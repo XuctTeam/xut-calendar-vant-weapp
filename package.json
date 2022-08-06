@@ -164,7 +164,7 @@
     "@babel/core": "^7.8.0",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
-    "@tarojs/cli": "^3.4.13",
+    "@tarojs/cli": "3.4.13",
     "@tarojs/mini-runner": "3.4.13",
     "@tarojs/plugin-framework-react": "3.4.13",
     "@tarojs/plugin-platform-alipay-dd": "^0.1.2",

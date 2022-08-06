@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, ReactNode } from 'react'
+import { useEffect, useState, useCallback, ReactNode, Fragment } from 'react'
 import { getCurrentInstance, navigateBack, reLaunch, getCurrentPages, useDidShow } from '@tarojs/taro'
 import { animated } from '@react-spring/web'
 import { View } from '@tarojs/components'
@@ -7,6 +7,7 @@ import { useRecoilState } from 'recoil'
 import { menuButtonStore } from '@/store'
 import { setMenuButtonAsync } from '@/utils'
 import './navigation.less'
+import { useWxBrowser } from '@/hooks'
 
 const hackSyncWechatTitle = () => {
   const iframe = document.createElement('iframe')
@@ -122,11 +123,21 @@ interface INavBarProps {
   springStyles: any
 }
 
+interface IH5PullDownBody {
+  h5Nav?: boolean
+  children: ReactNode
+}
+
+interface IWeChatPullDownBody {
+  menuButton: any
+  children: ReactNode
+}
+
 function NavBar(props: INavBarProps) {
   const { useNav, title, menuButton, navClassName, enablePullDownRefresh, pullDownRefreshStatus, renderHeader, springStyles } = props
-  const navHeight = menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
   const statusBarHeight = menuButton!.statusBarHeight
   const paddingLeftRight = menuButton!.width + menuButton!.marginRight * 2
+  const navHeight = menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
 
   const renderStatusText = (): any => {
     if (pullDownRefreshStatus === 'pulling') return '下拉刷新'
@@ -229,10 +240,27 @@ function H5PullDownRefresh(props: IH5PullDownRefresh) {
   )
 }
 
+function H5PullDownBody(props: IH5PullDownBody) {
+  const { h5Nav = false } = props
+  const wxBrower = useWxBrowser()
+  return <Fragment>{h5Nav && !wxBrower ? <View className='van-box van-box--padding'> {props.children}</View> : <Fragment>{props.children}</Fragment>}</Fragment>
+}
+
+function WeChatPullDownBody(props: IWeChatPullDownBody) {
+  const { menuButton } = props
+  const navHeight = menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
+  return (
+    <View className='van-box' style={{ paddingTop: `${navHeight}px` }}>
+      {props.children}
+    </View>
+  )
+}
+
 type IProps = {
   homeUrl: string
   children: ReactNode
   useNav?: boolean
+  h5Nav?: boolean
   navTitle?: ReactNode
   navClassName?: string
   enablePullDownRefresh?: boolean
@@ -242,7 +270,7 @@ type IProps = {
 }
 
 export default function Index(props: IProps) {
-  const { useNav = true, navTitle, navClassName, homeUrl, renderHeader, enablePullDownRefresh, pullDownRefreshStatus, springStyles } = props
+  const { useNav = true, navTitle, navClassName, h5Nav, homeUrl, renderHeader, enablePullDownRefresh, pullDownRefreshStatus, springStyles } = props
   const [menuButton, setMenuButton]: any = useRecoilState(menuButtonStore)
 
   useDidShow(() => {
@@ -294,7 +322,13 @@ export default function Index(props: IProps) {
         />
       )}
       {menuButton && process.env.TARO_ENV !== 'h5' && process.env.TARO_ENV !== 'alipay' && <MenuButton menuButton={menuButton} homeUrl={homeUrl} />}
-      {props.children}
+      {process.env.TARO_ENV === 'h5' ? (
+        <H5PullDownBody h5Nav={h5Nav}>{props.children}</H5PullDownBody>
+      ) : !!menuButton ? (
+        <WeChatPullDownBody menuButton={menuButton}>{props.children}</WeChatPullDownBody>
+      ) : (
+        <Fragment>{props.children}</Fragment>
+      )}
     </>
   )
 }

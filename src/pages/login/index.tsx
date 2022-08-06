@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-05 17:29:28
+ * @LastEditTime: 2022-08-06 21:42:18
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -45,7 +45,7 @@ export default Unite(
       loginLoading: false
     },
     async onLoad() {
-      if (this.hooks['env'] === 'WEAPP') {
+      if (process.env.TARO_ENV === 'weapp') {
         this._init()
       }
     },
@@ -59,6 +59,7 @@ export default Unite(
     _init() {
       this.hooks['login'](true)
         .then((code: any) => {
+          debugger
           this.setState({
             icode: { code: code, ts: dayjs().valueOf() }
           })
@@ -320,9 +321,11 @@ export default Unite(
     return (
       <Container navTitle='登录' className='pages-login-index'>
         <View className='section'>
-          <View className='navigation_minibar_left_back back-btn' onClick={() => back({ to: 4, data: { isLogin: true } })}>
-            <Icon name='arrow-left' />
-          </View>
+          {env === 'h5' && (
+            <View className='navigation_minibar_left_back back-btn' onClick={() => back({ to: 4, data: { isLogin: true } })}>
+              <Icon name='arrow-left' />
+            </View>
+          )}
           <View className='right-top-sign' />
           <View className='logo'>
             <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '140px', height: '120px' }}></Image>

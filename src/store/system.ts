@@ -5,7 +5,7 @@ import { cacheGetSync, cacheSetSync } from '@/cache'
  * @Author: Derek Xu
  * @Date: 2022-08-01 11:45:21
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 13:56:38
+ * @LastEditTime: 2022-08-06 21:36:50
  * @FilePath: \xut-calendar-vant-weapp\src\store\system.ts
  * @Description:
  *
@@ -51,7 +51,7 @@ const compViewState = atom({
 })
 
 export const compViewStore = selector({
-  key: 'mondayStore',
+  key: 'compViewStore',
   get: ({ get }) => {
     return get(compViewState)
   },

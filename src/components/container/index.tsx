@@ -1,6 +1,7 @@
 import { PureComponent, ReactNode, useState, useContext, useEffect } from 'react'
 import { showToast, usePageScroll } from '@tarojs/taro'
 import { UniteContext } from '@antmjs/vantui'
+import Router from 'tarojs-router-next'
 import { View } from '@tarojs/components'
 import { EMlf } from '@antmjs/trace'
 import { useSpring } from '@react-spring/web'
@@ -11,7 +12,6 @@ import PullDownRefresh from './pullDownRefresh'
 import Navigation from './navigation'
 
 import './index.less'
-import Router from 'tarojs-router-next'
 
 const LOGIN_CODE = '401'
 class ErrorBoundary extends PureComponent<{ setError: any }> {
@@ -120,7 +120,6 @@ export default function Index(props: IProps) {
           canPull={!!(ctx.uniteConfig.page && enablePagePullDownRefresh && canPull)}
           onRefresh={ctx.onRefresh}
           setStatus={setPullDownRefreshStatus}
-          h5Nav={h5Nav}
           status={pullDownRefreshStatus}
           api={api}
         >
@@ -138,6 +137,7 @@ export default function Index(props: IProps) {
           navTitle={navTitle}
           navClassName={navClassName}
           useNav={useNav}
+          h5Nav={h5Nav}
           enablePullDownRefresh={enablePagePullDownRefresh}
           pullDownRefreshStatus={pullDownRefreshStatus}
           renderHeader={renderPageTopHeader}

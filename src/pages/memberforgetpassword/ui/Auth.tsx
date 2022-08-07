@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-27 03:47:42
- * @LastEditTime: 2022-08-06 15:16:40
+ * @LastEditTime: 2022-08-07 12:58:52
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
@@ -197,7 +197,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
         </View>
       </View>
       <View className='button'>
-        <Button type='primary' block onClick={validateFormHandler}>
+        <Button type='info' block onClick={validateFormHandler}>
           下一步
         </Button>
       </View>

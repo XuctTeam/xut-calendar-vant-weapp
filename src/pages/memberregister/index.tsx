@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-06 15:11:44
+ * @LastEditTime: 2022-08-07 11:51:01
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
@@ -170,7 +170,7 @@ export default Unite(
       this.hooks['toast']({ title: '注册成功', icon: 'success' })
       setTimeout(() => {
         this.hooks['back']({ to: 4 })
-      }, 2000)
+      }, 1500)
     },
 
     _setLoading(loading: boolean) {

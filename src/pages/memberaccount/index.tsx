@@ -2,26 +2,25 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-05 13:44:56
+ * @LastEditTime: 2022-08-07 21:14:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Fragment } from 'react'
 import { Button, Cell, Dialog, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
+import Router from 'tarojs-router-next'
 import Container from '@/components/container'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import Avatar from '@/components/avatar'
-import { IUserInfo } from '~/../@types/user'
 import { userInfoStore, userAuthInfoStore } from '@/store'
 import Images from '@/constants/images'
 import Header from '@/components/header'
 import { cacheRemoveSync } from '@/cache'
 import { useBack } from '@/utils/taro'
 import { UploadHeader } from './ui'
-import { updateName, logout, updateAvatar } from '@/api/user'
+import { logout, updateAvatar } from '@/api/user'
 
 import './index.less'
 
@@ -72,11 +71,27 @@ export default Unite(
           this.hooks['setUserAuthsState']([])
           window.setTimeout(() => {
             this.hooks['back']()
-          }, 500)
+          }, 1500)
         })
         .catch((err) => {
           console.log(err)
         })
+    },
+
+    to(ty: number) {
+      switch (ty) {
+        case 1:
+          return Router.toMembermodifyname()
+        case 4:
+          return Router.toMembermodifypassword()
+        case 5:
+          return Router.toMemberbindemail()
+        case 6:
+          return Router.toMemberbindwechat()
+
+        default:
+          return Router.toMemberuserinfo()
+      }
     }
   },
   function ({ state, events }) {
@@ -86,9 +101,9 @@ export default Unite(
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const [userInfoState, setUserInfoState] = useRecoilState(userInfoStore)
 
-    const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, username: '' }
+    const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
     const { headerOpen } = state
-    const { setHeaderOpen, modiftAvatar, logout } = events
+    const { setHeaderOpen, modiftAvatar, to, logout } = events
     const phoneAuth =
       userAuths && userAuths.length > 0
         ? userAuths.find((i) => i.identityType === 'phone')
@@ -151,20 +166,20 @@ export default Unite(
           <Cell title='头像' size='large'>
             <Avatar src={avatar || Images.DEFAULT_AVATAR} round size='large' onClick={() => setHeaderOpen(true)} />
           </Cell>
-          <Cell title='名称' clickable onClick={() => setNameOpen(true)}>
+          <Cell title='名称' clickable onClick={() => to(1)}>
             {name}
           </Cell>
           <Cell title='登录账号' clickable onClick={() => to(2)}>
             {userNameAuth ? userNameAuth.username : '未绑定'}
+          </Cell>
+          <Cell title='微信' clickable onClick={() => to(6)}>
+            {wxAuth ? wxAuth.nickName : '未绑定'}
           </Cell>
           <Cell title='手机号' clickable onClick={() => to(3)}>
             {phoneAuth ? phoneAuth.username : '未绑定'}
           </Cell>
           <Cell title='邮箱' clickable onClick={() => to(5)}>
             {emailAuth ? emailAuth.username : '未绑定'}
-          </Cell>
-          <Cell title='微信' clickable onClick={() => to(6)}>
-            {wxAuth ? wxAuth.nickName : ''}
           </Cell>
           <Cell title='设置密码' clickable onClick={() => to(4)}></Cell>
         </View>

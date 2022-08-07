@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-07-28 14:32:45
+ * @LastEditTime: 2022-08-07 22:17:57
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -65,11 +65,14 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         return reject(error)
       }
       if (status !== HTTP_STATUS.AUTHENTICATE) {
-        let toastMsg: string = statusText
-        if (!toastMsg && errMsg) {
-          toastMsg = errMsg
+        let toastMsg: string = statusText || errMsg
+        if (!toastMsg && status === HTTP_STATUS.CLIENT_ERROR) {
+          toastMsg = codeKeys[code]
         }
-        if (!toastMsg && (status === 500 || status === 502 || status === 503 || status === 504)) {
+        if (!toastMsg && (status === HTTP_STATUS.SERVER_ERROR
+          || status === HTTP_STATUS.BAD_GATEWAY
+          || status === HTTP_STATUS.SERVICE_UNAVAILABLE
+          || status === HTTP_STATUS.GATEWAY_TIMEOUT)) {
           toastMsg = codeKeys[status]
         }
         /** 兼容刷新token 异常情况*/

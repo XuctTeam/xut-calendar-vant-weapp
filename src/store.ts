@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-05 13:32:52
+ * @LastEditTime: 2022-08-07 09:09:39
  * @FilePath: \xut-calendar-vant-weapp\src\store.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { atom, RecoilState } from 'recoil'
-import { calendarForceUpdateState, calendarStore } from '@/store/calendar'
+import {calendarStore } from '@/store/calendar'
 import { componentRefreshTimeStore } from '@/store/component'
 import { userInfoStore, userAuthInfoStore } from '@/store/user'
 import { lunarStore, mondayStore, compViewStore } from '@/store/system'
@@ -39,7 +39,6 @@ const menuButtonStore = atom({
 
 export {
   menuButtonStore,
-  calendarForceUpdateState,
   calendarStore,
   componentRefreshTimeStore,
   userInfoStore,

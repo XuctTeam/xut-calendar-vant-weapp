@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 13:13:28
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-05 13:30:24
+ * @LastEditTime: 2022-08-07 11:58:50
  * @FilePath: \xut-calendar-vant-weapp\src\store\user.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { atom, RecoilState, selector } from 'recoil'
-import { cacheGetSync, cacheSet } from '@/cache'
+import { atom } from 'recoil'
+import { cacheGetSync } from '@/cache'
 import { IUserInfo, IUserAuth } from '~/../@types/user'
 import { baseUserInfo, auths } from '@/api/user'
 

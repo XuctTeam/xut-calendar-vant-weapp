@@ -4,7 +4,7 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-27 15:04:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-06 15:14:52
+ * @LastEditTime: 2022-08-07 12:58:56
  */
 import { FunctionComponent, useState } from 'react'
 import { View } from '@tarojs/components'
@@ -57,7 +57,7 @@ const Password: FunctionComponent<IPageOption> = (props) => {
         </CellGroup>
       </View>
       <View className='button'>
-        <Button type='primary' block onClick={modifyPassword}>
+        <Button type='info' block onClick={modifyPassword}>
           保存
         </Button>
       </View>

@@ -1,15 +1,15 @@
 /*
  * @Author: Derek Xu
- * @Date: 2022-07-14 15:50:29
+ * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-06 22:00:57
- * @FilePath: \xut-calendar-vant-weapp\src\global.d.ts
+ * @LastEditTime: 2022-08-08 15:06:23
+ * @FilePath: \xut-calendar-vant-weapp\types\global.d.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-/* eslint-disable @typescript-eslint/triple-slash-reference */
-/// <reference path="../node_modules/@tarojs/taro/types/index.d.ts" />
+/// <reference types="@tarojs/taro" />
+
 declare module '*.png'
 declare module '*.gif'
 declare module '*.jpg'
@@ -34,7 +34,7 @@ declare namespace NodeJS {
     API_ENV: 'stable' | 'real' | 'pre' | 'dev'
     WATCHING: 'true' | 'false'
     DEPLOY_VERSION: string
-    CLIENT:  any,
+    CLIENT: any
     TEMPLATE_ID: any
   }
 }

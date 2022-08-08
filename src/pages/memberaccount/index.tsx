@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-07 21:14:19
+ * @LastEditTime: 2022-08-08 10:16:59
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -12,9 +12,9 @@ import { Button, Cell, Dialog, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import Container from '@/components/container'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import Avatar from '@/components/avatar'
-import { userInfoStore, userAuthInfoStore } from '@/store'
+import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
 import Images from '@/constants/images'
 import Header from '@/components/header'
 import { cacheRemoveSync } from '@/cache'
@@ -69,6 +69,7 @@ export default Unite(
           cacheRemoveSync('userId')
           this.hooks['setUserInfoState'](undefined)
           this.hooks['setUserAuthsState']([])
+          this.hooks['setCalendarState']([])
           window.setTimeout(() => {
             this.hooks['back']()
           }, 1500)
@@ -82,6 +83,8 @@ export default Unite(
       switch (ty) {
         case 1:
           return Router.toMembermodifyname()
+        case 2:
+          return Router.toMemberbindusername()
         case 4:
           return Router.toMembermodifypassword()
         case 5:
@@ -100,6 +103,7 @@ export default Unite(
     })
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const [userInfoState, setUserInfoState] = useRecoilState(userInfoStore)
+    const setCalendarState = useSetRecoilState(calendarStore)
 
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
     const { headerOpen } = state
@@ -150,7 +154,8 @@ export default Unite(
       back: back,
       userInfo: userInfoState,
       setUserInfoState: setUserInfoState,
-      setUserAuthsState: setUserAuthsState
+      setUserAuthsState: setUserAuthsState,
+      setCalendarState: setCalendarState
     })
     return (
       <Container
@@ -169,7 +174,7 @@ export default Unite(
           <Cell title='名称' clickable onClick={() => to(1)}>
             {name}
           </Cell>
-          <Cell title='登录账号' clickable onClick={() => to(2)}>
+          <Cell title='登录账号' clickable titleWidth='100px' onClick={() => to(2)}>
             {userNameAuth ? userNameAuth.username : '未绑定'}
           </Cell>
           <Cell title='微信' clickable onClick={() => to(6)}>
@@ -178,7 +183,7 @@ export default Unite(
           <Cell title='手机号' clickable onClick={() => to(3)}>
             {phoneAuth ? phoneAuth.username : '未绑定'}
           </Cell>
-          <Cell title='邮箱' clickable onClick={() => to(5)}>
+          <Cell title='邮箱' titleWidth='80px' clickable onClick={() => to(5)}>
             {emailAuth ? emailAuth.username : '未绑定'}
           </Cell>
           <Cell title='设置密码' clickable onClick={() => to(4)}></Cell>

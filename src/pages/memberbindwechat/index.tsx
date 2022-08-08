@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-07 21:06:27
+ * @LastEditTime: 2022-08-08 15:26:17
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindwechat\index.tsx
  * @Description:
  *
@@ -10,7 +10,6 @@
  */
 import { Button, Cell, Empty, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
-import { Fragment } from 'react'
 import Header from '@/components/header'
 import { useRecoilState } from 'recoil'
 import { userAuthInfoStore } from '@/store'
@@ -25,51 +24,54 @@ export default Unite(
 
     modifyMemberNameAndAvatar() {},
 
-    async onLoad() {}
+    async onLoad() {},
   },
   function ({ events }) {
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const { modifyMemberNameAndAvatar } = events
-    const wxAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'open_id') : undefined
+    const wxAuth =
+      userAuths && userAuths.length > 0
+        ? userAuths.find((i) => i.identityType === 'open_id')
+        : undefined
 
     events.setHooks({
-      setUserAuthsState: setUserAuthsState
+      setUserAuthsState: setUserAuthsState,
     })
 
     return (
       <Container
-        navTitle='微信绑定'
+        navTitle="微信绑定"
         enablePagePullDownRefresh={false}
-        className='pages-member-bind-wechat-index'
+        className="pages-member-bind-wechat-index"
         h5Nav={true}
         renderPageTopHeader={() => {
-          return <Header title='微信绑定' left to={4}></Header>
+          return <Header title="微信绑定" left to={4}></Header>
         }}
       >
         {wxAuth ? (
-          <Fragment>
-            <View className='box'>
-              <Cell title='头像' className='avatar'>
+          <>
+            <View className="box">
+              <Cell title="头像" className="avatar">
                 <Avatar src={wxAuth?.avatar} />
               </Cell>
-              <Cell title='昵称'>{wxAuth.username}</Cell>
+              <Cell title="昵称">{wxAuth.username}</Cell>
             </View>
-            <View className='button'>
-              <Button type='info' block onClick={modifyMemberNameAndAvatar}>
+            <View className="button">
+              <Button type="info" block onClick={modifyMemberNameAndAvatar}>
                 使用昵称头像
               </Button>
             </View>
-          </Fragment>
+          </>
         ) : (
-          <Empty image='error' description='暂未绑定' />
+          <Empty image="error" description="暂未绑定" />
         )}
       </Container>
     )
   },
-  { page: true }
+  { page: true },
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: ''
+  navigationBarTitleText: '',
 })

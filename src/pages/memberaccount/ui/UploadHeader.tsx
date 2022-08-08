@@ -11,7 +11,7 @@ import { useToast, useFile } from 'taro-hooks'
 import { Button, Popup, Uploader } from '@antmjs/vantui'
 import { cacheGetSync } from '@/cache'
 import { upload as uploadPath } from '@/api/common'
-import { IUploadInfo } from '~/../@types/common'
+import { IUploadInfo } from '~/../types/common'
 
 import { View } from '@tarojs/components'
 
@@ -33,7 +33,7 @@ interface IFile {
 const UploadHeader: FunctionComponent<IPageOption> = (props) => {
   const [files, setFiles] = useState<IFile[]>([])
   const [toast] = useToast({
-    icon: 'error'
+    icon: 'error',
   })
   const { upload } = useFile()
 
@@ -41,8 +41,8 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
     setFiles([
       {
         url: props.avatar,
-        status: 'done'
-      }
+        status: 'done',
+      },
     ])
   }, [props.avatar])
 
@@ -60,7 +60,7 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
       }
       let _file: IFile = {
         url: file[0].url,
-        status: 'uploading'
+        status: 'uploading',
       }
       setFiles([_file])
       const assessToken = cacheGetSync('accessToken')
@@ -68,7 +68,7 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
         url: uploadPath(),
         filePath: file[0].url,
         name: 'smsfile',
-        header: { Authorization: assessToken }
+        header: { Authorization: assessToken },
       })
       if (uploadResult.statusCode !== 200) {
         _uploadFail()
@@ -82,11 +82,11 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
       const { url } = result.data
       _file = {
         url: url,
-        status: 'done'
+        status: 'done',
       }
       setFiles([_file])
     },
-    [toast]
+    [toast],
   )
 
   const deleteAction = (event: any) => {
@@ -100,7 +100,7 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
     toast({ title: '上传失败' })
     const _file: IFile = {
       url: files[0]?.url || '',
-      status: 'failed'
+      status: 'failed',
     }
     setFiles([_file])
   }
@@ -122,11 +122,23 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
   }
 
   return (
-    <Popup show={props.open} position='bottom' style={{ height: '30%' }} onClose={props.close}>
-      <View className='upload'>
-        <Uploader fileList={files} accept='image' multiple maxCount={1} onDelete={deleteAction} onAfterRead={afterRead} />
-        <View className='button'>
-          <Button type='warning' block onClick={() => updateAvatarHandle()}>
+    <Popup
+      show={props.open}
+      position="bottom"
+      style={{ height: '30%' }}
+      onClose={props.close}
+    >
+      <View className="upload">
+        <Uploader
+          fileList={files}
+          accept="image"
+          multiple
+          maxCount={1}
+          onDelete={deleteAction}
+          onAfterRead={afterRead}
+        />
+        <View className="button">
+          <Button type="warning" block onClick={() => updateAvatarHandle()}>
             保存
           </Button>
         </View>

@@ -7,7 +7,7 @@
  */
 import httpRequest from '@/utils/request/innerRequest'
 
-import { IDavCalendar } from '~/../@types/calendar'
+import { IDavCalendar } from '@types/calendar'
 
 /**
  * @description: 查询日历列表

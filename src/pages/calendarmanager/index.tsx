@@ -2,71 +2,91 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-29 16:14:55
+ * @LastEditTime: 2022-08-08 14:14:03
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import { useEffect } from 'react'
+import Router from 'tarojs-router-next'
 import { Empty, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
 import Header from '@/components/header'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { calendarStore } from '@/store'
-import { IDavCalendar } from '~/../@types/calendar'
+import { IDavCalendar } from '~/../types/calendar'
 import { CalendarListBody } from './ui'
+import { list } from '@/api/calendar'
 import classnames from 'classnames'
 import { brower } from '@/utils'
 
 import './index.less'
-import Router from 'tarojs-router-next'
 
 export default Unite(
   {
     state: {},
 
+    async onLoad() {},
+
+    async reload() {
+      list().then((res) => {
+        this.hooks['setCalendarState'](res as any as IDavCalendar[])
+      })
+    },
+
     editCalendar(id: string) {
       if (!(this.hooks['calendars'] && this.hooks['calendars'].length > 0)) {
         return
       }
-      const calendar: IDavCalendar | undefined = this.hooks['calendars'].find((item: IDavCalendar) => item.id === id)
+      const calendar: IDavCalendar | undefined = this.hooks['calendars'].find(
+        (item: IDavCalendar) => item.id === id,
+      )
       if (!calendar) return
       Router.toCalendaredit({
         data: calendar,
         params: {
-          calendarId: calendar.id
-        }
+          calendarId: calendar.id,
+        },
       })
-    }
+    },
   },
 
   function ({ events }) {
-    const calendars = useRecoilValue(calendarStore)
-    const { editCalendar } = events
+    const { reload, editCalendar } = events
+    const [calendars, setCalendarState] = useRecoilState(calendarStore)
+
     events.setHooks({
-      calendars: calendars
+      calendars: calendars,
+      setCalendarState: setCalendarState,
     })
+    console.log(calendars)
 
     return (
       <Container
-        navTitle='日程管理'
-        enablePagePullDownRefresh={false}
+        navTitle="日程管理"
+        enablePagePullDownRefresh={true}
         h5Nav={true}
+        reload={reload}
         className={classnames('pages-calendar-manager-index', {
-          ['van-page-box']: brower()
+          ['van-page-box']: brower(),
         })}
         renderPageTopHeader={() => {
-          return <Header title='日程管理' left to={4}></Header>
+          return <Header title="日程管理" left to={4}></Header>
         }}
       >
-        {!calendars && <Empty description='暂无数据' />}
-        {calendars && calendars.length !== 0 && (
-          <View className='list'>
+        {calendars.length === 0 ? (
+          <Empty description="暂无数据" />
+        ) : (
+          <View className="list">
             {calendars?.map((item: IDavCalendar, index: number) => {
               return (
-                <View className='li' key={index}>
-                  <CalendarListBody item={item} editCalendar={editCalendar}></CalendarListBody>
+                <View className="li" key={index}>
+                  <CalendarListBody
+                    item={item}
+                    editCalendar={editCalendar}
+                  ></CalendarListBody>
                 </View>
               )
             })}
@@ -75,10 +95,10 @@ export default Unite(
       </Container>
     )
   },
-  { page: true }
+  { page: true },
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: ''
+  navigationBarTitleText: '',
 })

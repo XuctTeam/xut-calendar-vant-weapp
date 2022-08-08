@@ -13,7 +13,7 @@ import { View } from '@tarojs/components'
 import { Col, Row } from '@antmjs/vantui'
 import dayjs from 'dayjs'
 import ListEventData from './ListEventData'
-import { IDavComponent } from '~/../@types/calendar'
+import { IDavComponent } from '~/../types/calendar'
 
 interface IPageOption {
   selectedDay: string
@@ -26,11 +26,11 @@ interface IPageOption {
 const ListEventView: FunctionComponent<IPageOption> = (props) => {
   return (
     <Row>
-      <Col span={4} className='week-day'>
-        <View className='day'>{dayjs(props.selectedDay).format('DD')}</View>
-        <View className='week'>{dayjs(props.selectedDay).format('ddd')}</View>
+      <Col span={4} className="week-day">
+        <View className="day">{dayjs(props.selectedDay).format('DD')}</View>
+        <View className="week">{dayjs(props.selectedDay).format('ddd')}</View>
       </Col>
-      <Col span={20} className='event-list-content'>
+      <Col span={20} className="event-list-content">
         {props.componentList.map((component, i) => {
           return (
             <ListEventData

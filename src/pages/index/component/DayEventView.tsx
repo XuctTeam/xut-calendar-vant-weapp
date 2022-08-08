@@ -10,7 +10,7 @@
  */
 import { FunctionComponent, useEffect, useState } from 'react'
 import { ScrollView, View } from '@tarojs/components'
-import { IDavComponent } from '~/../@types/calendar'
+import { IDavComponent } from '~/../types/calendar'
 import dayjs from 'dayjs'
 import DayEventListData from './DayEventListData'
 import DayEventFullDay from './DayEventFullDay'
@@ -74,7 +74,10 @@ const DayEventView: FunctionComponent<IPageOption> = (props) => {
           }, 200)
           return
         }
-        const height = res.height * (hour - 1) + 10 + time.minute() * parseInt(res.height / 60 + '')
+        const height =
+          res.height * (hour - 1) +
+          10 +
+          time.minute() * parseInt(res.height / 60 + '')
         console.log(height)
         setTop(height)
       })
@@ -82,19 +85,28 @@ const DayEventView: FunctionComponent<IPageOption> = (props) => {
   }
 
   return (
-    <View className='day-event-list'>
-      {fullDayList.length !== 0 && <DayEventFullDay componentList={fullDayList} viewComponent={props.viewComponent}></DayEventFullDay>}
-      <View className='event-list'>
+    <View className="day-event-list">
+      {fullDayList.length !== 0 && (
+        <DayEventFullDay
+          componentList={fullDayList}
+          viewComponent={props.viewComponent}
+        ></DayEventFullDay>
+      )}
+      <View className="event-list">
         {Array.from({ length: 24 }, (v, k) => k).map((i, index) => {
           return (
-            <View className='item' key={index} id={`day-event-id-${i}`}>
-              <View className='time-line'>
-                <View className='timer'>{i < 10 ? `0${i}:00` : `${i}:00`}</View>
-                <View className='line'></View>
+            <View className="item" key={index} id={`day-event-id-${i}`}>
+              <View className="time-line">
+                <View className="timer">{i < 10 ? `0${i}:00` : `${i}:00`}</View>
+                <View className="line"></View>
               </View>
-              <ScrollView className='item-event' scrollX scrollWithAnimation>
+              <ScrollView className="item-event" scrollX scrollWithAnimation>
                 <DayEventListData
-                  componentList={!timeMap ? [] : timeMap.get(i < 10 ? `0${i}:00` : `${i}:00`) || []}
+                  componentList={
+                    !timeMap
+                      ? []
+                      : timeMap.get(i < 10 ? `0${i}:00` : `${i}:00`) || []
+                  }
                   viewComponent={props.viewComponent}
                 ></DayEventListData>
               </ScrollView>

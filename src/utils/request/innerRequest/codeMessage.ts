@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-30 13:24:21
- * @LastEditTime: 2022-08-07 22:14:36
+ * @LastEditTime: 2022-08-08 11:07:31
  * @LastEditors: Derek Xu
  */
 const codeMessage = {
@@ -43,7 +43,7 @@ const codeMessage = {
   '5000': '用户中心异常',
   '5001': '微信访问异常',
   '5003': '验证码错误',
-  '9999': '访问服务异常',
+  '9999': '访问服务异常'
 }
 
 export default codeMessage

@@ -1,8 +1,8 @@
 /*
  * @Author: Derek Xu
- * @Date: 2022-07-14 15:50:29
+ * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-07 21:13:46
+ * @LastEditTime: 2022-08-08 15:04:08
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -12,7 +12,7 @@
 export default defineAppConfig({
   pages: [
     'pages/index/index',
-    'pages/tabAndSearchPagination/index',
+    'pages/pagination/index',
     'pages/login/index',
     'pages/calendarmanager/index',
     'pages/calendaredit/index',
@@ -24,10 +24,11 @@ export default defineAppConfig({
     'pages/membermodifypassword/index',
     'pages/memberbindwechat/index',
     'pages/memberbindemail/index',
+    'pages/memberbindusername/index',
     'pages/onlineservices/index',
     'pages/systemsetting/index',
     'pages/aboutus/index',
-    'pages/privacyrule/index'
+    'pages/privacyrule/index',
   ],
   window: {
     // @ts-ignore
@@ -40,7 +41,7 @@ export default defineAppConfig({
     navigationStyle: 'custom',
     // 支付宝全局设置自定义导航栏
     transparentTitle: 'always',
-    titlePenetrate: 'YES'
+    titlePenetrate: 'YES',
   },
   tabBar: {
     list: [
@@ -48,13 +49,13 @@ export default defineAppConfig({
         pagePath: 'pages/index/index',
         text: '日程',
         iconPath: 'assets/icon/index.png',
-        selectedIconPath: 'assets/icon/index_focus.png'
+        selectedIconPath: 'assets/icon/index_focus.png',
       },
       {
-        pagePath: 'pages/tabAndSearchPagination/index',
+        pagePath: 'pages/pagination/index',
         text: '通讯录',
         iconPath: 'assets/icon/group.png',
-        selectedIconPath: 'assets/icon/group_focus.png'
+        selectedIconPath: 'assets/icon/group_focus.png',
       },
       // {
       //   pagePath: 'pages/messagemanager/index',
@@ -66,13 +67,13 @@ export default defineAppConfig({
         pagePath: 'pages/memberuserinfo/index',
         text: '我的',
         iconPath: 'assets/icon/mine.png',
-        selectedIconPath: 'assets/icon/mine_focus.png'
-      }
-    ]
+        selectedIconPath: 'assets/icon/mine_focus.png',
+      },
+    ],
   },
   permission: {
     'scope.userLocation': {
-      desc: '楚日历需获取您的地理位置'
-    }
-  }
+      desc: '楚日历需获取您的地理位置',
+    },
+  },
 })

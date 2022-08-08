@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { ReactNode, useRef } from 'react'
+import { ReactNode, useRef, CSSProperties } from 'react'
 import { showToast } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { sleep, rubberbandIfOutOfBounds } from '@/utils'
@@ -8,11 +8,17 @@ import { sleep, rubberbandIfOutOfBounds } from '@/utils'
 export type PullStatus = 'pulling' | 'canRelease' | 'refreshing' | 'complete'
 
 export type PullToRefreshProps = {
+  className: string
+  style: CSSProperties
   canPull: boolean
   children: ReactNode
   threshold?: number
-  h5Nav?: boolean
-  onRefresh: <T extends boolean>(catchRefresh?: T) => T extends true ? Promise<{ code: string; message: string; data: any }> : void
+  onRefresh: <T extends boolean>(
+    catchRefresh?: T,
+  ) => T extends true
+    ? Promise<{ code: string; message: string; data: any }>
+    : void
+  reload?: () => Promise<any>
   setStatus: any
   status: any
   api: any
@@ -32,12 +38,17 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
     api.start({ transform: `scale(1)`, opacity: 1 })
     setStatus('refreshing')
     try {
-      const res = await props.onRefresh(true)
-      if (res.code !== '200') {
-        showToast({
-          title: res.message,
-          icon: 'none'
-        })
+      if (props.reload && typeof props.reload === 'function') {
+        await props.reload()
+      }
+      if (!props.reload) {
+        const res = await props.onRefresh(true)
+        if (res.code !== '200') {
+          showToast({
+            title: res.message,
+            icon: 'none',
+          })
+        }
       }
       setStatus('complete')
     } catch {}
@@ -53,7 +64,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
           .catch(() => {
             setStatus('pulling')
           })
-      }
+      },
     })
   }
 
@@ -81,11 +92,12 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
 
     // event?.preventDefault?.()
     // event?.stopPropagation?.()
-    const height = Math.max(rubberbandIfOutOfBounds(y, 0, 0, headHeight * 5, 0.5), 0) / 1.1
+    const height =
+      Math.max(rubberbandIfOutOfBounds(y, 0, 0, headHeight * 5, 0.5), 0) / 1.1
     const rate = height / threshold
     api.start({
       transform: `scale(${rate > 1 ? 1 : rate})`,
-      opacity: rate > 1 ? 1 : rate
+      opacity: rate > 1 ? 1 : rate,
     })
     setStatus(height > threshold ? 'canRelease' : 'pulling')
   }
@@ -96,7 +108,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
       common({
         first: true,
         last: false,
-        event: e.changedTouches[0]
+        event: e.changedTouches[0],
       })
     }
   }
@@ -107,7 +119,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
       common({
         first: true,
         last: false,
-        event: e.changedTouches[0]
+        event: e.changedTouches[0],
       })
     }
   }
@@ -116,14 +128,20 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
       common({
         first: false,
         last: true,
-        event: e.changedTouches[0]
+        event: e.changedTouches[0],
       })
       yRef.current = 0
     }
   }
 
   return (
-    <View style={{ height: '100%' }} onTouchEnd={onEnd} onTouchMove={onMove} onTouchStart={onStart}>
+    <View
+      className={props.className || ''}
+      style={props.style}
+      onTouchEnd={onEnd}
+      onTouchMove={onMove}
+      onTouchStart={onStart}
+    >
       {props.children}
     </View>
   )

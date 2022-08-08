@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-06 15:49:31
+ * @LastEditTime: 2022-08-08 14:53:44
  * @FilePath: \xut-calendar-vant-weapp\src\app.tsx
  * @Description:
  *
@@ -11,7 +11,13 @@
 import React, { Suspense, useEffect } from 'react'
 import { RecoilRoot } from 'recoil'
 import { useWxBrowser } from '@/hooks'
-import { useDidShow, useDidHide, getUpdateManager, showModal, nextTick } from '@tarojs/taro'
+import {
+  useDidShow,
+  useDidHide,
+  getUpdateManager,
+  showModal,
+  nextTick,
+} from '@tarojs/taro'
 import { setSysInfoAsync, setWxBrower } from '@/utils'
 import Loading from '@/components/fullScreen/loading'
 import * as dayjs from 'dayjs'
@@ -61,7 +67,7 @@ export default function App(props: IProps) {
             title: '更新提示',
             content: '新版本已经准备好，立即重启应用？',
             confirmText: '我知道了',
-            showCancel: false
+            showCancel: false,
           }).then(function (mRes: any): void {
             if (mRes.confirm) {
               updateManager.applyUpdate()
@@ -74,7 +80,7 @@ export default function App(props: IProps) {
             title: '更新失败',
             content: '请删除小程序后重新打开',
             confirmText: '我知道了',
-            showCancel: false
+            showCancel: false,
           }).then(function (): void {})
         })
       }

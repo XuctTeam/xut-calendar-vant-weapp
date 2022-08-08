@@ -10,7 +10,7 @@
  */
 import { FunctionComponent } from 'react'
 import { View } from '@tarojs/components'
-import { IDavComponent } from '~/../@types/calendar'
+import { IDavComponent } from '~/../types/calendar'
 
 interface IPageOption {
   componentList: IDavComponent[]
@@ -19,15 +19,22 @@ interface IPageOption {
 
 const DayEventFullDay: FunctionComponent<IPageOption> = (props) => {
   return (
-    <View className='full-day taroify-hairline--bottom'>
-      <View className='title'>全天</View>
-      <View className='list'>
+    <View className="full-day taroify-hairline--bottom">
+      <View className="title">全天</View>
+      <View className="list">
         {props.componentList.map((i, index) => {
           return (
-            <View key={index} className='box' onClick={() => props.viewComponent(i)}>
-              <View className='color' style={{ background: `#${i.color}` }}></View>
-              <View className='content'>
-                <View className='title taroify-ellipsis'>{i.summary}</View>
+            <View
+              key={index}
+              className="box"
+              onClick={() => props.viewComponent(i)}
+            >
+              <View
+                className="color"
+                style={{ background: `#${i.color}` }}
+              ></View>
+              <View className="content">
+                <View className="title taroify-ellipsis">{i.summary}</View>
               </View>
             </View>
           )

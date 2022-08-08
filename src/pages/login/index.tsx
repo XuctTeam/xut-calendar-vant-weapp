@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-06 21:42:18
+ * @LastEditTime: 2022-08-08 09:42:37
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -10,6 +10,7 @@
  */
 import { Unite } from '@antmjs/vantui'
 import { useRef } from 'react'
+import Router from 'tarojs-router-next'
 import { View, Navigator, ITouchEvent } from '@tarojs/components'
 import { Button, Checkbox, Icon, Image, CellGroup, Field } from '@antmjs/vantui'
 import dayjs from 'dayjs'
@@ -19,13 +20,15 @@ import { back } from '@/utils/taro'
 import { IUserInfo as IMemberInfo } from 'taro-hooks/dist/useUserInfo'
 import { cacheSetSync, cacheRemoveSync } from '@/cache'
 import Container from '@/components/container'
-import { IUserAuth, IUserInfo } from '~/../@types/user'
+import { IUserAuth, IUserInfo } from '~/../types/user'
+import { IDavCalendar } from '~/../types/calendar'
 import { wechatLogin, phoneLogin, usernameLogin } from '@/api/login'
-import { userInfoStore, userAuthInfoStore } from '@/store'
+import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
 import { sendSmsCode, baseUserInfo, auths } from '@/api/user'
+import { list as listQueryCalendar } from '@/api/calendar'
 import { checkMobile } from '@/utils'
 import Images from '@/constants/images'
-import Router from 'tarojs-router-next'
+
 import './index.less'
 
 const smsBtnLoadingTime: number = 120
@@ -42,7 +45,7 @@ export default Unite(
       smsCode: '',
       smsText: '发送验证码',
       smsLoading: false,
-      loginLoading: false
+      loginLoading: false,
     },
     async onLoad() {
       if (process.env.TARO_ENV === 'weapp') {
@@ -61,14 +64,14 @@ export default Unite(
         .then((code: any) => {
           debugger
           this.setState({
-            icode: { code: code, ts: dayjs().valueOf() }
+            icode: { code: code, ts: dayjs().valueOf() },
           })
         })
         .catch(() => {
           this.hooks['login'](false)
             .then((code: any) => {
               this.setState({
-                icode: { code: code, ts: dayjs().valueOf() }
+                icode: { code: code, ts: dayjs().valueOf() },
               })
             })
             .catch((err: any) => {
@@ -80,43 +83,43 @@ export default Unite(
 
     setUsername(username: string) {
       this.setState({
-        username
+        username,
       })
     },
 
     setPassword(password: string) {
       this.setState({
-        password
+        password,
       })
     },
 
     setPhone(phone: string) {
       this.setState({
-        phone
+        phone,
       })
     },
 
     setSmsCode(smsCode: string) {
       this.setState({
-        smsCode
+        smsCode,
       })
     },
 
     setPhoneForm(phoneForm: boolean) {
       this.setState({
-        phoneForm
+        phoneForm,
       })
     },
 
     setSelf(self: boolean) {
       this.setState({
-        self
+        self,
       })
     },
 
     setLoginLoading(loginLoading: boolean) {
       this.setState({
-        loginLoading
+        loginLoading,
       })
     },
 
@@ -236,8 +239,12 @@ export default Unite(
     async _saveTokenToCache(accessToken: string, refreshToken: string) {
       cacheSetSync('accessToken', 'Bearer ' + accessToken)
       cacheSetSync('refreshToken', 'Bearer ' + refreshToken)
-      const result = await Promise.all([baseUserInfo(), auths()])
-      if (!(result[0] && result[1])) {
+      const result = await Promise.all([
+        baseUserInfo(),
+        auths(),
+        listQueryCalendar(),
+      ])
+      if (!(result[0] && result[1]) && result[2]) {
         this._error('获取用户信息失败')
         cacheRemoveSync('accessToken')
         cacheRemoveSync('refreshToken')
@@ -245,15 +252,16 @@ export default Unite(
       }
       this.hooks['setUserInfoState'](result[0] as IUserInfo)
       this.hooks['setUserAuthState'](result[1] as IUserAuth[])
+      this.hooks['setCalendarState'](result[2] as IDavCalendar[])
       this.hooks['show']({
         icon: 'success',
         title: '登录成功',
-        duration: 1500
+        duration: 1500,
       })
       setTimeout(() => {
         this.setLoginLoading(false)
         back({
-          to: 4
+          to: 4,
         })
       }, 2000)
     },
@@ -261,7 +269,7 @@ export default Unite(
     _stopSmsCode() {
       this.setState({
         smsText: '发送短信',
-        smsLoading: false
+        smsLoading: false,
       })
       if (this.hooks['timerRef'].current > 0) {
         window.clearTimeout(this.hooks['timerRef'].current)
@@ -271,7 +279,7 @@ export default Unite(
 
     _startSmsCode() {
       this.setState({
-        smsLoading: true
+        smsLoading: true,
       })
       this._setTimeOut(smsBtnLoadingTime - 1)
     },
@@ -282,7 +290,7 @@ export default Unite(
         return
       }
       this.setState({
-        smsText: '重发(' + sec + ')'
+        smsText: '重发(' + sec + ')',
       })
       this.hooks['timerRef'].current = window.setTimeout(() => {
         this._setTimeOut(sec - 1)
@@ -292,22 +300,43 @@ export default Unite(
     _error(msg: string) {
       this.hooks['show']({
         icon: 'error',
-        title: msg
+        title: msg,
       })
-    }
+    },
   },
   function ({ state, events }) {
-    const { self, phoneForm, username, password, phone, smsCode, smsText, smsLoading, loginLoading } = state
-    const { setUsername, setPassword, setPhone, setSmsCode, setPhoneForm, setSelf, pushCode, loginByPhoneOrUsername, loginByCode } = events
+    const {
+      self,
+      phoneForm,
+      username,
+      password,
+      phone,
+      smsCode,
+      smsText,
+      smsLoading,
+      loginLoading,
+    } = state
+    const {
+      setUsername,
+      setPassword,
+      setPhone,
+      setSmsCode,
+      setPhoneForm,
+      setSelf,
+      pushCode,
+      loginByPhoneOrUsername,
+      loginByCode,
+    } = events
     const env = useEnv()
     const [login] = useLogin()
     const [, { getUserProfile }] = useUserInfo()
     const [show] = useToast({
-      icon: 'error'
+      icon: 'error',
     })
     const timerRef = useRef<number>(0)
     const setUserInfoState = useSetRecoilState(userInfoStore)
     const setUserAuthState = useSetRecoilState(userAuthInfoStore)
+    const setCalendarState = useSetRecoilState(calendarStore)
 
     events.setHooks({
       login: login,
@@ -315,41 +344,53 @@ export default Unite(
       timerRef: timerRef,
       getUserProfile: getUserProfile,
       setUserInfoState: setUserInfoState,
-      setUserAuthState: setUserAuthState
+      setUserAuthState: setUserAuthState,
+      setCalendarState: setCalendarState,
     })
 
     return (
-      <Container navTitle='登录' className='pages-login-index'>
-        <View className='section'>
+      <Container navTitle="登录" className="pages-login-index">
+        <View className="section">
           {env === 'h5' && (
-            <View className='navigation_minibar_left_back back-btn' onClick={() => back({ to: 4, data: { isLogin: true } })}>
-              <Icon name='arrow-left' />
+            <View
+              className="navigation_minibar_left_back back-btn"
+              onClick={() => back({ to: 4, data: { isLogin: true } })}
+            >
+              <Icon name="arrow-left" />
             </View>
           )}
-          <View className='right-top-sign' />
-          <View className='logo'>
-            <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '140px', height: '120px' }}></Image>
+          <View className="right-top-sign" />
+          <View className="logo">
+            <Image
+              src={Images.DEFAULT_LOG_IMAGE}
+              style={{ width: '140px', height: '120px' }}
+            ></Image>
           </View>
-          <View className='login-form'>
-            <View className='form'>
+          <View className="login-form">
+            <View className="form">
               {!phoneForm ? (
                 <CellGroup>
                   <Field
-                    label='账号'
-                    placeholder='支持账号/邮箱/手机号'
+                    label="账号"
+                    placeholder="支持账号/邮箱/手机号"
                     value={username}
                     onChange={(e: ITouchEvent) => {
                       setUsername(e.detail)
                     }}
                   />
                   <Field
-                    label='密码'
+                    label="密码"
                     password
-                    placeholder='请输入密码'
+                    placeholder="请输入密码"
                     value={password}
                     onChange={(e: ITouchEvent) => setPassword(e.detail)}
                     renderButton={
-                      <Button size='small' plain type='info' onClick={() => Router.toMemberforgetpassword()}>
+                      <Button
+                        size="small"
+                        plain
+                        type="info"
+                        onClick={() => Router.toMemberforgetpassword()}
+                      >
                         忘记密码
                       </Button>
                     }
@@ -358,46 +399,65 @@ export default Unite(
               ) : (
                 <CellGroup>
                   <Field
-                    label='手机号'
-                    placeholder='请输入手机号'
+                    label="手机号"
+                    placeholder="请输入手机号"
                     value={phone}
                     maxlength={11}
-                    type='number'
+                    type="number"
                     onChange={(e: ITouchEvent) => setPhone(e.detail)}
                   ></Field>
                   <Field
-                    label='验证码'
-                    placeholder='请输入验证码'
+                    label="验证码"
+                    placeholder="请输入验证码"
                     maxlength={4}
-                    type='number'
+                    type="number"
                     value={smsCode}
                     onChange={(e: ITouchEvent) => setSmsCode(e.detail)}
                     renderButton={
-                      <Button size='small' plain type='info' disabled={smsLoading} onClick={pushCode}>
+                      <Button
+                        size="small"
+                        plain
+                        type="info"
+                        disabled={smsLoading}
+                        onClick={pushCode}
+                      >
                         {smsText}
                       </Button>
                     }
                   ></Field>
                 </CellGroup>
               )}
-              <View className='btn'>
-                <View onClick={() => setPhoneForm(!phoneForm)}>{phoneForm ? '账号密码登录' : '验证码登录'}</View>
+              <View className="btn">
+                <View onClick={() => setPhoneForm(!phoneForm)}>
+                  {phoneForm ? '账号密码登录' : '验证码登录'}
+                </View>
                 <View onClick={() => Router.toMemberregister()}>立即注册</View>
               </View>
             </View>
 
-            <Button type='danger' block onClick={loginByPhoneOrUsername} disabled={loginLoading}>
+            <Button
+              type="danger"
+              block
+              onClick={loginByPhoneOrUsername}
+              disabled={loginLoading}
+            >
               登录
             </Button>
           </View>
-          <View className='self'>
-            <Checkbox value={self} checkedColor='red' onChange={(e: any) => setSelf(e.detail)}>
+          <View className="self">
+            <Checkbox
+              value={self}
+              checkedColor="red"
+              onChange={(e: any) => setSelf(e.detail)}
+            >
               登录即已同意
               {env === 'WEAPP' ? (
-                <Navigator url='/pages/privacyrule/index'>《隐私保护政策》</Navigator>
+                <Navigator url="/pages/privacyrule/index">
+                  《隐私保护政策》
+                </Navigator>
               ) : (
                 <a
-                  href='#!'
+                  href="#!"
                   onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
@@ -410,21 +470,25 @@ export default Unite(
             </Checkbox>
           </View>
         </View>
-        <View className='footer'>
+        <View className="footer">
           {env === 'WEAPP' && (
-            <View className='btn' onClick={loginByCode}>
-              <Image src={Images.DEFAULT_WECHAT_IMAGE} style={{ width: '36px', height: '36px' }} fit='heightFix' />
-              <View className='label'>微信</View>
+            <View className="btn" onClick={loginByCode}>
+              <Image
+                src={Images.DEFAULT_WECHAT_IMAGE}
+                style={{ width: '36px', height: '36px' }}
+                fit="heightFix"
+              />
+              <View className="label">微信</View>
             </View>
           )}
         </View>
       </Container>
     )
   },
-  { page: true }
+  { page: true },
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: ''
+  navigationBarTitleText: '',
 })

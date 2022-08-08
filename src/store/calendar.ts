@@ -10,9 +10,8 @@
  */
 import { atom } from 'recoil'
 import { cacheGetSync } from '@/cache'
-import { IDavCalendar } from '~/../@types/calendar'
+import { IDavCalendar } from '~/../types/calendar'
 import { list } from '@/api/calendar'
-
 
 /**
  * @description: 日历集合
@@ -24,10 +23,7 @@ export const calendarStore = atom<IDavCalendar[]>({
     if (!cacheGetSync('accessToken')) {
       return []
     }
-    const _list = await  await list()
+    const _list = await await list()
     return _list as any as IDavCalendar[]
-    })()
-  })
-
-
-
+  })(),
+})

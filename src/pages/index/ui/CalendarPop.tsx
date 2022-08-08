@@ -7,10 +7,17 @@
  * @LastEditTime: 2022-07-29 16:24:36
  */
 import { ITouchEvent, View } from '@tarojs/components'
-import { IDavCalendar } from '~/../@types/calendar'
+import { IDavCalendar } from '~/../types/calendar'
 import { useEffect, useState } from 'react'
 import Router from 'tarojs-router-next'
-import { Button, Cell, Checkbox, CheckboxGroup, Empty, Popup } from '@antmjs/vantui'
+import {
+  Button,
+  Cell,
+  Checkbox,
+  CheckboxGroup,
+  Empty,
+  Popup,
+} from '@antmjs/vantui'
 
 interface IPageOption {
   calendars: Array<IDavCalendar>
@@ -27,7 +34,9 @@ const CalendarPop: React.FC<IPageOption> = (props) => {
   useEffect(() => {
     const _showCalendars = props.calendars.filter((i) => i.display === 1)
     setShowCalendars(_showCalendars)
-    setCheckValues(props.calendars.filter((i) => i.checked).map((i) => i.calendarId))
+    setCheckValues(
+      props.calendars.filter((i) => i.checked).map((i) => i.calendarId),
+    )
     console.log(checkValues)
   }, [props.calendars])
 
@@ -36,27 +45,40 @@ const CalendarPop: React.FC<IPageOption> = (props) => {
   }
 
   return (
-    <Popup className='pages-index-calendar_popup' show={props.open} position='top' style={{ height: '60%' }} onClose={props.closePopup} overlay>
-      <View className='title'>我的日历</View>
-      <View className='content'>
+    <Popup
+      className="pages-index-calendar_popup"
+      show={props.open}
+      position="top"
+      style={{ height: '60%' }}
+      onClose={props.closePopup}
+      overlay
+    >
+      <View className="title">我的日历</View>
+      <View className="content">
         {!props.hasLogin || showCalendars.length === 0 ? (
-          <Empty description='暂无数据' />
+          <Empty description="暂无数据" />
         ) : (
-          <CheckboxGroup onChange={(e: ITouchEvent) => checkGroupChange(e.detail)} value={checkValues}>
+          <CheckboxGroup
+            onChange={(e: ITouchEvent) => checkGroupChange(e.detail)}
+            value={checkValues}
+          >
             {showCalendars.map((item) => {
               return (
                 <Cell key={item.id + ''} title={item.name}>
-                  <Checkbox name={item.calendarId} checkedColor={`#${item.color}`}></Checkbox>
+                  <Checkbox
+                    name={item.calendarId}
+                    checkedColor={`#${item.color}`}
+                  ></Checkbox>
                 </Cell>
               )
             })}
           </CheckboxGroup>
         )}
       </View>
-      <View className='button'>
+      <View className="button">
         {props.hasLogin && (
           <Button
-            type='primary'
+            type="primary"
             block
             onClick={() => {
               props.closePopup()

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-02-22 16:22:05
- * @LastEditTime: 2022-07-20 13:49:01
+ * @LastEditTime: 2022-08-08 16:06:56
  * @LastEditors: Derek Xu
  */
 import { registerMiddleware, RouteContext, Router } from 'tarojs-router-next'
@@ -22,5 +22,5 @@ registerMiddleware(
   (ctx: RouteContext<{ mustLogin: boolean }>) => {
     // 仅当页面需要登录时才注册该中间件
     return ctx.route.ext?.mustLogin === true
-  }
+  },
 )

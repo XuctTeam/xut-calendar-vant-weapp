@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-15 20:05:45
+ * @LastEditTime: 2022-08-08 14:26:09
  * @FilePath: \xut-calendar-vant-weapp\src\pages\pagination\index.tsx
  * @Description:
  *
@@ -13,7 +13,9 @@ import { View } from '@tarojs/components'
 import { useReachBottom } from '@tarojs/taro'
 import Container from '@/components/container'
 import Pagination from '@/components/pagination'
+import { menuButtonStore } from '@/store'
 import './index.less'
+import { useRecoilState } from 'recoil'
 
 const PAGE_SIZE = 20
 
@@ -27,14 +29,14 @@ export default Unite(
       await this.loadList(true)
     },
     async loadList(refresh = false) {
-      const list = await getRoleListCommon({
-        pageSize: PAGE_SIZE,
-        offset: refresh ? 0 : this.state.list.length
-      })
-      this.setState({
-        list: refresh ? list : [].concat(this.state.list).concat(list as any),
-        complete: list.length < PAGE_SIZE ? true : false
-      })
+      // const list = await getRoleListCommon({
+      //   pageSize: PAGE_SIZE,
+      //   offset: refresh ? 0 : this.state.list.length
+      // })
+      // this.setState({
+      //   list: refresh ? list : [].concat(this.state.list).concat(list as any),
+      //   complete: list.length < PAGE_SIZE ? true : false
+      // })
     }
   },
   function ({ state, events, loading }) {
@@ -48,7 +50,7 @@ export default Unite(
       }
     })
     return (
-      <Container navTitle='下拉上滑列表页面' enablePagePullDownRefresh={true} loading={!list} className='pages-pagination-index'>
+      <Container navTitle='下拉上滑列表页面' enablePagePullDownRefresh={true} className='pages-pagination-index'>
         <Pagination complete={complete} size={PAGE_SIZE} data={list}>
           {list?.map((item: any, index: number) => {
             return (

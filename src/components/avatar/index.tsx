@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:46:12
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 19:51:43
+ * @LastEditTime: 2022-08-08 10:50:12
  * @FilePath: \xut-calendar-vant-weapp\src\components\avatar\index.tsx
  * @Description:
  *
@@ -29,7 +29,6 @@ interface IPageOption {
 
 function Index(props: IPageOption): JSX.Element {
   const { className, src, round = false, size = 'medium', children } = props
-  console.log(src)
 
   const click = () => {
     if (props.onClick && props.onClick instanceof Function) {

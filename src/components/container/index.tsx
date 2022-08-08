@@ -1,20 +1,24 @@
-import { PureComponent, ReactNode, useState, useContext, useEffect } from 'react'
+import {
+  PureComponent,
+  ReactNode,
+  useState,
+  useContext,
+  useEffect,
+} from 'react'
 import { showToast, usePageScroll } from '@tarojs/taro'
-import { UniteContext } from '@antmjs/vantui'
-import Router from 'tarojs-router-next'
-import { View } from '@tarojs/components'
+import { UniteContext, Popup } from '@antmjs/vantui'
 import { EMlf } from '@antmjs/trace'
 import { useSpring } from '@react-spring/web'
 import { monitor } from '@/trace'
 import Error from '../fullScreen/error'
+import Login from '../fullScreen/login'
 import Loading from '../fullScreen/loading'
 import PullDownRefresh from './pullDownRefresh'
 import Navigation from './navigation'
-
 import './index.less'
 
-const LOGIN_CODE = '401'
-class ErrorBoundary extends PureComponent<{ setError: any }> {
+const LOGIN_CODE = '206'
+class ErrorBoundary extends PureComponent<{ setError: any; children: any }> {
   constructor(props: any) {
     super(props)
   }
@@ -25,19 +29,19 @@ class ErrorBoundary extends PureComponent<{ setError: any }> {
     monitor(EMlf.js, {
       d1: 'componentDidCatch',
       d2: JSON.stringify(error || ''),
-      d3: JSON.stringify(errorInfo || '')
+      d3: JSON.stringify(errorInfo || ''),
     })
     const showError = {
       code: 'BoundaryError',
       message: '渲染出现了小故障',
-      data: { error, errorInfo }
+      data: { error, errorInfo },
     }
     this.props.setError(showError)
   }
 
   clearError() {
     this.setState({
-      error: null
+      error: null,
     })
   }
 
@@ -53,14 +57,31 @@ type IProps = {
   navTitle?: ReactNode
   navClassName?: string
   loading?: any
-  h5Nav?: boolean
   ignoreError?: boolean
   enablePagePullDownRefresh?: boolean
-  renderPageTopHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
+  h5Nav?: boolean
+  reload?: () => Promise<any>
+  renderPageTopHeader?: (
+    navHeight: number,
+    statusBarHeight: number,
+    safeRight: number,
+  ) => void
 }
 
 export default function Index(props: IProps) {
-  const { useNav = true, navTitle, navClassName, className, loading, ignoreError, renderPageTopHeader, enablePagePullDownRefresh = true, h5Nav = false } = props
+  const {
+    useNav = true,
+    navTitle,
+    navClassName,
+    className,
+    loading,
+    ignoreError,
+    renderPageTopHeader,
+    enablePagePullDownRefresh = true,
+  } = props
+  /** 新增扩展属性 */
+  const { h5Nav = false, reload } = props
+
   const ctx = useContext(UniteContext)
   const [canPull, setCanPull] = useState(true)
   const [springStyles, api] = useSpring(() => ({
@@ -68,21 +89,31 @@ export default function Index(props: IProps) {
     config: {
       tension: 300,
       friction: 30,
-      clamp: true
-    }
+      clamp: true,
+    },
   }))
-  const [pullDownRefreshStatus, setPullDownRefreshStatus] = useState('pulling') as [
+  const [pullDownRefreshStatus, setPullDownRefreshStatus] = useState(
+    'pulling',
+  ) as [
     'pulling' | 'refreshing' | 'complete' | 'canRelease',
-    React.Dispatch<React.SetStateAction<'pulling' | 'refreshing' | 'complete' | 'canRelease'>>
+    React.Dispatch<
+      React.SetStateAction<'pulling' | 'refreshing' | 'complete' | 'canRelease'>
+    >,
   ]
+  const [loginStatus] = useState(false)
 
   // 异常来自于三个部分 1: Request Code 2 JSError 3: BoundaryError
   useEffect(() => {
-    if (!loading && ctx.error && ctx.error.code !== 'JSError' && ctx.error.code !== 'BoundaryError') {
+    if (
+      !loading &&
+      ctx.error &&
+      ctx.error.code !== 'JSError' &&
+      ctx.error.code !== 'BoundaryError'
+    ) {
       if (!ignoreError) {
         showToast({
           title: ctx.error.message,
-          icon: 'none'
+          icon: 'none',
         })
       }
       ctx.setError(undefined)
@@ -101,15 +132,27 @@ export default function Index(props: IProps) {
 
   useEffect(() => {
     if (loading && ctx.error && !ignoreError && ctx.error.code === LOGIN_CODE) {
+      //setLoginStatus(true)
       Router.toLogin()
     }
   }, [loading, ctx, ignoreError])
 
   function render() {
-    if (loading || ctx.error?.code === 'JSError' || ctx.error?.code === 'BoundaryError') {
+    if (
+      loading ||
+      ctx.error?.code === 'JSError' ||
+      ctx.error?.code === 'BoundaryError'
+    ) {
       if (ctx.error) {
         if (ignoreError) return <></>
-        if (ctx.error.code !== LOGIN_CODE) return <Error setError={ctx.setError as any} onRefresh={ctx.onRefresh} error={ctx.error} />
+        if (ctx.error.code !== LOGIN_CODE)
+          return (
+            <Error
+              setError={ctx.setError as any}
+              onRefresh={ctx.onRefresh}
+              error={ctx.error}
+            />
+          )
       } else {
         return <Loading />
       }
@@ -117,13 +160,20 @@ export default function Index(props: IProps) {
     return (
       <>
         <PullDownRefresh
-          canPull={!!(ctx.uniteConfig.page && enablePagePullDownRefresh && canPull)}
+          style={{
+            visibility: loginStatus ? 'hidden' : 'visible',
+          }}
+          className={className}
+          canPull={
+            !!(ctx.uniteConfig.page && enablePagePullDownRefresh && canPull)
+          }
           onRefresh={ctx.onRefresh}
           setStatus={setPullDownRefreshStatus}
           status={pullDownRefreshStatus}
+          reload={reload}
           api={api}
         >
-          <View className={className}>{props.children}</View>
+          <>{props.children}</>
         </PullDownRefresh>
       </>
     )
@@ -133,7 +183,7 @@ export default function Index(props: IProps) {
     <ErrorBoundary setError={ctx.setError}>
       {ctx.uniteConfig.page ? (
         <Navigation
-          homeUrl='pages/index/index'
+          homeUrl="pages/index/index"
           navTitle={navTitle}
           navClassName={navClassName}
           useNav={useNav}

@@ -16,11 +16,20 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { Collapse, CollapseItem } from '@antmjs/vantui'
 import Header from '@/components/header'
 import dayjs from 'dayjs'
-import { ICurrentDay } from '~/../@types/date'
+import { ICurrentDay } from '~/../types/date'
 import { getToday } from '@/utils'
-import { calendarStore, componentRefreshTimeStore, lunarStore, mondayStore } from '@/store'
+import {
+  calendarStore,
+  componentRefreshTimeStore,
+  lunarStore,
+  mondayStore,
+} from '@/store'
 import { cacheGetSync } from '@/cache'
-import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../@types/calendar'
+import {
+  IDavCalendar,
+  ICalendarComponent,
+  IDavComponent,
+} from '~/../types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
 import { Calendar, CalendarPop, EventList } from './ui'
 import { componentsDaysById } from '@/api/component'
@@ -40,7 +49,7 @@ export default Unite(
       componentLoading: false,
       calendarComponents: [],
       componentRefreshLocalTime: 0,
-      marks: []
+      marks: [],
     },
 
     async onLoad() {
@@ -59,7 +68,7 @@ export default Unite(
       this._queryComponent(
         this.hooks['calendars'],
         dayjs(value).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
-        dayjs(value).endOf('month').format('YYYY-MM-DD HH:mm:ss')
+        dayjs(value).endOf('month').format('YYYY-MM-DD HH:mm:ss'),
       )
     },
 
@@ -74,7 +83,7 @@ export default Unite(
 
     selectDayClickHadnle(item: { value: CalendarTypes.SelectedDate }) {
       this.setState({
-        selectedDay: item.value.start.toString()
+        selectedDay: item.value.start.toString(),
       })
     },
 
@@ -84,14 +93,18 @@ export default Unite(
     componentRefresh() {
       this._queryComponent(
         this.hooks['calendars'],
-        dayjs(this.state.selectedDay).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
-        dayjs(this.state.selectedDay).endOf('month').format('YYYY-MM-DD HH:mm:ss')
+        dayjs(this.state.selectedDay)
+          .startOf('month')
+          .format('YYYY-MM-DD HH:mm:ss'),
+        dayjs(this.state.selectedDay)
+          .endOf('month')
+          .format('YYYY-MM-DD HH:mm:ss'),
       )
     },
 
     collapseChage(value: any) {
       this.setState({
-        collapse: value
+        collapse: value,
       })
     },
 
@@ -103,7 +116,7 @@ export default Unite(
       //@ts-ignore
       this.hooks['calRef'].current.reset(today)
       this.setState({
-        selectedDay: today
+        selectedDay: today,
       })
     },
 
@@ -112,7 +125,7 @@ export default Unite(
      */
     calendarPopOpen() {
       this.setState({
-        popOpen: true
+        popOpen: true,
       })
     },
     /**
@@ -120,13 +133,27 @@ export default Unite(
      */
     calendarPopClose() {
       this.setState({
-        popOpen: false
+        popOpen: false,
       })
     },
 
     calendarSelected(value: string[]) {
       const _calendars = this.hooks['calendars'].map((t: IDavCalendar) => {
-        const { id, name, color, major, display, memberId, calendarId, createMemberId, createMemberName, description, isShare, alarmTime, alarmType } = t
+        const {
+          id,
+          name,
+          color,
+          major,
+          display,
+          memberId,
+          calendarId,
+          createMemberId,
+          createMemberName,
+          description,
+          isShare,
+          alarmTime,
+          alarmType,
+        } = t
         const checked = value.includes(calendarId) ? true : false
         return {
           id,
@@ -142,7 +169,7 @@ export default Unite(
           description,
           isShare,
           alarmTime,
-          alarmType
+          alarmType,
         }
       })
       this.hooks['setCalendars'](_calendars)
@@ -155,11 +182,11 @@ export default Unite(
       Router.toComponentview({
         params: {
           componentId: component.id,
-          add: false
+          add: false,
         },
         data: {
-          component: component
-        }
+          component: component,
+        },
       })
     },
 
@@ -174,7 +201,7 @@ export default Unite(
       this.setState({
         componentLoading: true,
         calendarComponents: [],
-        marks: []
+        marks: [],
       })
 
       let pList: Array<Promise<any>> = []
@@ -188,29 +215,31 @@ export default Unite(
               .catch((err: any) => {
                 reject(err)
               })
-          })
+          }),
         )
       })
       let calendarComponents: Array<ICalendarComponent> = []
       Promise.all(
         pList.map((p) => {
           return p.catch((error) => error)
-        })
+        }),
       )
         .then((res) => {
-          res.forEach((i) => (calendarComponents = calendarComponents.concat(i)))
+          res.forEach(
+            (i) => (calendarComponents = calendarComponents.concat(i)),
+          )
           this._fillMarkDay(calendarComponents)
           const now: number = dayjs().unix()
           this.setState({
             calendarComponents: calendarComponents,
             componentLoading: false,
-            componentRefreshLocalTime: now
+            componentRefreshLocalTime: now,
           })
         })
         .catch((error) => {
           console.log(error, 'error')
           this.setState({
-            componentLoading: false
+            componentLoading: false,
           })
         })
     },
@@ -232,9 +261,9 @@ export default Unite(
         return { value: i }
       })
       this.setState({
-        marks: marks
+        marks: marks,
       })
-    }
+    },
   },
 
   function ({ state, events }) {
@@ -248,14 +277,16 @@ export default Unite(
       calendarPopOpen,
       calendarPopClose,
       calendarSelected,
-      viewComponent
+      viewComponent,
     } = events
     const env = useWebEnv()
     const [calendars, setCalendars] = useRecoilState(calendarStore)
     const lunar = useRecoilValue(lunarStore)
     const monday = useRecoilValue(mondayStore)
     const accessToken = cacheGetSync('accessToken')
-    const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(componentRefreshTimeStore)
+    const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(
+      componentRefreshTimeStore,
+    )
 
     const calRef = React.createRef()
 
@@ -264,7 +295,7 @@ export default Unite(
       setComponentRefresh: setComponentRefreshTime,
       calendars: calendars,
       setCalendars: setCalendars,
-      componentRefresh: componentRefreshTime
+      componentRefresh: componentRefreshTime,
     })
     events.setHooks({ calendars: calendars })
 
@@ -272,22 +303,22 @@ export default Unite(
 
     return (
       <Container
-        navTitle='日程管理'
-        className='pages-index-index'
+        navTitle="日程管理"
+        className="pages-index-index"
         h5Nav={true}
         enablePagePullDownRefresh={true}
         renderPageTopHeader={() => {
-          return <Header title='日程管理' left={false} to={1}></Header>
+          return <Header title="日程管理" left={false} to={1}></Header>
         }}
       >
         <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
           <CollapseItem
-            name='1'
+            name="1"
             renderTitle={
-              <View className='calendar-title'>
+              <View className="calendar-title">
                 <Icon
-                  classPrefix='page-icon'
-                  name='rili'
+                  classPrefix="page-icon"
+                  name="rili"
                   size={50}
                   onClick={(e) => {
                     e.stopPropagation()
@@ -295,7 +326,7 @@ export default Unite(
                     calendarPopOpen()
                   }}
                 ></Icon>
-                <View className='label'>{selectedDay}</View>
+                <View className="label">{selectedDay}</View>
               </View>
             }
           >
@@ -333,21 +364,28 @@ export default Unite(
         ></CalendarPop>
 
         {selectedDay !== day.current && (
-          <View className='pages-index_today-icon' style={{ bottom: env ? '80px' : '10px' }} onClick={currentClickHandle}>
+          <View
+            className="pages-index_today-icon"
+            style={{ bottom: env ? '80px' : '10px' }}
+            onClick={currentClickHandle}
+          >
             今
           </View>
         )}
 
-        <View className='pages-index_home-fab' style={{ bottom: env ? '80px' : '20px' }}>
-          {!!accessToken && <Button icon='plus' round />}
+        <View
+          className="pages-index_home-fab"
+          style={{ bottom: env ? '80px' : '20px' }}
+        >
+          {!!accessToken && <Button icon="plus" round />}
         </View>
       </Container>
     )
   },
-  { page: true }
+  { page: true },
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: ''
+  navigationBarTitleText: '',
 })

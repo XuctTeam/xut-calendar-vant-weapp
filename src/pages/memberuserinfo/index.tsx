@@ -15,14 +15,14 @@ import Container from '@/components/container'
 import { cacheGetSync } from '@/cache'
 import Images from '@/constants/images'
 import { userInfoStore } from '@/store'
-import { IUserInfo } from '~/../@types/user'
+import { IUserInfo } from '~/../types/user'
 import { User, Menu } from './ui'
 import './index.less'
 
 export default Unite(
   {
     state: {},
-    async onLoad() {}
+    async onLoad() {},
   },
   function ({}) {
     const accessToken = cacheGetSync('accessToken')
@@ -30,20 +30,28 @@ export default Unite(
 
     useReachBottom(() => {})
     return (
-      <Container navTitle='个人信息' enablePagePullDownRefresh={false} className='pages-member-info-index'>
+      <Container
+        navTitle="个人信息"
+        enablePagePullDownRefresh={false}
+        className="pages-member-info-index"
+      >
         <User
           hasLogin={!!accessToken}
           nickname={userInfo ? userInfo.name : ''}
-          avatar={userInfo && userInfo.avatar ? userInfo.avatar : Images.DEFAULT_AVATAR}
+          avatar={
+            userInfo && userInfo.avatar
+              ? userInfo.avatar
+              : Images.DEFAULT_AVATAR
+          }
         ></User>
         <Menu accessToken={accessToken || ''}></Menu>
       </Container>
     )
   },
-  { page: true }
+  { page: true },
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: ''
+  navigationBarTitleText: '',
 })

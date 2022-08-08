@@ -10,7 +10,7 @@
  */
 import { atom } from 'recoil'
 import { cacheGetSync } from '@/cache'
-import { IUserInfo, IUserAuth } from '~/../@types/user'
+import { IUserInfo, IUserAuth } from '~/../types/user'
 import { baseUserInfo, auths } from '@/api/user'
 
 /**
@@ -24,7 +24,7 @@ export const userInfoStore = atom<IUserInfo | undefined>({
       return undefined
     }
     return await baseUserInfo()
-  })()
+  })(),
 })
 
 export const userAuthInfoStore = atom<Array<IUserAuth> | undefined>({
@@ -34,5 +34,5 @@ export const userAuthInfoStore = atom<Array<IUserAuth> | undefined>({
       return []
     }
     return await auths()
-  })()
+  })(),
 })

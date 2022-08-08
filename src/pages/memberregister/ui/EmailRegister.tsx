@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:25:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-06 15:12:42
+ * @LastEditTime: 2022-08-08 09:28:49
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\EmailRegister.tsx
  * @Description:
  *
@@ -104,10 +104,10 @@ const EmailRegister: FunctionComponent<IPageOption> = (props) => {
         </FormItem>
         <FormItem label='验证码' name='code' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
           <Row gutter='20'>
-            <Col span='14' className='dark'>
+            <Col span='13' className='dark'>
               <Input placeholder='请输入验证码' type='number' maxlength={6} />
             </Col>
-            <Col span='10' className='dark'>
+            <Col span='11' className='dark'>
               <Button size='small' type='info' onClick={sendEmailSmsCode} disabled={emailDisable}>
                 {emailSmsText}
               </Button>

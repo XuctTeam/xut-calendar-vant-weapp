@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-01 09:57:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 19:38:05
+ * @LastEditTime: 2022-08-08 15:26:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\systemsetting\index.tsx
  * @Description:
  *
@@ -10,8 +10,7 @@
  */
 import Taro from '@tarojs/taro'
 import { useRecoilState } from 'recoil'
-import { Fragment } from 'react'
-import { ActionSheet, Cell, CellGroup, Field, Switch, Unite } from '@antmjs/vantui'
+import { ActionSheet, Cell, CellGroup, Switch, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { lunarStore, mondayStore, compViewStore } from '@/store'
 import Header from '@/components/header'
@@ -22,7 +21,7 @@ export default Unite(
   {
     state: {
       viewPicker: false,
-      mondayPicker: false
+      mondayPicker: false,
     },
     async onLoad() {},
 
@@ -32,13 +31,13 @@ export default Unite(
 
     setViewPicker(viewPicker: boolean) {
       this.setState({
-        viewPicker
+        viewPicker,
       })
     },
 
     setMondayPicker(mondayPicker: boolean) {
       this.setState({
-        mondayPicker
+        mondayPicker,
       })
     },
 
@@ -46,39 +45,61 @@ export default Unite(
       Taro.openSetting({
         success: function (res) {
           console.log(res.authSetting)
-        }
+        },
       })
-    }
+    },
   },
   function ({ state, events }) {
     const { viewPicker, mondayPicker } = state
-    const { setViewPicker, setMondayPicker, permissionClick, getVersion } = events
+    const { setViewPicker, setMondayPicker, permissionClick, getVersion } =
+      events
     const [lunar, setLunar] = useRecoilState(lunarStore)
     const [monday, setMonday] = useRecoilState(mondayStore)
     const [compView, setCompView] = useRecoilState(compViewStore)
 
     console.log(getVersion())
     return (
-      <Fragment>
+      <>
         <Container
-          navTitle='设置'
+          navTitle="设置"
           enablePagePullDownRefresh={true}
           h5Nav={true}
-          className='pages-systemsetting-index'
+          className="pages-systemsetting-index"
           renderPageTopHeader={() => {
-            return <Header title='设置' left to={4}></Header>
+            return <Header title="设置" left to={4}></Header>
           }}
         >
-          <CellGroup title='日历设置'>
-            <Cell title='切换视图' clickable onClick={() => setViewPicker(true)} value={compView === 'list' ? '列表视图' : '日视图'} />
-            <Cell title='显示农历'>
-              <Switch checked={lunar} onChange={(e) => setLunar(e.detail)}></Switch>
+          <CellGroup title="日历设置">
+            <Cell
+              title="切换视图"
+              clickable
+              onClick={() => setViewPicker(true)}
+              value={compView === 'list' ? '列表视图' : '日视图'}
+            />
+            <Cell title="显示农历">
+              <Switch
+                checked={lunar}
+                onChange={(e) => setLunar(e.detail)}
+              ></Switch>
             </Cell>
-            <Cell title='星期开始于' clickable onClick={() => setMondayPicker(true)} value={monday ? '周一' : '周日'}></Cell>
+            <Cell
+              title="星期开始于"
+              clickable
+              onClick={() => setMondayPicker(true)}
+              value={monday ? '周一' : '周日'}
+            ></Cell>
           </CellGroup>
-          <CellGroup title='系统设置'>
-            {process.env.TARO_ENV === 'weapp' && <Cell title='权限管理' clickable onClick={permissionClick}></Cell>}
-            <Cell title='关于我们' clickable isLink url='/pages/aboutus/index' linkType='navigateTo'>
+          <CellGroup title="系统设置">
+            {process.env.TARO_ENV === 'weapp' && (
+              <Cell title="权限管理" clickable onClick={permissionClick}></Cell>
+            )}
+            <Cell
+              title="关于我们"
+              clickable
+              isLink
+              url="/pages/aboutus/index"
+              linkType="navigateTo"
+            >
               {'V' + getVersion()}
             </Cell>
           </CellGroup>
@@ -92,12 +113,12 @@ export default Unite(
           actions={[
             {
               name: '列表视图',
-              color: 'list'
+              color: 'list',
             },
             {
               name: '日视图',
-              color: 'day'
-            }
+              color: 'day',
+            },
           ]}
           onClose={() => setViewPicker(false)}
         />
@@ -111,22 +132,22 @@ export default Unite(
           actions={[
             {
               name: '周一',
-              color: '1'
+              color: '1',
             },
             {
               name: '周日',
-              color: '0'
-            }
+              color: '0',
+            },
           ]}
           onClose={() => setMondayPicker(false)}
         />
-      </Fragment>
+      </>
     )
   },
-  { page: true }
+  { page: true },
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: ''
+  navigationBarTitleText: '',
 })

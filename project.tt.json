@@ -1,7 +1,6 @@
 {
   "miniprogramRoot": "./",
   "projectname": "mini-project",
-  "appid": "wxd1cee317f1b0df7c",
   "setting": {
     "urlCheck": true,
     "es6": false,

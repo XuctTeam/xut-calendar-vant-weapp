@@ -1,11 +1,5 @@
-import { useEffect, useState, useCallback, ReactNode } from 'react'
-import {
-  getCurrentInstance,
-  navigateBack,
-  reLaunch,
-  getCurrentPages,
-  useDidShow,
-} from '@tarojs/taro'
+import { useEffect, useState, useCallback, ReactNode, Suspense } from 'react'
+import { getCurrentInstance, navigateBack, reLaunch, getCurrentPages, useDidShow } from '@tarojs/taro'
 import { animated } from '@react-spring/web'
 import { View } from '@tarojs/components'
 import { Icon } from '@antmjs/vantui'
@@ -14,6 +8,7 @@ import { menuButtonStore } from '@/store'
 import { setMenuButtonAsync } from '@/utils'
 import { useWxBrowser } from '@/hooks'
 import './navigation.less'
+import Loading from '../fullScreen/loading'
 
 const hackSyncWechatTitle = () => {
   const iframe = document.createElement('iframe')
@@ -37,13 +32,13 @@ function MenuButton(props: IMenuButtonProps) {
 
   const handleGoBack = useCallback(() => {
     navigateBack({
-      delta: 1,
+      delta: 1
     })
   }, [])
 
   const handleGoHome = useCallback(() => {
     reLaunch({
-      url: '/' + homeUrl,
+      url: '/' + homeUrl
     })
   }, [homeUrl])
 
@@ -66,43 +61,43 @@ function MenuButton(props: IMenuButtonProps) {
         }
       }
     },
-    [homeUrl],
+    [homeUrl]
   )
 
   return (
     <>
       <View
-        className="navigation_minibar_left"
+        className='navigation_minibar_left'
         style={{
           top: `${menuButton!.top}px`,
           left: `${menuButton!.marginRight}px`,
           width: `${menuButton!.width}px`,
-          height: `${menuButton!.height}px`,
+          height: `${menuButton!.height}px`
         }}
       >
         {backButton && (
           <View
-            className="navigation_minibar_left_back"
+            className='navigation_minibar_left_back'
             style={{
               width: `${menuButton!.height}px`,
               height: `${menuButton!.height}px`,
-              marginRight: '10px',
+              marginRight: '10px'
             }}
             onClick={handleGoBack}
           >
-            <Icon name="arrow-left" />
+            <Icon name='arrow-left' />
           </View>
         )}
         {homeButton && (
           <View
-            className="navigation_minibar_left_home"
+            className='navigation_minibar_left_home'
             style={{
               width: `${menuButton!.height}px`,
-              height: `${menuButton!.height}px`,
+              height: `${menuButton!.height}px`
             }}
             onClick={handleGoHome}
           >
-            <Icon name="wap-home" />
+            <Icon name='wap-home' />
           </View>
         )}
       </View>
@@ -114,11 +109,7 @@ interface IH5PullDownRefresh {
   navClassName?: string
   springStyles: any
   enablePullDownRefresh?: boolean
-  renderHeader?: (
-    navHeight: number,
-    statusBarHeight: number,
-    safeRight: number,
-  ) => void
+  renderHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
   pullDownRefreshStatus?: 'pulling' | 'refreshing' | 'complete' | 'canRelease'
 }
 
@@ -129,11 +120,7 @@ interface INavBarProps {
   navClassName?: string
   enablePullDownRefresh?: boolean
   pullDownRefreshStatus?: 'pulling' | 'refreshing' | 'complete' | 'canRelease'
-  renderHeader?: (
-    navHeight: number,
-    statusBarHeight: number,
-    safeRight: number,
-  ) => void
+  renderHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
   springStyles: any
 }
 
@@ -148,28 +135,15 @@ interface IWeChatPullDownBody {
 }
 
 function NavBar(props: INavBarProps) {
-  const {
-    useNav,
-    title,
-    menuButton,
-    navClassName,
-    enablePullDownRefresh,
-    pullDownRefreshStatus,
-    renderHeader,
-    springStyles,
-  } = props
-  const navHeight =
-    menuButton!.top +
-    menuButton!.height +
-    (menuButton!.top - menuButton!.statusBarHeight)
+  const { useNav, title, menuButton, navClassName, enablePullDownRefresh, pullDownRefreshStatus, renderHeader, springStyles } = props
+  const navHeight = menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
   const statusBarHeight = menuButton!.statusBarHeight
   const paddingLeftRight = menuButton!.width + menuButton!.marginRight * 2
 
   const renderStatusText = (): any => {
     if (pullDownRefreshStatus === 'pulling') return '下拉刷新'
     if (pullDownRefreshStatus === 'canRelease') return '释放立即刷新'
-    if (pullDownRefreshStatus === 'refreshing')
-      return <View className="navigation_minibar_loading" />
+    if (pullDownRefreshStatus === 'refreshing') return <View className='navigation_minibar_loading' />
     if (pullDownRefreshStatus === 'complete') return '刷新成功'
   }
   const NView = animated(View)
@@ -180,29 +154,27 @@ function NavBar(props: INavBarProps) {
           <View
             style={{
               height: `${navHeight}px`,
-              paddingTop: `${statusBarHeight as number}px`,
+              paddingTop: `${statusBarHeight as number}px`
             }}
           >
             <View
-              className="navigation_minibar_center"
+              className='navigation_minibar_center'
               style={{
                 marginLeft: `${paddingLeftRight as number}px`,
-                marginRight: `${paddingLeftRight as number}px`,
+                marginRight: `${paddingLeftRight as number}px`
               }}
             >
-              <View className="navigation_minibar_content van-ellipsis">
-                {title}
-              </View>
+              <View className='navigation_minibar_content van-ellipsis'>{title}</View>
             </View>
           </View>
         )}
         {renderHeader?.(navHeight, statusBarHeight, paddingLeftRight)}
         {enablePullDownRefresh ? (
-          <View className="navigation_minibar_pulldown">
+          <View className='navigation_minibar_pulldown'>
             <NView
               className={'navigation_minibar_pulldown_bar'}
               style={{
-                ...springStyles,
+                ...springStyles
               }}
             >
               {renderStatusText()}
@@ -212,12 +184,12 @@ function NavBar(props: INavBarProps) {
           <></>
         )}
       </View>
-      <View className="visibility-hidden">
+      <View className='visibility-hidden'>
         {useNav && (
           <View
             style={{
               height: `${navHeight}px`,
-              width: '100%',
+              width: '100%'
             }}
           />
         )}
@@ -228,19 +200,12 @@ function NavBar(props: INavBarProps) {
 }
 
 function H5PullDownRefresh(props: IH5PullDownRefresh) {
-  const {
-    navClassName,
-    pullDownRefreshStatus,
-    springStyles,
-    renderHeader,
-    enablePullDownRefresh,
-  } = props
+  const { navClassName, pullDownRefreshStatus, springStyles, renderHeader, enablePullDownRefresh } = props
 
   const renderStatusText = (): any => {
     if (pullDownRefreshStatus === 'pulling') return '下拉刷新'
     if (pullDownRefreshStatus === 'canRelease') return '释放立即刷新'
-    if (pullDownRefreshStatus === 'refreshing')
-      return <View className="navigation_minibar_loading" />
+    if (pullDownRefreshStatus === 'refreshing') return <View className='navigation_minibar_loading' />
     if (pullDownRefreshStatus === 'complete') return '刷新成功'
   }
   const NView = animated(View)
@@ -249,11 +214,11 @@ function H5PullDownRefresh(props: IH5PullDownRefresh) {
       <View className={`navigation_minibar ${navClassName || ''}`}>
         {renderHeader?.(0, 0, 0)}
         {enablePullDownRefresh ? (
-          <View className="navigation_minibar_pulldown">
+          <View className='navigation_minibar_pulldown'>
             <NView
               className={'navigation_minibar_pulldown_bar'}
               style={{
-                ...springStyles,
+                ...springStyles
               }}
             >
               {renderStatusText()}
@@ -263,11 +228,11 @@ function H5PullDownRefresh(props: IH5PullDownRefresh) {
           <></>
         )}
       </View>
-      <View className="visibility-hidden">
+      <View className='visibility-hidden'>
         <View
           style={{
             height: `0px`,
-            width: '100%',
+            width: '100%'
           }}
         />
         {renderHeader?.(0, 0, 0)}
@@ -279,25 +244,14 @@ function H5PullDownRefresh(props: IH5PullDownRefresh) {
 function H5PullDownBody(props: IH5PullDownBody) {
   const { h5Nav = false } = props
   const wxBrower = useWxBrowser()
-  return (
-    <>
-      {h5Nav && !wxBrower ? (
-        <View className="van-box van-box--padding"> {props.children}</View>
-      ) : (
-        <>{props.children}</>
-      )}
-    </>
-  )
+  return <>{h5Nav && !wxBrower ? <View className='van-box van-box--padding'> {props.children}</View> : <>{props.children}</>}</>
 }
 
 function WeChatPullDownBody(props: IWeChatPullDownBody) {
   const { menuButton } = props
-  const navHeight =
-    menuButton!.top +
-    menuButton!.height +
-    (menuButton!.top - menuButton!.statusBarHeight)
+  const navHeight = menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
   return (
-    <View className="van-box" style={{ paddingTop: `${navHeight}px` }}>
+    <View className='van-box' style={{ paddingTop: `${navHeight}px` }}>
       {props.children}
     </View>
   )
@@ -311,26 +265,13 @@ type IProps = {
   navClassName?: string
   enablePullDownRefresh?: boolean
   pullDownRefreshStatus?: 'pulling' | 'refreshing' | 'complete' | 'canRelease'
-  renderHeader?: (
-    navHeight: number,
-    statusBarHeight: number,
-    safeRight: number,
-  ) => void
+  renderHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
   springStyles: any
   h5Nav?: boolean
 }
 
 export default function Index(props: IProps) {
-  const {
-    useNav = true,
-    navTitle,
-    navClassName,
-    homeUrl,
-    renderHeader,
-    enablePullDownRefresh,
-    pullDownRefreshStatus,
-    springStyles,
-  } = props
+  const { useNav = true, navTitle, navClassName, homeUrl, renderHeader, enablePullDownRefresh, pullDownRefreshStatus, springStyles } = props
   /** 新增属性 */
   const { h5Nav } = props
   const [menuButton, setMenuButton]: any = useRecoilState(menuButtonStore)
@@ -353,16 +294,13 @@ export default function Index(props: IProps) {
     // @ts-ignore
     if (process.env.NODE_ENV === 'development') {
       const ins = getCurrentInstance()
-      if (ins.page?.config?.navigationBarTitleText)
-        console.warn(
-          '使用Navigation组件后不要在配置文件设置navigationBarTitleText',
-        )
+      if (ins.page?.config?.navigationBarTitleText) console.warn('使用Navigation组件后不要在配置文件设置navigationBarTitleText')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       {process.env.TARO_ENV === 'h5' ? (
         <H5PullDownRefresh
           navClassName={navClassName}
@@ -386,21 +324,15 @@ export default function Index(props: IProps) {
           useNav={useNav}
         />
       )}
-      {menuButton &&
-        process.env.TARO_ENV !== 'h5' &&
-        process.env.TARO_ENV !== 'alipay' && (
-          <MenuButton menuButton={menuButton} homeUrl={homeUrl} />
-        )}
+      {menuButton && process.env.TARO_ENV !== 'h5' && process.env.TARO_ENV !== 'alipay' && <MenuButton menuButton={menuButton} homeUrl={homeUrl} />}
       {/* {props.children} */}
       {process.env.TARO_ENV === 'h5' ? (
         <H5PullDownBody h5Nav={h5Nav}>{props.children}</H5PullDownBody>
       ) : !!menuButton ? (
-        <WeChatPullDownBody menuButton={menuButton}>
-          {props.children}
-        </WeChatPullDownBody>
+        <WeChatPullDownBody menuButton={menuButton}>{props.children}</WeChatPullDownBody>
       ) : (
         <>{props.children}</>
       )}
-    </>
+    </Suspense>
   )
 }

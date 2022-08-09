@@ -2,24 +2,17 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 14:53:44
+ * @LastEditTime: 2022-08-09 15:37:53
  * @FilePath: \xut-calendar-vant-weapp\src\app.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import React, { Suspense, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { RecoilRoot } from 'recoil'
 import { useWxBrowser } from '@/hooks'
-import {
-  useDidShow,
-  useDidHide,
-  getUpdateManager,
-  showModal,
-  nextTick,
-} from '@tarojs/taro'
+import { useDidShow, useDidHide, getUpdateManager, showModal, nextTick } from '@tarojs/taro'
 import { setSysInfoAsync, setWxBrower } from '@/utils'
-import Loading from '@/components/fullScreen/loading'
 import * as dayjs from 'dayjs'
 import isLeapYear from 'dayjs/plugin/isLeapYear'
 import 'dayjs/locale/zh-cn'
@@ -67,7 +60,7 @@ export default function App(props: IProps) {
             title: '更新提示',
             content: '新版本已经准备好，立即重启应用？',
             confirmText: '我知道了',
-            showCancel: false,
+            showCancel: false
           }).then(function (mRes: any): void {
             if (mRes.confirm) {
               updateManager.applyUpdate()
@@ -80,7 +73,7 @@ export default function App(props: IProps) {
             title: '更新失败',
             content: '请删除小程序后重新打开',
             confirmText: '我知道了',
-            showCancel: false,
+            showCancel: false
           }).then(function (): void {})
         })
       }
@@ -94,8 +87,6 @@ export default function App(props: IProps) {
 
   return (
     // 在入口组件不会渲染任何内容，但我们可以在这里做类似于状态管理的事情
-    <RecoilRoot>
-      <Suspense fallback={<Loading />}>{props.children}</Suspense>
-    </RecoilRoot>
+    <RecoilRoot>{props.children}</RecoilRoot>
   )
 }

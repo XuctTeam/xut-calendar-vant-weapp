@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 09:42:37
+ * @LastEditTime: 2022-08-09 08:56:23
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -252,7 +252,7 @@ export default Unite(
       }
       this.hooks['setUserInfoState'](result[0] as IUserInfo)
       this.hooks['setUserAuthState'](result[1] as IUserAuth[])
-      this.hooks['setCalendarState'](result[2] as IDavCalendar[])
+      this.hooks['setCalendarState'](result[2] as any as IDavCalendar[])
       this.hooks['show']({
         icon: 'success',
         title: '登录成功',

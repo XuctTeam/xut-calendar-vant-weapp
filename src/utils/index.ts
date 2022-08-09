@@ -5,6 +5,7 @@ import { IMenuButton } from '@/store'
 import dayjs from 'dayjs'
 import { ICurrentDay } from '../../@types/date'
 import { lunarDay } from './date'
+import Taro from '@tarojs/taro'
 
 function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
   try {
@@ -225,8 +226,11 @@ export const getToday = (): ICurrentDay => {
  * @returns
  */
 export const base64 = (str: string): string => {
-  const buff = Buffer.from(str, 'utf-8')
-  return buff.toString('base64')
+  // 对字符串进行编码
+var encode = encodeURI(str);
+// 对编码的字符串转化base64
+var base64 = window.btoa(encode);
+return base64;
 }
 
 /**

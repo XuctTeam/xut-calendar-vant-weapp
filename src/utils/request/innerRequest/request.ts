@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-15 14:52:03
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-21 13:32:16
+ * @LastEditTime: 2022-08-09 09:02:45
  * @FilePath: \xut-calendar-vant-weapp\src\utils\request\innerRequest\request.ts
  * @Description:
  *
@@ -28,7 +28,6 @@ export default class httpRequest<T> {
       'Content-Type': 'application/json',
       ...options?.header
     }
-
     if (!(url.includes('/uaa/sms') || url.includes('/uaa/captcha') || url.includes('/register'))) {
       /* 非登录接口都要通过token请求 */
       if (!url.includes('/oauth/token')) {

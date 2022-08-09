@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 10:16:59
+ * @LastEditTime: 2022-08-09 16:56:20
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -85,6 +85,8 @@ export default Unite(
           return Router.toMembermodifyname()
         case 2:
           return Router.toMemberbindusername()
+        case 3:
+          return Router.toMemberbindphone()
         case 4:
           return Router.toMembermodifypassword()
         case 5:

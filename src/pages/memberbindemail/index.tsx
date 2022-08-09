@@ -2,16 +2,16 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 10:57:00
+ * @LastEditTime: 2022-08-09 18:38:09
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindemail\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { useRecoilState } from 'recoil'
-import { useEffect, useRef } from 'react'
-import { Button, CellGroup, Field, Unite } from '@antmjs/vantui'
-import { View } from '@tarojs/components'
+import { useEffect } from 'react'
+import { Button, CellGroup, Col, Form, FormItem, Row, Unite } from '@antmjs/vantui'
+import { Input, View } from '@tarojs/components'
 import Header from '@/components/header'
 import { useToast } from 'taro-hooks'
 import Container from '@/components/container'
@@ -21,119 +21,100 @@ import { bindEmail, unbindEmail, auths } from '@/api/user'
 import { sendUmsEmailCode } from '@/api/common'
 import { IUserAuth } from '~/../types/user'
 import { useBack } from '@/utils/taro'
+import CountDown from '@/components/countdown'
 import './index.less'
 
 export default Unite(
   {
     state: {
-      email: '',
-      smsCode: '',
       smsText: '发送验证码',
       disable: false,
-      loading: false,
+      loading: false
     },
-
-    async onLoad() {},
-
-    async onReady() {},
 
     async onUnload() {
-      this._cleanTime()
-    },
-
-    setEmail(email: string) {
-      this.setState({
-        email,
-      })
-    },
-
-    setSmsCode(smsCode: string) {
-      this.setState({
-        smsCode,
-      })
+      this.hooks['countDown'].clean()
     },
 
     sendSmsCode() {
-      if (!this._checkParam()) return
-      sendUmsEmailCode(this.state.email, this.hooks['emailAuth'] ? 2 : 1)
-        .then(() => {
-          this._setTextTime(120)
+      const email = this.hooks['form'].getFieldValue('email')
+      if (!(email && checkEmail(email))) {
+        this.hooks['toast']({
+          title: '邮箱不能为空'
         })
+        return
+      }
+      this._setTextTime()
+
+      sendUmsEmailCode(email, this.hooks['emailAuth'] ? 2 : 1)
+        .then(() => {})
         .catch((err: any) => {
           console.log(err)
         })
     },
 
-    _setTextTime(num: number) {
-      if (num === 0) {
-        this.setState({
-          smsText: '发送验证码',
-          disable: false,
-        })
-        this._cleanTime()
-        return
-      }
+    _setTextTime() {
+      const { countDown } = this.hooks
+      countDown.reset()
       this.setState({
-        smsText: '重发(' + num + ')',
-        disable: true,
+        disable: true
       })
-      this.hooks['timerRef'].current = window.setTimeout(() => {
-        this._setTextTime(num - 1)
-      }, 1000)
+    },
+
+    setSmsText(counter: number) {
+      this.setState({
+        smsText: '重发(' + counter + ')'
+      })
+    },
+
+    setSmsTextEnd() {
+      this.setState({
+        smsText: '发送验证码',
+        disable: false
+      })
     },
 
     bindEmail() {
-      if (!this._checkParam()) return
-      if (!this.state.smsCode) {
-        this.hooks['toast']({
-          title: '验证码为空',
+      this.hooks['form'].validateFields((errorMessage: any, fieldValues: any) => {
+        if (errorMessage && errorMessage.length) {
+          return console.info('errorMessage', errorMessage)
+        }
+        this.setState({
+          loading: true
         })
-        return
-      }
-      this.setState({
-        loading: true,
-      })
-      if (this.hooks['emailAuth']) {
-        unbindEmail(this.state.email, this.state.smsCode)
-          .then(() => {
+        const { email, code } = fieldValues
+        if (this.hooks['emailAuth']) {
+          unbindEmail(email, code)
+            .then(() => {
+              this.hooks['toast']({
+                icon: 'success',
+                title: '解绑成功'
+              })
+              this._reload()
+            })
+            .catch((err) => {
+              console.log(err)
+              this.setState({
+                loading: false
+              })
+            })
+          return
+        }
+        bindEmail(email, code)
+          .then(async () => {
             this.hooks['toast']({
               icon: 'success',
-              title: '解绑成功',
+              title: '绑定成功'
             })
             this._reload()
           })
           .catch((err) => {
             console.log(err)
             this.setState({
-              loading: false,
+              loading: false
             })
           })
-        return
-      }
-      bindEmail(this.state.email, this.state.smsCode)
-        .then(async () => {
-          this.hooks['toast']({
-            icon: 'success',
-            title: '绑定成功',
-          })
-          this._reload()
-        })
-        .catch((err) => {
-          console.log(err)
-          this.setState({
-            loading: false,
-          })
-        })
-    },
-
-    _checkParam() {
-      if (!this.state.email || !checkEmail(this.state.email)) {
-        this.hooks['toast']({
-          title: '邮箱格式错误',
-        })
-        return false
-      }
-      return true
+      })
     },
 
     _reload() {
@@ -142,7 +123,7 @@ export default Unite(
           this.hooks['setUserAuthsState'](res as IUserAuth[])
           this.setState({
             disable: false,
-            loading: false,
+            loading: false
           })
           window.setTimeout(() => {
             this.hooks['back']()
@@ -151,95 +132,98 @@ export default Unite(
         .catch((err) => {
           console.log(err)
         })
-    },
-    _cleanTime() {
-      if (this.hooks['timerRef'].current > 0) {
-        window.clearTimeout(this.hooks['timerRef'].current)
-        this.hooks['timerRef'].current = 0
-      }
-    },
+    }
   },
   function ({ state, events }) {
-    const { email, smsCode, smsText, disable, loading } = state
-    const { setEmail, setSmsCode, sendSmsCode, bindEmail } = events
-    const timerRef = useRef<number>(0)
+    const { smsText, disable, loading } = state
+    const { sendSmsCode, bindEmail, setSmsText, setSmsTextEnd } = events
+    const form = Form.useForm()
     const [toast] = useToast({
-      icon: 'error',
+      icon: 'error'
     })
     const [back] = useBack({
-      to: 4,
+      to: 4
     })
+    const countDown = new CountDown({
+      interval: 120,
+      onStep({ counter, diff }) {
+        console.log(counter, diff)
+        setSmsText(diff)
+      },
+      onEnd() {
+        setSmsTextEnd()
+      }
+    })
+
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
-    const emailAuth =
-      userAuths && userAuths.length > 0
-        ? userAuths.find((i) => i.identityType === 'email')
-        : undefined
+    const emailAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'email') : undefined
 
     events.setHooks({
       toast: toast,
       back: back,
-      timerRef: timerRef,
+      form: form,
+      countDown: countDown,
       emailAuth: emailAuth,
       userAuths: userAuths,
-      setUserAuthsState: setUserAuthsState,
+      setUserAuthsState: setUserAuthsState
     })
 
     useEffect(() => {
       if (emailAuth) {
-        setEmail(emailAuth.username)
+        form.setFields({ email: emailAuth.username })
       }
     }, [])
 
     return (
       <Container
-        navTitle="邮箱绑定"
+        navTitle='邮箱绑定'
         enablePagePullDownRefresh={false}
-        className="pages-member-bind-email-index"
+        className='pages-member-bind-email-index'
         h5Nav={true}
         renderPageTopHeader={() => {
-          return <Header title="邮箱绑定" left to={4}></Header>
+          return <Header title='邮箱绑定' left to={4}></Header>
         }}
       >
-        <View className="box">
+        <Form form={form} className='box'>
           <CellGroup inset>
-            <Field
-              label="邮箱"
-              placeholder="请输入邮箱"
-              value={email}
-              onChange={(e) => setEmail(e.detail)}
-            ></Field>
-            <Field
-              label="验证码"
-              placeholder="请输入验证码"
-              value={smsCode}
-              type="number"
-              maxlength={6}
-              onChange={(e) => setSmsCode(e.detail)}
-              renderButton={
-                <Button
-                  size="small"
-                  type="primary"
-                  onClick={() => sendSmsCode()}
-                  disabled={disable}
-                >
-                  {smsText}
-                </Button>
-              }
-            ></Field>
+            <FormItem
+              label='邮箱'
+              name='email'
+              required
+              trigger='onInput'
+              validateTrigger='onBlur'
+              rules={[{ rule: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/, message: '邮箱格式错误' }]}
+              // taro的input的onInput事件返回对应表单的最终值为e.detail.value
+              valueFormat={(e) => e.detail.value}
+            >
+              <Input placeholder='请输入邮箱' disabled={!!emailAuth}></Input>
+            </FormItem>
+            <FormItem label='验证码' name='code' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
+              <Row gutter='20' className='van-sms-cell'>
+                <Col span='13' className='dark'>
+                  <Input placeholder='请输入验证码' type='number' maxlength={6} />
+                </Col>
+                <Col span='11' className='dark'>
+                  <Button size='small' type='info' onClick={sendSmsCode} disabled={disable}>
+                    {smsText}
+                  </Button>
+                </Col>
+              </Row>
+            </FormItem>
           </CellGroup>
-        </View>
-        <View className="button">
-          <Button block type="info" disabled={loading} onClick={bindEmail}>
+        </Form>
+        <View className='button'>
+          <Button block type='info' disabled={loading} onClick={bindEmail}>
             {emailAuth ? '解绑' : '绑定'}
           </Button>
         </View>
       </Container>
     )
   },
-  { page: true },
+  { page: true }
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: '',
+  navigationBarTitleText: ''
 })

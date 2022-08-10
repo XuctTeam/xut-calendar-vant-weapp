@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-07 12:59:45
+ * @LastEditTime: 2022-08-10 14:03:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifypassword\index.tsx
  * @Description:
  *
@@ -11,12 +11,12 @@
 import { Button, CellGroup, Field, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Header from '@/components/header'
+import { useBack } from '@/utils/taro'
 import Container from '@/components/container'
 import { useToast } from 'taro-hooks'
 import { password as updatePassword } from '@/api/user'
 
 import './index.less'
-import { useBack } from '@/utils/taro'
 
 export default Unite(
   {

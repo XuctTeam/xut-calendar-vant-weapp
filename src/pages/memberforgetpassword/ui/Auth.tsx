@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-27 03:47:42
- * @LastEditTime: 2022-08-07 12:58:52
+ * @LastEditTime: 2022-08-10 09:05:59
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
@@ -196,7 +196,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
           </Button>
         </View>
       </View>
-      <View className='button'>
+      <View className='van-page-button'>
         <Button type='info' block onClick={validateFormHandler}>
           下一步
         </Button>

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-09 17:23:04
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-09 17:32:37
+ * @LastEditTime: 2022-08-10 12:38:03
  * @FilePath: \xut-calendar-vant-weapp\src\components\countdown\types.d.ts
  * @Description:
  *
@@ -15,14 +15,9 @@ export interface CountDownDateMeta {
   s: number
 }
 
-export interface IStep {
-  counter: number
-  diff: number
-}
-
 export interface CountDownOpt {
   interval: number
   endTime: number
-  onStep?(value: IStep): void
+  onStep?(value: CountDownDateMeta): void
   onEnd?(): void
 }

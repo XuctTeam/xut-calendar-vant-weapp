@@ -2,13 +2,15 @@
  * @Author: Derek Xu
  * @Date: 2022-08-09 17:12:57
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-09 18:06:11
+ * @LastEditTime: 2022-08-10 18:28:09
  * @FilePath: \xut-calendar-vant-weapp\src\components\countdown\index.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import { setTimeoutInterval, clearTimeoutInterval } from '@xdoer/timeout-interval'
 import { CountDownOpt } from './types'
+import { merge } from './util'
 
 export default class CountDown {
   private opt: CountDownOpt
@@ -17,53 +19,52 @@ export default class CountDown {
   now: number
 
   constructor(opt?: Partial<CountDownOpt>, getNowTimeStamp = () => Date.now()) {
-    this.opt = Object.assign({ interval: 1000, endTime: 0 }, opt)
+    this.opt = merge({ interval: 1000, endTime: 0 }, opt)
     this.getNowTimeStamp = getNowTimeStamp
     this.now = getNowTimeStamp()
   }
 
-  begin() {
-    const that = this
-    let speed = 1000,
-      counter = 0,
-      start = this.getNowTimeStamp()
-    function instance() {
-      if (that.opt.endTime > 0 && new Date().getTime() > that.opt.endTime) {
-        return that.end()
+  private useLocalTimeToCountDown() {
+    let countdownSeconds = Math.round((this.opt.endTime - this.getNowTimeStamp()) / 1000)
+
+    if (countdownSeconds < 0) return
+
+    this.timerId = setTimeoutInterval(() => {
+      this.opt.onStep?.(this.calculateTime(countdownSeconds * 1000))
+
+      countdownSeconds--
+
+      if (countdownSeconds < 0) {
+        clearTimeoutInterval(this.timerId)
+        return this.opt.onEnd?.()
       }
-      let ideal = counter * speed,
-        real = new Date().getTime() - start
-      counter++
-      if (counter === that.opt.interval) {
-        return that.end()
-      }
-      that.opt.onStep?.({
-        counter: counter,
-        diff: that.opt.interval - counter
-      })
-      let diff = real - ideal
-      that.timerId = window.setTimeout(function () {
-        instance()
-      }, speed - diff) // 通过系统时间进行修复
-    }
-    that.timerId = window.setTimeout(function () {
-      instance()
-    }, speed)
+    }, this.opt.interval)
   }
 
-  end() {
-    this.clean()
-    return this.opt.onEnd?.()
+  private calculateTime(ms: number) {
+    const s = ms / 1000
+    const m = s / 60
+    const format = (v: number) => Number.parseInt('' + v, 10)
+
+    return {
+      d: format(m / 60 / 24),
+      h: format((m / 60) % 24),
+      m: format(m % 60),
+      s: format(s % 60)
+    }
+  }
+
+  start(h: number, m: number, s: number) {
+    let endTime: Date = new Date()
+    endTime.setHours(endTime.getHours() + h)
+    endTime.setMinutes(endTime.getMinutes() + m)
+    endTime.setSeconds(endTime.getSeconds() + s)
+    this.opt.endTime = endTime.getTime()
+    this.useLocalTimeToCountDown()
   }
 
   clean() {
-    if (this.timerId) {
-      window.clearTimeout(this.timerId)
-    }
-  }
-
-  reset() {
-    this.now = this.getNowTimeStamp()
-    this.begin()
+    clearTimeoutInterval(this.timerId)
+    this.timerId = null
   }
 }

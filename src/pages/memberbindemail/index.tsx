@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-09 18:38:09
+ * @LastEditTime: 2022-08-10 18:37:41
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindemail\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { useRecoilState } from 'recoil'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Button, CellGroup, Col, Form, FormItem, Row, Unite } from '@antmjs/vantui'
 import { Input, View } from '@tarojs/components'
 import Header from '@/components/header'
@@ -54,8 +54,7 @@ export default Unite(
     },
 
     _setTextTime() {
-      const { countDown } = this.hooks
-      countDown.reset()
+      this.hooks['countDownRef'].current.start(0, 2, 0)
       this.setState({
         disable: true
       })
@@ -144,16 +143,7 @@ export default Unite(
     const [back] = useBack({
       to: 4
     })
-    const countDown = new CountDown({
-      interval: 120,
-      onStep({ counter, diff }) {
-        console.log(counter, diff)
-        setSmsText(diff)
-      },
-      onEnd() {
-        setSmsTextEnd()
-      }
-    })
+    const countDownRef = useRef<any>()
 
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const emailAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'email') : undefined
@@ -162,15 +152,28 @@ export default Unite(
       toast: toast,
       back: back,
       form: form,
-      countDown: countDown,
+      countDownRef: countDownRef,
       emailAuth: emailAuth,
       userAuths: userAuths,
       setUserAuthsState: setUserAuthsState
     })
 
     useEffect(() => {
+      countDownRef.current = new CountDown({
+        endTime: Date.now() + 1000 * 100,
+        onStep({ d, h, m, s }) {
+          console.log(`${d}天${h}时${m}分${s}秒`)
+          setSmsText(m * 60 + s)
+        },
+        onEnd() {
+          setSmsTextEnd()
+        }
+      })
       if (emailAuth) {
         form.setFields({ email: emailAuth.username })
+      }
+      return () => {
+        countDownRef.current.clean()
       }
     }, [])
 
@@ -184,7 +187,7 @@ export default Unite(
           return <Header title='邮箱绑定' left to={4}></Header>
         }}
       >
-        <Form form={form} className='box'>
+        <Form form={form} className='van-page-box'>
           <CellGroup inset>
             <FormItem
               label='邮箱'
@@ -204,7 +207,7 @@ export default Unite(
                   <Input placeholder='请输入验证码' type='number' maxlength={6} />
                 </Col>
                 <Col span='11' className='dark'>
-                  <Button size='small' type='info' onClick={sendSmsCode} disabled={disable}>
+                  <Button size='small' plain type='info' onClick={sendSmsCode} disabled={disable}>
                     {smsText}
                   </Button>
                 </Col>
@@ -212,7 +215,7 @@ export default Unite(
             </FormItem>
           </CellGroup>
         </Form>
-        <View className='button'>
+        <View className='van-page-button'>
           <Button block type='info' disabled={loading} onClick={bindEmail}>
             {emailAuth ? '解绑' : '绑定'}
           </Button>

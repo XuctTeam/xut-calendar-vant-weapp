@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-09 16:56:20
+ * @LastEditTime: 2022-08-10 09:02:39
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -169,7 +169,7 @@ export default Unite(
           return <Header title='账号与安全' left to={4}></Header>
         }}
       >
-        <View className='box'>
+        <View className='van-page-box'>
           <Cell title='头像' size='large'>
             <Avatar src={avatar || Images.DEFAULT_AVATAR} round size='large' onClick={() => setHeaderOpen(true)} />
           </Cell>
@@ -190,7 +190,7 @@ export default Unite(
           </Cell>
           <Cell title='设置密码' clickable onClick={() => to(4)}></Cell>
         </View>
-        <View className='button'>
+        <View className='van-page-button'>
           <Button type='warning' block onClick={logout}>
             退出登录
           </Button>

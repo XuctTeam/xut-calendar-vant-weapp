@@ -2,15 +2,17 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-09 18:34:27
+ * @LastEditTime: 2022-08-10 18:34:17
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import { useEffect, useRef } from 'react'
+import Router from 'tarojs-router-next'
 import { useRecoilState } from 'recoil'
 import { Button, Cell, CellGroup, Col, Form, FormItem, Row, Unite } from '@antmjs/vantui'
-import { Input, View, Button as TaroButton, ButtonProps, CommonEventFunction } from '@tarojs/components'
+import { Input, View, Button as TaroButton, ButtonProps } from '@tarojs/components'
 import { useLogin, useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import Header from '@/components/header'
@@ -18,10 +20,11 @@ import { userAuthInfoStore } from '@/store'
 import { checkMobile } from '@/utils'
 import { sendUmsSmsCode } from '@/api/common'
 import { IUserAuth } from '~/../types/user'
+import { useBack } from '@/utils/taro'
 import { getPhoneNumber, logout, bindPhone, unbindPhone, auths } from '@/api/user'
-import CountDown from '@/components/countdown'
 
 import './index.less'
+import CountDown from '@/components/countdown'
 
 export default Unite(
   {
@@ -29,10 +32,6 @@ export default Unite(
       smsText: '发送验证码',
       disable: false,
       loading: false
-    },
-
-    async onunload() {
-      this.hooks['countDown'].clean()
     },
 
     sendSmsCode() {
@@ -54,14 +53,14 @@ export default Unite(
     },
 
     _setSmsTextTime() {
-      const { countDown } = this.hooks
-      countDown.reset()
+      //const { countDown } = this.hooks
+      this.hooks['countDownRef'].current.start(0, 2, 0)
       this.setState({
         disable: true
       })
     },
 
-    setSmsText(counter: number) {
+    setSmsText(counter: any) {
       this.setState({
         smsText: '重发(' + counter + ')'
       })
@@ -79,7 +78,11 @@ export default Unite(
         if (errorMessage && errorMessage.length) {
           return console.info('errorMessage', errorMessage)
         }
+        this.setState({
+          loading: true
+        })
         const { phone, code } = fieldValues
+        const that = this
         const edit = !!this.hooks['phoneAuth']
         if (edit) {
           /**绑定 */
@@ -89,6 +92,9 @@ export default Unite(
             })
             .catch((err) => {
               console.log(err)
+              this.setState({
+                loading: false
+              })
             })
           return
         }
@@ -96,6 +102,11 @@ export default Unite(
           .then((res) => {
             const { exist, merge } = res
             if (exist && merge) {
+              that.setState({
+                loading: false,
+                smsText: '发送验证码'
+              })
+              this.hooks['countDownRef'].current.clean()
               Router.toMemberaccountmerge({
                 params: {
                   phone
@@ -107,6 +118,9 @@ export default Unite(
           })
           .catch((err) => {
             console.log(err)
+            this.setState({
+              loading: false
+            })
           })
       })
     },
@@ -138,6 +152,7 @@ export default Unite(
 
     _optPhoneSuccess(title: string) {
       this.hooks['toast']({
+        icon: 'success',
         title
       })
       auths()
@@ -159,32 +174,47 @@ export default Unite(
   function ({ state, events }) {
     const form = Form.useForm()
     const { smsText, disable, loading } = state
-    const { sendSmsCode, setSmsText, bindPhone, setSmsTextEnd, onGetPhoneNumber } = events
+    const { sendSmsCode, setSmsText, bindPhone, setSmsTextEnd, onGetPhoneNumber, uuid } = events
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const phoneAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'phone') : undefined
-    const countDown = new CountDown({
-      interval: 120,
-      onStep({ counter, diff }) {
-        console.log(counter, diff)
-        setSmsText(diff)
-      },
-      onEnd() {
-        setSmsTextEnd()
-      }
-    })
+    const countDownRef = useRef<any>()
     const [toast] = useToast({
       icon: 'error'
     })
+    const [back] = useBack({
+      to: 4
+    })
     const [checkSession] = useLogin()
+    const isWechat = process.env.TARO_ENV === 'weapp' && !!phoneAuth
 
     events.setHooks({
       toast: toast,
+      back: back,
       form: form,
+      countDownRef: countDownRef,
       checkSession: checkSession,
       phoneAuth: phoneAuth,
-      countDown: countDown,
       setUserAuthsState: setUserAuthsState
     })
+
+    useEffect(() => {
+      if (phoneAuth) {
+        form.setFieldsValue('phone', phoneAuth.username)
+      }
+      countDownRef.current = new CountDown({
+        endTime: Date.now() + 1000 * 100,
+        onStep({ d, h, m, s }) {
+          console.log(`${d}天${h}时${m}分${s}秒`)
+          setSmsText(m * 60 + s)
+        },
+        onEnd() {
+          setSmsTextEnd()
+        }
+      })
+      return () => {
+        countDownRef.current.clean()
+      }
+    }, [])
 
     return (
       <Container
@@ -196,7 +226,7 @@ export default Unite(
           return <Header title='手机绑定' left to={4}></Header>
         }}
       >
-        <Form form={form} className='box'>
+        <Form form={form} className='van-page-box'>
           <CellGroup inset>
             <FormItem
               label='手机号'
@@ -216,7 +246,7 @@ export default Unite(
                   <Input placeholder='请输入验证码' type='number' maxlength={6} />
                 </Col>
                 <Col span='11' className='dark'>
-                  <Button size='small' type='info' onClick={sendSmsCode} disabled={disable}>
+                  <Button size='small' plain type='info' onClick={sendSmsCode} disabled={disable}>
                     {smsText}
                   </Button>
                 </Col>
@@ -227,16 +257,16 @@ export default Unite(
         <CellGroup inset>
           <Cell label='解绑手机号后日程将无法同步~~' />
         </CellGroup>
-        <View className='button'>
+        <View className='van-page-button'>
           <Row>
-            {process.env.TARO_ENV === 'weapp' && !!phoneAuth && (
+            {isWechat && (
               <Col span='12'>
                 <TaroButton type='warn' openType='getPhoneNumber' onGetPhoneNumber={(e: any) => onGetPhoneNumber(e)}>
                   获取本机号码
                 </TaroButton>
               </Col>
             )}
-            <Col span='12'>
+            <Col span={isWechat ? 12 : 24}>
               <Button block type='info' disabled={loading} onClick={bindPhone}>
                 {phoneAuth ? '解绑' : '绑定'}
               </Button>

@@ -3154,7 +3154,7 @@
 
 "@xdoer/timeout-interval@^1.0.2":
   version "1.0.2"
-  resolved "https://registry.npmmirror.com/@xdoer/timeout-interval/-/timeout-interval-1.0.2.tgz"
+  resolved "https://registry.npmmirror.com/@xdoer/timeout-interval/-/timeout-interval-1.0.2.tgz#951d6d5bdae37df5e2609d433b33c894802ca956"
   integrity sha512-zW9sKdUD6OLVLXMJMFIrQpQkXi98D7f9nNxM+/ESZoTV2F2A3MYuxRwy6hT3ejnvLVdqCQQyjDGW4UfgytqFMw==
 
 "@xmldom/xmldom@^0.8.2":

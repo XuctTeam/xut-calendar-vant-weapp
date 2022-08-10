@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-10 18:34:17
+ * @LastEditTime: 2022-08-10 21:12:05
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
@@ -22,9 +22,9 @@ import { sendUmsSmsCode } from '@/api/common'
 import { IUserAuth } from '~/../types/user'
 import { useBack } from '@/utils/taro'
 import { getPhoneNumber, logout, bindPhone, unbindPhone, auths } from '@/api/user'
+import { create } from '@/utils/countdown'
 
 import './index.less'
-import CountDown from '@/components/countdown'
 
 export default Unite(
   {
@@ -201,16 +201,17 @@ export default Unite(
       if (phoneAuth) {
         form.setFieldsValue('phone', phoneAuth.username)
       }
-      countDownRef.current = new CountDown({
-        endTime: Date.now() + 1000 * 100,
-        onStep({ d, h, m, s }) {
+      countDownRef.current = create(
+        Date.now() + 1000 * 100,
+        ({ d, h, m, s }) => {
           console.log(`${d}天${h}时${m}分${s}秒`)
           setSmsText(m * 60 + s)
         },
-        onEnd() {
+        () => {
           setSmsTextEnd()
         }
-      })
+      )
+
       return () => {
         countDownRef.current.clean()
       }

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-10 10:11:47
+ * @LastEditTime: 2022-08-10 21:28:45
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccountmerge\index.tsx
  * @Description:
  *
@@ -18,25 +18,15 @@ import Container from '@/components/container'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
 import { merge, logout } from '@/api/user'
 import Header from '@/components/header'
+import { cacheRemoveSync } from '@/cache'
 
 import './index.less'
-import { cacheRemoveSync } from '@/cache'
 
 export default Unite(
   {
     state: {
       check: false,
-      loading: false,
-      phone: ''
-    },
-
-    async onLoad() {
-      const { phone } = Router.getParams()
-      if (!phone) {
-        this.setState({
-          phone
-        })
-      }
+      loading: false
     },
 
     setCheck(check: boolean) {
@@ -50,15 +40,18 @@ export default Unite(
         this._error('请勾选确认~')
         return
       }
-      if (!this.state.phone) {
+      const { phone } = this.location.params
+      if (!phone) {
         this._error('未获取手机号参数~')
         return
       }
       this.setState({
         loading: true
       })
-      merge(this.state.phone)
-        .then(() => {})
+      merge(phone)
+        .then(() => {
+          this._success()
+        })
         .catch((err: any) => {
           console.log(err)
         })

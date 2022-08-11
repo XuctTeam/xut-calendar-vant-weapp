@@ -54,14 +54,14 @@ type IProps = {
   ignoreError?: boolean
   enablePagePullDownRefresh?: boolean
   h5Nav?: boolean
-  reload?: () => Promise<any>
+  onReload?: () => Promise<any>
   renderPageTopHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
 }
 
 export default function Index(props: IProps) {
   const { useNav = true, navTitle, navClassName, className, loading, ignoreError, renderPageTopHeader, enablePagePullDownRefresh = true } = props
   /** 新增扩展属性 */
-  const { h5Nav = false, reload } = props
+  const { h5Nav = false, onReload } = props
 
   const ctx = useContext(UniteContext)
   const [canPull, setCanPull] = useState(true)
@@ -129,7 +129,7 @@ export default function Index(props: IProps) {
           onRefresh={ctx.onRefresh}
           setStatus={setPullDownRefreshStatus}
           status={pullDownRefreshStatus}
-          reload={reload}
+          onReload={onReload}
           api={api}
         >
           <>{props.children}</>

@@ -2,13 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-07 22:55:40
+ * @LastEditTime: 2022-08-11 13:28:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifyname\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Button, Field, Unite } from '@antmjs/vantui'
+import { Button, CellGroup, Field, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { useRecoilState } from 'recoil'
 import Header from '@/components/header'
@@ -99,10 +99,12 @@ export default Unite(
           return <Header title='修改姓名' left to={4}></Header>
         }}
       >
-        <View className='box'>
-          <Field label='姓名' required value={name} placeholder='请输入名称' border={false} onChange={(e) => setName(e.detail)} />
+        <View className='van-page-box'>
+          <CellGroup inset>
+            <Field label='姓名' required value={name} placeholder='请输入名称' border={false} onChange={(e) => setName(e.detail)} />
+          </CellGroup>
         </View>
-        <View className='button'>
+        <View className='van-page-button'>
           <Button type='info' block loading={loading} onClick={updateNames}>
             保存
           </Button>

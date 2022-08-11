@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 14:54:14
+ * @LastEditTime: 2022-08-11 09:53:23
  * @FilePath: \xut-calendar-vant-weapp\src\pages\aboutus\index.tsx
  * @Description:
  *
@@ -34,7 +34,7 @@ export default Unite(
       <Container
         navTitle='关于我们'
         h5Nav={true}
-        enablePagePullDownRefresh={true}
+        enablePagePullDownRefresh={false}
         className='pages-aboutus-index'
         renderPageTopHeader={() => {
           return <Header title='关于我们' left to={4}></Header>

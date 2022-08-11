@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-26 10:50:22
- * @LastEditTime: 2022-07-22 18:26:51
+ * @LastEditTime: 2022-08-11 13:23:40
  * @LastEditors: Derek Xu
  */
 import Taro from '@tarojs/taro'
@@ -49,7 +49,7 @@ const back = (backOption: BackOption): Promise<TaroGeneral.CallbackResult> => {
     console.log(err)
     switch (backOption.to) {
       case 2:
-      //return Router.toContactmanager({ type: NavigateType.switchTab })
+        return Router.toAddressgroupesmanager({ type: NavigateType.switchTab })
       case 3:
       //return Router.toMessagemanager({ type: NavigateType.switchTab })
       case 4:

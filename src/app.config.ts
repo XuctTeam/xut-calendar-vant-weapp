@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-10 09:35:09
+ * @LastEditTime: 2022-08-11 13:13:38
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -27,6 +27,8 @@ export default defineAppConfig({
     'pages/memberbindusername/index',
     'pages/memberbindphone/index',
     'pages/memberaccountmerge/index',
+    'pages/addressgroupesmanager/index',
+    'pages/addressgroupesedit/index',
     'pages/onlineservices/index',
     'pages/systemsetting/index',
     'pages/aboutus/index',
@@ -54,7 +56,7 @@ export default defineAppConfig({
         selectedIconPath: 'assets/icon/index_focus.png'
       },
       {
-        pagePath: 'pages/pagination/index',
+        pagePath: 'pages/addressgroupesmanager/index',
         text: '通讯录',
         iconPath: 'assets/icon/group.png',
         selectedIconPath: 'assets/icon/group_focus.png'

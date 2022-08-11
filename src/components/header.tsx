@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 18:15:14
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 15:25:29
+ * @LastEditTime: 2022-08-11 11:08:43
  * @FilePath: \xut-calendar-vant-weapp\src\components\header.tsx
  * @Description:
  *
@@ -30,18 +30,12 @@ export default function Index(props: IPageOption): JSX.Element {
     back({
       to: props.to,
       data: props.data,
-      delta: props.delta,
+      delta: props.delta
     })
   }
 
   return _brower ? (
-    <NavBar
-      title={props.title}
-      safeAreaInsetTop={false}
-      leftArrow={props.left}
-      leftText={props.left ? '返回' : ''}
-      onClickLeft={routerToBack}
-    ></NavBar>
+    <NavBar title={props.title} safeAreaInsetTop={false} leftArrow={props.left} leftText={props.left ? '返回' : ''} onClickLeft={routerToBack}></NavBar>
   ) : (
     <></>
   )

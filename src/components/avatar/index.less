@@ -1,4 +1,5 @@
 @import './_variables.less';
+@import '../../styles/index.less';
 
 .van-avatar {
   box-sizing: content-box;
@@ -7,6 +8,15 @@
   justify-content: center;
   overflow: hidden;
   text-align: center;
+  background: @avatar-background-color;
+
+  &--circle {
+    border-radius: var(--border-radius-max, @border-radius-max);
+  }
+
+  &--square {
+    border-radius: 0;
+  }
 
   &--small {
     width: @avatar-size-small;
@@ -24,5 +34,9 @@
     width: @avatar-size-large;
     height: @avatar-size-large;
     font-size: @avatar-font-size-large;
+  }
+
+  .van-image {
+    height: 100%;
   }
 }

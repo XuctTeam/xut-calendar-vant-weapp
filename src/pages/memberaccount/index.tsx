@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-10 09:02:39
+ * @LastEditTime: 2022-08-11 18:07:18
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -171,7 +171,7 @@ export default Unite(
       >
         <View className='van-page-box'>
           <Cell title='头像' size='large'>
-            <Avatar src={avatar || Images.DEFAULT_AVATAR} round size='large' onClick={() => setHeaderOpen(true)} />
+            <Avatar src={avatar || Images.DEFAULT_AVATAR} shape='circle' size='large' onClick={() => setHeaderOpen(true)} />
           </Cell>
           <Cell title='名称' clickable onClick={() => to(1)}>
             {name}

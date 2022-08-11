@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 14:14:03
+ * @LastEditTime: 2022-08-11 09:00:47
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -30,7 +30,7 @@ export default Unite(
 
     async onLoad() {},
 
-    async reload() {
+    async onReload() {
       list().then((res) => {
         this.hooks['setCalendarState'](res as any as IDavCalendar[])
       })
@@ -40,53 +40,48 @@ export default Unite(
       if (!(this.hooks['calendars'] && this.hooks['calendars'].length > 0)) {
         return
       }
-      const calendar: IDavCalendar | undefined = this.hooks['calendars'].find(
-        (item: IDavCalendar) => item.id === id,
-      )
+      const calendar: IDavCalendar | undefined = this.hooks['calendars'].find((item: IDavCalendar) => item.id === id)
       if (!calendar) return
       Router.toCalendaredit({
         data: calendar,
         params: {
-          calendarId: calendar.id,
-        },
+          calendarId: calendar.id
+        }
       })
-    },
+    }
   },
 
   function ({ events }) {
-    const { reload, editCalendar } = events
+    const { onReload, editCalendar } = events
     const [calendars, setCalendarState] = useRecoilState(calendarStore)
 
     events.setHooks({
       calendars: calendars,
-      setCalendarState: setCalendarState,
+      setCalendarState: setCalendarState
     })
     console.log(calendars)
 
     return (
       <Container
-        navTitle="日程管理"
+        navTitle='日程管理'
         enablePagePullDownRefresh={true}
         h5Nav={true}
-        reload={reload}
+        onReload={onReload}
         className={classnames('pages-calendar-manager-index', {
-          ['van-page-box']: brower(),
+          ['van-page-box']: brower()
         })}
         renderPageTopHeader={() => {
-          return <Header title="日程管理" left to={4}></Header>
+          return <Header title='日程管理' left to={4}></Header>
         }}
       >
         {calendars.length === 0 ? (
-          <Empty description="暂无数据" />
+          <Empty description='暂无数据' />
         ) : (
-          <View className="list">
+          <View className='list'>
             {calendars?.map((item: IDavCalendar, index: number) => {
               return (
-                <View className="li" key={index}>
-                  <CalendarListBody
-                    item={item}
-                    editCalendar={editCalendar}
-                  ></CalendarListBody>
+                <View className='li' key={index}>
+                  <CalendarListBody item={item} editCalendar={editCalendar}></CalendarListBody>
                 </View>
               )
             })}
@@ -95,10 +90,10 @@ export default Unite(
       </Container>
     )
   },
-  { page: true },
+  { page: true }
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: '',
+  navigationBarTitleText: ''
 })

@@ -2,25 +2,28 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-11 19:12:03
+ * @LastEditTime: 2022-08-12 18:34:02
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Empty, Unite } from '@antmjs/vantui'
+import { Dialog, Empty, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import Container from '@/components/container'
+import { useRecoilValue } from 'recoil'
 import Header from '@/components/header'
 import { GroupBody, GroupHeader } from './ui'
 import { IGroup } from 'types/group'
 import { groupList, deleteGroup } from '@/api/group'
 import { cacheGetSync } from '@/cache'
 import { userInfoStore } from '@/store'
+import { useToast } from 'taro-hooks'
+import { IUserInfo } from 'types/user'
 
 import './index.less'
-import { useRecoilValue } from 'recoil'
+import { useEffect } from 'react'
 
 export default Unite(
   {
@@ -29,12 +32,15 @@ export default Unite(
       loading: false
     },
 
-    async onLoad() {
-      if (!cacheGetSync('accessToken')) return
-      this._init()
-    },
+    async onLoad() {},
 
-    _init() {
+    init() {
+      if (!cacheGetSync('accessToken')) {
+        this.setState({
+          list: []
+        })
+        return
+      }
       this.setState({
         loading: true
       })
@@ -58,7 +64,7 @@ export default Unite(
         const result = await Router.toAddressgroupesedit()
         const { edit } = result
         if (!!edit) {
-          this._init()
+          this.init()
         }
       } catch (err: any) {
         console.log(err)
@@ -66,27 +72,76 @@ export default Unite(
     },
 
     async editGroup(id: string) {
-      console.log(222222222222222)
       console.log(id)
       try {
         const result = await Router.toAddressgroupesedit({
           params: {
-            id: id + ''
+            id
           }
         })
         const { edit } = result
         if (!!edit) {
-          this._init()
+          this.init()
         }
       } catch (err: any) {
         console.log(err)
       }
+    },
+
+    deleteGroup(id: string) {
+      Dialog.confirm({
+        title: '确认消息',
+        message: '是否删除?',
+        selector: 'vanDialog0'
+      }).then((value) => {
+        if (value === 'cancel') return
+        this._deleteGroup(id)
+      })
+    },
+
+    _deleteGroup(id: string) {
+      this.setState({
+        loading: true
+      })
+      deleteGroup(id)
+        .then(() => {
+          this._showDeleteToast()
+        })
+        .catch((err: any) => {
+          console.log(err)
+          this.setState({
+            loading: false
+          })
+        })
+    },
+
+    _showDeleteToast() {
+      this.setState({
+        loading: false
+      })
+      this.hooks['toast']({
+        title: '删除成功'
+      }).then(() => {
+        this.init()
+      })
     }
   },
   function ({ state, events }) {
     const { list, loading } = state
-    const { addGroup, editGroup } = events
-    const userInfoState = useRecoilValue(userInfoStore)
+    const { addGroup, editGroup, deleteGroup, init } = events
+    const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
+    const accessToken = cacheGetSync('accessToken')
+    const [toast] = useToast({
+      icon: 'error'
+    })
+
+    events.setHooks({
+      toast: toast
+    })
+
+    useEffect(() => {
+      init()
+    }, [accessToken])
 
     return (
       <Container
@@ -95,22 +150,35 @@ export default Unite(
         className='pages-address-groupes-manager-index '
         loading={loading}
         renderPageTopHeader={() => {
-          return <Header title='通讯录管理' left to={4}></Header>
+          return <Header title='通讯录管理' left={false} to={2}></Header>
         }}
       >
         <GroupHeader addGroup={addGroup} mineClick={() => {}}></GroupHeader>
-        <View className='br'></View>
-        <>
+        <View className='list'>
           {list && list.length > 0 ? (
-            <View className='list'>
+            <>
               {list.map((item: IGroup, index: number) => (
-                <GroupBody key={index} group={item} uid={userInfoState?.id || ''} remove={() => {}} edit={editGroup} viewGroup={() => {}}></GroupBody>
+                <GroupBody
+                  key={index}
+                  group={item}
+                  uid={userInfoState?.id || ''}
+                  remove={deleteGroup}
+                  edit={editGroup}
+                  members={(id: string) => {
+                    Router.toAddressgroupmember({
+                      params: {
+                        id
+                      }
+                    })
+                  }}
+                ></GroupBody>
               ))}
-            </View>
+            </>
           ) : (
             <Empty description='暂无数据' />
           )}
-        </>
+        </View>
+        <Dialog id='vanDialog0' />
       </Container>
     )
   },

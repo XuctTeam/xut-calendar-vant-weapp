@@ -4,7 +4,7 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-09 22:14:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-16 17:03:53
+ * @LastEditTime: 2022-08-12 14:11:20
  */
 import httpRequest from '@/utils/request/innerRequest'
 
@@ -62,22 +62,22 @@ export const applyRefuseJoinGroup = (id: string, action: number) => {
 
 /**
  * @description: 按拼音分组用户
- * @param {*}
+ * @param {string} groupId
  * @return {*}
  * @author: Derek Xu
  */
-export const groupMemberPinYinList = () => {
-  return httpRequest.get('/ums/api/app/v1/mbr/group')
+export const groupMemberPinYinList = (groupId: string) => {
+  return httpRequest.get('/ums/api/app/v1/mbr/group', { groupId })
 }
 
 /**
  * @description: 通过群组查询
- * @param {string} id
+ * @param {string} groupId
  * @return {*}
  * @author: Derek Xu
  */
-export const groupMemberList = (id: string) => {
-  return httpRequest.get('/ums/api/app/v1/mbr/group/query', { groupId: id })
+export const groupMemberList = (groupId: string) => {
+  return httpRequest.get('/ums/api/app/v1/mbr/group/query', { groupId })
 }
 
 /**

@@ -12,6 +12,7 @@ function getVersion() {
 
   return `${date.getFullYear() - 2010}.${date.getMonth()}${fillZero(date.getDay())}.${date.getHours()}${fillZero(date.getMinutes())}`
 }
+
 function getClient() {
   return {
     CLIENT_ID: 'app_id',
@@ -22,11 +23,11 @@ function getClient() {
 function getWxTemplate() {
   return { IDS: ['m3tIRN2yvI2mdFuGHV9mXS0uIHf9oz-u6U51HRHTcLQ'] }
 }
+const client = getClient()
+const template = getWxTemplate()
 
 const version = getVersion()
 console.log(version)
-const client = getClient()
-const template = getWxTemplate()
 
 const config = {
   projectName: pkg.name,
@@ -119,16 +120,16 @@ const config = {
         chain.devtool('hidden-source-map')
         chain.output
           .path(npath.resolve('./build'))
-          .filename('assets/js/[name].js')
-          .chunkFilename('assets/js/chunk/[name].js')
+          .filename('assets/js/[name]_[hash].js')
+          .chunkFilename('assets/js/chunk/[name]_[hash].js')
           .publicPath(publicPath.replace('VERSION', version))
       } else {
         chain.mode('development')
         chain.devtool('eval-cheap-module-source-map')
         chain.output
           .path(npath.resolve('./build'))
-          .filename('assets/js/[name].js')
-          .chunkFilename('assets/js/chunk/[name].js')
+          .filename('assets/js/[name]_[hash].js')
+          .chunkFilename('assets/js/chunk/[name]_[hash].js')
           .publicPath(publicPath.replace('VERSION', version))
       }
       if (process.env.WATCHING === 'true') {
@@ -175,8 +176,8 @@ const config = {
     },
     miniCssExtractPluginOption: {
       ignoreOrder: false,
-      filename: 'assets/css/[name].css',
-      chunkFilename: 'assets/css/chunk/[name].css'
+      filename: 'assets/css/[name]_[hash].css',
+      chunkFilename: 'assets/css/chunk/[name]_[hash].css'
     }
   },
   plugins: [

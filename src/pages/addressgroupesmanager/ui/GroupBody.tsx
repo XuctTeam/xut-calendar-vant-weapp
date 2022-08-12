@@ -4,13 +4,13 @@
  * @Autor: Derek Xu
  * @Date: 2022-02-07 21:52:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-11 19:17:18
+ * @LastEditTime: 2022-08-12 14:21:42
  */
 import { FunctionComponent } from 'react'
 import { View } from '@tarojs/components'
 import dayjs from 'dayjs'
 import { IGroup } from 'types/group'
-import { Button, Cell, Col, Row, Tag, Icon } from '@antmjs/vantui'
+import { Button, Col, Row, Tag, Icon } from '@antmjs/vantui'
 import Avatar from '@/components/avatar'
 
 interface IPageStateProps {
@@ -18,7 +18,7 @@ interface IPageStateProps {
   uid: string
   edit: (id: string) => void
   remove: (id: string) => void
-  viewGroup: (id: string) => void
+  members: (id: string) => void
 }
 
 const GroupBody: FunctionComponent<IPageStateProps> = (props) => {
@@ -40,7 +40,7 @@ const GroupBody: FunctionComponent<IPageStateProps> = (props) => {
           <Col span={20}>
             <View className='title'>
               <View className='label'>{name}</View>
-              <Tag color='warning'>{createMemberId === props.uid ? '群主' : '组员'}</Tag>
+              <Tag type='warning'>{createMemberId === props.uid ? '群主' : '组员'}</Tag>
             </View>
             <View className='number row'>
               <View>
@@ -53,28 +53,23 @@ const GroupBody: FunctionComponent<IPageStateProps> = (props) => {
       </View>
       <View className='lbr'></View>
       <View className='btns'>
-        <Button
-          type='info'
-          disabled={props.uid !== createMemberId}
-          onClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            props.edit(id || '')
-          }}
-        >
-          编辑
-        </Button>
-        <Button
-          type='danger'
-          disabled={props.uid !== createMemberId}
-          onClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            props.remove(id || '')
-          }}
-        >
-          删除
-        </Button>
+        <Row gutter={2}>
+          <Col span='8'>
+            <Button type='info' size='small' disabled={props.uid !== createMemberId} onClick={() => props.edit(id || '')}>
+              编辑
+            </Button>
+          </Col>
+          <Col span='8'>
+            <Button type='danger' size='small' disabled={props.uid !== createMemberId} onClick={() => props.remove(id || '')}>
+              删除
+            </Button>
+          </Col>
+          <Col span='8'>
+            <Button type='warning' size='small' onClick={() => props.members(id || '')}>
+              组员
+            </Button>
+          </Col>
+        </Row>
       </View>
     </View>
   )

@@ -244,7 +244,7 @@ function H5PullDownRefresh(props: IH5PullDownRefresh) {
 function H5PullDownBody(props: IH5PullDownBody) {
   const { h5Nav = false } = props
   const wxBrower = useWxBrowser()
-  return <>{h5Nav && !wxBrower ? <View className='van-box van-box--padding'> {props.children}</View> : <>{props.children}</>}</>
+  return <>{h5Nav && !wxBrower ? <View className='van-box'> {props.children}</View> : <>{props.children}</>}</>
 }
 
 function WeChatPullDownBody(props: IWeChatPullDownBody) {

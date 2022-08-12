@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-10 09:13:01
+ * @LastEditTime: 2022-08-12 17:22:03
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -423,7 +423,7 @@ export default Unite(
         <View className='footer'>
           {env === 'WEAPP' && (
             <View className='btn' onClick={loginByCode}>
-              <Image src={Images.DEFAULT_WECHAT_IMAGE} style={{ width: '36px', height: '36px' }} fit='heightFix' />
+              <Icon classPrefix='page-icon' name='weixin1' size='36px'></Icon>
               <View className='label'>微信</View>
             </View>
           )}

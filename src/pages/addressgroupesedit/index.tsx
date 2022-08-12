@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-11 19:06:47
+ * @LastEditTime: 2022-08-12 13:21:00
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesedit\index.tsx
  * @Description:
  *
@@ -11,7 +11,6 @@
 import { Button, CellGroup, Form, FormItem, Switch, Toast, Unite, Uploader } from '@antmjs/vantui'
 import { Input, ITouchEvent, View } from '@tarojs/components'
 import Container from '@/components/container'
-import Router from 'tarojs-router-next'
 import Header from '@/components/header'
 import { IFormInstanceAPI } from '@antmjs/vantui/types/form'
 import { addGroup, getGroupInfo } from '@/api/group'
@@ -30,7 +29,7 @@ export default Unite(
     },
 
     async onLoad() {
-      const { id } = Router.getParams()
+      const { id } = this.location.params
       if (!!id) {
         this._init(id || '')
       }
@@ -94,8 +93,8 @@ export default Unite(
       }
       const uploadResult = await this.hooks['upload']({
         url,
-        filePath: file.path,
-        name: 'smfile',
+        filePath: file[0].url,
+        name: 'smsfile',
         header: { Authorization: cacheGetSync('accessToken') }
       })
       if (uploadResult?.statusCode !== 200) {
@@ -107,13 +106,14 @@ export default Unite(
         this._uploadFail()
         return
       }
+      fieldValues['url'] = result.data.url
       this._addForm(fieldValues)
     },
 
     _addForm(fieldValues: any) {
       const { id } = this.location.params
       const { name, num, password, power, url } = fieldValues
-      debugger
+
       addGroup(id || '', name, url, password, power ? 'PUBLIC' : 'PRIVATE', num).then(() => {
         this.setState({
           loading: false

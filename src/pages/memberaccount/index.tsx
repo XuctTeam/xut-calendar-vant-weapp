@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-11 18:07:18
+ * @LastEditTime: 2022-08-12 18:42:57
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -27,7 +27,8 @@ import './index.less'
 export default Unite(
   {
     state: {
-      headerOpen: false
+      headerOpen: false,
+      loading: false
     },
     async onLoad() {},
 
@@ -62,6 +63,9 @@ export default Unite(
     },
 
     _logout() {
+      this.setState({
+        loading: true
+      })
       logout()
         .then(() => {
           cacheRemoveSync('accessToken')
@@ -71,11 +75,17 @@ export default Unite(
           this.hooks['setUserAuthsState']([])
           this.hooks['setCalendarState']([])
           window.setTimeout(() => {
+            this.setState({
+              loading: false
+            })
             this.hooks['back']()
           }, 1500)
         })
         .catch((err) => {
           console.log(err)
+          this.setState({
+            loading: false
+          })
         })
     },
 
@@ -108,7 +118,7 @@ export default Unite(
     const setCalendarState = useSetRecoilState(calendarStore)
 
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
-    const { headerOpen } = state
+    const { headerOpen, loading } = state
     const { setHeaderOpen, modiftAvatar, to, logout } = events
     const phoneAuth =
       userAuths && userAuths.length > 0
@@ -191,7 +201,7 @@ export default Unite(
           <Cell title='设置密码' clickable onClick={() => to(4)}></Cell>
         </View>
         <View className='van-page-button'>
-          <Button type='warning' block onClick={logout}>
+          <Button type='warning' block disabled={loading} onClick={logout}>
             退出登录
           </Button>
         </View>

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-10 13:38:16
- * @LastEditTime: 2022-06-20 16:39:26
+ * @LastEditTime: 2022-08-12 15:07:21
  * @LastEditors: Derek Xu
  */
 export const colors = [
@@ -95,3 +95,13 @@ export const alarmTypes = [
     text: '公众号'
   }
 ]
+
+export const IndexList = (): string[] => {
+  const indexList = []
+  const charCodeOfA = 'A'.charCodeAt(0)
+  for (let i = 0; i < 26; i++) {
+    indexList.push(String.fromCharCode(charCodeOfA + i))
+  }
+  indexList.push('#')
+  return indexList
+}

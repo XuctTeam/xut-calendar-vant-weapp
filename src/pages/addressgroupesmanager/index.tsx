@@ -2,13 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 18:34:02
+ * @LastEditTime: 2022-08-13 21:19:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Dialog, Empty, Unite } from '@antmjs/vantui'
+import { CellGroup, Dialog, Empty, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import Container from '@/components/container'
@@ -61,12 +61,13 @@ export default Unite(
 
     async addGroup() {
       try {
-        const result = await Router.toAddressgroupesedit()
-        const { edit } = result
+        const res: any = Router.toAddressgroupesedit()
+        if (!res) return
+        const { edit } = res
         if (!!edit) {
           this.init()
         }
-      } catch (err: any) {
+      } catch (err) {
         console.log(err)
       }
     },
@@ -79,6 +80,7 @@ export default Unite(
             id
           }
         })
+        if (!result) return
         const { edit } = result
         if (!!edit) {
           this.init()
@@ -178,6 +180,7 @@ export default Unite(
             <Empty description='暂无数据' />
           )}
         </View>
+
         <Dialog id='vanDialog0' />
       </Container>
     )

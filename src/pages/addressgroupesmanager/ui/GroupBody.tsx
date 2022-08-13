@@ -4,7 +4,7 @@
  * @Autor: Derek Xu
  * @Date: 2022-02-07 21:52:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 14:21:42
+ * @LastEditTime: 2022-08-13 23:09:29
  */
 import { FunctionComponent } from 'react'
 import { View } from '@tarojs/components'
@@ -53,21 +53,15 @@ const GroupBody: FunctionComponent<IPageStateProps> = (props) => {
       </View>
       <View className='lbr'></View>
       <View className='btns'>
-        <Row gutter={2}>
+        <Row gutter={10}>
           <Col span='8'>
-            <Button type='info' size='small' disabled={props.uid !== createMemberId} onClick={() => props.edit(id || '')}>
-              编辑
-            </Button>
+            {props.uid === createMemberId && <Icon classPrefix='page-icon' name='bianji' size='28px' onClick={() => props.edit(id || '')}></Icon>}
           </Col>
           <Col span='8'>
-            <Button type='danger' size='small' disabled={props.uid !== createMemberId} onClick={() => props.remove(id || '')}>
-              删除
-            </Button>
+            {props.uid === createMemberId && <Icon classPrefix='page-icon' name='shanchu' size='28px' onClick={() => props.remove(id || '')}></Icon>}
           </Col>
           <Col span='8'>
-            <Button type='warning' size='small' onClick={() => props.members(id || '')}>
-              组员
-            </Button>
+            <Icon classPrefix='page-icon' name='yonghuguanli' size='28px' onClick={() => props.members(id || '')}></Icon>
           </Col>
         </Row>
       </View>

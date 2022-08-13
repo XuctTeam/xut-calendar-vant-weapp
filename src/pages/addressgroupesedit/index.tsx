@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 13:21:00
+ * @LastEditTime: 2022-08-13 22:35:03
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesedit\index.tsx
  * @Description:
  *
@@ -39,15 +39,19 @@ export default Unite(
       getGroupInfo(id).then((res) => {
         const { name, power, password, num, images } = res as any as IGroup
         this.hooks['form'].setFields({
-          name,
+          name: name,
           password,
           power: 'PUBLIC' === power,
           num,
-          file: [
-            {
-              url: images || ''
-            }
-          ]
+          file: images
+            ? [
+                {
+                  url: images,
+                  type: 'image',
+                  edit: true
+                }
+              ]
+            : []
         })
       })
     },
@@ -88,6 +92,16 @@ export default Unite(
       })
       const { file } = fieldValues
       if (!file) {
+        this._addForm(fieldValues)
+        return
+      }
+      if (!(file && file.length !== 0)) {
+        this._addForm(fieldValues)
+        return
+      }
+      const { edit } = file[0]
+      if (edit) {
+        fieldValues['url'] = file[0].url
         this._addForm(fieldValues)
         return
       }
@@ -169,6 +183,7 @@ export default Unite(
             <FormItem
               name='file'
               layout='vertical'
+              mutiLevel
               className='van-upload-form-item'
               label='上传图片(图片大小不得大于 0.1M)'
               valueKey='fileList'

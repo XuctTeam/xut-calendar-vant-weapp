@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-06-18 18:27:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 13:38:21
+ * @LastEditTime: 2022-08-13 21:41:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\ui\GroupHeader.tsx
  * @Description:
  *

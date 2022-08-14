@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 18:28:07
+ * @LastEditTime: 2022-08-14 11:35:58
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupmember\index.tsx
  * @Description:
  *
@@ -15,6 +15,7 @@ import Header from '@/components/header'
 import { groupMemberPinYinList } from '@/api/groupmember'
 import { IPinYinGroupMember } from 'types/group'
 import { IndexList } from '@/constants'
+import { MemberList } from './ui'
 import './index.less'
 
 export default Unite(
@@ -64,14 +65,7 @@ export default Unite(
           {list.map((item: IPinYinGroupMember, index: number) => (
             <Block key={index}>
               <IndexAnchor index={item.charCode}></IndexAnchor>
-              <Cell title='文本'></Cell>
-              <Cell title='文本'></Cell>
-              <Cell title='文本'></Cell>
-              <Cell title='文本'></Cell>
-              <Cell title='文本'></Cell>
-              <Cell title='文本'></Cell>
-              <Cell title='文本'></Cell>
-              <Cell title='文本'></Cell>
+              <MemberList charCode={item.charCode} members={item.members}></MemberList>
             </Block>
           ))}
         </IndexBar>

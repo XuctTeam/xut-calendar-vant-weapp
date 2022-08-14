@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 14:19:12
+ * @LastEditTime: 2022-08-14 13:05:56
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -30,6 +30,7 @@ export default defineAppConfig({
     'pages/addressgroupesmanager/index',
     'pages/addressgroupesedit/index',
     'pages/addressgroupmember/index',
+    'pages/addressgroupapply/index',
     'pages/onlineservices/index',
     'pages/systemsetting/index',
     'pages/aboutus/index',

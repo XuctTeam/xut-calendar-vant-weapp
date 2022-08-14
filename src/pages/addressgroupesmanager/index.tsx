@@ -155,7 +155,7 @@ export default Unite(
           return <Header title='通讯录管理' left={false} to={2}></Header>
         }}
       >
-        <GroupHeader addGroup={addGroup} mineClick={() => {}}></GroupHeader>
+        <GroupHeader addGroup={addGroup}></GroupHeader>
         <View className='list'>
           {list && list.length > 0 ? (
             <>

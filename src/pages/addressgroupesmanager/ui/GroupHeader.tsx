@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-06-18 18:27:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-13 21:41:51
+ * @LastEditTime: 2022-08-14 13:06:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\ui\GroupHeader.tsx
  * @Description:
  *
@@ -11,9 +11,9 @@
 import { FunctionComponent } from 'react'
 import { View } from '@tarojs/components'
 import { Col, Row, Icon } from '@antmjs/vantui'
+import Router from 'tarojs-router-next'
 
 interface IPageOption {
-  mineClick: () => void
   addGroup: () => void
 }
 
@@ -31,7 +31,12 @@ const GroupHeader: FunctionComponent<IPageOption> = (props) => {
           </View>
         </Col>
         <Col span={12}>
-          <View className='box' onClick={props.apply}>
+          <View
+            className='box'
+            onClick={() => {
+              Router.toAddressgroupapply()
+            }}
+          >
             <Icon classPrefix='page-icon' name='qingjiashenqing' size='36px'></Icon>
             <View className='title'>
               <View className='label'>新的申请</View>

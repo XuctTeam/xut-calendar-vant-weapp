@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 13:27:57
- * @LastEditTime: 2022-07-21 15:24:57
+ * @LastEditTime: 2022-08-15 18:22:18
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent } from 'react'
@@ -19,7 +19,7 @@ interface IPageOption {
 const User: FunctionComponent<IPageOption> = (props) => {
   return (
     <View className='head'>
-      <Avatar src={props.avatar} size='large' round />
+      <Avatar src={props.avatar} size='large' shape='circle' />
       <View className='top'>
         {!props.hasLogin ? (
           <View className='top-info' onClick={() => Router.toLogin()}>

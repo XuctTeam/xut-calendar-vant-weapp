@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:46:12
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-11 18:24:08
+ * @LastEditTime: 2022-08-15 18:30:13
  * @FilePath: \xut-calendar-vant-weapp\src\components\avatar\index.tsx
  * @Description:
  *
@@ -57,7 +57,7 @@ function Index(props: IPageOption): JSX.Element {
       onClick={click}
       {...restProps}
     >
-      {src ? <Image round={shape === 'circle'} src={src} /> : children}
+      {src ? <Image round={shape === 'circle'} src={src} style={{ width: '100%', height: '100%' }} /> : children}
     </View>
   )
 }

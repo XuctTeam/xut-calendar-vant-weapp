@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-15 19:11:00
+ * @LastEditTime: 2022-08-15 21:25:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { ITouchEvent, View } from '@tarojs/components'
-import { Search, Unite, Sidebar, SidebarItem, Loading, Empty } from '@antmjs/vantui'
+import { Search, Unite, Sidebar, SidebarItem, Loading, Empty, Tabs, Tab } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Header from '@/components/header'
 import Router from 'tarojs-router-next'
@@ -22,7 +22,7 @@ import './index.less'
 export default Unite(
   {
     state: {
-      sidebarActive: 0,
+      active: 0,
       loading: false,
       list: []
     },
@@ -31,22 +31,38 @@ export default Unite(
       this._applyMine()
     },
 
-    setSidebarActive(sidebarActive: number) {
+    setActive(active: number) {
       if (this.state.loading) {
         this.setState({
           loading: false
         })
       }
       this.setState({
-        sidebarActive,
+        active: active,
         loading: true
       })
-      if (sidebarActive === 0) {
+      if (active === 0) {
         this._applyMine()
         return
       }
       this._mineApply()
       return
+    },
+
+    async onSearchFouce(e: ITouchEvent) {
+      e.stopPropagation()
+      const active = this.state.active
+      try {
+        const result = await Router.toAddressgroupsearch()
+        if (!result) return
+        const { refresh } = result
+        if (!!refresh) return
+        if (active === 1) {
+          this._mineApply()
+        }
+      } catch (err: any) {
+        console.log(err)
+      }
     },
 
     _applyMine() {
@@ -63,22 +79,6 @@ export default Unite(
             loading: false
           })
         })
-    },
-
-    async onSearchFouce(e: ITouchEvent) {
-      e.stopPropagation()
-      const sidebarActive = this.state.sidebarActive
-      try {
-        const result = await Router.toAddressgroupsearch()
-        if (!result) return
-        const { refresh } = result
-        if (!!refresh) return
-        if (sidebarActive === 1) {
-          this._mineApply()
-        }
-      } catch (err: any) {
-        console.log(err)
-      }
     },
 
     _mineApply() {
@@ -98,8 +98,8 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const { loading, sidebarActive, list } = state
-    const { setSidebarActive, onSearchFouce } = events
+    const { loading, list } = state
+    const { setActive, onSearchFouce } = events
     return (
       <Container
         navTitle='群组申请'
@@ -110,9 +110,17 @@ export default Unite(
           return <Header title='群组申请' left to={2}></Header>
         }}
       >
-        <Search placeholder='搜索加入群组' onSearch={() => {}} shape='round' onFocus={onSearchFouce} />
-        <View className='box'>
-          <Sidebar
+        <Search placeholder='搜索加入群组' shape='round' onFocus={onSearchFouce} />
+        <Tabs swipeable className='box' onClick={(e) => setActive(e.detail.index)}>
+          <Tab title='申请我的'>
+            <MemberList loading={loading} list={list}></MemberList>
+          </Tab>
+          <Tab title='我的申请'>
+            <MemberList loading={loading} list={list}></MemberList>
+          </Tab>
+        </Tabs>
+
+        {/* <Sidebar
             activeKey={sidebarActive}
             onChange={(e) => {
               if (loading) {
@@ -134,8 +142,7 @@ export default Unite(
                 {list.length === 0 ? <Empty description='暂无数据' /> : <MemberList></MemberList>}
               </View>
             )}
-          </View>
-        </View>
+          </View> */}
       </Container>
     )
   },

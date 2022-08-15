@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-15 19:09:11
+ * @LastEditTime: 2022-08-15 21:58:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupsearch\index.tsx
  * @Description:
  *
@@ -75,6 +75,13 @@ export default Unite(
       this.loadList(true)
     },
 
+    onConditionSearch(hasPass: string, dateScope: string, numCount: string) {
+      this.setState({
+        show: false
+      })
+      console.log(hasPass, dateScope, numCount)
+    },
+
     onClear() {
       this.hooks['pageRef'].current = 0
       this.setState({
@@ -122,7 +129,7 @@ export default Unite(
   },
   function ({ state, events }) {
     const { value, show, list, complete, loading } = state
-    const { setValue, setShow, onSearch, loadList, onJoin, onClear } = events
+    const { setValue, setShow, onSearch, loadList, onJoin, onClear, onConditionSearch } = events
     const pageRef = useRef<number>(0)
     const [toast] = useToast({
       icon: 'success'
@@ -181,7 +188,7 @@ export default Unite(
             )
           })}
         </Pagination>
-        <ConditionSearch show={show} value={value} onClose={() => setShow(false)}></ConditionSearch>
+        <ConditionSearch show={show} value={value} onClose={() => setShow(false)} onSearch={onConditionSearch}></ConditionSearch>
         <Dialog id='vanDialog0' />
       </Container>
     )

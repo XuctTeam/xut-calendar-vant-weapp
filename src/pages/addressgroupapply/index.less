@@ -1,14 +1,13 @@
 .address-group-apply-index {
-  .van-sidebar {
-    width: 240px;
-  }
-
   .box {
     margin: 10px 14px;
-    display: flex;
-    flex-direction: row;
     box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
     border-radius: @border-radius-lg;
+  }
+
+  .van-tab__pane,
+  .van-cell {
+    background: #fff;
   }
 
   .br {
@@ -41,5 +40,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .cell {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+
+    .label {
+      font-size: 30px;
+      font-weight: bold;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .name {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: space-between;
+      font-size: 26px;
+      color: #999;
+    }
   }
 }

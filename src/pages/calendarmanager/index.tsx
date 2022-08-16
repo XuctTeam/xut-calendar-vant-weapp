@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-11 09:00:47
+ * @LastEditTime: 2022-08-16 22:45:32
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -67,9 +67,7 @@ export default Unite(
         enablePagePullDownRefresh={true}
         h5Nav={true}
         onReload={onReload}
-        className={classnames('pages-calendar-manager-index', {
-          ['van-page-box']: brower()
-        })}
+        className='pages-calendar-manager-index'
         renderPageTopHeader={() => {
           return <Header title='日程管理' left to={4}></Header>
         }}

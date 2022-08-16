@@ -52,6 +52,7 @@
 
           .container-text {
             @include flex;
+            flex-direction: column;
           }
 
           .lunar-text {

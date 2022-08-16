@@ -2,19 +2,19 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-15 21:25:13
+ * @LastEditTime: 2022-08-16 11:55:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { ITouchEvent, View } from '@tarojs/components'
-import { Search, Unite, Sidebar, SidebarItem, Loading, Empty, Tabs, Tab } from '@antmjs/vantui'
+import { ITouchEvent } from '@tarojs/components'
+import { Search, Unite, Tabs, Tab, Dialog } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Header from '@/components/header'
 import Router from 'tarojs-router-next'
 import { IGroupMember } from 'types/group'
-import { applyMineList, mineApplyList } from '@/api/groupmember'
+import { applyMineList, mineApplyList, applyAgreeJoinGroup, applyRefuseJoinGroup } from '@/api/groupmember'
 import { MemberList } from './ui'
 
 import './index.less'
@@ -95,11 +95,85 @@ export default Unite(
             loading: false
           })
         })
+    },
+
+    /**
+     * 同意申请
+     * @param gid
+     * @param mid
+     */
+    agreeJoin(gmid: string) {
+      Dialog.confirm({
+        title: '确认',
+        message: '确认同意申请吗？',
+        selector: 'vanDialogGroupApply'
+      }).then((value) => {
+        if (value === 'cancel') return
+        applyAgreeJoinGroup(gmid, 1)
+          .then(() => {
+            if (this.state.active === 0) {
+              this._applyMine()
+              return
+            }
+          })
+          .catch((err: any) => {
+            console.log(err)
+          })
+      })
+    },
+
+    /**
+     * 拒绝申请
+     * @param gid
+     * @param mid
+     */
+    refuseJoin(gmid: string) {
+      Dialog.confirm({
+        title: '确认',
+        message: '确认拒绝申请吗？',
+        selector: 'vanDialogGroupApply'
+      }).then((value) => {
+        if (value === 'cancel') return
+        applyRefuseJoinGroup(gmid, 2)
+          .then(() => {
+            if (this.state.active === 0) {
+              this._applyMine()
+              return
+            }
+          })
+          .catch((err: any) => {
+            console.log(err)
+          })
+      })
+    },
+
+    /**
+     * 删除申请
+     * @param gid
+     */
+    deleteApply(gmid: string) {
+      Dialog.confirm({
+        title: '确认',
+        message: '确认撤回申请吗？',
+        selector: 'vanDialogGroupApply'
+      }).then((value) => {
+        if (value === 'cancel') return
+        applyRefuseJoinGroup(gmid, 3)
+          .then(() => {
+            if (this.state.active === 1) {
+              this._mineApply()
+              return
+            }
+          })
+          .catch((err: any) => {
+            console.log(err)
+          })
+      })
     }
   },
   function ({ state, events }) {
-    const { loading, list } = state
-    const { setActive, onSearchFouce } = events
+    const { active, loading, list } = state
+    const { setActive, onSearchFouce, agreeJoin, refuseJoin, deleteApply } = events
     return (
       <Container
         navTitle='群组申请'
@@ -113,36 +187,13 @@ export default Unite(
         <Search placeholder='搜索加入群组' shape='round' onFocus={onSearchFouce} />
         <Tabs swipeable className='box' onClick={(e) => setActive(e.detail.index)}>
           <Tab title='申请我的'>
-            <MemberList loading={loading} list={list}></MemberList>
+            <MemberList active={active} loading={loading} list={list} agreeJoin={agreeJoin} refuseJoin={refuseJoin} deleteApply={deleteApply}></MemberList>
           </Tab>
           <Tab title='我的申请'>
-            <MemberList loading={loading} list={list}></MemberList>
+            <MemberList active={active} loading={loading} list={list} agreeJoin={agreeJoin} refuseJoin={refuseJoin} deleteApply={deleteApply}></MemberList>
           </Tab>
         </Tabs>
-
-        {/* <Sidebar
-            activeKey={sidebarActive}
-            onChange={(e) => {
-              if (loading) {
-              }
-              setSidebarActive(e.detail || 0)
-            }}
-          >
-            <SidebarItem title='申请我的' />
-            <SidebarItem title='我的申请' />
-          </Sidebar>
-          <View className='group-apply'>
-            {loading ? (
-              <View className='loading'>
-                <Loading size='24px'>加载中...</Loading>
-              </View>
-            ) : (
-              <View className='body'>
-                <View className='header'>{sidebarActive === 0 ? '申请我的' : '我的申请'}</View>
-                {list.length === 0 ? <Empty description='暂无数据' /> : <MemberList></MemberList>}
-              </View>
-            )}
-          </View> */}
+        <Dialog id='vanDialogGroupApply' />
       </Container>
     )
   },

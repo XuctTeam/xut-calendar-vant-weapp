@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-14 11:35:58
+ * @LastEditTime: 2022-08-16 12:43:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupmember\index.tsx
  * @Description:
  *
@@ -24,7 +24,7 @@ export default Unite(
     async onLoad() {
       const { id } = this.location.params
       if (!!id) {
-        this._init('1557959852441329666')
+        this._init(id)
       }
     },
 

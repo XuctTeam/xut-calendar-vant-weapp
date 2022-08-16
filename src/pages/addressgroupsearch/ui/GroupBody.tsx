@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-15 16:56:25
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-15 18:49:06
+ * @LastEditTime: 2022-08-16 09:06:22
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupsearch\ui\GroupBody.tsx
  * @Description:
  *
@@ -28,8 +28,8 @@ const Group: FC<IPageOption> = (props) => {
 
   return (
     <Row className='body'>
-      <Col span={16} className='left'>
-        <View>{avatar ? <Avatar src={avatar}></Avatar> : <Avatar>G</Avatar>}</View>
+      <Col span={17} className='left'>
+        <View>{avatar ? <Avatar src={avatar}></Avatar> : <Avatar className='avatar'>G</Avatar>}</View>
         <View className='title'>
           <View className='label'>{name}</View>
           <View className='num'>
@@ -37,7 +37,7 @@ const Group: FC<IPageOption> = (props) => {
           </View>
         </View>
       </Col>
-      <Col span={8} className='button'>
+      <Col span={7} className='button'>
         <Button type='warning' size='small' round onClick={() => props.onJoin(id || '', hasPasword)}>
           加入
         </Button>

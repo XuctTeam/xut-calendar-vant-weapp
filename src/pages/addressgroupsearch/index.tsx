@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-15 21:58:13
+ * @LastEditTime: 2022-08-16 11:55:52
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupsearch\index.tsx
  * @Description:
  *
@@ -34,7 +34,10 @@ export default Unite(
       list: [],
       complete: false,
       loading: false,
-      password: ''
+      password: '',
+      hasPass: '',
+      dateScope: '',
+      numCount: ''
     },
 
     setValue(value: string) {
@@ -55,11 +58,45 @@ export default Unite(
       })
     },
 
+    setHasPass(hasPass: string) {
+      this.setState({
+        hasPass
+      })
+    },
+
+    setDateScope(dateScope: string) {
+      this.setState({
+        dateScope
+      })
+    },
+
+    setNumCount(numCount: string) {
+      this.setState({
+        numCount
+      })
+    },
+
+    reset() {
+      this.setState({
+        hasPass: '',
+        dateScope: '',
+        numCount: '',
+        value: ''
+      })
+    },
+
     async loadList(refresh = false) {
       this.setState({
         loading: true
       })
-      const result: any = await search(this.state.value, this.hooks['pageRef'].current, PAGE_SIZE)
+      const result: any = await search(
+        this.state.value,
+        this.hooks['pageRef'].current,
+        PAGE_SIZE,
+        this.state.hasPass,
+        this.state.dateScope,
+        this.state.numCount
+      )
       const { finished, list } = result
       this.setState({
         complete: finished,
@@ -75,11 +112,12 @@ export default Unite(
       this.loadList(true)
     },
 
-    onConditionSearch(hasPass: string, dateScope: string, numCount: string) {
+    onConditionSearch() {
       this.setState({
         show: false
       })
-      console.log(hasPass, dateScope, numCount)
+      this.hooks['pageRef'].current = 0
+      this.loadList(true)
     },
 
     onClear() {
@@ -96,7 +134,7 @@ export default Unite(
       Dialog.confirm({
         title: '加入密码',
         message: <Input placeholder='请输入密码' value={this.state.password} onInput={(e) => this.setPassword(e.detail.value)} />,
-        selector: 'vanDialog0'
+        selector: 'vanDialogGroupSearch'
       }).then((value) => {
         if (value === 'cancel') return
         console.log('dialog result', this.state.password)
@@ -128,8 +166,8 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const { value, show, list, complete, loading } = state
-    const { setValue, setShow, onSearch, loadList, onJoin, onClear, onConditionSearch } = events
+    const { value, show, list, complete, loading, hasPass, dateScope, numCount } = state
+    const { setValue, setShow, onSearch, loadList, onJoin, onClear, onConditionSearch, setHasPass, setDateScope, setNumCount, reset } = events
     const pageRef = useRef<number>(0)
     const [toast] = useToast({
       icon: 'success'
@@ -166,6 +204,7 @@ export default Unite(
             onSearch={onSearch}
             shape='round'
             clearable
+            value={value}
             onClear={onClear}
             renderAction={
               <Button size='small' type='warning' onClick={() => setShow(true)}>
@@ -188,8 +227,20 @@ export default Unite(
             )
           })}
         </Pagination>
-        <ConditionSearch show={show} value={value} onClose={() => setShow(false)} onSearch={onConditionSearch}></ConditionSearch>
-        <Dialog id='vanDialog0' />
+        <ConditionSearch
+          show={show}
+          value={value}
+          onClose={() => setShow(false)}
+          onSearch={onConditionSearch}
+          hasPass={hasPass}
+          dateScope={dateScope}
+          numCount={numCount}
+          setHasPass={setHasPass}
+          setDateScope={setDateScope}
+          setNumCount={setNumCount}
+          reset={reset}
+        ></ConditionSearch>
+        <Dialog id='vanDialogGroupSearch' />
       </Container>
     )
   },

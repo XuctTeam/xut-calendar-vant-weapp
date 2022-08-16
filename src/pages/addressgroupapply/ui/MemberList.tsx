@@ -2,13 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-08-15 11:09:43
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-15 22:59:28
+ * @LastEditTime: 2022-08-16 11:46:26
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\ui\MemberList.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Empty, Loading } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { IGroupMember } from 'types/group'
@@ -17,7 +17,11 @@ import dayjs from 'dayjs'
 
 interface IPageOption {
   loading: boolean
+  active: number
   list: IGroupMember[]
+  agreeJoin: (gmid: string) => void
+  refuseJoin: (gmid: string) => void
+  deleteApply: (gmid: string) => void
 }
 
 const MemberList: FC<IPageOption> = (props) => {
@@ -36,11 +40,16 @@ const MemberList: FC<IPageOption> = (props) => {
               return (
                 <MemberBody
                   key={index}
+                  id={item.id}
                   avatar={item.avatar}
                   name={item.name}
                   groupName={item.groupName}
                   time={dayjs(item.createTime).format('YYYY/MM/DD')}
                   desc={''}
+                  active={props.active}
+                  agreeJoin={props.agreeJoin}
+                  refuseJoin={props.refuseJoin}
+                  deleteApply={props.deleteApply}
                 ></MemberBody>
               )
             })

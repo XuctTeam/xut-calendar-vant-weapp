@@ -2,13 +2,15 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-13 21:19:51
+ * @LastEditTime: 2022-08-16 12:04:00
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { CellGroup, Dialog, Empty, Unite } from '@antmjs/vantui'
+
+import { useEffect } from 'react'
+import { Dialog, Empty, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import Container from '@/components/container'
@@ -23,7 +25,6 @@ import { useToast } from 'taro-hooks'
 import { IUserInfo } from 'types/user'
 
 import './index.less'
-import { useEffect } from 'react'
 
 export default Unite(
   {
@@ -94,7 +95,7 @@ export default Unite(
       Dialog.confirm({
         title: '确认消息',
         message: '是否删除?',
-        selector: 'vanDialog0'
+        selector: 'vanGroupMememberDialog'
       }).then((value) => {
         if (value === 'cancel') return
         this._deleteGroup(id)
@@ -181,7 +182,7 @@ export default Unite(
           )}
         </View>
 
-        <Dialog id='vanDialog0' />
+        <Dialog id='vanGroupMememberDialog' />
       </Container>
     )
   },

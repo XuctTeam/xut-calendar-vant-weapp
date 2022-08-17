@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 12:00:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-07 09:08:28
+ * @LastEditTime: 2022-08-17 09:42:47
  * @FilePath: \xut-calendar-vant-weapp\src\store\calendar.ts
  * @Description:
  *
@@ -23,7 +23,11 @@ export const calendarStore = atom<IDavCalendar[]>({
     if (!cacheGetSync('accessToken')) {
       return []
     }
-    const _list = await await list()
-    return _list as any as IDavCalendar[]
-  })(),
+    try {
+      const _list = await list()
+      return _list as any as IDavCalendar[]
+    } catch (err) {
+      return []
+    }
+  })()
 })

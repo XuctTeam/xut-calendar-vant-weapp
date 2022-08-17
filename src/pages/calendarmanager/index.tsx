@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-16 22:45:32
+ * @LastEditTime: 2022-08-17 12:59:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -15,8 +15,8 @@ import { View } from '@tarojs/components'
 import Container from '@/components/container'
 import Header from '@/components/header'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { calendarStore } from '@/store'
-import { IDavCalendar } from '~/../types/calendar'
+import {} from '@/store'
+import { userInfoStore, calendarStore } from '@/store'
 import { CalendarListBody } from './ui'
 import { list } from '@/api/calendar'
 import classnames from 'classnames'
@@ -59,7 +59,6 @@ export default Unite(
       calendars: calendars,
       setCalendarState: setCalendarState
     })
-    console.log(calendars)
 
     return (
       <Container

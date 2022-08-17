@@ -55,6 +55,9 @@ const config = {
     // 解决Recoil报错问题
     Window: 'function () {}',
 
+    /* 腾讯地图使用 */
+    LOCATION_APIKEY: JSON.stringify('5Y6BZ-LHMWU-HM2VX-45SUU-RDESJ-4VBGR'),
+
     /* 图片服务器 */
     SERVICES_IMAGES: JSON.stringify('https://images.xuct.net.cn/')
   },

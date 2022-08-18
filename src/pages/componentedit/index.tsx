@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-17 18:51:59
+ * @LastEditTime: 2022-08-18 09:46:14
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -11,7 +11,7 @@
 import { Textarea, View } from '@tarojs/components'
 import { Button, Cell, Col, Grid, GridItem, Icon, Row, Switch, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
-import Router from 'tarojs-router-next'
+import Router, { NavigateType } from 'tarojs-router-next'
 import Header from '@/components/header'
 import dayjs from 'dayjs'
 import { calendarStore, userInfoStore } from '@/store'
@@ -183,8 +183,36 @@ export default Unite(
           params
         })
         if (!result) return
+        const { alarmType, alarmTimes } = result
+        if (!alarmType || !alarmTimes) return
+        this.setState({
+          alarmType,
+          alarmTimes
+        })
       } catch (err) {
         console.log(err)
+      }
+    },
+
+    async setRepeatChoose() {
+      try {
+        const result = await Router.toComponenteditrepeat({
+          data: {
+            selectedDate: this.state.dtstart,
+            repeatStatus: this.state.repeatStatus,
+            repeatType: this.state.repeatType,
+            repeatInterval: this.state.repeatInterval,
+            repeatByday: this.state.repeatByday,
+            repeatBymonth: this.state.repeatBymonth,
+            repeatBymonthday: this.state.repeatBymonthday
+          }
+        })
+        if (result) {
+          this.setState({ ...result })
+        }
+      } catch (err) {
+        console.log(err)
+        Router.toIndex({ type: NavigateType.switchTab })
       }
     },
 
@@ -236,7 +264,8 @@ export default Unite(
       setPlace,
       setDescriptionChoose,
       setCalendarChoose,
-      setAlarmChoose
+      setAlarmChoose,
+      setRepeatChoose
     } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const calendars = useRecoilValue(calendarStore)
@@ -353,6 +382,7 @@ export default Unite(
             description={description}
             setPlaceChoose={setPlaceChoose}
             setDescriptionChoose={setDescriptionChoose}
+            setRepeatChoose={setRepeatChoose}
           ></GridAction>
         </View>
 

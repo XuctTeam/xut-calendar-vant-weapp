@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 17:22:03
+ * @LastEditTime: 2022-08-18 20:15:40
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -303,7 +303,6 @@ export default Unite(
   function ({ state, events }) {
     const { self, phoneForm, username, password, phone, smsCode, smsText, smsLoading, loginLoading } = state
     const { setUsername, setPassword, setPhone, setSmsCode, setPhoneForm, setSelf, pushCode, loginByPhoneOrUsername, loginByCode } = events
-    const env = useEnv()
     const [login] = useLogin()
     const [, { getUserProfile }] = useUserInfo()
     const [show] = useToast({
@@ -327,7 +326,7 @@ export default Unite(
     return (
       <Container navTitle='登录' className='pages-login-index'>
         <View className='section'>
-          {env === 'h5' && (
+          {process.env.TARO_ENV === 'h5' && (
             <View className='navigation_minibar_left_back back-btn' onClick={() => back({ to: 4, data: { isLogin: true } })}>
               <Icon name='arrow-left' />
             </View>
@@ -403,7 +402,7 @@ export default Unite(
           <View className='self'>
             <Checkbox value={self} checkedColor='red' onChange={(e: any) => setSelf(e.detail)}>
               登录即已同意
-              {env === 'WEAPP' ? (
+              {process.env.TARO_ENV === 'weapp' ? (
                 <Navigator url='/pages/privacyrule/index'>《隐私保护政策》</Navigator>
               ) : (
                 <a
@@ -421,7 +420,7 @@ export default Unite(
           </View>
         </View>
         <View className='footer'>
-          {env === 'WEAPP' && (
+          {process.env.TARO_ENV === 'weapp' && (
             <View className='btn' onClick={loginByCode}>
               <Icon classPrefix='page-icon' name='weixin1' size='36px'></Icon>
               <View className='label'>微信</View>

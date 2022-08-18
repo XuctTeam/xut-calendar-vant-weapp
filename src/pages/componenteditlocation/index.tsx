@@ -2,13 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-17 17:48:32
+ * @LastEditTime: 2022-08-18 22:14:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditlocation\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { CellGroup, Button, Col, Field, Row, Unite, Dialog } from '@antmjs/vantui'
+import { Button, Col, Row, Unite, Dialog } from '@antmjs/vantui'
 import { Textarea, View } from '@tarojs/components'
 import Container from '@/components/container'
 import Header from '@/components/header'

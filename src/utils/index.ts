@@ -427,13 +427,13 @@ const _formatWeeklyText = (repeatInterval: number, repeatStatus: string, repeatB
  * @param selectedDate
  */
 const _formatMonthlyText = (repeatInterval: number, repeatStatus: string, repeatByday: string, repeatBymonthday: string): string => {
-  const monthDays = repeatByday ? repeatByday.split(':') : []
-  if (!monthDays[1]) return ''
-  switch (repeatStatus) {
-    case '5':
-      return '每月（' + repeatBymonthday + '日）'
-    case '6':
-      return '每月（第' + monthDays[0] + '个' + formatWeek(Number.parseInt(monthDays[1])) + ')'
+  if (repeatStatus === '5') {
+    return '每月（' + repeatBymonthday + '日）'
+  }
+  if (repeatStatus === '6') {
+    const monthDays = repeatByday ? repeatByday.split(':') : []
+    if (!monthDays[1]) return ''
+    return '每月（第' + monthDays[0] + '个' + formatWeek(Number.parseInt(monthDays[1])) + ')'
   }
   if (repeatBymonthday) {
     if (repeatInterval === 1) {
@@ -441,7 +441,8 @@ const _formatMonthlyText = (repeatInterval: number, repeatStatus: string, repeat
     }
     return '每' + repeatInterval + '月（' + repeatBymonthday + '日）'
   }
-
+  const monthDays = repeatByday ? repeatByday.split(':') : []
+  if (!monthDays[1]) return ''
   if (repeatInterval === 1) {
     return '每月（第' + monthDays[0] + '个' + monthDays[1] + ')'
   }

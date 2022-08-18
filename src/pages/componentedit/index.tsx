@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-18 09:46:14
+ * @LastEditTime: 2022-08-18 22:35:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -20,7 +20,7 @@ import { useRecoilValue } from 'recoil'
 import { IUserInfo } from 'types/user'
 import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode } from '@/utils'
 import { IDavCalendar } from 'types/calendar'
-import { Picker, Time, CalendarAction, SelectCalendar, GridAction } from './ui'
+import { Picker, Time, CalendarAction, SelectCalendar, GridAction, RepeatPicker } from './ui'
 import './index.less'
 
 const today = dayjs().toDate()
@@ -216,6 +216,54 @@ export default Unite(
       }
     },
 
+    setRepeatReset() {
+      this.setState({
+        repeatStatus: '0',
+        repeatInterval: 1,
+        repeatType: '',
+        repeatByday: '',
+        repeatBymonth: '',
+        repeatBymonthday: '',
+        repeatUntil: null
+      })
+    },
+
+    setRepeatPickerOpen(repeatPickerOpen: boolean) {
+      this.setState({
+        repeatPickerOpen
+      })
+    },
+
+    setRepeatUntilChoose(repeatUntil: string | number | null) {
+      if (!repeatUntil) {
+        this.setState({
+          repeatUntil: null,
+          repeatPickerOpen: false
+        })
+        return
+      }
+      this.setState({
+        repeatUntil: dayjs(repeatUntil).toDate(),
+        repeatPickerOpen: false
+      })
+    },
+
+    async setMembersChoose() {
+      try {
+        const result = await Router.toComponenteditmembers({
+          data: this.state.memberIds
+        })
+        if (!result) return
+        const { memberIds } = result
+        if (!(memberIds && memberIds.length > 0)) return
+        this.setState({
+          memberIds: memberIds
+        })
+      } catch (err) {
+        console.log(err)
+      }
+    },
+
     _initCalendar(calendarId?: string) {
       const { calendars } = this.hooks
       if (!(calendars && calendars.length > 0)) return
@@ -250,7 +298,8 @@ export default Unite(
       description,
       memberIds,
       selectCalendarOpen,
-      selectedCalendar
+      selectedCalendar,
+      repeatPickerOpen
     } = state
     const {
       setSummary,
@@ -265,7 +314,11 @@ export default Unite(
       setDescriptionChoose,
       setCalendarChoose,
       setAlarmChoose,
-      setRepeatChoose
+      setRepeatChoose,
+      setRepeatReset,
+      setRepeatPickerOpen,
+      setRepeatUntilChoose,
+      setMembersChoose
     } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const calendars = useRecoilValue(calendarStore)
@@ -313,46 +366,30 @@ export default Unite(
             </Row>
           </View>
           {place && (
-            <Cell icon='location-o' renderRightIcon={<Icon name='cross' size='18px' onClick={() => setPlace('')} />} clickable>
+            <Cell icon='location-o' renderRightIcon={<Icon name='cross' onClick={() => setPlace('')} />} clickable>
               {place}
             </Cell>
           )}
           {!!userInfoState && memberIds.length !== 0 && <Cell title='组织者'>{userInfoState.name}</Cell>}
-          <Cell icon='friends-o' clickable isLink>
+          <Cell icon='friends-o' clickable isLink onClick={setMembersChoose}>
             {memberIds.length !== 0 ? `共邀请（${memberIds.length}）人` : '添加参与者'}
           </Cell>
           {repeatStatus !== '0' && (
             <>
-              <Cell
-                isLink
-                renderRightIcon={
-                  <Icon
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      e.preventDefault()
-                    }}
-                  ></Icon>
-                }
-              >
+              <Cell icon='replay' renderRightIcon={<Icon name='cross' onClick={setRepeatReset}></Icon>}>
                 {formatRepeatTime(repeatType, repeatStatus, repeatByday, repeatBymonth, repeatBymonthday, repeatInterval)}
               </Cell>
               <Cell
-                className='vi-component-wrapper_repeat-until'
                 clickable
+                icon='clock-o'
                 title={!repeatUntil ? '选择结束时间' : ''}
-                onClick={() => {
-                  // this.setState({
-                  //   repeatPickerOpen: true
-                  // })
-                }}
+                onClick={() => setRepeatPickerOpen(true)}
                 renderRightIcon={
                   <Icon
                     name='cross'
                     onClick={(e) => {
                       e.stopPropagation()
-                      // this.setState({
-                      //   repeatUntil: null
-                      // })
+                      setRepeatUntilChoose(null)
                     }}
                   ></Icon>
                 }
@@ -410,6 +447,13 @@ export default Unite(
           }}
         ></Picker>
         <CalendarAction show={selectCalendarOpen} onClose={() => setSelectCalendarOpen(false)} calendars={calendars} onSelect={setCalendarChoose} />
+        <RepeatPicker
+          show={repeatPickerOpen}
+          selectedDate={repeatUntil}
+          minDate={dtend}
+          onClose={() => setRepeatPickerOpen(false)}
+          onConfirm={setRepeatUntilChoose}
+        ></RepeatPicker>
       </Container>
     )
   },

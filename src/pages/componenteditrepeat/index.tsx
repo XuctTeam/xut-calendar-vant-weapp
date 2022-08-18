@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-18 11:19:57
+ * @LastEditTime: 2022-08-18 20:21:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditrepeat\index.tsx
  * @Description:
  *
@@ -14,9 +14,10 @@ import Container from '@/components/container'
 import Header from '@/components/header'
 import dayjs from 'dayjs'
 import Router, { NavigateType } from 'tarojs-router-next'
-import './index.less'
 import { formatRepeatTime } from '@/utils'
 import { View } from '@tarojs/components'
+import './index.less'
+import { useBack } from '@/utils/taro'
 
 export default Unite(
   {
@@ -107,6 +108,19 @@ export default Unite(
         console.log(err)
         Router.toIndex({ type: NavigateType.switchTab })
       }
+    },
+
+    saveRepeat() {
+      this.hooks['back']({
+        data: {
+          repeatType: this.state.repeatType,
+          repeatByday: this.state.repeatByday,
+          repeatBymonth: this.state.repeatBymonth,
+          repeatBymonthday: this.state.repeatBymonthday,
+          repeatInterval: this.state.repeatInterval,
+          repeatStatus: this.state.repeatStatus
+        }
+      })
     },
 
     /**
@@ -210,7 +224,15 @@ export default Unite(
   },
   function ({ state, events }) {
     const { selectedDate, repeatStatus, repeatInterval, repeatType, repeatByday, repeatBymonth, repeatBymonthday } = state
-    const { setRepeatChoose, setCustomRepeatChoose } = events
+    const { setRepeatChoose, setCustomRepeatChoose, saveRepeat } = events
+    const [back] = useBack({
+      to: 1
+    })
+
+    events.setHooks({
+      back: back
+    })
+
     return (
       <Container
         navTitle='循环选择'
@@ -264,7 +286,7 @@ export default Unite(
           </CellGroup>
         </RadioGroup>
         <View className='van-page-button'>
-          <Button block type='info'>
+          <Button block type='info' onClick={saveRepeat}>
             保存
           </Button>
         </View>

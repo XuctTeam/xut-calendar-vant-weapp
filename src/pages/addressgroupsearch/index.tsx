@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-16 11:55:52
+ * @LastEditTime: 2022-08-19 21:33:11
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupsearch\index.tsx
  * @Description:
  *
@@ -11,7 +11,7 @@
 import { useRef } from 'react'
 import { Button, Dialog, Search, Unite } from '@antmjs/vantui'
 import Pagination from '@/components/pagination'
-import { Input, ITouchEvent } from '@tarojs/components'
+import { Input, ITouchEvent, View } from '@tarojs/components'
 import { useReachBottom } from '@tarojs/taro'
 import Container from '@/components/container'
 import Header from '@/components/header'
@@ -206,11 +206,7 @@ export default Unite(
             clearable
             value={value}
             onClear={onClear}
-            renderAction={
-              <Button size='small' type='warning' onClick={() => setShow(true)}>
-                筛选
-              </Button>
-            }
+            renderAction={<View onClick={() => setShow(true)}>筛选</View>}
           />
           {list?.map((item: IGroup, index: number) => {
             return (

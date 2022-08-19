@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-18 11:26:40
+ * @LastEditTime: 2022-08-19 20:37:08
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditcustomrepreat\index.tsx
  * @Description:
  *
@@ -71,9 +71,9 @@ export default Unite(
       }
     },
 
-    setIntervalSelected(value: number) {
+    setIntervalSelected(value: number | number[]) {
       this.setState({
-        repeatInterval: value,
+        repeatInterval: value instanceof Array ? value[0] : value,
         intervalOpen: false
       })
     },
@@ -173,23 +173,23 @@ export default Unite(
           actions={[
             {
               name: '天',
-              color: 'DAILY'
+              value: 'DAILY'
             },
             {
               name: '周',
-              color: 'WEEKLY'
+              value: 'WEEKLY'
             },
             {
               name: '月',
-              color: 'MONTHLY'
+              value: 'MONTHLY'
             },
             {
               name: '年',
-              color: 'YEARLY'
+              value: 'YEARLY'
             }
           ]}
           onClose={() => setRepeatTypeOpen(false)}
-          onSelect={(e) => setRepeatSelected(e.detail.color)}
+          onSelect={(e) => setRepeatSelected(e.detail.value)}
         />
         <IntervalPicker
           open={intervalOpen}

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-15 11:09:43
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-16 11:46:26
+ * @LastEditTime: 2022-08-19 21:18:17
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\ui\MemberList.tsx
  * @Description:
  *
@@ -34,7 +34,7 @@ const MemberList: FC<IPageOption> = (props) => {
       ) : (
         <>
           {props.list.length === 0 ? (
-            <Empty description='暂无数据' />
+            <Empty description='~空空如也~' />
           ) : (
             props.list.map((item: IGroupMember, index: number) => {
               return (

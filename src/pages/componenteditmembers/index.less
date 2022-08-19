@@ -9,6 +9,20 @@
     background: #f5f5f5;
   }
 
+  .van-page-box {
+    padding-top: 2px;
+    overflow: hidden;
+  }
+
+  .van-page-button {
+    display: flex;
+    flex-direction: row;
+
+    .block {
+      width: 20px;
+    }
+  }
+
   .van-cell,
   .van-checkbox {
     background: #fff;
@@ -16,5 +30,28 @@
 
   .van-checkbox {
     justify-content: flex-end;
+  }
+
+  .list {
+    height: 100%;
+    overflow-y: auto;
+    padding-bottom: 300px;
+  }
+
+  .member {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+
+    .avatar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .name {
+      margin-left: 20px;
+    }
   }
 }

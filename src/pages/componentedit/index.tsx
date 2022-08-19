@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-18 22:35:19
+ * @LastEditTime: 2022-08-20 00:15:56
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -251,13 +251,15 @@ export default Unite(
     async setMembersChoose() {
       try {
         const result = await Router.toComponenteditmembers({
-          data: this.state.memberIds
+          data: {
+            members: this.state.memberIds
+          }
         })
         if (!result) return
-        const { memberIds } = result
-        if (!(memberIds && memberIds.length > 0)) return
+        const { members } = result
+        if (!(members && members.length > 0)) return
         this.setState({
-          memberIds: memberIds
+          memberIds: members
         })
       } catch (err) {
         console.log(err)
@@ -370,7 +372,11 @@ export default Unite(
               {place}
             </Cell>
           )}
-          {!!userInfoState && memberIds.length !== 0 && <Cell title='组织者'>{userInfoState.name}</Cell>}
+          {!!userInfoState && memberIds.length !== 0 && (
+            <Cell icon='manager-o' title='组织者' className='manager'>
+              {userInfoState.name}
+            </Cell>
+          )}
           <Cell icon='friends-o' clickable isLink onClick={setMembersChoose}>
             {memberIds.length !== 0 ? `共邀请（${memberIds.length}）人` : '添加参与者'}
           </Cell>

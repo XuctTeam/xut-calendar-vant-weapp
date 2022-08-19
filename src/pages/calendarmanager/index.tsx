@@ -2,27 +2,24 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-17 12:59:28
+ * @LastEditTime: 2022-08-19 21:19:03
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { useEffect } from 'react'
 import Router from 'tarojs-router-next'
 import { Empty, Unite } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
 import Header from '@/components/header'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import {} from '@/store'
-import { userInfoStore, calendarStore } from '@/store'
+import { useRecoilState } from 'recoil'
+import { calendarStore } from '@/store'
 import { CalendarListBody } from './ui'
 import { list } from '@/api/calendar'
-import classnames from 'classnames'
-import { brower } from '@/utils'
 
 import './index.less'
+import { IDavCalendar } from 'types/calendar'
 
 export default Unite(
   {
@@ -72,7 +69,7 @@ export default Unite(
         }}
       >
         {calendars.length === 0 ? (
-          <Empty description='暂无数据' />
+          <Empty description='~空空如也~' />
         ) : (
           <View className='list'>
             {calendars?.map((item: IDavCalendar, index: number) => {

@@ -12,7 +12,7 @@ interface IPageOption {
   open: boolean
   type: string
   repeatInterval: number
-  onSelected: (values: number) => void
+  onSelected: (values: number | number[]) => void
   onClose: () => void
 }
 
@@ -30,7 +30,7 @@ const IntervalPicker: React.FC<IPageOption> = (props) => {
         columns={columns}
         onCancel={props.onClose}
         onConfirm={(e) => {
-          props.onSelected(Number.parseInt(e.detail.value))
+          props.onSelected(e.detail.value)
         }}
       ></Picker>
     </Popup>

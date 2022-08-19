@@ -2,18 +2,14 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-10-27 17:12:27
- * @LastEditTime: 2022-07-20 09:20:19
+ * @LastEditTime: 2022-08-19 21:18:37
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useState } from 'react'
 import { View } from '@tarojs/components'
 import { Empty } from '@antmjs/vantui'
 import dayjs from 'dayjs'
-import {
-  IDavCalendar,
-  ICalendarComponent,
-  IDavComponent,
-} from '~/../types/calendar'
+import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import { ListEventView, DayEventView } from '../component'
 
 type IPageOption = {
@@ -55,29 +51,24 @@ const EventList: FunctionComponent<IPageOption> = (props) => {
         map.set(c.calendarId, {
           name: c.name,
           color: c.color,
-          checked: c.checked ? true : false,
+          checked: c.checked ? true : false
         })
       })
     let cps: Array<IDavComponent> = []
     if (props.calendarComponents && props.calendarComponents.length !== 0) {
       props.calendarComponents.forEach((c) => {
         if (!c.components) return
-        const selectedCalendar: ISelectCalendar | undefined = map.get(
-          c.calendarId,
-        )
+        const selectedCalendar: ISelectCalendar | undefined = map.get(c.calendarId)
         if (selectedCalendar == null) return
-        if (
-          selectedCalendar.checked &&
-          dayjs(props.selectedDay).isSame(dayjs(c.day), 'day')
-        ) {
+        if (selectedCalendar.checked && dayjs(props.selectedDay).isSame(dayjs(c.day), 'day')) {
           cps = cps.concat(
             c.components.map((item) => {
               return {
                 ...item,
                 color: selectedCalendar.color,
-                calendarName: selectedCalendar.name,
+                calendarName: selectedCalendar.name
               }
-            }),
+            })
           )
         }
       })
@@ -86,17 +77,12 @@ const EventList: FunctionComponent<IPageOption> = (props) => {
       return dayjs(n1.dtstart).unix() - dayjs(n2.dtstart).unix()
     })
     setComponentList(cps)
-  }, [
-    props.accessToken,
-    props.selectedDay,
-    props.calendars,
-    props.calendarComponents,
-  ])
+  }, [props.accessToken, props.selectedDay, props.calendars, props.calendarComponents])
 
   return (
-    <View className="vi-index-wrapper_event">
+    <View className='vi-index-wrapper_event'>
       {componentList.length == 0 ? (
-        <Empty description="~暂无数据~" />
+        <Empty description='~空空如也~' />
       ) : (
         <View>
           {props.view === 0 ? (

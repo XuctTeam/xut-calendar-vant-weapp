@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-16 12:04:00
+ * @LastEditTime: 2022-08-19 21:18:59
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -178,7 +178,7 @@ export default Unite(
               ))}
             </>
           ) : (
-            <Empty description='暂无数据' />
+            <Empty description='~空空如也~' />
           )}
         </View>
 

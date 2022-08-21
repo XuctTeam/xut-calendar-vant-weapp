@@ -4,7 +4,7 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-09 22:14:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 14:11:20
+ * @LastEditTime: 2022-08-21 21:29:26
  */
 import httpRequest from '@/utils/request/innerRequest'
 
@@ -93,11 +93,10 @@ export const groupMemberLeave = (groupId: string, action: number, memberId?: str
 }
 
 /**
- * @description: 去重查询用户组下所有组员
- * @param {*}
+ * @description: 通过id查询用户
+ * @param {string} ids
  * @return {*}
- * @author: Derek Xu
  */
-export const distinctMemberList = () => {
-  return httpRequest.get('/ums/api/app/v1/mbr/group/distinct')
+export const queryByIds = (ids: string[]) => {
+  return httpRequest.post('/ums/api/app/v1/mbr/ids', { ids })
 }

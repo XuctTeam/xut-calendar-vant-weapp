@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-21 20:33:53
+ * @LastEditTime: 2022-08-26 19:05:48
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { Textarea, View } from '@tarojs/components'
-import { Button, Cell, Col, Grid, GridItem, Icon, Row, Switch, Unite } from '@antmjs/vantui'
+import { Button, Cell, Col, Icon, Row, Switch, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Router, { NavigateType } from 'tarojs-router-next'
 import Header from '@/components/header'
@@ -356,13 +356,13 @@ export default Unite(
           </Cell>
           <View className='picker'>
             <Row>
-              <Col span={10}>
+              <Col span={10} key={1}>
                 <Time time={dtstart} fullDay={fullDay} onClick={() => setPickDtStartOpen(true)}></Time>
               </Col>
-              <Col span={4}>
+              <Col span={4} key={2}>
                 <Icon name='arrow'></Icon>
               </Col>
-              <Col span={10}>
+              <Col span={10} key={3}>
                 <Time time={dtend} fullDay={fullDay} onClick={() => setPickDtEndOpen(true)}></Time>
               </Col>
             </Row>

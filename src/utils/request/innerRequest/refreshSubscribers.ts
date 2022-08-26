@@ -2,14 +2,14 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-12 12:49:07
- * @LastEditTime: 2022-07-16 17:05:06
+ * @LastEditTime: 2022-08-26 18:49:02
  * @LastEditors: Derek Xu
  */
 import { tokenRefresh } from '@/api/login'
 import dayjs from 'dayjs'
 import httpRequest from './index'
 import { pageCleanToLogin } from '../../taro'
-import { cacheSetSync, cacheGetSync } from '@/cache'
+import { cacheSetSync, cacheGetSync, cacheRemoveSync } from '@/cache'
 import Taro from '@tarojs/taro'
 
 interface ITask<T> {
@@ -64,7 +64,10 @@ class RefreshSubscribers {
     if (!reToken) {
       return this.fail()
     }
-    const result: any = await tokenRefresh(reToken.replace('Bearer ', ''))
+    const result = await tokenRefresh(reToken.replace('Bearer ', '')).catch((err) => {
+      console.log(err)
+      return
+    })
     if (!result) return
     cacheSetSync('accessToken', 'Bearer ' + result.access_token)
     cacheSetSync('refreshToken', 'Bearer ' + result.refresh_token)

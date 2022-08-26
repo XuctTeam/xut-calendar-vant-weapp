@@ -2,12 +2,11 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-02 17:45:23
- * @LastEditTime: 2022-07-15 22:29:35
+ * @LastEditTime: 2022-08-26 18:28:23
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
-
-import { IDavCalendar } from '@types/calendar'
+import { IDavCalendar } from 'types/calendar'
 
 /**
  * @description: 查询日历列表
@@ -15,7 +14,7 @@ import { IDavCalendar } from '@types/calendar'
  * @return {*}
  * @author: Derek Xu
  */
-export const list = () => {
+export const list = (): Promise<any> => {
   return httpRequest.get('/cms/api/app/v1/calendar/list')
 }
 
@@ -25,7 +24,7 @@ export const list = () => {
  * @return {*}
  * @author: Derek Xu
  */
-export const colorsList = () => {
+export const colorsList = (): Promise<any> => {
   return httpRequest.get('/cms/api/app/v1/calendar/color')
 }
 

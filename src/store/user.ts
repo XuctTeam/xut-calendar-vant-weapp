@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 13:13:28
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-17 09:41:00
+ * @LastEditTime: 2022-08-26 18:44:45
  * @FilePath: \xut-calendar-vant-weapp\src\store\user.ts
  * @Description:
  *
@@ -23,11 +23,11 @@ export const userInfoStore = atom<IUserInfo | undefined>({
     if (!cacheGetSync('accessToken')) {
       return undefined
     }
-    try {
-      return await baseUserInfo()
-    } catch (err) {
+    const res = await baseUserInfo().catch((err) => {
+      console.log(err)
       return undefined
-    }
+    })
+    return res
   })()
 })
 
@@ -37,10 +37,10 @@ export const userAuthInfoStore = atom<Array<IUserAuth> | undefined>({
     if (!cacheGetSync('accessToken')) {
       return []
     }
-    try {
-      return await auths()
-    } catch (err) {
+    const res = await auths().catch((err) => {
+      console.log(err)
       return []
-    }
+    })
+    return res
   })()
 })

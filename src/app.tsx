@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 17:54:16
+ * @LastEditTime: 2022-08-26 19:09:47
  * @FilePath: \xut-calendar-vant-weapp\src\app.tsx
  * @Description:
  *
@@ -16,7 +16,6 @@ import { setSysInfoAsync, setWxBrower } from '@/utils'
 import * as dayjs from 'dayjs'
 import isLeapYear from 'dayjs/plugin/isLeapYear'
 import 'dayjs/locale/zh-cn'
-import Vconsole from 'vconsole'
 
 import './cache'
 import './app.less'
@@ -29,10 +28,6 @@ interface IProps {
 /** 日期国际化 */
 dayjs.extend(isLeapYear) // use plugin
 dayjs.locale('zh-cn') // use locale
-
-if (process.env.NODE_ENV !== 'production') {
-  new Vconsole()
-}
 
 export default function App(props: IProps) {
   // 可以使用所有的 React Hooks

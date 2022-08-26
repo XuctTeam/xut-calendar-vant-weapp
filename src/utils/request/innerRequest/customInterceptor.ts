@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-08-07 22:17:57
+ * @LastEditTime: 2022-08-26 18:49:43
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -27,13 +27,15 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         reject()
         return
       }
-      if (res.statusCode === HTTP_STATUS.NOT_FOUND || res.statusCode === HTTP_STATUS.BAD_GATEWAY || res.statusCode === HTTP_STATUS.CLIENT_ERROR) {
+      const { statusCode } = res
+      if (statusCode === HTTP_STATUS.NOT_FOUND || statusCode === HTTP_STATUS.BAD_GATEWAY || statusCode === HTTP_STATUS.CLIENT_ERROR) {
         return Promise.reject({
           source: 'interceptor',
           status: res.statusCode,
           statusText: codeMessage[res.statusCode]
         })
       }
+
       if (res.statusCode === HTTP_STATUS.SUCCESS) {
         if (url.includes(OAUTHTOKEN_URL)) {
           return resolve(res.data)
@@ -66,14 +68,16 @@ const customInterceptor = (chain: Chain): Promise<any> => {
       }
       if (status !== HTTP_STATUS.AUTHENTICATE) {
         let toastMsg: string = statusText || errMsg
-        if (!toastMsg && status === HTTP_STATUS.CLIENT_ERROR) {
-          toastMsg = codeKeys[code]
-        }
-        if (!toastMsg && (status === HTTP_STATUS.SERVER_ERROR
-          || status === HTTP_STATUS.BAD_GATEWAY
-          || status === HTTP_STATUS.SERVICE_UNAVAILABLE
-          || status === HTTP_STATUS.GATEWAY_TIMEOUT)) {
+        if (
+          status === HTTP_STATUS.SERVER_ERROR ||
+          status === HTTP_STATUS.BAD_GATEWAY ||
+          status === HTTP_STATUS.SERVICE_UNAVAILABLE ||
+          status === HTTP_STATUS.GATEWAY_TIMEOUT
+        ) {
           toastMsg = codeKeys[status]
+        }
+        if (!toastMsg) {
+          toastMsg = codeKeys[code]
         }
         /** 兼容刷新token 异常情况*/
         if (url.includes(OAUTHTOKEN_URL)) {
@@ -86,20 +90,6 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         })
         return reject(error)
       }
-
-      /* 1.刷新token认证失败，清空并返回登录 */
-      // if (url.includes(OAUTHTOKEN_URL) && requestParams.data && requestParams.data['refresh_token']) {
-      //   debugger
-      //   Taro.showToast({
-      //     icon: 'error',
-      //     title: '获取登录信息失败',
-      //     duration: 1500
-      //   })
-      //   refreshSubscribers.cleanTask()
-      //   pageCleanToLogin()
-      //   return reject(error)
-      // }
-
       /* 2.认证失败且不是token过期 */
       if (status === HTTP_STATUS.AUTHENTICATE && code !== HTTP_STATUS.AUTHENTICATE) {
         Taro.showToast({
@@ -107,7 +97,10 @@ const customInterceptor = (chain: Chain): Promise<any> => {
           title: codeKeys[code],
           duration: 1500
         })
-        return reject(error)
+        return reject({
+          code: 401,
+          message: codeKeys[code]
+        })
       }
       let refreshToken = cacheGetSync('refreshToken')
       const now = dayjs().unix()

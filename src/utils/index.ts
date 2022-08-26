@@ -228,7 +228,7 @@ export const base64 = (str: string): string => {
   // 对字符串进行编码
   var encode = encodeURI(str)
   // 对编码的字符串转化base64
-  var base64 = window.btoa(encode)
+  var base64 = base64_encode(encode)
   return base64
 }
 
@@ -503,4 +503,36 @@ export const checkEmail = (email: string): boolean => {
  */
 export const checkPassowrd = (password: string): boolean => {
   return /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,30}$/.test(password)
+}
+
+const base64_encode = (str) => {
+  var c1, c2, c3
+  var base64EncodeChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  var i = 0,
+    len = str.length,
+    string = ''
+
+  while (i < len) {
+    c1 = str.charCodeAt(i++) & 0xff
+    if (i == len) {
+      string += base64EncodeChars.charAt(c1 >> 2)
+      string += base64EncodeChars.charAt((c1 & 0x3) << 4)
+      string += '=='
+      break
+    }
+    c2 = str.charCodeAt(i++)
+    if (i == len) {
+      string += base64EncodeChars.charAt(c1 >> 2)
+      string += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xf0) >> 4))
+      string += base64EncodeChars.charAt((c2 & 0xf) << 2)
+      string += '='
+      break
+    }
+    c3 = str.charCodeAt(i++)
+    string += base64EncodeChars.charAt(c1 >> 2)
+    string += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xf0) >> 4))
+    string += base64EncodeChars.charAt(((c2 & 0xf) << 2) | ((c3 & 0xc0) >> 6))
+    string += base64EncodeChars.charAt(c3 & 0x3f)
+  }
+  return string
 }

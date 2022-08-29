@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-10 13:38:16
- * @LastEditTime: 2022-08-12 15:07:21
+ * @LastEditTime: 2022-08-29 14:49:45
  * @LastEditors: Derek Xu
  */
 export const colors = [
@@ -105,3 +105,5 @@ export const IndexList = (): string[] => {
   indexList.push('#')
   return indexList
 }
+
+export const LOGIN_CODE = '206'

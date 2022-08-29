@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-21 21:55:06
+ * @LastEditTime: 2022-08-29 17:38:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
@@ -125,11 +125,26 @@ export default Unite(
           checkedIds: []
         })
       })
+    },
+
+    onSearch(val: string) {
+      console.log(val)
+    },
+
+    async onChooseMember() {
+      try {
+        const result = await Router.toComponenteditmemberchoose()
+        if (!result) return
+        const { memberIds } = result
+        if (!memberIds) return
+      } catch (err) {
+        console.log(err)
+      }
     }
   },
   function ({ state, events }) {
     const { loading, allCheck, list, checkedIds } = state
-    const { setAllCheckClick, setCheck, saveMembers, removeMember } = events
+    const { setAllCheckClick, setCheck, saveMembers, removeMember, onSearch, onChooseMember } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const [back] = useBack({
       to: 1
@@ -156,7 +171,20 @@ export default Unite(
         }}
       >
         <View className='van-page-box'>
-          <Search placeholder='请输入用户' renderAction={<View>按组查询</View>}></Search>
+          <Search
+            placeholder='请输入用户'
+            renderAction={
+              <View
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onChooseMember()
+                }}
+              >
+                按组查询
+              </View>
+            }
+            onSearch={(e) => onSearch(e.detail)}
+          ></Search>
           <CheckboxGroup value={allCheck} onChange={(e) => setAllCheckClick(e.detail)}>
             <CellGroup>
               <Cell title={`全选【${checkedIds.length + 1}】人`}>

@@ -1,17 +1,17 @@
 import { PureComponent, ReactNode, useState, useContext, useEffect } from 'react'
 import { showToast, usePageScroll } from '@tarojs/taro'
-import Router from 'tarojs-router-next'
-import { UniteContext } from '@antmjs/vantui'
+import { UniteContext, Popup } from '@antmjs/vantui'
 import { EMlf } from '@antmjs/trace'
 import { useSpring } from '@react-spring/web'
 import { monitor } from '@/trace'
+import { LOGIN_CODE } from '@/constants'
 import Error from '../fullScreen/error'
+import Login from '../fullScreen/login'
 import Loading from '../fullScreen/loading'
 import PullDownRefresh from './pullDownRefresh'
 import Navigation from './navigation'
 import './index.less'
 
-const LOGIN_CODE = '206'
 class ErrorBoundary extends PureComponent<{ setError: any; children: any }> {
   constructor(props: any) {
     super(props)
@@ -51,18 +51,16 @@ type IProps = {
   navTitle?: ReactNode
   navClassName?: string
   loading?: any
-  ignoreError?: boolean
-  enablePagePullDownRefresh?: boolean
   h5Nav?: boolean
   onReload?: () => Promise<any>
+  ignoreError?: boolean
+  enablePagePullDownRefresh?: boolean
   renderPageTopHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
 }
 
 export default function Index(props: IProps) {
   const { useNav = true, navTitle, navClassName, className, loading, ignoreError, renderPageTopHeader, enablePagePullDownRefresh = true } = props
-  /** 新增扩展属性 */
-  const { h5Nav = false, onReload } = props
-
+  const { h5Nav, onReload } = props
   const ctx = useContext(UniteContext)
   const [canPull, setCanPull] = useState(true)
   const [springStyles, api] = useSpring(() => ({
@@ -77,7 +75,7 @@ export default function Index(props: IProps) {
     'pulling' | 'refreshing' | 'complete' | 'canRelease',
     React.Dispatch<React.SetStateAction<'pulling' | 'refreshing' | 'complete' | 'canRelease'>>
   ]
-  const [loginStatus] = useState(false)
+  const [loginStatus, setLoginStatus] = useState(false)
 
   // 异常来自于三个部分 1: Request Code 2 JSError 3: BoundaryError
   useEffect(() => {
@@ -104,8 +102,7 @@ export default function Index(props: IProps) {
 
   useEffect(() => {
     if (loading && ctx.error && !ignoreError && ctx.error.code === LOGIN_CODE) {
-      //setLoginStatus(true)
-      Router.toLogin()
+      setLoginStatus(true)
     }
   }, [loading, ctx, ignoreError])
 
@@ -134,6 +131,24 @@ export default function Index(props: IProps) {
         >
           <>{props.children}</>
         </PullDownRefresh>
+        <Popup
+          show={loginStatus}
+          className='popup-with-login'
+          closeIconPosition='top-left'
+          position='bottom'
+          closeable
+          safeAreaInsetTop
+          style={{
+            height: '100vh'
+          }}
+          onClose={async () => {
+            setLoginStatus(false)
+            ctx.setError(undefined)
+            ctx.onRefresh()
+          }}
+        >
+          <Login setLoginStatus={setLoginStatus} setError={ctx.setError as any} onRefresh={ctx.onRefresh} />
+        </Popup>
       </>
     )
   }

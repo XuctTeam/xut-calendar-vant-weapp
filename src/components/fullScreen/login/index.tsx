@@ -3,7 +3,6 @@ import Taro, { hideLoading, showLoading, showToast } from '@tarojs/taro'
 import { MiniPhoneButton } from '@antmjs/vantui'
 import { useEffect, useState } from 'react'
 import { cacheSetSync } from '@/cache'
-import { loginCommon } from '@/actions/simple/common'
 import './index.less'
 interface IProps {
   setLoginStatus: React.Dispatch<React.SetStateAction<boolean>>
@@ -29,7 +28,7 @@ export default function Index(props: IProps) {
   const [params, setParams] = useState<Params>({
     jsCode: '',
     iv: '',
-    userInfoEncryptedData: '',
+    userInfoEncryptedData: ''
   })
 
   useEffect(() => {
@@ -45,17 +44,17 @@ export default function Index(props: IProps) {
           const _params = { ...params, jsCode }
           setParams(_params)
         }
-      },
+      }
     })
   }
 
   const handleLogin = async (_params: Params) => {
     showLoading({
-      title: '登录中...',
+      title: '登录中...'
     })
-    const res = await loginCommon(_params)
+    //const res = await loginCommon(_params)
     hideLoading()
-    cacheSetSync('token', res.token)
+    //cacheSetSync('token', res.token)
     setError(undefined)
     setLoginStatus(false)
     onRefresh()
@@ -79,12 +78,12 @@ export default function Index(props: IProps) {
   }
 
   return (
-    <View className="pages-login-index">
+    <View className='pages-popup-login-index'>
       <MiniPhoneButton
-        className="login-btn"
-        size="large"
+        className='login-btn'
+        size='large'
         type={'primary'}
-        openType="getPhoneNumber"
+        openType='getPhoneNumber'
         onFail={onGetPhoneNumberFail}
         onGetPhone={(res) => {
           if (!/(deny)|(permission)/.test(res.errMsg)) {

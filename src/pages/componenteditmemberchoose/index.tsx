@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-22 19:49:44
+ * @LastEditTime: 2022-08-29 17:41:31
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmemberchoose\index.tsx
  * @Description:
  *
@@ -12,15 +12,18 @@ import { Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Header from '@/components/header'
 import './index.less'
+import { ScrollView } from '@tarojs/components'
 
 export default Unite(
   {
-    state: {
-      list: null,
-      complete: false
+    state: {},
+
+    onScroll(e) {
+      console.log(e.detail)
     }
   },
-  function ({ state, events, loading }) {
+  function ({ state, events }) {
+    const { onScroll } = events
     return (
       <Container
         navTitle='参与人选择'
@@ -32,7 +35,9 @@ export default Unite(
           return <Header title='参与人选择' left={true} to={1}></Header>
         }}
       >
-        水电费水电费
+        <ScrollView className='scrollview' scrollX scrollWithAnimation onScroll={onScroll}>
+          sdfsdfsdfssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+        </ScrollView>
       </Container>
     )
   },

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-19 21:18:59
+ * @LastEditTime: 2022-08-31 14:41:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -47,9 +47,11 @@ export default Unite(
       })
       groupList()
         .then((res) => {
+          const list = res as any as IGroup[]
+          const _list = [...list, ...list, ...list, ...list]
           this.setState({
             loading: false,
-            list: res as any as IGroup[]
+            list: _list
           })
         })
         .catch((err) => {
@@ -150,8 +152,9 @@ export default Unite(
       <Container
         navTitle='通讯录管理'
         enablePagePullDownRefresh={false}
-        className='pages-address-groupes-manager-index '
+        className='pages-address-groupes-manager-index'
         loading={loading}
+        tabbar
         renderPageTopHeader={() => {
           return <Header title='通讯录管理' left={false} to={2}></Header>
         }}

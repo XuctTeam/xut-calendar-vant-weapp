@@ -52,6 +52,7 @@ type IProps = {
   navClassName?: string
   loading?: any
   h5Nav?: boolean
+  tabbar?: boolean
   onReload?: () => Promise<any>
   ignoreError?: boolean
   enablePagePullDownRefresh?: boolean
@@ -60,7 +61,7 @@ type IProps = {
 
 export default function Index(props: IProps) {
   const { useNav = true, navTitle, navClassName, className, loading, ignoreError, renderPageTopHeader, enablePagePullDownRefresh = true } = props
-  const { h5Nav, onReload } = props
+  const { h5Nav, tabbar, onReload } = props
   const ctx = useContext(UniteContext)
   const [canPull, setCanPull] = useState(true)
   const [springStyles, api] = useSpring(() => ({
@@ -162,6 +163,7 @@ export default function Index(props: IProps) {
           navClassName={navClassName}
           useNav={useNav}
           h5Nav={h5Nav}
+          tabbar={tabbar}
           enablePullDownRefresh={enablePagePullDownRefresh}
           pullDownRefreshStatus={pullDownRefreshStatus}
           renderHeader={renderPageTopHeader}

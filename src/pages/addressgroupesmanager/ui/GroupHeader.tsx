@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-06-18 18:27:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-14 13:06:33
+ * @LastEditTime: 2022-08-31 16:40:52
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\ui\GroupHeader.tsx
  * @Description:
  *
@@ -21,7 +21,7 @@ const GroupHeader: FunctionComponent<IPageOption> = (props) => {
   return (
     <View className='group-header'>
       <Row gutter={10} className='header-opt'>
-        <Col span={12}>
+        <Col span={12} key={1}>
           <View className='box' onClick={props.addGroup}>
             <Icon classPrefix='page-icon' name='tuandui' size='36px'></Icon>
             <View className='title'>
@@ -30,7 +30,7 @@ const GroupHeader: FunctionComponent<IPageOption> = (props) => {
             </View>
           </View>
         </Col>
-        <Col span={12}>
+        <Col span={12} key={2}>
           <View
             className='box'
             onClick={() => {

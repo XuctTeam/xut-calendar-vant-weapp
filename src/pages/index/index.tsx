@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-16 22:48:42
+ * @LastEditTime: 2022-08-31 13:47:40
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -279,6 +279,7 @@ export default Unite(
         navTitle='日程管理'
         className='pages-index-index'
         h5Nav={true}
+        tabbar
         enablePagePullDownRefresh={true}
         renderPageTopHeader={() => {
           return <Header title='日程管理' left={false} to={1}></Header>

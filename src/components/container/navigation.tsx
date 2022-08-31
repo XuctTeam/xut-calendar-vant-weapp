@@ -5,7 +5,7 @@ import { View } from '@tarojs/components'
 import { Icon } from '@antmjs/vantui'
 import { useRecoilState } from 'recoil'
 import { menuButtonStore } from '@/store'
-import { setMenuButtonAsync } from '@/utils'
+import { setMenuButtonAsync, brower } from '@/utils'
 import classnames from 'classnames'
 import './navigation.less'
 
@@ -245,6 +245,7 @@ type IProps = {
   navClassName?: string
   enablePullDownRefresh?: boolean
   h5Nav?: boolean
+  tabbar?: boolean
   pullDownRefreshStatus?: 'pulling' | 'refreshing' | 'complete' | 'canRelease'
   renderHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
   springStyles: any
@@ -254,7 +255,8 @@ export default function Index(props: IProps) {
   const { useNav = true, navTitle, navClassName, homeUrl, renderHeader, enablePullDownRefresh, pullDownRefreshStatus, springStyles } = props
   const [menuButton, setMenuButton]: any = useRecoilState(menuButtonStore)
   /** 新增属性 */
-  const { h5Nav } = props
+  const { h5Nav, tabbar = false } = props
+  const wxBrower = brower()
 
   useDidShow(() => {
     // 设置title
@@ -309,7 +311,18 @@ export default function Index(props: IProps) {
         />
       )}
       {menuButton && process.env.TARO_ENV !== 'h5' && process.env.TARO_ENV !== 'alipay' && <MenuButton menuButton={menuButton} homeUrl={homeUrl} />}
-      <View className={classnames('van-box', { ['van-box--padding-top']: process.env.TARO_ENV === 'h5' && h5Nav })}>{props.children}</View>
+      {tabbar ? (
+        <>{props.children}</>
+      ) : (
+        <View
+          className={classnames('van-box', {
+            ['van-box--padding']: process.env.TARO_ENV === 'h5' && h5Nav,
+            ['van-box--padding-top']: wxBrower && h5Nav
+          })}
+        >
+          {props.children}
+        </View>
+      )}
     </>
   )
 }

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-18 20:15:40
+ * @LastEditTime: 2022-08-31 13:59:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -30,6 +30,7 @@ import { checkMobile } from '@/utils'
 import Images from '@/constants/images'
 
 import './index.less'
+import { useWxBrowser } from '@/hooks'
 
 const smsBtnLoadingTime: number = 120
 
@@ -308,6 +309,8 @@ export default Unite(
     const [show] = useToast({
       icon: 'error'
     })
+    const webEnv = useEnv()
+    const isWxBrower = useWxBrowser()
     const timerRef = useRef<number>(0)
     const setUserInfoState = useSetRecoilState(userInfoStore)
     const setUserAuthState = useSetRecoilState(userAuthInfoStore)
@@ -326,7 +329,7 @@ export default Unite(
     return (
       <Container navTitle='登录' className='pages-login-index'>
         <View className='section'>
-          {process.env.TARO_ENV === 'h5' && (
+          {webEnv && !isWxBrower && (
             <View className='navigation_minibar_left_back back-btn' onClick={() => back({ to: 4, data: { isLogin: true } })}>
               <Icon name='arrow-left' />
             </View>

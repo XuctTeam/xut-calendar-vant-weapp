@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-31 13:47:40
+ * @LastEditTime: 2022-09-01 15:26:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -11,7 +11,7 @@
 import React, { useRef } from 'react'
 import { Button, Icon, Unite } from '@antmjs/vantui'
 import Container from '@/components/container'
-import { View } from '@tarojs/components'
+import { PageMeta, View } from '@tarojs/components'
 import { useWebEnv } from '@/hooks'
 import Router from 'tarojs-router-next'
 import { useRecoilState, useRecoilValue } from 'recoil'

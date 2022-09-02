@@ -1,8 +1,8 @@
 .pages-calendar-edit-index {
   display: flex;
   flex-direction: column;
-  position: relative;
   height: 100%;
+  overflow: hidden;
 
   .van-cell,
   .van-grid-item__content {
@@ -20,6 +20,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  textarea {
+    background: #fff;
+    padding: 20px;
+    box-sizing: border-box;
   }
 
   .box {

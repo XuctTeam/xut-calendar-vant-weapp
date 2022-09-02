@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, ReactNode } from 'react'
 import { getCurrentInstance, navigateBack, reLaunch, getCurrentPages, useDidShow } from '@tarojs/taro'
 import { animated } from '@react-spring/web'
-import { View } from '@tarojs/components'
+import { PageMeta, View } from '@tarojs/components'
 import { Icon } from '@antmjs/vantui'
 import { useRecoilState } from 'recoil'
 import { menuButtonStore } from '@/store'
@@ -311,17 +311,17 @@ export default function Index(props: IProps) {
         />
       )}
       {menuButton && process.env.TARO_ENV !== 'h5' && process.env.TARO_ENV !== 'alipay' && <MenuButton menuButton={menuButton} homeUrl={homeUrl} />}
-      {tabbar ? (
-        <>{props.children}</>
-      ) : (
+      {process.env.TARO_ENV === 'h5' && !tabbar ? (
         <View
           className={classnames('van-box', {
-            ['van-box--padding']: process.env.TARO_ENV === 'h5' && h5Nav,
+            ['van-box--padding']: h5Nav,
             ['van-box--padding-top']: wxBrower && h5Nav
           })}
         >
           {props.children}
         </View>
+      ) : (
+        <>{props.children}</>
       )}
     </>
   )

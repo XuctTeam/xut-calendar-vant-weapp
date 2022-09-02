@@ -39,7 +39,7 @@ const config = {
     828: 1.81 / 2
   },
   sourceRoot: 'src',
-  outputRoot: process.env.TARO_ENV === 'h5' ? 'build' : process.env.TARO_ENV,
+  outputRoot: process.env.TARO_ENV === 'h5' ? 'build' : 'dist/' + process.env.NODE_ENV + '/' + process.env.TARO_ENV,
   env: {
     API_ENV: JSON.stringify(process.env.API_ENV),
     WATCHING: JSON.stringify(process.env.WATCHING || 'false'),
@@ -187,7 +187,8 @@ const config = {
     [npath.join(process.cwd(), 'config/webpack/configPlugin')],
     '@tarojs/plugin-platform-alipay-dd',
     ['@tarojs/plugin-platform-kwai'],
-    ['tarojs-router-next-plugin']
+    ['tarojs-router-next-plugin'],
+    ['tarojs-plugin-platform-miniprogram']
   ]
 }
 

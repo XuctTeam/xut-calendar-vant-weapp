@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-29 17:44:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-31 17:22:51
+ * @LastEditTime: 2022-09-01 10:12:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmemberchoose\ui\GroupSelect.tsx
  * @Description:
  *
@@ -24,16 +24,18 @@ const GroupSelect: FC<IPageOption> = (props) => {
   const { id, images, name, count } = props
   return (
     <View className='li' hoverClass='li--hover hover-class' hoverStayTime={70} onClick={() => props.onClick(id)}>
-      {images ? (
-        <Avatar src={images} size='medium'></Avatar>
-      ) : (
-        <Avatar className='avatar' size='medium'>
-          G
-        </Avatar>
-      )}
-      <View className='label'>
-        <View>{name}</View>
-        <View className='count'>{`共 ${count} 人`}</View>
+      <View className='li--box'>
+        {images ? (
+          <Avatar src={images} size='medium'></Avatar>
+        ) : (
+          <Avatar className='avatar' size='medium'>
+            G
+          </Avatar>
+        )}
+        <View className='label'>
+          <View>{name}</View>
+          <View className='count'>{`共 ${count} 人`}</View>
+        </View>
       </View>
     </View>
   )

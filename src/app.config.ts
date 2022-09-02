@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-21 21:39:57
+ * @LastEditTime: 2022-09-01 11:38:34
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -90,5 +90,6 @@ export default defineAppConfig({
     'scope.userLocation': {
       desc: '楚日历需获取您的地理位置'
     }
-  }
+  },
+  requiredPrivateInfos: ['chooseLocation']
 })

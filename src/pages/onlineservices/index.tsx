@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-01 09:57:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 11:11:21
+ * @LastEditTime: 2022-09-01 13:15:55
  * @FilePath: \xut-calendar-vant-weapp\src\pages\onlineservices\index.tsx
  * @Description:
  *
@@ -33,18 +33,18 @@ export default Unite(
           return <Header title='在线客服' left to={4}></Header>
         }}
       >
-        <View className='box'>
+        <View className='van-page-box'>
           <View className='image'>
             <Image round src={Images.DEFAULT_QR_IMAGE} />
           </View>
-          {process.env.TARO_ENV === 'weapp' && (
-            <View className='button'>
-              <Button color='primary' openType='contact'>
-                在线客服
-              </Button>
-            </View>
-          )}
         </View>
+        {process.env.TARO_ENV === 'weapp' && (
+          <View className='van-page-button'>
+            <Button type='primary' block openType='contact'>
+              在线客服
+            </Button>
+          </View>
+        )}
       </Container>
     )
   },

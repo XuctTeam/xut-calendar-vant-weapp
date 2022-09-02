@@ -4,7 +4,7 @@
  * @Autor: Derek Xu
  * @Date: 2021-12-02 22:46:09
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-19 21:18:46
+ * @LastEditTime: 2022-09-01 16:18:31
  */
 import { ITouchEvent, View } from '@tarojs/components'
 import { IDavCalendar } from '~/../types/calendar'
@@ -36,7 +36,16 @@ const CalendarPop: React.FC<IPageOption> = (props) => {
   }
 
   return (
-    <Popup className='pages-index-calendar_popup' show={props.open} position='top' style={{ height: '60%' }} onClose={props.closePopup} overlay>
+    <Popup
+      className='pages-index-calendar_popup'
+      show={props.open}
+      position='top'
+      safeAreaInsetTop
+      style={{ height: '60%' }}
+      zIndex={999}
+      onClose={props.closePopup}
+      overlay
+    >
       <View className='title'>我的日历</View>
       <View className='content'>
         {!props.hasLogin || showCalendars.length === 0 ? (

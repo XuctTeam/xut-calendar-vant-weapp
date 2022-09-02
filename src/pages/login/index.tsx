@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-31 13:59:06
+ * @LastEditTime: 2022-09-01 09:45:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -30,7 +30,7 @@ import { checkMobile } from '@/utils'
 import Images from '@/constants/images'
 
 import './index.less'
-import { useWxBrowser } from '@/hooks'
+import { useWebEnv, useWxBrowser } from '@/hooks'
 
 const smsBtnLoadingTime: number = 120
 
@@ -309,7 +309,7 @@ export default Unite(
     const [show] = useToast({
       icon: 'error'
     })
-    const webEnv = useEnv()
+    const webEnv = useWebEnv()
     const isWxBrower = useWxBrowser()
     const timerRef = useRef<number>(0)
     const setUserInfoState = useSetRecoilState(userInfoStore)

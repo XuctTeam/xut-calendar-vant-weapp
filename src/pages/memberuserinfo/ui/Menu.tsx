@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 17:04:12
- * @LastEditTime: 2022-08-06 22:05:39
+ * @LastEditTime: 2022-09-01 13:39:57
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useCallback } from 'react'
@@ -88,7 +88,7 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
   }
 
   return (
-    <View className='vi-aboutme-wrapper_setting'>
+    <View className='setting'>
       {!env && <Cell icon='guide-o' title='消息订阅' isLink onClick={atListItemClickHandle.bind(this, 6)}></Cell>}
       <Cell title='我的日历' icon='calendar-o' isLink onClick={atListItemClickHandle.bind(this, 1)}></Cell>
       <Cell title='电脑版' icon='tv-o' isLink onClick={atListItemClickHandle.bind(this, 3)}>

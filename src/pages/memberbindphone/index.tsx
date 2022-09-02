@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-10 21:12:05
+ * @LastEditTime: 2022-09-01 12:38:37
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
@@ -262,7 +262,7 @@ export default Unite(
           <Row>
             {isWechat && (
               <Col span='12'>
-                <TaroButton type='warn' openType='getPhoneNumber' onGetPhoneNumber={(e: any) => onGetPhoneNumber(e)}>
+                <TaroButton className='van-btn' type='warn' openType='getPhoneNumber' onGetPhoneNumber={(e: any) => onGetPhoneNumber(e)}>
                   获取本机号码
                 </TaroButton>
               </Col>

@@ -2,18 +2,18 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-31 17:45:39
+ * @LastEditTime: 2022-09-01 09:20:44
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmemberchoose\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Cell, CellGroup, CheckboxGroup, Unite, Checkbox, Empty, Loading } from '@antmjs/vantui'
+import { Cell, CellGroup, CheckboxGroup, Unite, Checkbox, Empty, Loading, Button } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Header from '@/components/header'
 import { ScrollView, View } from '@tarojs/components'
 import { GroupSelect } from './ui'
-import { IGroup } from 'types/group'
+import { IGroup, IGroupMember } from 'types/group'
 import { groupList } from '@/api/group'
 import { groupMemberList } from '@/api/groupmember'
 import './index.less'
@@ -41,20 +41,29 @@ export default Unite(
     },
 
     setAllCheckClick(allCheck: string[]) {
+      if (allCheck.length === 0) {
+        this.setState({
+          allCheck,
+          checkedIds: []
+        })
+        return
+      }
       this.setState({
-        allCheck
+        allCheck,
+        checkedIds: this.state.members.map((item) => item.memberId)
       })
     },
 
     setGroupClick(id: string) {
+      if (!!this.state.loading) return
       this.setState({
         loading: true
       })
       groupMemberList(id)
         .then((res) => {
-          debugger
           this.setState({
-            loading: true
+            loading: false,
+            members: res as any as IGroupMember[]
           })
         })
         .catch((err: any) => {
@@ -63,7 +72,7 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const { groups, allCheck, checkedIds, loading } = state
+    const { groups, allCheck, checkedIds, loading, members } = state
     const { setAllCheckClick, setGroupClick } = events
 
     return (
@@ -92,16 +101,40 @@ export default Unite(
           })}
         </ScrollView>
         <View className='divider'></View>
-        <CheckboxGroup value={allCheck} onChange={(e) => setAllCheckClick(e.detail)}>
-          <CellGroup>
-            <Cell title={`全选【${checkedIds.length}】人`}>
-              <Checkbox name='1' shape='square'></Checkbox>
-            </Cell>
-          </CellGroup>
-          <></>
-        </CheckboxGroup>
         <View className='list'>
-          {loading ? <Loading type='spinner'>加载中...</Loading> : checkedIds.length === 0 ? <Empty description='~空空如也~'></Empty> : <></>}
+          <CheckboxGroup value={allCheck} onChange={(e) => setAllCheckClick(e.detail)}>
+            <CellGroup>
+              <Cell title={`全选【${checkedIds.length}】人`} border={false}>
+                <Checkbox name='1' shape='square'></Checkbox>
+              </Cell>
+            </CellGroup>
+            <></>
+          </CheckboxGroup>
+          {loading ? (
+            <View className='loading-box'>
+              <Loading type='spinner'>加载中...</Loading>{' '}
+            </View>
+          ) : members.length === 0 ? (
+            <Empty description='~空空如也~'></Empty>
+          ) : (
+            <CheckboxGroup value={checkedIds}>
+              <CellGroup>
+                {members.map((item, index: number) => {
+                  return (
+                    <Cell key={index} title={item.name}>
+                      <Checkbox name={`${item.memberId}`} shape='square' />
+                    </Cell>
+                  )
+                })}
+              </CellGroup>
+              <></>
+            </CheckboxGroup>
+          )}
+        </View>
+        <View className='buttons'>
+          <Button type='info' block>
+            保存
+          </Button>
         </View>
       </Container>
     )

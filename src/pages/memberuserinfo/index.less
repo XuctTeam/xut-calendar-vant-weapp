@@ -6,44 +6,68 @@
   }
 
   .head {
+    width: 100%;
+    height: 200rpx;
+    position: relative;
+    z-index: -1;
     overflow: hidden;
     display: flex;
     flex-direction: row;
-    background: no-repeat url('https://images.xuct.net.cn/group1/M00/00/00/CgAQDGKEij2ATKyTAAIAU7l2Pcg600.png');
-    background-size: 100% 100%;
     align-items: center;
-    height: 300px;
     padding-left: 30px;
+    z-index: 99;
+  }
 
-    .top-info {
-      font-size: 26px;
-      padding-left: 30px;
+  .head::after {
+    content: '';
+    width: 140%;
+    height: 200rpx;
+    position: absolute;
+    z-index: -1;
+    left: -20%;
+    top: 0;
+    border-radius: 0 0 50% 50%;
+    background: #a4d1eb;
+  }
 
-      .top-info_need {
-        font-size: 30px;
-        font-weight: 600;
-        font-weight: bold;
-      }
+  .top-info {
+    font-size: 24px;
+    padding-left: 30px;
+    color: #fff;
+
+    .top-info_need {
+      font-size: 30px;
+      font-weight: 600;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  }
+
+  .top-refresh {
+    display: flex;
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    margin: 20px 0px 0px 20px;
+
+    .top-user {
+      font-size: 32px;
+      margin-right: 20px;
     }
 
-    .top-refresh {
+    .button {
+      width: 30px;
+      height: 54px;
       display: flex;
-      height: 60px;
-      flex-direction: row;
-      align-items: center;
-      margin: 20px 0px 0px 20px;
-
-      .top-user {
-        font-size: 32px;
-        margin-right: 20px;
-      }
-
-      .button {
-        width: 30px;
-        height: 54px;
-        display: flex;
-        box-sizing: border-box;
-      }
+      box-sizing: border-box;
     }
+  }
+
+  .setting {
+    box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
+    border-radius: @border-radius-lg;
+    padding: @padding-sm;
+    margin: 20px;
+    background: #fff;
   }
 }

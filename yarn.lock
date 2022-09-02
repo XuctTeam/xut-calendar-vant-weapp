@@ -13255,6 +13255,11 @@ taro-hooks@^1.5.9:
     lodash.uniq "^4.5.0"
     querystring "^0.2.1"
 
+tarojs-plugin-platform-miniprogram@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.npmmirror.com/tarojs-plugin-platform-miniprogram/-/tarojs-plugin-platform-miniprogram-0.1.1.tgz#690e0d075bec35b6c00343ac3a007b91fc77c562"
+  integrity sha512-+F24gSPRO9UQKOEthftUy7qAltltnSWnn8pc6gga20iydE62J2T3Ay4JUQ4d1qE9bLc0+EZvp7ldvV1jQIE9gg==
+
 tarojs-router-next-plugin@^2.8.1:
   version "2.8.1"
   resolved "https://registry.npmmirror.com/tarojs-router-next-plugin/-/tarojs-router-next-plugin-2.8.1.tgz"

@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback, ReactNode } from 'react'
 import { getCurrentInstance, navigateBack, reLaunch, getCurrentPages, useDidShow } from '@tarojs/taro'
 import { animated } from '@react-spring/web'
-import { PageMeta, View } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { Icon } from '@antmjs/vantui'
 import { useRecoilState } from 'recoil'
 import { menuButtonStore } from '@/store'
-import { setMenuButtonAsync, brower } from '@/utils'
+import { brower, setMenuButtonAsync } from '@/utils'
 import classnames from 'classnames'
 import './navigation.less'
 
@@ -120,7 +120,6 @@ interface INavBarProps {
   enablePullDownRefresh?: boolean
   pullDownRefreshStatus?: 'pulling' | 'refreshing' | 'complete' | 'canRelease'
   renderHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
-  h5Nav?: boolean
   springStyles: any
 }
 
@@ -161,16 +160,14 @@ function NavBar(props: INavBarProps) {
           )}
           {renderHeader?.(navHeight, statusBarHeight, paddingLeftRight)}
           {enablePullDownRefresh ? (
-            <View className='navigation_minibar_pulldown'>
-              <NView
-                className={'navigation_minibar_pulldown_bar'}
-                style={{
-                  ...springStyles
-                }}
-              >
-                {renderStatusText()}
-              </NView>
-            </View>
+            <NView
+              className={'navigation_minibar_pulldown'}
+              style={{
+                ...springStyles
+              }}
+            >
+              {renderStatusText()}
+            </NView>
           ) : (
             <></>
           )}
@@ -244,10 +241,10 @@ type IProps = {
   navTitle?: ReactNode
   navClassName?: string
   enablePullDownRefresh?: boolean
-  h5Nav?: boolean
-  tabbar?: boolean
   pullDownRefreshStatus?: 'pulling' | 'refreshing' | 'complete' | 'canRelease'
   renderHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
+  h5Nav?: boolean
+  tabbar?: boolean
   springStyles: any
 }
 

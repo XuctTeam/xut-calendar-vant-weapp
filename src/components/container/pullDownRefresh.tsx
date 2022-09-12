@@ -13,7 +13,7 @@ export type PullToRefreshProps = {
   canPull: boolean
   children: ReactNode
   threshold?: number
-  onRefresh: <T extends boolean>(catchRefresh?: T) => T extends true ? Promise<{ code: string; message: string; data: any }> : void
+  onRefresh: <T extends boolean>(catchRefresh?: T) => T extends true ? Promise<{ code: string; message: string; data?: any }> : void
   onReload?: () => Promise<any>
   setStatus: any
   status: any
@@ -34,17 +34,12 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
     api.start({ transform: `translateX(-50%) scale(1)`, opacity: 1 })
     setStatus('refreshing')
     try {
-      if (props.onReload && typeof props.onReload === 'function') {
-        await props.onReload()
-      }
-      if (!props.onReload) {
-        const res = await props.onRefresh(true)
-        if (res.code !== '200') {
-          showToast({
-            title: res.message,
-            icon: 'none'
-          })
-        }
+      const res = await props.onRefresh(true)
+      if (res.code !== '200') {
+        showToast({
+          title: res.message,
+          icon: 'none'
+        })
       }
       setStatus('complete')
     } catch {}

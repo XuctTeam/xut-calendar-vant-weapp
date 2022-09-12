@@ -49,6 +49,7 @@ const config = {
   },
   alias: {
     '@babel/runtime-corejs3/regenerator': npath.resolve(process.cwd(), './node_modules/regenerator-runtime'),
+    '@babel/runtime/regenerator': npath.resolve(process.cwd(), './node_modules/regenerator-runtime'),
     '@': npath.resolve(process.cwd(), 'src')
   },
   defineConstants: {

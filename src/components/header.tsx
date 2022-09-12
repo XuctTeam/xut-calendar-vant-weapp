@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 18:15:14
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-12 16:00:49
+ * @LastEditTime: 2022-09-11 13:39:31
  * @FilePath: \xut-calendar-vant-weapp\src\components\header.tsx
  * @Description:
  *
@@ -24,6 +24,7 @@ interface IPageOption {
 export default function Index(props: IPageOption): JSX.Element {
   const [back] = useBack()
   const _brower = brower()
+  debugger
 
   const routerToBack = () => {
     if (!props.to) props.to = 1

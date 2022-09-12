@@ -1,3 +1,12 @@
+/*
+ * @Author: Derek Xu
+ * @Date: 2022-08-08 21:51:08
+ * @LastEditors: Derek Xu
+ * @LastEditTime: 2022-09-09 20:19:07
+ * @FilePath: \xut-calendar-vant-weapp\config\webpack\h5Chain.js
+ * @Description:
+ * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
+ */
 /* eslint-disable import/no-commonjs, @typescript-eslint/no-var-requires */
 const npath = require('path')
 
@@ -20,11 +29,7 @@ module.exports = function (chain) {
       (filename) =>
         /webpack[\\/]buildin[\\/]global\.js/.test(filename) ||
         /css-loader/.test(filename) ||
-        (/node_modules/.test(filename) &&
-          !(
-            /(taro)|(react-spring)/.test(filename) &&
-            !/tarojs[\\/](runtime|shared|plugin-platform)/.test(filename)
-          )),
+        (/node_modules/.test(filename) && !(/(taro)|(react-spring)|(@antmjs)/.test(filename) && !/tarojs[\\/](runtime|shared|plugin-platform)/.test(filename)))
     )
 
   chain.module
@@ -40,9 +45,9 @@ module.exports = function (chain) {
             framework: 'react',
             ts: true,
             // 这里必须要用false即runtime和shared这两个包不能进行polyfill
-            useBuiltIns: false,
-          },
-        ],
-      ],
+            useBuiltIns: false
+          }
+        ]
+      ]
     })
 }

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-10 13:38:16
- * @LastEditTime: 2022-08-29 14:49:45
+ * @LastEditTime: 2022-09-14 19:34:14
  * @LastEditors: Derek Xu
  */
 export const colors = [
@@ -97,7 +97,7 @@ export const alarmTypes = [
 ]
 
 export const IndexList = (): string[] => {
-  const indexList = []
+  const indexList: string[] = []
   const charCodeOfA = 'A'.charCodeAt(0)
   for (let i = 0; i < 26; i++) {
     indexList.push(String.fromCharCode(charCodeOfA + i))

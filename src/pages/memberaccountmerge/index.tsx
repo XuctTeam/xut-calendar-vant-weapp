@@ -2,13 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-10 21:28:45
+ * @LastEditTime: 2022-09-15 09:38:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccountmerge\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Button, Checkbox, Unite } from '@antmjs/vantui'
+import Unite from '@antmjs/unite'
+import { Button, Checkbox } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import { useRecoilState, useSetRecoilState } from 'recoil'

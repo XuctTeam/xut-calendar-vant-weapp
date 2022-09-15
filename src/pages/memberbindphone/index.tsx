@@ -2,16 +2,17 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-01 12:38:37
+ * @LastEditTime: 2022-09-15 09:38:02
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import Unite from '@antmjs/unite'
 import { useEffect, useRef } from 'react'
 import Router from 'tarojs-router-next'
 import { useRecoilState } from 'recoil'
-import { Button, Cell, CellGroup, Col, Form, FormItem, Row, Unite } from '@antmjs/vantui'
+import { Button, Cell, CellGroup, Col, Form, FormItem, Row } from '@antmjs/vantui'
 import { Input, View, Button as TaroButton, ButtonProps } from '@tarojs/components'
 import { useLogin, useToast } from 'taro-hooks'
 import Container from '@/components/container'

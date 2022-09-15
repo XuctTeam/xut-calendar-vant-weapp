@@ -2,15 +2,16 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-07 11:51:01
+ * @LastEditTime: 2022-09-15 09:36:47
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import Unite from '@antmjs/unite'
 import Taro from '@tarojs/taro'
 import Header from '@/components/header'
-import { Button, Icon, Unite, Form } from '@antmjs/vantui'
+import { Button, Icon, Form } from '@antmjs/vantui'
 import { Swiper, SwiperItem, View } from '@tarojs/components'
 import Container from '@/components/container'
 import { useToast } from 'taro-hooks'

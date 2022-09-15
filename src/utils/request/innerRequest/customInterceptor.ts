@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-09-02 09:31:27
+ * @LastEditTime: 2022-09-15 09:40:52
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -23,14 +23,11 @@ const customInterceptor = (chain: Chain): Promise<any> => {
   const result = new Promise(function (resolve: (res: any) => void, reject) {
     p = chain.proceed(requestParams)
     p.then((res: Taro.request.SuccessCallbackResult<IRequestResponse>) => {
-      debugger
       if (!res) {
         reject()
         return
       }
-      debugger
     }).catch((error: any) => {
-      debugger
       Taro.showToast({
         icon: 'error',
         title: '请求异常',

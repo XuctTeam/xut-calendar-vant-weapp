@@ -2,14 +2,15 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-18 09:32:59
+ * @LastEditTime: 2022-09-15 09:34:05
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditalarm\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import Unite from '@antmjs/unite'
 import { View } from '@tarojs/components'
-import { Button, Cell, CellGroup, Checkbox, RadioGroup, Unite, Radio, CheckboxGroup } from '@antmjs/vantui'
+import { Button, Cell, CellGroup, Checkbox, RadioGroup, Radio, CheckboxGroup } from '@antmjs/vantui'
 import Container from '@/components/container'
 
 import Header from '@/components/header'

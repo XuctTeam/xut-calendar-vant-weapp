@@ -2,13 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-01 10:50:01
+ * @LastEditTime: 2022-09-15 09:40:48
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesedit\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Button, CellGroup, Form, FormItem, Switch, Toast, Unite, Uploader } from '@antmjs/vantui'
+import Unite from '@antmjs/unite'
+import { Button, CellGroup, Form, FormItem, Switch, Toast, Uploader } from '@antmjs/vantui'
 import { Input, ITouchEvent, View } from '@tarojs/components'
 import Container from '@/components/container'
 import Header from '@/components/header'
@@ -30,7 +31,6 @@ export default Unite(
 
     async onLoad() {
       const { id } = this.location.params
-      debugger
       if (!!id) {
         this._init(id || '')
       }

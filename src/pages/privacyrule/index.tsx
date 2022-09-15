@@ -2,13 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-01 14:55:06
+ * @LastEditTime: 2022-09-15 09:36:55
  * @FilePath: \xut-calendar-vant-weapp\src\pages\privacyrule\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Unite } from '@antmjs/vantui'
+import Unite from '@antmjs/unite'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
 import Header from '@/components/header'

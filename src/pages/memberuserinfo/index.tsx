@@ -2,13 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:26:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-06 21:40:13
+ * @LastEditTime: 2022-09-15 09:31:15
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberuserinfo\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Unite } from '@antmjs/vantui'
+import Unite from '@antmjs/unite'
 import { useReachBottom } from '@tarojs/taro'
 import { useRecoilValue } from 'recoil'
 import Container from '@/components/container'
@@ -22,7 +22,7 @@ import './index.less'
 export default Unite(
   {
     state: {},
-    async onLoad() {},
+    async onLoad() {}
   },
   function ({}) {
     const accessToken = cacheGetSync('accessToken')
@@ -30,28 +30,20 @@ export default Unite(
 
     useReachBottom(() => {})
     return (
-      <Container
-        navTitle="个人信息"
-        enablePagePullDownRefresh={false}
-        className="pages-member-info-index"
-      >
+      <Container navTitle='个人信息' enablePagePullDownRefresh={false} className='pages-member-info-index'>
         <User
           hasLogin={!!accessToken}
           nickname={userInfo ? userInfo.name : ''}
-          avatar={
-            userInfo && userInfo.avatar
-              ? userInfo.avatar
-              : Images.DEFAULT_AVATAR
-          }
+          avatar={userInfo && userInfo.avatar ? userInfo.avatar : Images.DEFAULT_AVATAR}
         ></User>
         <Menu accessToken={accessToken || ''}></Menu>
       </Container>
     )
   },
-  { page: true },
+  { page: true }
 )
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: '',
+  navigationBarTitleText: ''
 })

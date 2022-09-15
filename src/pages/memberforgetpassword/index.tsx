@@ -2,13 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-06 15:11:37
+ * @LastEditTime: 2022-09-15 09:39:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberforgetpassword\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Steps, Unite } from '@antmjs/vantui'
+import Unite from '@antmjs/unite'
+import { Steps } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Header from '@/components/header'
 import { Auth, Password } from './ui'

@@ -2,20 +2,20 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-01 09:45:54
+ * @LastEditTime: 2022-09-15 09:40:56
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Unite } from '@antmjs/vantui'
+import Unite from '@antmjs/unite'
 import { useRef } from 'react'
 import Router from 'tarojs-router-next'
 import { View, Navigator, ITouchEvent } from '@tarojs/components'
 import { Button, Checkbox, Icon, Image, CellGroup, Field } from '@antmjs/vantui'
 import dayjs from 'dayjs'
 import { useSetRecoilState } from 'recoil'
-import { useEnv, useLogin, useUserInfo, useToast } from 'taro-hooks'
+import { useLogin, useUserInfo, useToast } from 'taro-hooks'
 import { back } from '@/utils/taro'
 import { IUserInfo as IMemberInfo } from 'taro-hooks/dist/useUserInfo'
 import { cacheSetSync, cacheRemoveSync } from '@/cache'
@@ -63,7 +63,6 @@ export default Unite(
     _init() {
       this.hooks['login'](true)
         .then((code: any) => {
-          debugger
           this.setState({
             icode: { code: code, ts: dayjs().valueOf() }
           })

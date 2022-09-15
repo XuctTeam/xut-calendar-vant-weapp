@@ -2,15 +2,16 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-10 21:18:45
+ * @LastEditTime: 2022-09-15 09:39:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindemail\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import Unite from '@antmjs/unite'
 import { useRecoilState } from 'recoil'
 import { useEffect, useRef } from 'react'
-import { Button, CellGroup, Col, Form, FormItem, Row, Unite } from '@antmjs/vantui'
+import { Button, CellGroup, Col, Form, FormItem, Row } from '@antmjs/vantui'
 import { Input, View } from '@tarojs/components'
 import Header from '@/components/header'
 import { useToast } from 'taro-hooks'

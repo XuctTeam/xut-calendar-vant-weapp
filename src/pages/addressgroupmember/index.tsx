@@ -2,14 +2,15 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-16 22:46:11
+ * @LastEditTime: 2022-09-15 09:33:01
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupmember\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { Cell, IndexAnchor, IndexBar, Unite } from '@antmjs/vantui'
-import { Block, View } from '@tarojs/components'
+import Unite from '@antmjs/unite'
+import { IndexAnchor, IndexBar } from '@antmjs/vantui'
+import { Block } from '@tarojs/components'
 import Container from '@/components/container'
 import Header from '@/components/header'
 import { groupMemberPinYinList } from '@/api/groupmember'

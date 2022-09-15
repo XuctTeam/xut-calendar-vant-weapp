@@ -1,6 +1,13 @@
-/* eslint-disable import/no-commonjs */
-// babel-preset-taro 更多选项和默认值：
-// https://github.com/NervJS/taro/blob/next/packages/babel-preset-taro/README.md
+/*
+ * @Author: Derek Xu
+ * @Date: 2022-08-09 19:10:39
+ * @LastEditors: Derek Xu
+ * @LastEditTime: 2022-09-15 09:08:37
+ * @FilePath: \xut-calendar-vant-weapp\babel.config.js
+ * @Description:
+ *
+ * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
+ */
 module.exports = {
   presets: [
     [
@@ -8,9 +15,9 @@ module.exports = {
       {
         framework: 'react',
         ts: true,
-        useBuiltIns: 'usage',
-      },
-    ],
+        useBuiltIns: 'usage'
+      }
+    ]
   ],
   plugins: [
     ['lodash'],
@@ -18,10 +25,9 @@ module.exports = {
       'import',
       {
         libraryName: '@antmjs/vantui',
-        libraryDirectory: 'es',
-        style: (name) => `${name}/style/less`,
+        libraryDirectory: 'es'
       },
-      '@antmjs/vantui',
-    ],
-  ],
+      '@antmjs/vantui'
+    ]
+  ]
 }

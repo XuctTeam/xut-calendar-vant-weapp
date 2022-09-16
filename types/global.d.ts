@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 15:06:23
+ * @LastEditTime: 2022-09-16 15:51:53
  * @FilePath: \xut-calendar-vant-weapp\types\global.d.ts
  * @Description:
  *
@@ -34,7 +34,8 @@ declare namespace NodeJS {
     API_ENV: 'stable' | 'real' | 'pre' | 'dev'
     WATCHING: 'true' | 'false'
     DEPLOY_VERSION: string
-    CLIENT: any
+    APP_CLIENT: string
+    WX_CLIENT: string
     TEMPLATE_ID: any
   }
 }

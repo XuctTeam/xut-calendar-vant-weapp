@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-03 09:31:21
- * @LastEditTime: 2022-08-09 08:55:40
+ * @LastEditTime: 2022-09-16 15:30:16
  * @LastEditors: Derek Xu
  */
 import http from '@/utils/request/innerRequest'
@@ -15,20 +15,16 @@ import http from '@/utils/request/innerRequest'
  * @return {*}
  * @author: Derek Xu
  */
-export const wechatLogin = (
-  code: string,
-  iv: string,
-  encryptedData: string,
-): Promise<any> => {
+export const wechatLogin = (code: string, iv: string, encryptedData: string): Promise<any> => {
   return http.post(
     '/uaa/oauth/token',
     {
       grant_type: 'wechat',
       code,
       iv,
-      encryptedData,
+      encryptedData
     },
-    'application/x-www-form-urlencoded; charset=UTF-8',
+    'application/x-www-form-urlencoded; charset=UTF-8'
   )
 }
 
@@ -45,9 +41,9 @@ export const phoneLogin = (phone: string, code: string): Promise<any> => {
     {
       grant_type: 'phone',
       mobile: phone,
-      code,
+      code
     },
-    'application/x-www-form-urlencoded; charset=UTF-8',
+    'application/x-www-form-urlencoded; charset=UTF-8'
   )
 }
 
@@ -58,19 +54,8 @@ export const phoneLogin = (phone: string, code: string): Promise<any> => {
  * @return {*}
  * @author: Derek Xu
  */
-export const usernameLogin = (
-  username: string,
-  password: string,
-): Promise<any> => {
-  return http.post(
-    '/uaa/oauth/token',
-    {
-      grant_type: 'password',
-      username,
-      password,
-    },
-    'application/x-www-form-urlencoded; charset=UTF-8',
-  )
+export const usernameLogin = (username: string, password: string): Promise<any> => {
+  return http.post(`/uaa/oauth2/token?grant_type=app&scope=server&username=${username}&password=${password}&loginType=password`, {})
 }
 
 /**
@@ -84,8 +69,8 @@ export const tokenRefresh = (refresh_token: string): Promise<any> => {
     '/uaa/oauth/token',
     {
       grant_type: 'refresh_token',
-      refresh_token,
+      refresh_token
     },
-    'application/x-www-form-urlencoded; charset=UTF-8',
+    'application/x-www-form-urlencoded; charset=UTF-8'
   )
 }

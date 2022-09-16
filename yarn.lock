@@ -120,10 +120,10 @@
   resolved "https://registry.npmmirror.com/@antmjs/utils/-/utils-2.0.7.tgz#3f527defa76d203fd7b009b5d8dd9a540a493c6d"
   integrity sha512-A+HjaTm0GvfOUdEBXD4cuDFj2SNckky652XGvNu0xLNwVbnjKQBEMgkJpUNdcD03iNDEuDg8eF9aBSccHrNhbQ==
 
-"@antmjs/vantui@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.npmmirror.com/@antmjs/vantui/-/vantui-2.0.2.tgz#ee0a26397064d0e1ca73d3631f293b7c48da89e6"
-  integrity sha512-PslLP/ZItNelAz45TUaPMDBmsA4igWMDgE4CbMjXNWOY66POFto6pqy8ncpQY/WChZIkJ50RuQyDhP4VKlRDHg==
+"@antmjs/vantui@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.npmmirror.com/@antmjs/vantui/-/vantui-2.1.0.tgz#765fae7a49d349bf5da098689598b8cffe7ef00b"
+  integrity sha512-O95L3ioKjla+uXjTiSi9k5mime8bBWFhKQzbbEC4UkoMvYHEExexI7QViSEL2OS3Cn2kP4uBrxUz4n8djxjSmA==
   dependencies:
     "@vant/icons" "^1.7.1"
     classnames "^2.3.1"

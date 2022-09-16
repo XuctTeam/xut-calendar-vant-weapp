@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:35:06
+ * @LastEditTime: 2022-09-16 17:15:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
@@ -21,8 +21,8 @@ import Router from 'tarojs-router-next'
 import { MemberBody } from './ui'
 import { useToast } from 'taro-hooks'
 import { queryByIds } from '@/api/groupmember'
-import './index.less'
 import { IGroupMember } from 'types/group'
+import './index.less'
 
 export default Unite(
   {
@@ -175,13 +175,17 @@ export default Unite(
           <Search
             placeholder='请输入用户'
             renderAction={
-              <View
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onChooseMember()
-                }}
-              >
-                按组查询
+              <View>
+                <Button
+                  size='small'
+                  type='warning'
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onChooseMember()
+                  }}
+                >
+                  分组选择
+                </Button>
               </View>
             }
             onSearch={(e) => onSearch(e.detail)}

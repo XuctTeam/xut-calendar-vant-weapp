@@ -13,21 +13,13 @@ function getVersion() {
   return `${date.getFullYear() - 2010}.${date.getMonth()}${fillZero(date.getDay())}.${date.getHours()}${fillZero(date.getMinutes())}`
 }
 
-function getClient() {
-  return {
-    CLIENT_ID: 'app_id',
-    CLIENT_SECURITY: 'Wechat!@#Auth~!@'
-  }
-}
-
 function getWxTemplate() {
   return { IDS: ['m3tIRN2yvI2mdFuGHV9mXS0uIHf9oz-u6U51HRHTcLQ'] }
 }
-const client = getClient()
 const template = getWxTemplate()
-
 const version = getVersion()
-console.log(version)
+const app_client = 'YXBwOmFwcA=='
+const wx_client = 'd3g6d3g='
 
 const config = {
   projectName: pkg.name,
@@ -44,8 +36,9 @@ const config = {
     API_ENV: JSON.stringify(process.env.API_ENV),
     WATCHING: JSON.stringify(process.env.WATCHING || 'false'),
     DEPLOY_VERSION: JSON.stringify(version),
-    CLIENT: JSON.stringify(client),
-    TEMPLATE_ID: JSON.stringify(template)
+    TEMPLATE_ID: JSON.stringify(template),
+    APP_CLIENT: JSON.stringify(app_client),
+    WX_CLIENT: JSON.stringify(wx_client)
   },
   alias: {
     '@babel/runtime-corejs3/regenerator': npath.resolve(process.cwd(), './node_modules/regenerator-runtime'),
@@ -160,7 +153,8 @@ const config = {
       historyApiFallback: true,
       headers: {
         'Access-Control-Allow-Origin': '*' // 表示允许跨域
-      }
+      },
+      static: './static'
     },
     postcss: {
       autoprefixer: {

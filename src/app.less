@@ -1,28 +1,29 @@
 /* stylelint-disable selector-type-no-unknown, selector-max-type */
 @import '@antmjs/vantui/lib/index.less';
 @import './iconfont.less';
-page,
-body {
-  background: @gray-9;
-}
 
 page {
+  background: @pageBack;
+  font-size: 28px;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-view {
-  //font-size: 28px;
+view,
+div {
   box-sizing: border-box;
 }
-// .antmjs-vantui-unite {
-//   height: 100vh;
-//   overflow-y: scroll;
-// }
+
 ::-webkit-scrollbar {
   display: none;
+}
+
+body,
+html {
+  // NOTE: taro h5 ios上拉遮挡底部fixed元素
+  overflow: hidden !important;
 }
 
 .van-sms-cell {
@@ -90,4 +91,18 @@ view {
     width: 100%;
     height: 100%;
   }
+}
+
+.van-nav-bar {
+  //background-color: #a4d1eb;
+  background-color: @navBack;
+}
+
+.van-nav-bar__text,
+.van-nav-bar__title {
+  color: #fff;
+}
+
+.van-nav-bar__arrow {
+  color: #fff !important;
 }

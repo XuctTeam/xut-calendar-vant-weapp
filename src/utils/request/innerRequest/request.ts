@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-15 14:52:03
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-09 09:02:45
+ * @LastEditTime: 2022-09-16 15:57:24
  * @FilePath: \xut-calendar-vant-weapp\src\utils\request\innerRequest\request.ts
  * @Description:
  *
@@ -11,7 +11,6 @@
 import Taro from '@tarojs/taro'
 import { cacheGetSync } from '@/cache'
 import interceptors from './customInterceptor'
-import { base64 } from '@/utils'
 
 interceptors.forEach((interceptorItem) => Taro.addInterceptor(interceptorItem))
 
@@ -30,10 +29,10 @@ export default class httpRequest<T> {
     }
     if (!(url.includes('/uaa/sms') || url.includes('/uaa/captcha') || url.includes('/register'))) {
       /* 非登录接口都要通过token请求 */
-      if (!url.includes('/oauth/token')) {
+      if (!url.includes('/oauth2/token')) {
         header['Authorization'] = cacheGetSync('accessToken')
       } else {
-        header['Authorization'] = this._clientAuth()
+        header['Authorization'] = 'Basic ' + (process.env.TARO_ENV === 'h5' ? process.env.APP_CLIENT : process.env.WX_CLIENT)
       }
     }
     if (options.header) delete options.header
@@ -67,9 +66,5 @@ export default class httpRequest<T> {
 
   exchage(url: string, opt: RequestOpts): Taro.RequestTask<T> {
     return this.baseOptions(url, opt)
-  }
-
-  _clientAuth = () => {
-    return 'Basic ' + base64(process.env.CLIENT.CLIENT_ID + ':' + process.env.CLIENT.CLIENT_SECURITY)
   }
 }

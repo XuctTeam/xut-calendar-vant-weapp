@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-09-15 09:40:52
+ * @LastEditTime: 2022-09-16 17:10:22
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -13,8 +13,8 @@ import refreshSubscribers from './refreshSubscribers'
 import { IRequestResponse } from '../constants'
 import { cacheGetSync } from '@/cache'
 
-const OAUTHTOKEN_URL: string = '/oauth/token'
-const codeKeys = codeMessage as { [key: string]: any }
+const OAUTHTOKEN_URL: string = '/oauth2/token'
+const codeKeys = codeMessage as { [key: number]: any }
 
 const customInterceptor = (chain: Chain): Promise<any> => {
   const requestParams = chain.requestParams
@@ -27,10 +27,40 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         reject()
         return
       }
+      const { statusCode } = res
+      if (statusCode === HTTP_STATUS.NOT_FOUND || statusCode === HTTP_STATUS.BAD_GATEWAY || statusCode === HTTP_STATUS.CLIENT_ERROR) {
+        return Promise.reject({
+          status: res.statusCode,
+          statusText: codeMessage[res.statusCode]
+        })
+      }
+
+      if (res.statusCode === HTTP_STATUS.SUCCESS) {
+        if (url.includes(OAUTHTOKEN_URL)) {
+          return resolve(res.data)
+        }
+        if (res.data.code !== 200) {
+          return Promise.reject({
+            status: res.statusCode,
+            statusText: res.data.message || codeKeys[res.data.code]
+          })
+        }
+        return resolve(res.data.data)
+      }
+      return Promise.reject({
+        status: res.statusCode,
+        code: res.data.code,
+        statusText: res.data.message || codeKeys[res.data.code]
+      })
     }).catch((error: any) => {
+      const { status } = error
+      let msg = '请求异常'
+      if (HTTP_STATUS.AUTHENTICATE === status || HTTP_STATUS.SERVICE_UNAVAILABLE === status) {
+        msg = codeKeys[status]
+      }
       Taro.showToast({
         icon: 'error',
-        title: '请求异常',
+        title: msg,
         duration: 1500
       })
       return reject(error)

@@ -4,13 +4,13 @@
  * @Autor: Derek Xu
  * @Date: 2021-12-02 22:46:09
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-01 16:18:31
+ * @LastEditTime: 2022-09-16 17:51:38
  */
 import { ITouchEvent, View } from '@tarojs/components'
 import { IDavCalendar } from '~/../types/calendar'
 import { useEffect, useState } from 'react'
 import Router from 'tarojs-router-next'
-import { Button, Cell, Checkbox, CheckboxGroup, Empty, Popup } from '@antmjs/vantui'
+import { Button, Cell, CellGroup, Checkbox, CheckboxGroup, Popup } from '@antmjs/vantui'
 
 interface IPageOption {
   calendars: Array<IDavCalendar>
@@ -39,18 +39,19 @@ const CalendarPop: React.FC<IPageOption> = (props) => {
     <Popup
       className='pages-index-calendar_popup'
       show={props.open}
-      position='top'
+      position='left'
       safeAreaInsetTop
-      style={{ height: '60%' }}
+      style={{ height: '100%', width: '80%' }}
       zIndex={999}
       onClose={props.closePopup}
       overlay
     >
-      <View className='title'>我的日历</View>
-      <View className='content'>
-        {!props.hasLogin || showCalendars.length === 0 ? (
-          <Empty description='~空空如也~' />
-        ) : (
+      <View className='box'>
+        <CellGroup title='我' className='li'>
+          <View>123123</View>
+          <View>234234</View>
+        </CellGroup>
+        <CellGroup title='日历' className='li'>
           <CheckboxGroup onChange={(e: ITouchEvent) => checkGroupChange(e.detail)} value={checkValues}>
             {showCalendars.map((item) => {
               return (
@@ -60,21 +61,22 @@ const CalendarPop: React.FC<IPageOption> = (props) => {
               )
             })}
           </CheckboxGroup>
-        )}
-      </View>
-      <View className='button'>
-        {props.hasLogin && (
-          <Button
-            type='primary'
-            block
-            onClick={() => {
-              props.closePopup()
-              Router.toCalendaredit()
-            }}
-          >
-            新增日历
-          </Button>
-        )}
+        </CellGroup>
+
+        <View className='button'>
+          {props.hasLogin && (
+            <Button
+              type='primary'
+              block
+              onClick={() => {
+                props.closePopup()
+                Router.toCalendaredit()
+              }}
+            >
+              新增日历
+            </Button>
+          )}
+        </View>
       </View>
     </Popup>
   )

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:35:20
+ * @LastEditTime: 2022-09-16 18:00:22
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -286,49 +286,51 @@ export default Unite(
           return <Header title='日程管理' left={false} to={1}></Header>
         }}
       >
-        <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
-          <CollapseItem
-            name='1'
-            renderTitle={
-              <View className='calendar-title'>
-                <Icon
-                  classPrefix='page-icon'
-                  name='rili'
-                  size={50}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    e.preventDefault()
-                    calendarPopOpen()
-                  }}
-                ></Icon>
-                <View className='label'>{selectedDay}</View>
-              </View>
-            }
-          >
-            <Calendar
-              ref={calRef}
-              currentDay={dayjs(selectedDay).format('YYYY/MM/DD')}
-              marks={marks}
-              isLunar={!!lunar}
-              isMonfirst={!!monday}
-              selectMonthChage={selectMonthChage}
-              selectDayLongClick={selectDayLongClick}
-              selectDayClick={selectDayClickHadnle}
-            ></Calendar>
-          </CollapseItem>
-        </Collapse>
+        <View className='box'>
+          <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
+            <CollapseItem
+              name='1'
+              renderTitle={
+                <View className='calendar-title'>
+                  <Icon
+                    classPrefix='page-icon'
+                    name='rili'
+                    size={50}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      e.preventDefault()
+                      calendarPopOpen()
+                    }}
+                  ></Icon>
+                  <View className='label'>{selectedDay}</View>
+                </View>
+              }
+            >
+              <Calendar
+                ref={calRef}
+                currentDay={dayjs(selectedDay).format('YYYY/MM/DD')}
+                marks={marks}
+                isLunar={!!lunar}
+                isMonfirst={!!monday}
+                selectMonthChage={selectMonthChage}
+                selectDayLongClick={selectDayLongClick}
+                selectDayClick={selectDayClickHadnle}
+              ></Calendar>
+            </CollapseItem>
+          </Collapse>
 
-        <EventList
-          loading={false}
-          accessToken={accessToken || ''}
-          wxBrower={false}
-          today={day.current}
-          view={view && view + '' === '1' ? 1 : 0}
-          selectedDay={selectedDay}
-          calendars={calendars || []}
-          calendarComponents={calendarComponents}
-          viewComponent={viewComponent}
-        ></EventList>
+          <EventList
+            loading={false}
+            accessToken={accessToken || ''}
+            wxBrower={false}
+            today={day.current}
+            view={view && view + '' === '1' ? 1 : 0}
+            selectedDay={selectedDay}
+            calendars={calendars || []}
+            calendarComponents={calendarComponents}
+            viewComponent={viewComponent}
+          ></EventList>
+        </View>
 
         <CalendarPop
           hasLogin={!!accessToken}

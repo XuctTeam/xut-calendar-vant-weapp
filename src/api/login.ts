@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-03 09:31:21
- * @LastEditTime: 2022-09-16 15:30:16
+ * @LastEditTime: 2022-09-18 16:13:46
  * @LastEditors: Derek Xu
  */
 import http from '@/utils/request/innerRequest'
@@ -66,7 +66,7 @@ export const usernameLogin = (username: string, password: string): Promise<any> 
  */
 export const tokenRefresh = (refresh_token: string): Promise<any> => {
   return http.post(
-    '/uaa/oauth/token',
+    '/uaa/oauth2/token',
     {
       grant_type: 'refresh_token',
       refresh_token

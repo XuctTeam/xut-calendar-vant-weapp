@@ -2,15 +2,15 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-12 12:49:07
- * @LastEditTime: 2022-08-26 18:49:02
+ * @LastEditTime: 2022-09-18 16:10:49
  * @LastEditors: Derek Xu
  */
+import Taro from '@tarojs/taro'
 import { tokenRefresh } from '@/api/login'
 import dayjs from 'dayjs'
 import httpRequest from './index'
 import { pageCleanToLogin } from '../../taro'
-import { cacheSetSync, cacheGetSync, cacheRemoveSync } from '@/cache'
-import Taro from '@tarojs/taro'
+import { cacheSetSync, cacheGetSync } from '@/cache'
 
 interface ITask<T> {
   url: string
@@ -19,7 +19,7 @@ interface ITask<T> {
   reject: (value: unknown) => void
 }
 
-class RefreshSubscribers {
+class Refresh {
   private _refresh: number = 0
   private _isRefreshing: boolean = false
   private _refreshSubscribers: Array<any> = []
@@ -74,7 +74,7 @@ class RefreshSubscribers {
     console.log('taro util:: refresh token success , refreshToken  = ' + reToken)
     this._refresh = dayjs().unix()
     setTimeout(() => {
-      this.onRrefreshed()
+      this.onRefresh()
     }, 200)
     return true
   }
@@ -82,7 +82,7 @@ class RefreshSubscribers {
   /**
    * @description 刷新成功后回调
    */
-  onRrefreshed() {
+  onRefresh() {
     if (this._refreshSubscribers.length > 0) {
       this._refreshSubscribers.forEach((task) => {
         task.resolve(httpRequest.exchage(task.url, task.opt))
@@ -121,4 +121,4 @@ class RefreshSubscribers {
   }
 }
 
-export default new RefreshSubscribers()
+export default new Refresh()

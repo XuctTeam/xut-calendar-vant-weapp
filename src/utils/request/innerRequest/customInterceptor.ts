@@ -2,15 +2,16 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-09-16 17:10:22
+ * @LastEditTime: 2022-09-18 16:12:40
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
 import dayjs from 'dayjs'
 import { HTTP_STATUS } from './statusCode'
 import codeMessage from './codeMessage'
-import refreshSubscribers from './refreshSubscribers'
+import refresh from './refresh'
 import { IRequestResponse } from '../constants'
+import { pageCleanToLogin } from '../../taro'
 import { cacheGetSync } from '@/cache'
 
 const OAUTHTOKEN_URL: string = '/oauth2/token'
@@ -54,16 +55,42 @@ const customInterceptor = (chain: Chain): Promise<any> => {
       })
     }).catch((error: any) => {
       const { status } = error
-      let msg = '请求异常'
-      if (HTTP_STATUS.AUTHENTICATE === status || HTTP_STATUS.SERVICE_UNAVAILABLE === status) {
-        msg = codeKeys[status]
+      //不是刷新token异常
+      if (HTTP_STATUS.FAILED_DEPENDENCY !== status) {
+        let msg = '请求异常'
+        if (HTTP_STATUS.AUTHENTICATE === status || HTTP_STATUS.SERVICE_UNAVAILABLE === status) {
+          msg = codeKeys[status]
+        }
+        Taro.showToast({
+          icon: 'error',
+          title: msg,
+          duration: 1500
+        })
+        return reject(error)
       }
-      Taro.showToast({
-        icon: 'error',
-        title: msg,
-        duration: 1500
+      if (url.indexOf(OAUTHTOKEN_URL) > -1) {
+        refresh.cleanTask()
+        pageCleanToLogin()
+        return reject('refresh token error')
+      }
+      if (!refresh.isRefreshing) {
+        refresh.isRefreshing = true
+        refresh.pageRefreshToken()
+      }
+      return new Promise((rev, rej) => {
+        refresh.pushTask({
+          resolve: rev,
+          reject: rej,
+          url: url,
+          opt: requestParams
+        })
       })
-      return reject(error)
+        .then((rs: any) => {
+          resolve(rs)
+        })
+        .catch((err) => {
+          reject(err)
+        })
     })
   })
   return result

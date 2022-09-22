@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:34:57
+ * @LastEditTime: 2022-09-22 17:55:16
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmemberchoose\index.tsx
  * @Description:
  *
@@ -18,6 +18,7 @@ import { IGroup, IGroupMember } from 'types/group'
 import { groupList } from '@/api/group'
 import { groupMemberList } from '@/api/groupmember'
 import './index.less'
+import { useBack } from '@/utils/taro'
 
 export default Unite(
   {
@@ -33,7 +34,7 @@ export default Unite(
       groupList()
         .then((res) => {
           this.setState({
-            groups: res as any as IGroup[]
+            groups: (res as any as IGroup[]).filter((item) => item.count !== 1)
           })
         })
         .catch((err) => {
@@ -70,11 +71,40 @@ export default Unite(
         .catch((err: any) => {
           console.log(err)
         })
+    },
+
+    setCheckSelected(values: string[]) {
+      this.setState({
+        checkedIds: values
+      })
+      this.setState({
+        allCheck: values.length === this.state.members.length ? ['1'] : []
+      })
+    },
+
+    saveSelectMember() {
+      if (this.state.checkedIds.length === 0) {
+        this.hooks['back']()
+        return
+      }
+      const checkMembers = this.state.members.filter((item) => this.state.checkedIds.includes(item.memberId + ''))
+      this.hooks['back']({
+        data: {
+          members: checkMembers
+        }
+      })
     }
   },
   function ({ state, events }) {
     const { groups, allCheck, checkedIds, loading, members } = state
-    const { setAllCheckClick, setGroupClick } = events
+    const { setAllCheckClick, setGroupClick, setCheckSelected, saveSelectMember } = events
+    const [back] = useBack({
+      to: 1
+    })
+
+    events.setHooks({
+      back: back
+    })
 
     return (
       <Container
@@ -113,12 +143,12 @@ export default Unite(
           </CheckboxGroup>
           {loading ? (
             <View className='loading-box'>
-              <Loading type='spinner'>加载中...</Loading>{' '}
+              <Loading type='spinner'>加载中...</Loading>
             </View>
           ) : members.length === 0 ? (
             <Empty description='~空空如也~'></Empty>
           ) : (
-            <CheckboxGroup value={checkedIds}>
+            <CheckboxGroup value={checkedIds} onChange={(e) => setCheckSelected(e.detail)}>
               <CellGroup>
                 {members.map((item, index: number) => {
                   return (
@@ -133,7 +163,7 @@ export default Unite(
           )}
         </View>
         <View className='buttons'>
-          <Button type='info' block>
+          <Button type='info' block onClick={saveSelectMember}>
             保存
           </Button>
         </View>

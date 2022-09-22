@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-16 18:00:22
+ * @LastEditTime: 2022-09-22 17:07:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -12,7 +12,7 @@ import Unite from '@antmjs/unite'
 import React, { useRef } from 'react'
 import { Button, Icon } from '@antmjs/vantui'
 import Container from '@/components/container'
-import { PageMeta, View } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { useWebEnv } from '@/hooks'
 import Router from 'tarojs-router-next'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -21,12 +21,13 @@ import Header from '@/components/header'
 import dayjs from 'dayjs'
 import { getToday } from '@/utils'
 import { ICurrentDay } from '~/../types/date'
-import { calendarStore, componentRefreshTimeStore, lunarStore, mondayStore, compViewStore } from '@/store'
+import { calendarStore, componentRefreshTimeStore, lunarStore, mondayStore, compViewStore, userInfoStore, userAuthInfoStore } from '@/store'
 import { cacheGetSync } from '@/cache'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
-import { Calendar, CalendarPop, EventList } from './ui'
+import { Calendar, UserInfo, EventList } from './ui'
 import { componentsDaysById } from '@/api/component'
+import Images from '@/constants/images'
 
 import './index.less'
 
@@ -256,6 +257,8 @@ export default Unite(
     } = events
     const env = useWebEnv()
     const [calendars, setCalendars] = useRecoilState(calendarStore)
+    const userInfoState = useRecoilValue(userInfoStore)
+    const userAuths = useRecoilValue(userAuthInfoStore)
     const lunar = useRecoilValue(lunarStore)
     const monday = useRecoilValue(mondayStore)
     const view = useRecoilValue(compViewStore)
@@ -263,6 +266,17 @@ export default Unite(
     const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(componentRefreshTimeStore)
     const calRef = React.createRef()
     const refrestTimeRef = useRef<number>(0)
+    const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
+    const phoneAuth =
+      userAuths && userAuths.length > 0
+        ? userAuths.find((i) => i.identityType === 'phone')
+        : {
+            memberId: (userInfoState && userInfoState.id) || '',
+            username: '',
+            nickName: '',
+            avatar: '',
+            identityType: 'phone'
+          }
 
     events.setHooks({
       calRef: calRef,
@@ -332,13 +346,16 @@ export default Unite(
           ></EventList>
         </View>
 
-        <CalendarPop
+        <UserInfo
           hasLogin={!!accessToken}
           open={popOpen}
           calendars={calendars && calendars instanceof Array ? calendars : []}
           closePopup={calendarPopClose}
           selected={calendarSelected}
-        ></CalendarPop>
+          avatar={avatar}
+          name={name}
+          phone={phoneAuth?.username}
+        ></UserInfo>
 
         {selectedDay !== day.current && (
           <View className='pages-index_today-icon' style={{ bottom: env ? '80px' : '10px' }} onClick={currentClickHandle}>

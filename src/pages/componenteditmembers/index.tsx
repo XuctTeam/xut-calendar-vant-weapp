@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-16 17:15:38
+ * @LastEditTime: 2022-09-22 17:52:09
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
@@ -136,8 +136,11 @@ export default Unite(
       try {
         const result = await Router.toComponenteditmemberchoose()
         if (!result) return
-        const { memberIds } = result
-        if (!memberIds) return
+        const { members } = result
+        if (!members) return
+        this.setState({
+          list: [...this.state.list, ...members]
+        })
       } catch (err) {
         console.log(err)
       }
@@ -210,8 +213,8 @@ export default Unite(
                     return (
                       <Cell key={index}>
                         <View className='member'>
-                          {item}
-                          <Checkbox name={`${item}`} shape='square' />
+                          {item.name}
+                          <Checkbox name={`${item.memberId}`} shape='square' />
                         </View>
                       </Cell>
                     )

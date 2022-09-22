@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-10 19:52:50
- * @LastEditTime: 2022-09-02 09:23:12
+ * @LastEditTime: 2022-09-22 14:40:48
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
@@ -21,7 +21,7 @@ export const sendSmsCode = (phone: String): Promise<any> => {
  * @returns
  */
 export const logout = (): Promise<any> => {
-  return httpRequest.delete('/uaa/oauth/logout')
+  return httpRequest.delete('/uaa/token/logout')
 }
 
 /**

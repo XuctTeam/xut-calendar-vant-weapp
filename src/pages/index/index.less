@@ -47,9 +47,14 @@
 
   /* 日历弹出样式 */
   .pages-index-calendar_popup {
-    display: flex;
-    flex-direction: column;
     background-color: @pageBack;
+
+    .pop-box {
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
 
     .van-cell {
       background: #fff;
@@ -60,35 +65,54 @@
       justify-content: flex-end;
     }
 
-    .box {
-      padding: 100px 10px 10px 10px;
-      box-sizing: border-box;
-    }
-
     .li {
-      padding: 20px;
-      width: 100%;
       box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
       border-radius: @border-radius-lg;
       padding: @padding-sm;
       display: inline-block;
+      margin: 10px;
+      box-sizing: border-box;
+      background: #fff;
     }
 
     .title {
-      width: 100%;
-      text-align: center;
-      font-size: 32px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      font-size: 28px;
+      align-items: center;
       color: grey;
-      border-bottom: 10px solid rgb(242, 242, 242);
+      padding: 2px 30px;
     }
 
-    .content {
-      flex: 1;
-      overflow-y: auto;
+    .user-info {
+      padding: 80px 30px 20px 30px;
+      height: 200px;
+      display: flex;
+      flex-direction: row;
+
+      .name {
+        display: flex;
+        flex-direction: column;
+        padding-left: 20px;
+        color: #999;
+        font-size: 28px;
+      }
     }
 
-    .button {
-      padding: 30px;
+    .logo {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .notice {
+        display: flex;
+        flex-direction: column;
+        padding-left: 20px;
+        color: #000;
+        font-weight: bold;
+        font-size: 26px;
+      }
     }
   }
 

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:33:51
+ * @LastEditTime: 2022-09-23 15:49:04
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -14,14 +14,16 @@ import { Button, Cell, Col, Icon, Row, Switch } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Router, { NavigateType } from 'tarojs-router-next'
 import Header from '@/components/header'
-import dayjs from 'dayjs'
-import { calendarStore, userInfoStore } from '@/store'
+import dayjs, { Dayjs } from 'dayjs'
+import { calendarStore, userInfoStore, componentRefreshTimeStore } from '@/store'
 import { add, getById, queryComponentMemberIds } from '@/api/component'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { IUserInfo } from 'types/user'
 import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode } from '@/utils'
 import { IDavCalendar } from 'types/calendar'
 import { Picker, Time, CalendarAction, SelectCalendar, GridAction, RepeatPicker } from './ui'
+import { useToast, useRequestSubscribeMessage } from 'taro-hooks'
+import { useBack } from '@/utils/taro'
 import './index.less'
 
 const today = dayjs().toDate()
@@ -31,6 +33,7 @@ const todayNext = dayjs(todayPre).add(1, 'hour').toDate()
 export default Unite(
   {
     state: {
+      id: undefined,
       loading: false,
       summary: '',
       fullDay: 0,
@@ -66,10 +69,12 @@ export default Unite(
 
     async _init(id: string) {
       this.setState({
-        loading: true
+        loading: true,
+        id
       })
       const result = await Promise.all([getById(id), queryComponentMemberIds(id)])
       if (!(result && result.length === 2)) return
+      const _component = result[1]
     },
 
     setSummary(summary: string) {
@@ -267,16 +272,105 @@ export default Unite(
       }
     },
 
+    saveOrUpdateComponent() {
+      if (!this.state.summary) {
+        this.hooks['toast']({ title: '标题不能为空' })
+        return
+      }
+      if (!this.state.selectedCalendar) {
+        this.hooks['toast']({ title: '选择日历不能为空' })
+        return
+      }
+
+      if (this.state.repeatStatus !== '0' && !this.state.repeatUntil) {
+        this.hooks['toast']({ title: '循环日期不能为空' })
+        return
+      }
+      const start: Dayjs = dayjs(this.state.dtstart)
+      const end: Dayjs = dayjs(this.state.dtend)
+      if (end.isBefore(start)) {
+        this.hooks['toast']({ title: '结束时间小于开始时间' })
+        return
+      }
+      if (end.diff(start) < 3600) {
+        this.hooks['toast']({ title: '时间范围应大于1小时' })
+        return
+      }
+      const that = this
+      const addOrUpdateComponent = {
+        id: this.state.id,
+        summary: this.state.summary,
+        calendarId: this.state.selectedCalendar.calendarId,
+        creatorMemberId: this.hooks['userInfo'].id,
+        location: this.state.place,
+        description: this.state.description,
+        dtstart: this.state.dtstart,
+        dtend: this.state.dtend,
+        fullDay: this.state.fullDay,
+        repeatStatus: this.state.repeatStatus,
+        repeatType: this.state.repeatType,
+        repeatInterval: this.state.repeatInterval,
+        repeatByday: this.state.repeatByday,
+        repeatBymonth: this.state.repeatBymonth,
+        repeatBymonthday: this.state.repeatBymonthday,
+        repeatUntil: this.state.repeatUntil,
+        alarmType: this.state.alarmType,
+        alarmTimes: this.state.alarmTimes,
+        memberIds: this.state.memberIds
+      }
+      add(addOrUpdateComponent)
+        .then((res) => {
+          addOrUpdateComponent.id = res as any as string
+          //要刷新首页列表
+          that.hooks['setComponentRefreshTime'](dayjs().unix())
+          if (process.env.TARO_ENV !== 'weapp') {
+            this._toView(addOrUpdateComponent.id)
+            return
+          }
+          that._subscribeMessage(addOrUpdateComponent.id)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+
     _initCalendar(calendarId?: string) {
       const { calendars } = this.hooks
       if (!(calendars && calendars.length > 0)) return
       if (!calendarId) {
-        const majorCalendar = calendars.find((i) => i.major === 1)
-        if (!majorCalendar) return
+        const _majorCalendar = calendars.find((i: IDavCalendar) => i.major === 1)
+        if (!_majorCalendar) return
         this.setState({
-          selectedCalendar: majorCalendar
+          selectedCalendar: _majorCalendar
         })
+        return
       }
+      const _majorCalendar = calendars.find((i) => i.calendarId === calendarId)
+      this.setState({
+        selectedCalendar: _majorCalendar
+      })
+    },
+
+    async _subscribeMessage(id: string) {
+      const subscribeIds = process.env.TEMPLATE_ID?.IDS
+      try {
+        const { [subscribeIds]: result } = await this.hooks['requestSubscribeMessage'](subscribeIds)
+        if (result === 'accept') {
+          console.log('message accept')
+        }
+        this._toView(id)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    _toView(id: string) {
+      Router.toComponentview({
+        params: {
+          id,
+          add: true
+        }
+      })
     }
   },
   function ({ state, events }) {
@@ -321,13 +415,29 @@ export default Unite(
       setRepeatReset,
       setRepeatPickerOpen,
       setRepeatUntilChoose,
-      setMembersChoose
+      setMembersChoose,
+      saveOrUpdateComponent
     } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const calendars = useRecoilValue(calendarStore)
+    const setComponentRefreshTime = useSetRecoilState(componentRefreshTimeStore)
+    const [toast] = useToast({
+      icon: 'error'
+    })
+
+    const [back] = useBack({
+      to: 1
+    })
+
+    const [requestSubscribeMessage] = useRequestSubscribeMessage()
 
     events.setHooks({
-      calendars: calendars
+      toast: toast,
+      back: back,
+      userInfo: userInfoState,
+      calendars: calendars,
+      setComponentRefreshTime: setComponentRefreshTime,
+      requestSubscribeMessage: requestSubscribeMessage
     })
 
     return (
@@ -431,7 +541,7 @@ export default Unite(
         </View>
 
         <View className='van-page-button'>
-          <Button type='info' block>
+          <Button type='info' block onClick={saveOrUpdateComponent}>
             保存
           </Button>
         </View>

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-10-27 17:12:27
- * @LastEditTime: 2022-08-19 21:18:37
+ * @LastEditTime: 2022-09-23 15:55:55
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useState } from 'react'
@@ -84,7 +84,7 @@ const EventList: FunctionComponent<IPageOption> = (props) => {
       {componentList.length == 0 ? (
         <Empty description='~空空如也~' />
       ) : (
-        <View>
+        <>
           {props.view === 0 ? (
             <DayEventView
               selectedDay={props.selectedDay}
@@ -102,7 +102,7 @@ const EventList: FunctionComponent<IPageOption> = (props) => {
               componentList={componentList}
             ></ListEventView>
           )}
-        </View>
+        </>
       )}
     </View>
   )

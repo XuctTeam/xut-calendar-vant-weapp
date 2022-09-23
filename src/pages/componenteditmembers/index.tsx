@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-22 17:52:09
+ * @LastEditTime: 2022-09-23 11:35:01
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
@@ -18,17 +18,18 @@ import { IUserInfo } from 'types/user'
 import { useRecoilValue } from 'recoil'
 import { useBack } from '@/utils/taro'
 import Router from 'tarojs-router-next'
-import { MemberBody } from './ui'
+import { MySelf, MemberBody } from './ui'
 import { useToast } from 'taro-hooks'
 import { queryByIds } from '@/api/groupmember'
 import { IGroupMember } from 'types/group'
 import './index.less'
+import { useRef } from 'react'
 
 export default Unite(
   {
     state: {
       loading: false,
-      allCheck: [],
+      allCheck: undefined,
       list: [],
       checkedIds: []
     },
@@ -38,10 +39,7 @@ export default Unite(
       if (!data) return
       const { members } = data
       if (!(members && members.length > 0)) return
-
-      this.setState({
-        checkedIds: members
-      })
+      this._init(members)
     },
 
     _init(members: string[]) {
@@ -50,9 +48,13 @@ export default Unite(
       })
       queryByIds(members)
         .then((res) => {
+          const _list = res as any as IGroupMember[]
+          this.hooks['listRef'].current = _list
           this.setState({
             loading: false,
-            list: res as any as IGroupMember[]
+            checkedIds: members,
+            allCheck: ['1'],
+            list: _list
           })
         })
         .catch((err) => {
@@ -66,7 +68,7 @@ export default Unite(
     setAllCheckClick(values: string[]) {
       if (values.length !== 0) {
         this.setState({
-          checkedIds: this.state.list.map((item) => item.toString()),
+          checkedIds: this.state.list.map((item) => item.memberId),
           allCheck: values
         })
         return
@@ -77,7 +79,7 @@ export default Unite(
       })
     },
 
-    setCheck(values: string[]) {
+    setMemmberCheck(values: string[]) {
       if (values.length === 0) {
         this.setState({
           allCheck: [],
@@ -88,20 +90,27 @@ export default Unite(
       if (values.length === this.state.list.length) {
         this.setState({
           allCheck: ['1'],
-          checkedIds: this.state.list.map((item) => item.toString())
+          checkedIds: this.state.list.map((item) => item.memberId)
         })
         return
       }
       this.setState({
         allCheck: [],
-        checkedIds: this.state.list.filter((item) => values.includes(item.toString())).map((item) => item.toString())
+        checkedIds: this.state.list.filter((item) => values.includes(item.memberId)).map((item) => item.toString())
       })
     },
 
     saveMembers() {
+      if (this.state.checkedIds.length > 200) {
+        this.hooks['toast']({
+          title: '单事件最大200参会者'
+        })
+        return
+      }
+
       this.hooks['back']({
         data: {
-          members: this.state.checkedIds.map((item) => item.toString())
+          members: this.state.checkedIds.map((item) => item)
         }
       })
     },
@@ -116,11 +125,12 @@ export default Unite(
 
       Dialog.confirm({
         title: '确认',
-        message: '确认消息吗？',
+        message: '确认删除吗？',
         selector: 'componentEditMemberDialog'
       }).then((value) => {
         if (value === 'cancel') return
-        const _keeps = this.state.list.filter((item) => !this.state.checkedIds.includes(item.toString()))
+        const _keeps = this.state.list.filter((item) => !this.state.checkedIds.includes(item.memberId))
+        this.hooks['listRef'].current = _keeps
         this.setState({
           list: _keeps,
           checkedIds: []
@@ -129,7 +139,16 @@ export default Unite(
     },
 
     onSearch(val: string) {
-      console.log(val)
+      if (!val) {
+        this.setState({
+          list: this.hooks['listRef'].current
+        })
+        return
+      }
+      const list = this.hooks['listRef'].current.filter((item) => item.name.indexOf(val) > 1)
+      this.setState({
+        list
+      })
     },
 
     async onChooseMember() {
@@ -138,8 +157,12 @@ export default Unite(
         if (!result) return
         const { members } = result
         if (!members) return
+        const _members = [...members].filter((x: IGroupMember) => [...this.state.list].every((y: IGroupMember) => y.memberId !== x.memberId))
+        if (!(_members && _members.length !== 0)) return
+        const _list = [...this.state.list, ..._members]
+        this.hooks['listRef'].current = _list
         this.setState({
-          list: [...this.state.list, ...members]
+          list: _list
         })
       } catch (err) {
         console.log(err)
@@ -147,9 +170,10 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const { loading, allCheck, list, checkedIds } = state
-    const { setAllCheckClick, setCheck, saveMembers, removeMember, onSearch, onChooseMember } = events
+    const { loading, allCheck, checkedIds, list } = state
+    const { setAllCheckClick, setMemmberCheck, saveMembers, removeMember, onSearch, onChooseMember } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
+    const listRef = useRef<IGroupMember[]>([])
     const [back] = useBack({
       to: 1
     })
@@ -159,7 +183,8 @@ export default Unite(
 
     events.setHooks({
       back: back,
-      toast: toast
+      toast: toast,
+      listRef: listRef
     })
 
     return (
@@ -177,6 +202,7 @@ export default Unite(
         <View className='van-page-box'>
           <Search
             placeholder='请输入用户'
+            onClear={() => onSearch('')}
             renderAction={
               <View>
                 <Button
@@ -201,23 +227,16 @@ export default Unite(
             </CellGroup>
             <></>
           </CheckboxGroup>
-          <MemberBody name={userInfoState?.name || ''} avatar={userInfoState?.avatar || ''}></MemberBody>
+          <MySelf name={userInfoState?.name || ''} avatar={userInfoState?.avatar || ''}></MySelf>
           <View className='divider'></View>
           {list.length === 0 ? (
             <Empty description='~空空如也~'></Empty>
           ) : (
             <View className='list'>
-              <CheckboxGroup value={checkedIds} onChange={(e) => setCheck(e.detail)}>
+              <CheckboxGroup value={checkedIds} onChange={(e) => setMemmberCheck(e.detail)}>
                 <CellGroup>
                   {list.map((item, index) => {
-                    return (
-                      <Cell key={index}>
-                        <View className='member'>
-                          {item.name}
-                          <Checkbox name={`${item.memberId}`} shape='square' />
-                        </View>
-                      </Cell>
-                    )
+                    return <MemberBody name={item.name} avatar={item.avatar} memberId={item.memberId} key={index}></MemberBody>
                   })}
                 </CellGroup>
                 <></>

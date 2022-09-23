@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-25 10:23:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-07-18 14:41:26
+ * @LastEditTime: 2022-09-23 17:23:18
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\component\ListEventView.tsx
  * @Description:
  *
@@ -26,11 +26,11 @@ interface IPageOption {
 const ListEventView: FunctionComponent<IPageOption> = (props) => {
   return (
     <Row>
-      <Col span={4} className="week-day">
-        <View className="day">{dayjs(props.selectedDay).format('DD')}</View>
-        <View className="week">{dayjs(props.selectedDay).format('ddd')}</View>
+      <Col span={4} className='week-day'>
+        <View className='day'>{dayjs(props.selectedDay).format('DD')}</View>
+        <View className='week'>{dayjs(props.selectedDay).format('ddd')}</View>
       </Col>
-      <Col span={20} className="event-list-content">
+      <Col span={20} className='event-list-content'>
         {props.componentList.map((component, i) => {
           return (
             <ListEventData

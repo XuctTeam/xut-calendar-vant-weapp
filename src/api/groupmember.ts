@@ -4,7 +4,7 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-09 22:14:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-21 21:29:26
+ * @LastEditTime: 2022-09-23 09:53:19
  */
 import httpRequest from '@/utils/request/innerRequest'
 
@@ -98,5 +98,5 @@ export const groupMemberLeave = (groupId: string, action: number, memberId?: str
  * @return {*}
  */
 export const queryByIds = (ids: string[]) => {
-  return httpRequest.post('/ums/api/app/v1/mbr/ids', { ids })
+  return httpRequest.post('/ums/api/app/v1/mbr/group/ids', { ids })
 }

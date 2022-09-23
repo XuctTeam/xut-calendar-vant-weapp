@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-05-25 15:12:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 15:26:10
+ * @LastEditTime: 2022-09-23 16:29:37
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\component\DayEventListData.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 徐涛 jianhao2010303@163.com, All Rights Reserved.
  */
 import { View } from '@tarojs/components'
-import { FunctionComponent } from 'react'
+import { Fragment, FunctionComponent } from 'react'
 import { IDavComponent } from '~/../types/calendar'
 import DayEventData from './DayEventData'
 
@@ -33,16 +33,7 @@ const DayEventListData: FunctionComponent<IPageOption> = (props) => {
   return (
     <>
       {props.componentList.map((i, index) => {
-        return (
-          <View key={index}>
-            <DayEventData
-              width={getWidth()}
-              color={i.color || '417ff9'}
-              component={i}
-              viewComponent={props.viewComponent}
-            ></DayEventData>
-          </View>
-        )
+        return <DayEventData key={index} width={getWidth()} color={i.color || '417ff9'} component={i} viewComponent={props.viewComponent}></DayEventData>
       })}
     </>
   )

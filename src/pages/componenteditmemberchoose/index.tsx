@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-22 17:55:16
+ * @LastEditTime: 2022-09-23 11:10:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmemberchoose\index.tsx
  * @Description:
  *
@@ -17,14 +17,16 @@ import { GroupSelect } from './ui'
 import { IGroup, IGroupMember } from 'types/group'
 import { groupList } from '@/api/group'
 import { groupMemberList } from '@/api/groupmember'
-import './index.less'
+
 import { useBack } from '@/utils/taro'
+
+import './index.less'
 
 export default Unite(
   {
     state: {
       loading: false,
-      allCheck: [],
+      allCheck: undefined,
       groups: [],
       members: [],
       checkedIds: []
@@ -131,16 +133,16 @@ export default Unite(
             )
           })}
         </ScrollView>
+        <CheckboxGroup value={allCheck} onChange={(e) => setAllCheckClick(e.detail)}>
+          <CellGroup border={false}>
+            <Cell title={`全选【${checkedIds.length}】人`} border={false}>
+              <Checkbox name='1' shape='square'></Checkbox>
+            </Cell>
+          </CellGroup>
+          <></>
+        </CheckboxGroup>
         <View className='divider'></View>
         <View className='list'>
-          <CheckboxGroup value={allCheck} onChange={(e) => setAllCheckClick(e.detail)}>
-            <CellGroup>
-              <Cell title={`全选【${checkedIds.length}】人`} border={false}>
-                <Checkbox name='1' shape='square'></Checkbox>
-              </Cell>
-            </CellGroup>
-            <></>
-          </CheckboxGroup>
           {loading ? (
             <View className='loading-box'>
               <Loading type='spinner'>加载中...</Loading>
@@ -150,7 +152,7 @@ export default Unite(
           ) : (
             <CheckboxGroup value={checkedIds} onChange={(e) => setCheckSelected(e.detail)}>
               <CellGroup>
-                {members.map((item, index: number) => {
+                {members.map((item: IGroupMember, index: number) => {
                   return (
                     <Cell key={index} title={item.name}>
                       <Checkbox name={`${item.memberId}`} shape='square' />

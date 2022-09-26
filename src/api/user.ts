@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-10 19:52:50
- * @LastEditTime: 2022-09-22 14:40:48
+ * @LastEditTime: 2022-09-26 20:48:05
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
@@ -189,8 +189,8 @@ export const merge = (phone: string) => {
  * @param {*} Promise
  * @return {*}
  */
-export const captcha = (): Promise<any> => {
-  return httpRequest.get('/uaa/register/captcha')
+export const captcha = (randomStr: string): Promise<any> => {
+  return httpRequest.get('/code?randomStr=' + randomStr)
 }
 
 /**

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-01-18 18:24:40
- * @LastEditTime: 2022-09-23 13:58:16
+ * @LastEditTime: 2022-09-26 21:57:01
  * @LastEditors: Derek Xu
  */
 import React from 'react'
@@ -35,17 +35,17 @@ const DifferentDay: React.FC<IPageOption> = (props) => {
   } = props
 
   return (
-    <View className='date-time'>
-      <View className='cell'>{formatDifferentDayTime(1, props.fullDay, props.dtstart)}</View>
-      <View className='cell'>{formatDifferentDayTime(2, props.fullDay, props.dtend)}</View>
+    <>
+      <View>{formatDifferentDayTime(1, props.fullDay, props.dtstart)}</View>
+      <View>{formatDifferentDayTime(2, props.fullDay, props.dtend)}</View>
       {repeatStatus !== '0' && (
-        <View className='cell'>
+        <View>
           {formatRepeatTime(repeatType, repeatStatus, repeatByday, repeatBymonth, repeatBymonthday, repeatInterval) +
             ',至 ' +
             dayjs(repeatUntil).format('YYYY-MM-DD')}
         </View>
       )}
-    </View>
+    </>
   )
 }
 

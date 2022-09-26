@@ -37,6 +37,7 @@
         width: 30px;
         height: 30px;
         border-radius: 50%;
+        margin-right: var(--padding-base, 4px);
       }
     }
 
@@ -85,13 +86,24 @@
 
     .event-content {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       flex: 1;
       font-size: 30px;
       font-weight: 400;
       color: #000;
       padding-right: 10px;
       text-align: left;
+    }
+
+    .same-day {
+      display: flex;
+      flex-direction: row;
+      color: var(--cell-value-color, #969799);
+      font-size: 28px;
+    }
+
+    .repeat {
+      margin-left: 20px;
     }
   }
 

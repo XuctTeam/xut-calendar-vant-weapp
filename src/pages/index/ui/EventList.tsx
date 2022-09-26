@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-10-27 17:12:27
- * @LastEditTime: 2022-09-23 15:55:55
+ * @LastEditTime: 2022-09-26 22:18:13
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useState } from 'react'
@@ -33,6 +33,8 @@ interface ISelectCalendar {
 const currentTime = dayjs().valueOf()
 
 const EventList: FunctionComponent<IPageOption> = (props) => {
+  const { view } = props
+
   const [componentList, setComponentList] = useState<IDavComponent[]>([])
 
   useEffect(() => {
@@ -85,7 +87,7 @@ const EventList: FunctionComponent<IPageOption> = (props) => {
         <Empty description='~空空如也~' />
       ) : (
         <>
-          {props.view === 0 ? (
+          {view === 0 ? (
             <DayEventView
               selectedDay={props.selectedDay}
               viewComponent={props.viewComponent}

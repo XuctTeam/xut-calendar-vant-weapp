@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:36:47
+ * @LastEditTime: 2022-09-26 21:15:57
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
@@ -20,6 +20,7 @@ import { register, captcha as toGetCaptcha } from '@/api/user'
 import { UserNameRegister, PhoneRegister, EmailRegister } from './ui'
 
 import './index.less'
+import dayjs from 'dayjs'
 
 interface ICaptcha {
   image: string
@@ -48,28 +49,17 @@ export default Unite(
   {
     state: {
       formType: 0,
-      image: '',
-      key: '',
+      randomStr: (Math.random() + dayjs().valueOf()).toString(),
       loading: false
     },
     async onLoad() {
-      this.getCaptcha()
+      //this.getCaptcha()
     },
 
     getCaptcha() {
-      toGetCaptcha()
-        .then((res) => {
-          const captcha: ICaptcha = res as any as ICaptcha
-          let array = Taro.base64ToArrayBuffer(captcha.image)
-          let base64 = Taro.arrayBufferToBase64(array)
-          this.setState({
-            key: captcha.key,
-            image: 'data:image/jpeg;base64,' + base64
-          })
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      this.setState({
+        randomStr: (Math.random() + dayjs().valueOf()).toString()
+      })
     },
 
     setFormType(formType: number) {
@@ -117,7 +107,7 @@ export default Unite(
         username: {
           username: data.username,
           password: data.password,
-          key: this.state.key,
+          // key: this.state.key,
           captcha: data.captcha
         }
       })
@@ -181,8 +171,8 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const { formType, image, loading } = state
-    const { getCaptcha, setFormType, registerHandler } = events
+    const { randomStr, formType, loading } = state
+    const { setFormType, registerHandler, getCaptcha } = events
     const userRef = Form.useForm()
     const emailRef = Form.useForm()
     const phoneRef = Form.useForm()
@@ -220,7 +210,7 @@ export default Unite(
             }}
           >
             <SwiperItem>
-              <UserNameRegister form={userRef} image={image} getCaptcha={getCaptcha}></UserNameRegister>
+              <UserNameRegister form={userRef} randomStr={randomStr} getCaptcha={getCaptcha}></UserNameRegister>
             </SwiperItem>
             <SwiperItem>
               <PhoneRegister form={phoneRef}></PhoneRegister>

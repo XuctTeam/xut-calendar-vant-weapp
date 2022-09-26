@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-26 17:49:55
+ * @LastEditTime: 2022-09-26 21:57:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -325,7 +325,18 @@ export default Unite(
           <Cell className='start-time' icon='clock-o'>
             <View className='margin-left event-content'>
               {dayjs(dtstart).isSame(dtend, 'date') ? (
-                <SameDay dtstart={dtstart} dtend={dtend} fullDay={fullDay}></SameDay>
+                <SameDay
+                  dtstart={dtstart}
+                  dtend={dtend}
+                  fullDay={fullDay}
+                  repeatStatus={repeatStatus}
+                  repeatType={repeatType}
+                  repeatByday={repeatByday}
+                  repeatBymonth={repeatBymonth}
+                  repeatBymonthday={repeatBymonthday}
+                  repeatInterval={repeatInterval}
+                  repeatUntil={repeatUntil}
+                ></SameDay>
               ) : (
                 <DifferentDay
                   dtstart={dtstart}
@@ -337,6 +348,7 @@ export default Unite(
                   repeatBymonth={repeatBymonth}
                   repeatBymonthday={repeatBymonthday}
                   repeatInterval={repeatInterval}
+                  repeatUntil={repeatUntil}
                 ></DifferentDay>
               )}
             </View>

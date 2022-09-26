@@ -256,6 +256,7 @@
         font-size: 20px;
         color: #000;
         overflow: hidden;
+        padding-right: 2px;
       }
 
       .title {
@@ -304,6 +305,87 @@
         height: 100%;
         border-top-left-radius: @border-radius-sm;
         border-bottom-left-radius: @border-radius-sm;
+      }
+    }
+  }
+
+  .list-event-list {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+
+    .week-day {
+      width: 100px;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+
+      .day {
+        font-size: 50px;
+        font-weight: 500;
+        color: #417ff9;
+      }
+      .week {
+        font-size: 20px;
+        color: #417ff9;
+      }
+    }
+
+    .list {
+      flex: 1;
+      .event-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0 30px;
+      }
+
+      .event-item {
+        overflow: hidden;
+        border: none;
+        position: relative;
+      }
+
+      .event-color {
+        width: 6px;
+        min-width: 6px;
+        height: 6.4vmin;
+        background: #417ff9;
+        margin-right: 30px;
+      }
+
+      .event-title {
+        font-size: 30px;
+        color: #000;
+        overflow: hidden;
+        padding: 20px 0;
+        width: 100%;
+      }
+
+      .event-summary-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .event-time {
+        display: flex;
+        flex-direction: row;
+        font-size: 20px;
+        color: #959595;
+        align-items: center;
+
+        .time-containe {
+          display: flex;
+          flex-direction: row;
+          margin-right: 40px;
+        }
+      }
+
+      .event-expire {
+        color: red;
       }
     }
   }

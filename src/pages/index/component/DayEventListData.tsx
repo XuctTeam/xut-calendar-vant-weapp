@@ -2,14 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-05-25 15:12:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-23 16:29:37
+ * @LastEditTime: 2022-09-26 22:43:49
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\component\DayEventListData.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 徐涛 jianhao2010303@163.com, All Rights Reserved.
  */
-import { View } from '@tarojs/components'
-import { Fragment, FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import { IDavComponent } from '~/../types/calendar'
 import DayEventData from './DayEventData'
 

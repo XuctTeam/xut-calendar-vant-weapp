@@ -372,10 +372,10 @@ export const formateSameDayDuration = (fullDay: number, dtstart: Date, dtend: Da
   days = dayjs(day1)
   daye = dayjs(day2)
   const diff: number = days.diff(daye, 'minute')
-  if (diff < 60) return diff + '分钟'
+  if (diff < 60 && diff > 0) return diff + '分钟'
   if (diff === 60) return '1小时'
   const hour = parseInt(diff / 60 + '')
-  return hour + '小时' + (diff - hour * 60) + '分钟'
+  return hour + '小时' + (diff - hour * 60 > 0 ? diff - hour * 60 + '分钟' : '')
 }
 
 /**

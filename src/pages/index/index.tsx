@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-26 14:58:50
+ * @LastEditTime: 2022-09-26 22:19:48
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -337,7 +337,7 @@ export default Unite(
             accessToken={accessToken || ''}
             wxBrower={false}
             today={day.current}
-            view={view && view + '' === '1' ? 1 : 0}
+            view={view && view === 'list' ? 1 : 0}
             selectedDay={selectedDay}
             calendars={calendars || []}
             calendarComponents={calendarComponents}

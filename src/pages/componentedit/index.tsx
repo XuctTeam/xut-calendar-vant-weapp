@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-23 15:49:04
+ * @LastEditTime: 2022-09-26 18:14:25
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -20,7 +20,7 @@ import { add, getById, queryComponentMemberIds } from '@/api/component'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { IUserInfo } from 'types/user'
 import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode } from '@/utils'
-import { IDavCalendar } from 'types/calendar'
+import { IDavCalendar, IDavComponent } from 'types/calendar'
 import { Picker, Time, CalendarAction, SelectCalendar, GridAction, RepeatPicker } from './ui'
 import { useToast, useRequestSubscribeMessage } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
@@ -33,6 +33,8 @@ const todayNext = dayjs(todayPre).add(1, 'hour').toDate()
 export default Unite(
   {
     state: {
+      edit: false,
+      saving: false,
       id: undefined,
       loading: false,
       summary: '',
@@ -72,9 +74,30 @@ export default Unite(
         loading: true,
         id
       })
-      const result = await Promise.all([getById(id), queryComponentMemberIds(id)])
+      let result
+      try {
+        result = await Promise.all([getById(id), queryComponentMemberIds(id)])
+      } catch (err) {
+        console.log(err)
+      }
       if (!(result && result.length === 2)) return
-      const _component = result[1]
+      const _component = result[0] as any as IDavComponent
+      const _megreComponent = Object.assign(
+        {},
+        { ..._component },
+        {
+          edit: true,
+          dtstart: dayjs(_component.dtstart).toDate(),
+          dtend: dayjs(_component.dtend).toDate(),
+          alarmType: alarmTypeToCode(_component.alarmType),
+          alarmTimes: _component.alarmTimes ? _component.alarmTimes.split(',') : [],
+          repeatStatus: _component.repeatStatus + '',
+          repeatUntil: _component.repeatUntil ? dayjs(_component.repeatUntil).toDate() : null,
+          memberIds: result[1] as any as string[]
+        }
+      )
+      this.setState({ ..._megreComponent, loading: false })
+      this._initCalendar(_megreComponent.calendarId)
     },
 
     setSummary(summary: string) {
@@ -254,6 +277,12 @@ export default Unite(
       })
     },
 
+    setSaving(saving: boolean) {
+      this.setState({
+        saving
+      })
+    },
+
     async setMembersChoose() {
       try {
         const result = await Router.toComponenteditmembers({
@@ -296,6 +325,9 @@ export default Unite(
         this.hooks['toast']({ title: '时间范围应大于1小时' })
         return
       }
+      this.setState({
+        saving: true
+      })
       const that = this
       const addOrUpdateComponent = {
         id: this.state.id,
@@ -318,11 +350,12 @@ export default Unite(
         alarmTimes: this.state.alarmTimes,
         memberIds: this.state.memberIds
       }
+
       add(addOrUpdateComponent)
         .then((res) => {
           addOrUpdateComponent.id = res as any as string
           //要刷新首页列表
-          that.hooks['setComponentRefreshTime'](dayjs().unix())
+          that.hooks['setComponentRefreshTime'](dayjs().valueOf())
           if (process.env.TARO_ENV !== 'weapp') {
             this._toView(addOrUpdateComponent.id)
             return
@@ -365,17 +398,42 @@ export default Unite(
     },
 
     _toView(id: string) {
-      Router.toComponentview({
-        params: {
-          id,
-          add: true
-        }
+      if (this.state.edit) {
+        this.hooks['toast']({
+          icon: 'success',
+          title: '编辑成功'
+        })
+        window.setTimeout(() => {
+          this.setState({
+            saving: false
+          })
+          this.hooks['back']({
+            delta: 2
+          })
+        }, 1500)
+        return
+      }
+      this.hooks['toast']({
+        icon: 'success',
+        title: '新增成功'
       })
+      window.setTimeout(() => {
+        this.setState({
+          saving: false
+        })
+        Router.toComponentview({
+          params: {
+            id,
+            add: true
+          }
+        })
+      }, 1500)
     }
   },
   function ({ state, events }) {
     const {
       loading,
+      saving,
       summary,
       dtstart,
       dtend,
@@ -416,7 +474,8 @@ export default Unite(
       setRepeatPickerOpen,
       setRepeatUntilChoose,
       setMembersChoose,
-      saveOrUpdateComponent
+      saveOrUpdateComponent,
+      setSaving
     } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const calendars = useRecoilValue(calendarStore)
@@ -541,7 +600,7 @@ export default Unite(
         </View>
 
         <View className='van-page-button'>
-          <Button type='info' block onClick={saveOrUpdateComponent}>
+          <Button type='info' block onClick={saveOrUpdateComponent} loading={saving}>
             保存
           </Button>
         </View>

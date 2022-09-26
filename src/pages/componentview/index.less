@@ -1,13 +1,115 @@
 .pages-component-view-index {
-  .li {
-    background-color: @white;
-    min-height: 200px;
-    margin: 0 @padding-sm @padding-sm;
-    box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
-    border-radius: @border-radius-lg;
-    padding: @padding-sm;
-    &:first-child {
-      margin-top: @padding-sm;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: @pageBack;
+  padding: 10px 10px;
+
+  .margin-left {
+    margin-left: 10px;
+  }
+
+  .divider {
+    width: 100%;
+    height: 4px;
+    background: #f5f5f5;
+  }
+
+  .van-cell {
+    background: #fff;
+    align-items: flex-start;
+  }
+
+  .overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .summany {
+    .van-cell__value {
+      display: flex;
+      flex-direction: row;
+
+      .event-label {
+        margin-top: 8px;
+        text-align: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
+    }
+
+    .calendar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      flex: 1;
+      visibility: inherit;
+    }
+
+    .event-calendar {
+      display: flex;
+      visibility: inherit;
+      flex-direction: column;
+      text-align: left;
+      flex: 1;
+
+      .title {
+        color: #333;
+        font-size: 32px;
+      }
+    }
+
+    .ellipsis {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      background: rgb(179, 179, 179, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+
+      .van-icon {
+        color: #fff;
+      }
+    }
+  }
+
+  .start-time {
+    .van-cell__value {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .event-content {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      font-size: 30px;
+      font-weight: 400;
+      color: #000;
+      padding-right: 10px;
+      text-align: left;
+    }
+  }
+
+  .alarm {
+    .van-cell__value {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .event-content {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      font-size: 30px;
+      font-weight: 400;
+      color: #000;
+      padding-right: 10px;
+      text-align: left;
     }
   }
 }

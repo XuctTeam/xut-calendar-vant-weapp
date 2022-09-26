@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-22 17:07:38
+ * @LastEditTime: 2022-09-26 14:58:50
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -30,6 +30,7 @@ import { componentsDaysById } from '@/api/component'
 import Images from '@/constants/images'
 
 import './index.less'
+import { useDidShow } from '@tarojs/taro'
 
 const day: ICurrentDay = getToday()
 
@@ -46,12 +47,7 @@ export default Unite(
 
     async onLoad() {},
 
-    async onShow() {
-      const { accessToken, refrestTimeRef, componentRefreshTime } = this.hooks
-      if (!accessToken) return
-      if (refrestTimeRef.current !== 0 && componentRefreshTime !== 0 && refrestTimeRef.current >= componentRefreshTime) return
-      this.componentRefresh()
-    },
+    async onShow() {},
 
     /**
      * 日历月份改变
@@ -158,11 +154,8 @@ export default Unite(
     async viewComponent(component: IDavComponent) {
       Router.toComponentview({
         params: {
-          componentId: component.id,
+          id: component.id,
           add: false
-        },
-        data: {
-          component: component
         }
       })
     },
@@ -209,7 +202,7 @@ export default Unite(
             componentLoading: false
           })
           const now = dayjs().valueOf()
-          this.hooks['refrestTimeRef'].current = now
+          this.hooks['localRefrestTimeRef'].current = now
           this.hooks['setComponentRefreshTime'](now)
         })
         .catch((error) => {
@@ -245,6 +238,7 @@ export default Unite(
   function ({ state, events }) {
     const { popOpen, collapse, selectedDay, marks, calendarComponents } = state
     const {
+      componentRefresh,
       selectMonthChage,
       selectDayLongClick,
       selectDayClickHadnle,
@@ -263,9 +257,9 @@ export default Unite(
     const monday = useRecoilValue(mondayStore)
     const view = useRecoilValue(compViewStore)
     const accessToken = cacheGetSync('accessToken')
-    const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(componentRefreshTimeStore)
     const calRef = React.createRef()
-    const refrestTimeRef = useRef<number>(0)
+    const localRefrestTimeRef = useRef<number>(0)
+    const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(componentRefreshTimeStore)
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
     const phoneAuth =
       userAuths && userAuths.length > 0
@@ -280,14 +274,19 @@ export default Unite(
 
     events.setHooks({
       calRef: calRef,
-      refrestTimeRef: refrestTimeRef,
-      accessToken: accessToken,
       componentRefreshTime: componentRefreshTime,
+      localRefrestTimeRef: localRefrestTimeRef,
       setComponentRefreshTime: setComponentRefreshTime,
       calendars: calendars,
       setCalendars: setCalendars
     })
     events.setHooks({ calendars: calendars })
+
+    useDidShow(() => {
+      if (!accessToken) return
+      if (localRefrestTimeRef.current !== 0 && componentRefreshTime !== 0 && localRefrestTimeRef.current >= componentRefreshTime) return
+      componentRefresh()
+    })
 
     return (
       <Container

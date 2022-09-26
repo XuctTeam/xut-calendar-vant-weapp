@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-09 19:10:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-23 16:21:26
+ * @LastEditTime: 2022-09-26 18:35:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\component\DayEventData.tsx
  * @Description:
  *
@@ -26,7 +26,7 @@ const DayEventData: FunctionComponent<IPagOption> = (props) => {
       <View className='event-box' onClick={() => props.viewComponent(props.component)}>
         <View className='color' style={{ background: `#${props.color}` }}></View>
         <View className='content'>
-          <View className='title'>{props.component.summary}</View>
+          <View className='van-ellipsis title'>{props.component.summary}</View>
           <View>{dayjs(props.component.dtstart).format('HH:mm') + '-' + dayjs(props.component.dtend).format('HH:mm')}</View>
         </View>
       </View>

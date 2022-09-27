@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-06-18 18:27:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-31 16:40:52
+ * @LastEditTime: 2022-09-27 21:56:40
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\ui\GroupHeader.tsx
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 import { FunctionComponent } from 'react'
 import { View } from '@tarojs/components'
-import { Col, Row, Icon } from '@antmjs/vantui'
+import { Icon } from '@antmjs/vantui'
 import Router from 'tarojs-router-next'
 
 interface IPageOption {
@@ -19,34 +19,28 @@ interface IPageOption {
 
 const GroupHeader: FunctionComponent<IPageOption> = (props) => {
   return (
-    <View className='group-header'>
-      <Row gutter={10} className='header-opt'>
-        <Col span={12} key={1}>
-          <View className='box' onClick={props.addGroup}>
-            <Icon classPrefix='page-icon' name='tuandui' size='36px'></Icon>
-            <View className='title'>
-              <View className='label'>新增群组</View>
-              <View className='desc'>创建群组</View>
-            </View>
-          </View>
-        </Col>
-        <Col span={12} key={2}>
-          <View
-            className='box'
-            onClick={() => {
-              Router.toAddressgroupapply()
-            }}
-          >
-            <Icon classPrefix='page-icon' name='qingjiashenqing' size='36px'></Icon>
-            <View className='title'>
-              <View className='label'>新的申请</View>
-              <View className='desc'>申请加入群组</View>
-            </View>
-          </View>
-        </Col>
-      </Row>
-      <View className='br'></View>
-    </View>
+    <>
+      <View className='box' onClick={props.addGroup}>
+        <Icon classPrefix='page-icon' name='tuandui' size='36px'></Icon>
+        <View className='title'>
+          <View className='label'>新增群组</View>
+          <View className='desc'>创建群组</View>
+        </View>
+      </View>
+      <View className='divider'></View>
+      <View
+        className='box'
+        onClick={() => {
+          Router.toAddressgroupapply()
+        }}
+      >
+        <Icon classPrefix='page-icon' name='qingjiashenqing' size='36px'></Icon>
+        <View className='title'>
+          <View className='label'>新的申请</View>
+          <View className='desc'>申请加入群组</View>
+        </View>
+      </View>
+    </>
   )
 }
 

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-03 09:31:21
- * @LastEditTime: 2022-09-18 16:13:46
+ * @LastEditTime: 2022-09-28 04:10:28
  * @LastEditors: Derek Xu
  */
 import http from '@/utils/request/innerRequest'
@@ -16,16 +16,8 @@ import http from '@/utils/request/innerRequest'
  * @author: Derek Xu
  */
 export const wechatLogin = (code: string, iv: string, encryptedData: string): Promise<any> => {
-  return http.post(
-    '/uaa/oauth/token',
-    {
-      grant_type: 'wechat',
-      code,
-      iv,
-      encryptedData
-    },
-    'application/x-www-form-urlencoded; charset=UTF-8'
-  )
+  const data = encodeURI(encryptedData)
+  return http.post(`/uaa/oauth2/token?grant_type=wx&scope=server&code='${code}'&iv='${iv}'&encryptedData='${data}'`, {})
 }
 
 /**

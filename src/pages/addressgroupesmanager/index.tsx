@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:32:55
+ * @LastEditTime: 2022-09-28 02:14:52
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -10,8 +10,8 @@
  */
 import Unite from '@antmjs/unite'
 import { useEffect } from 'react'
-import { Dialog, Empty } from '@antmjs/vantui'
-import { View } from '@tarojs/components'
+import { Dialog, Empty, Loading, PowerScrollView } from '@antmjs/vantui'
+import { ScrollView, View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import Container from '@/components/container'
 import { useRecoilValue } from 'recoil'
@@ -20,9 +20,12 @@ import { GroupBody, GroupHeader } from './ui'
 import { IGroup } from 'types/group'
 import { groupList, deleteGroup } from '@/api/group'
 import { cacheGetSync } from '@/cache'
-import { userInfoStore } from '@/store'
+import { IMenuButton, userInfoStore } from '@/store'
 import { useToast } from 'taro-hooks'
 import { IUserInfo } from 'types/user'
+import classnames from 'classnames'
+import { brower } from '@/utils'
+import { menuButtonStore } from '@/store'
 
 import './index.less'
 
@@ -33,17 +36,18 @@ export default Unite(
       loading: false
     },
 
-    async onLoad() {},
-
-    init() {
-      if (!cacheGetSync('accessToken')) {
+    async query(data?: any) {
+      console.log(data)
+      if (!this.hooks['accessToken']) {
         this.setState({
-          list: []
+          list: [],
+          loading: false
         })
         return
       }
       this.setState({
-        loading: true
+        loading: true,
+        list: []
       })
       groupList()
         .then((res) => {
@@ -68,7 +72,7 @@ export default Unite(
         if (!res) return
         const { edit } = res
         if (!!edit) {
-          this.init()
+          this.query()
         }
       } catch (err) {
         console.log(err)
@@ -86,7 +90,7 @@ export default Unite(
         if (!result) return
         const { edit } = result
         if (!!edit) {
-          this.init()
+          this.query()
         }
       } catch (err: any) {
         console.log(err)
@@ -102,6 +106,16 @@ export default Unite(
         if (value === 'cancel') return
         this._deleteGroup(id)
       })
+    },
+
+    getTopSize() {
+      if (process.env.TARO_ENV === 'weapp') {
+        const menuButton = this.hooks['menuButton']
+        if (!menuButton) return 100
+        return menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
+      }
+      if (brower()) return 100
+      return 200
     },
 
     _deleteGroup(id: string) {
@@ -127,25 +141,28 @@ export default Unite(
       this.hooks['toast']({
         title: '删除成功'
       }).then(() => {
-        this.init()
+        this.query()
       })
     }
   },
   function ({ state, events }) {
     const { list, loading } = state
-    const { addGroup, editGroup, deleteGroup, init } = events
+    const { addGroup, editGroup, deleteGroup, query, getTopSize } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
+    const menuButton: IMenuButton | undefined = useRecoilValue(menuButtonStore)
     const accessToken = cacheGetSync('accessToken')
     const [toast] = useToast({
       icon: 'error'
     })
 
     events.setHooks({
-      toast: toast
+      toast: toast,
+      accessToken: accessToken,
+      menuButton: menuButton
     })
 
     useEffect(() => {
-      init()
+      query()
     }, [accessToken])
 
     return (
@@ -153,38 +170,73 @@ export default Unite(
         navTitle='通讯录管理'
         enablePagePullDownRefresh={false}
         className='pages-address-groupes-manager-index'
-        loading={loading}
         tabbar
         renderPageTopHeader={() => {
           return <Header title='通讯录管理' left={false} to={2}></Header>
         }}
       >
-        <GroupHeader addGroup={addGroup}></GroupHeader>
-        <View className='list'>
-          {list && list.length > 0 ? (
-            <>
-              {list.map((item: IGroup, index: number) => (
-                <GroupBody
-                  key={index}
-                  group={item}
-                  uid={userInfoState?.id || ''}
-                  remove={deleteGroup}
-                  edit={editGroup}
-                  members={(id: string) => {
-                    Router.toAddressgroupmember({
-                      params: {
-                        id
-                      }
-                    })
-                  }}
-                ></GroupBody>
-              ))}
-            </>
-          ) : (
-            <Empty description='~空空如也~' />
-          )}
-        </View>
+        <View className='page-box' style={{ paddingTop: getTopSize() + 'px' }}>
+          <View className='header'>
+            <GroupHeader addGroup={addGroup}></GroupHeader>
+          </View>
+          <View className='divider'></View>
+          <PowerScrollView
+            className='list'
+            finishedText='没有更多了'
+            emptyDescription='~空空如也~'
+            current={list.length}
+            onScrollToUpper={query}
+            finished={!loading}
+          >
+            {list.map((item: IGroup, index: number) => (
+              <GroupBody
+                key={index}
+                group={item}
+                uid={userInfoState?.id || ''}
+                remove={deleteGroup}
+                edit={editGroup}
+                members={(id: string) => {
+                  Router.toAddressgroupmember({
+                    params: {
+                      id
+                    }
+                  })
+                }}
+              ></GroupBody>
+            ))}
 
+            {/* {loading ? (
+              <View className='loading'>
+                <Loading>加载中...</Loading>
+              </View>
+            ) : (
+              <>
+                {list && list.length > 0 ? (
+                  <>
+                    {list.map((item: IGroup, index: number) => (
+                      <GroupBody
+                        key={index}
+                        group={item}
+                        uid={userInfoState?.id || ''}
+                        remove={deleteGroup}
+                        edit={editGroup}
+                        members={(id: string) => {
+                          Router.toAddressgroupmember({
+                            params: {
+                              id
+                            }
+                          })
+                        }}
+                      ></GroupBody>
+                    ))}
+                  </>
+                ) : (
+                  <Empty description='~空空如也~' />
+                )}
+              </>
+            )} */}
+          </PowerScrollView>
+        </View>
         <Dialog id='vanGroupMememberDialog' />
       </Container>
     )

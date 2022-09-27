@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-25 10:23:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-26 22:35:33
+ * @LastEditTime: 2022-09-27 09:46:47
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\component\ListEventView.tsx
  * @Description:
  *

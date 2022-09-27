@@ -1,13 +1,11 @@
 import { PureComponent, ReactNode, useState, useContext, useEffect } from 'react'
 import { showToast, usePageScroll } from '@tarojs/taro'
-import { Popup } from '@antmjs/vantui'
 import { UniteContext } from '@antmjs/unite'
 import { EMlf } from '@antmjs/trace'
 import { useSpring } from '@react-spring/web'
 import { monitor } from '@/trace'
 import { LOGIN_CODE } from '@/constants'
 import Error from '../fullScreen/error'
-import Login from '../fullScreen/login'
 import Loading from '../fullScreen/loading'
 import PullDownRefresh from './pullDownRefresh'
 import Navigation from './navigation'
@@ -77,7 +75,6 @@ export default function Index(props: IProps) {
     'pulling' | 'refreshing' | 'complete' | 'canRelease',
     React.Dispatch<React.SetStateAction<'pulling' | 'refreshing' | 'complete' | 'canRelease'>>
   ]
-  const [loginStatus, setLoginStatus] = useState(false)
 
   // 异常来自于三个部分 1: Request Code 2 JSError 3: BoundaryError
   // 有初始数据但是请求接口报错了，则toast。JSError BoundaryError Login 三个直接展示全屏错误
@@ -103,13 +100,6 @@ export default function Index(props: IProps) {
     }
   })
 
-  useEffect(() => {
-    // Login报错 直接展示全屏错误
-    if (ctx.error && ctx.error.code === LOGIN_CODE) {
-      setLoginStatus(true)
-    }
-  }, [ctx])
-
   function render() {
     // JSError、 BoundaryError、 没有初始数据并且报错并且不是登录错误  则全屏展示
     if (ctx.error?.code === 'JSError' || ctx.error?.code === 'BoundaryError' || (loading && ctx.error && ctx.error?.code !== LOGIN_CODE)) {
@@ -120,9 +110,6 @@ export default function Index(props: IProps) {
     return (
       <>
         <PullDownRefresh
-          style={{
-            visibility: loginStatus ? 'hidden' : 'visible'
-          }}
           className={className}
           canPull={!!(ctx.uniteConfig.page && enablePagePullDownRefresh && canPull)}
           onRefresh={ctx.onRefresh}
@@ -157,24 +144,6 @@ export default function Index(props: IProps) {
       ) : (
         render()
       )}
-      <Popup
-        show={loginStatus}
-        className='popup-with-login'
-        closeIconPosition='top-left'
-        position='bottom'
-        closeable
-        safeAreaInsetTop
-        style={{
-          height: '100vh'
-        }}
-        onClose={async () => {
-          setLoginStatus(false)
-          ctx.setError(undefined)
-          ctx.onRefresh()
-        }}
-      >
-        <Login setLoginStatus={setLoginStatus} setError={ctx.setError as any} onRefresh={ctx.onRefresh} />
-      </Popup>
     </ErrorBoundary>
   )
 }

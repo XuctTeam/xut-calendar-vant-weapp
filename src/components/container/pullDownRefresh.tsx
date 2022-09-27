@@ -9,7 +9,6 @@ export type PullStatus = 'pulling' | 'canRelease' | 'refreshing' | 'complete'
 
 export type PullToRefreshProps = {
   className: string
-  style: CSSProperties
   canPull: boolean
   children: ReactNode
   threshold?: number
@@ -34,12 +33,17 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
     api.start({ transform: `translateX(-50%) scale(1)`, opacity: 1 })
     setStatus('refreshing')
     try {
-      const res = await props.onRefresh(true)
-      if (res.code !== '200') {
-        showToast({
-          title: res.message,
-          icon: 'none'
-        })
+      let res
+      if (props.onReload && props.onReload instanceof Function) {
+        res = props.onReload()
+      } else {
+        res = await props.onRefresh(true)
+        if (res.code !== '200') {
+          showToast({
+            title: res.message,
+            icon: 'none'
+          })
+        }
       }
       setStatus('complete')
     } catch {}
@@ -125,7 +129,7 @@ export default function PullDownRefresh(props: PullToRefreshProps) {
   }
 
   return (
-    <View className={props.className || ''} style={props.style} onTouchEnd={onEnd} onTouchMove={onMove} onTouchStart={onStart}>
+    <View className={props.className || ''} onTouchEnd={onEnd} onTouchMove={onMove} onTouchStart={onStart}>
       {props.children}
     </View>
   )

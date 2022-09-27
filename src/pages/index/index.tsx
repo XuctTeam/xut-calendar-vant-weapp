@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-26 22:19:48
+ * @LastEditTime: 2022-09-27 13:14:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -363,7 +363,7 @@ export default Unite(
         )}
 
         <View className='pages-index_home-fab' style={{ bottom: env ? '80px' : '20px' }} onClick={() => Router.toComponentedit()}>
-          {!!accessToken && <Button icon='plus' round />}
+          {!!accessToken && <Button icon='plus' round type='warning' />}
         </View>
       </Container>
     )

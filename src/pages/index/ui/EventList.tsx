@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-10-27 17:12:27
- * @LastEditTime: 2022-09-26 22:18:13
+ * @LastEditTime: 2022-09-27 09:16:41
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useState } from 'react'
@@ -82,7 +82,7 @@ const EventList: FunctionComponent<IPageOption> = (props) => {
   }, [props.accessToken, props.selectedDay, props.calendars, props.calendarComponents])
 
   return (
-    <View className='vi-index-wrapper_event'>
+    <View className='event-list-wrapper'>
       {componentList.length == 0 ? (
         <Empty description='~空空如也~' />
       ) : (

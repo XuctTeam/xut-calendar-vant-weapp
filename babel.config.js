@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-09 19:10:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:08:37
+ * @LastEditTime: 2022-09-29 13:23:26
  * @FilePath: \xut-calendar-vant-weapp\babel.config.js
  * @Description:
  *
@@ -28,6 +28,14 @@ module.exports = {
         libraryDirectory: 'es'
       },
       '@antmjs/vantui'
+    ],
+    [
+      'import',
+      {
+        libraryName: 'taro-hooks',
+        camel2DashComponentName: false
+      },
+      'taro-hooks'
     ]
   ]
 }

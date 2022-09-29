@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-27 13:14:38
+ * @LastEditTime: 2022-09-29 17:10:40
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -152,6 +152,7 @@ export default Unite(
      * @description 日程查看
      */
     async viewComponent(component: IDavComponent) {
+      console.log(component.id)
       Router.toComponentview({
         params: {
           id: component.id,

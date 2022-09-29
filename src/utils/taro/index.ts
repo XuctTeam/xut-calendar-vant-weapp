@@ -2,10 +2,9 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-26 10:50:22
- * @LastEditTime: 2022-08-11 13:23:40
+ * @LastEditTime: 2022-09-29 16:05:57
  * @LastEditors: Derek Xu
  */
-import Taro from '@tarojs/taro'
 import Router, { NavigateType } from 'tarojs-router-next'
 import useBack from './useBack'
 
@@ -23,13 +22,8 @@ export interface BackOption {
   delta?: number
 }
 
-/**
- * 清除所有登录信息
- */
-export const pageCleanToLogin = () => {
-  Taro.switchTab({
-    url: '/pages/index/index'
-  })
+export const toIndex = () => {
+  Router.navigate({ url: '/pages/index/index' }, { type: NavigateType.redirectTo })
 }
 
 /**

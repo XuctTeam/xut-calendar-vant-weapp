@@ -184,8 +184,7 @@ const config = {
     [npath.join(process.cwd(), 'config/webpack/configPlugin')],
     '@tarojs/plugin-platform-alipay-dd',
     ['@tarojs/plugin-platform-kwai'],
-    ['tarojs-router-next-plugin'],
-    ['tarojs-plugin-platform-miniprogram']
+    ['tarojs-router-next-plugin']
   ]
 }
 

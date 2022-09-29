@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-26 21:57:54
+ * @LastEditTime: 2022-09-29 17:40:49
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -14,6 +14,9 @@ import Header from '@/components/header'
 import { View } from '@tarojs/components'
 import { ActionSheet, Cell, Dialog, Icon, Loading, Overlay } from '@antmjs/vantui'
 import dayjs from 'dayjs'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import ButtonGroup from '@/components/buttongroup'
+import Router from 'tarojs-router-next'
 import { DifferentDay, SameDay } from './ui'
 import { userInfoStore, componentRefreshTimeStore } from '@/store'
 import { formatAlarmText } from '@/utils'
@@ -28,9 +31,6 @@ import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
 
 import './index.less'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import ButtonGroup from '@/components/buttongroup'
-import Router from 'tarojs-router-next'
 
 const DEFAULT_ATTEND_BACKGROUD = Images.DEFAULT_ATTEND_BACKGROUD
 

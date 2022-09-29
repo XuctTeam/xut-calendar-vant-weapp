@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-03 09:31:21
- * @LastEditTime: 2022-09-28 04:10:28
+ * @LastEditTime: 2022-09-29 16:41:07
  * @LastEditors: Derek Xu
  */
 import http from '@/utils/request/innerRequest'
@@ -16,8 +16,10 @@ import http from '@/utils/request/innerRequest'
  * @author: Derek Xu
  */
 export const wechatLogin = (code: string, iv: string, encryptedData: string): Promise<any> => {
-  const data = encodeURI(encryptedData)
-  return http.post(`/uaa/oauth2/token?grant_type=wx&scope=server&code='${code}'&iv='${iv}'&encryptedData='${data}'`, {})
+  return http.post(
+    `/uaa/oauth2/token?grant_type=wx&scope=server&code=${encodeURIComponent(code)}&iv=${iv}&encryptedData=${encodeURIComponent(encryptedData)}`,
+    {}
+  )
 }
 
 /**

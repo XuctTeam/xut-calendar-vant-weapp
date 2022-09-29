@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:39:54
+ * @LastEditTime: 2022-09-29 09:38:03
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindemail\index.tsx
  * @Description:
  *
@@ -34,10 +34,6 @@ export default Unite(
       loading: false
     },
 
-    async onUnload() {
-      this.hooks['countDown'].clean()
-    },
-
     sendSmsCode() {
       const email = this.hooks['form'].getFieldValue('email')
       if (!(email && checkEmail(email))) {
@@ -46,13 +42,12 @@ export default Unite(
         })
         return
       }
-      this._setTextTime()
-
       sendUmsEmailCode(email, this.hooks['emailAuth'] ? 2 : 1)
         .then(() => {})
         .catch((err: any) => {
           console.log(err)
         })
+      this._setTextTime()
     },
 
     _setTextTime() {

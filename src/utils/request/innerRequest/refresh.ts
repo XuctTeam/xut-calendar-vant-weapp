@@ -2,15 +2,15 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-12 12:49:07
- * @LastEditTime: 2022-09-18 16:10:49
+ * @LastEditTime: 2022-09-29 16:06:06
  * @LastEditors: Derek Xu
  */
 import Taro from '@tarojs/taro'
 import { tokenRefresh } from '@/api/login'
 import dayjs from 'dayjs'
 import httpRequest from './index'
-import { pageCleanToLogin } from '../../taro'
-import { cacheSetSync, cacheGetSync } from '@/cache'
+import { toIndex } from '../../taro'
+import { cacheSetSync, cacheGetSync, cacheRemoveSync } from '@/cache'
 
 interface ITask<T> {
   url: string
@@ -98,8 +98,10 @@ class Refresh {
       icon: 'success'
     })
     this.cleanTask()
+    cacheRemoveSync('accessToken')
+    cacheRemoveSync('refreshToken')
     setTimeout(() => {
-      pageCleanToLogin()
+      toIndex()
     }, 500)
     return false
   }

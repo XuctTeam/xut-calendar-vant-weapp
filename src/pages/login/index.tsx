@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-28 04:00:18
+ * @LastEditTime: 2022-09-29 16:21:29
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Router from 'tarojs-router-next'
 import { View, Navigator, ITouchEvent } from '@tarojs/components'
 import { Button, Checkbox, Icon, Image, CellGroup, Field } from '@antmjs/vantui'
@@ -17,7 +17,6 @@ import dayjs from 'dayjs'
 import { useSetRecoilState } from 'recoil'
 import { useLogin, useUserInfo, useToast } from 'taro-hooks'
 import { back } from '@/utils/taro'
-import { IUserInfo as IMemberInfo } from 'taro-hooks/dist/useUserInfo'
 import { cacheSetSync, cacheRemoveSync } from '@/cache'
 import Container from '@/components/container'
 import { IUserAuth, IUserInfo } from '~/../types/user'
@@ -26,14 +25,11 @@ import { wechatLogin, phoneLogin, usernameLogin } from '@/api/login'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
 import { sendSmsCode, baseUserInfo, auths } from '@/api/user'
 import { list as listQueryCalendar } from '@/api/calendar'
-import { checkMobile } from '@/utils'
+import { checkMobile, brower } from '@/utils'
 import classnames from 'classnames'
 import Images from '@/constants/images'
-
+import { create } from '@/utils/countdown'
 import './index.less'
-import { useWebEnv, useWxBrowser } from '@/hooks'
-
-const smsBtnLoadingTime: number = 120
 
 export default Unite(
   {
@@ -49,26 +45,16 @@ export default Unite(
       smsLoading: false,
       loginLoading: false
     },
-    async onLoad() {
-      if (process.env.TARO_ENV === 'weapp') {
-        this._init()
-      }
-    },
 
-    onUnload() {
-      if (this.hooks['timerRef'].current > 0) {
-        this._stopSmsCode()
-      }
-    },
-
-    _init() {
+    init() {
       this.hooks['login'](true)
         .then((code: any) => {
           this.setState({
             icode: { code: code, ts: dayjs().valueOf() }
           })
         })
-        .catch(() => {
+        .catch((err: any) => {
+          console.log(err)
           this.hooks['login'](false)
             .then((code: any) => {
               this.setState({
@@ -201,7 +187,7 @@ export default Unite(
       const code: string = this.state.icode.code
 
       this.hooks['getUserProfile']({ lang: 'zh_CN', desc: '用于完善会员资料' })
-        .then((res: IMemberInfo) => {
+        .then((res: any) => {
           const { iv, encryptedData } = res
           if (!iv || !encryptedData) {
             this._error('微信登陆失败')
@@ -226,7 +212,6 @@ export default Unite(
         this._error('手机号错误')
         return
       }
-      this._startSmsCode()
       sendSmsCode(this.state.phone)
         .then((res) => {
           console.log(res)
@@ -235,6 +220,14 @@ export default Unite(
           console.log(error)
           this._stopSmsCode()
         })
+      this._setTextTime()
+    },
+
+    _setTextTime() {
+      this.hooks['countDownRef'].current.start(0, 2, 0)
+      this.setState({
+        smsLoading: true
+      })
     },
 
     async _saveTokenToCache(accessToken: string, refreshToken: string) {
@@ -263,6 +256,19 @@ export default Unite(
       }, 2000)
     },
 
+    setSmsText(counter: number) {
+      this.setState({
+        smsText: '重发(' + counter + ')'
+      })
+    },
+
+    setSmsTextEnd() {
+      this.setState({
+        smsText: '发送验证码',
+        smsLoading: false
+      })
+    },
+
     _stopSmsCode() {
       this.setState({
         smsText: '发送短信',
@@ -274,26 +280,6 @@ export default Unite(
       }
     },
 
-    _startSmsCode() {
-      this.setState({
-        smsLoading: true
-      })
-      this._setTimeOut(smsBtnLoadingTime - 1)
-    },
-
-    _setTimeOut(sec: number) {
-      if (sec === 0) {
-        this._stopSmsCode()
-        return
-      }
-      this.setState({
-        smsText: '重发(' + sec + ')'
-      })
-      this.hooks['timerRef'].current = window.setTimeout(() => {
-        this._setTimeOut(sec - 1)
-      }, 1000)
-    },
-
     _error(msg: string) {
       this.hooks['show']({
         icon: 'error',
@@ -303,33 +289,62 @@ export default Unite(
   },
   function ({ state, events }) {
     const { self, phoneForm, username, password, phone, smsCode, smsText, smsLoading, loginLoading } = state
-    const { setUsername, setPassword, setPhone, setSmsCode, setPhoneForm, setSelf, pushCode, loginByPhoneOrUsername, loginByCode } = events
+    const {
+      init,
+      setUsername,
+      setPassword,
+      setPhone,
+      setSmsCode,
+      setPhoneForm,
+      setSelf,
+      pushCode,
+      loginByPhoneOrUsername,
+      loginByCode,
+      setSmsText,
+      setSmsTextEnd
+    } = events
     const [login] = useLogin()
     const [, { getUserProfile }] = useUserInfo()
     const [show] = useToast({
       icon: 'error'
     })
-    const webEnv = useWebEnv()
-    const isWxBrower = useWxBrowser()
-    const timerRef = useRef<number>(0)
+    const webEnv = brower()
     const setUserInfoState = useSetRecoilState(userInfoStore)
     const setUserAuthState = useSetRecoilState(userAuthInfoStore)
     const setCalendarState = useSetRecoilState(calendarStore)
+    const countDownRef = useRef<any>()
 
     events.setHooks({
       login: login,
       show: show,
-      timerRef: timerRef,
+      countDownRef: countDownRef,
       getUserProfile: getUserProfile,
       setUserInfoState: setUserInfoState,
       setUserAuthState: setUserAuthState,
       setCalendarState: setCalendarState
     })
 
+    useEffect(() => {
+      init()
+      countDownRef.current = create(
+        Date.now() + 1000 * 100,
+        ({ d, h, m, s }) => {
+          console.log(`${d}天${h}时${m}分${s}秒`)
+          setSmsText(m * 60 + s)
+        },
+        () => {
+          setSmsTextEnd()
+        }
+      )
+      return () => {
+        countDownRef.current.clean()
+      }
+    }, [])
+
     return (
       <Container navTitle='登录' className='pages-login-index'>
         <View className='section'>
-          {webEnv && !isWxBrower && (
+          {webEnv && (
             <View className='navigation_minibar_left_back back-btn' onClick={() => back({ to: 4, data: { isLogin: true } })}>
               <Icon name='arrow-left' />
             </View>

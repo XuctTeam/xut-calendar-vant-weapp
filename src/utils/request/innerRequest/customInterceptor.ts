@@ -2,20 +2,23 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-09-18 16:12:40
+ * @LastEditTime: 2022-09-29 16:28:07
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
-import dayjs from 'dayjs'
 import { HTTP_STATUS } from './statusCode'
 import codeMessage from './codeMessage'
 import refresh from './refresh'
-import { IRequestResponse } from '../constants'
-import { pageCleanToLogin } from '../../taro'
-import { cacheGetSync } from '@/cache'
 
 const OAUTHTOKEN_URL: string = '/oauth2/token'
 const codeKeys = codeMessage as { [key: number]: any }
+
+interface IRequestResponse {
+  code: number
+  success: boolean
+  data: any
+  message: string
+}
 
 const customInterceptor = (chain: Chain): Promise<any> => {
   const requestParams = chain.requestParams
@@ -54,11 +57,11 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         statusText: res.data.message || codeKeys[res.data.code]
       })
     }).catch((error: any) => {
-      const { status } = error
+      const { status, statusText, message } = error
       //不是刷新token异常
-      if (HTTP_STATUS.FAILED_DEPENDENCY !== status) {
+      if (HTTP_STATUS.FAILED_DEPENDENCY !== status && HTTP_STATUS.AUTHENTICATE !== status) {
         let msg = '请求异常'
-        if (HTTP_STATUS.AUTHENTICATE === status || HTTP_STATUS.SERVICE_UNAVAILABLE === status) {
+        if (HTTP_STATUS.SERVICE_UNAVAILABLE === status || HTTP_STATUS.GATEWAY_TIMEOUT === status) {
           msg = codeKeys[status]
         }
         Taro.showToast({
@@ -68,29 +71,38 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         })
         return reject(error)
       }
-      if (url.indexOf(OAUTHTOKEN_URL) > -1) {
-        refresh.cleanTask()
-        pageCleanToLogin()
-        return reject('refresh token error')
-      }
-      if (!refresh.isRefreshing) {
+      if (HTTP_STATUS.FAILED_DEPENDENCY === status && !refresh.isRefreshing && !url.includes(OAUTHTOKEN_URL)) {
         refresh.isRefreshing = true
         refresh.pageRefreshToken()
+        return new Promise((rev, rej) => {
+          refresh.pushTask({
+            resolve: rev,
+            reject: rej,
+            url: url,
+            opt: requestParams
+          })
+        })
+          .then((rs: any) => {
+            resolve(rs)
+          })
+          .catch((err) => {
+            reject(err)
+          })
       }
-      return new Promise((rev, rej) => {
-        refresh.pushTask({
-          resolve: rev,
-          reject: rej,
-          url: url,
-          opt: requestParams
-        })
+      if (status === HTTP_STATUS.AUTHENTICATE) {
+        const { grant_type } = requestParams.data
+        if (url.includes(OAUTHTOKEN_URL) && grant_type && grant_type === 'refresh_token') {
+          refresh.fail()
+          return reject('refresh token error')
+        }
+      }
+      let msg = message || codeKeys[status] || statusText
+      Taro.showToast({
+        icon: 'error',
+        title: msg,
+        duration: 1500
       })
-        .then((rs: any) => {
-          resolve(rs)
-        })
-        .catch((err) => {
-          reject(err)
-        })
+      return reject(error)
     })
   })
   return result

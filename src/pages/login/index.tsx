@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-29 16:21:29
+ * @LastEditTime: 2022-09-29 21:37:57
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -47,6 +47,7 @@ export default Unite(
     },
 
     init() {
+      if (process.env.TARO_ENV !== 'weapp') return
       this.hooks['login'](true)
         .then((code: any) => {
           this.setState({

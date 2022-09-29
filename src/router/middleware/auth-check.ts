@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-02-22 16:22:05
- * @LastEditTime: 2022-09-29 15:59:24
+ * @LastEditTime: 2022-09-29 21:37:05
  * @LastEditors: Derek Xu
  */
 import { registerMiddleware, RouteContext, Router } from 'tarojs-router-next'
@@ -12,7 +12,6 @@ registerMiddleware(
   async (_, next) => {
     const token = cacheGetSync('accessToken')
     if (!token) {
-      debugger
       Router.toLogin()
       // 直接返回，不执行 next 即可打断中间件向下执行
       return

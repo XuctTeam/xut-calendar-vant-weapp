@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:39:23
+ * @LastEditTime: 2022-09-29 21:43:31
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -24,14 +24,29 @@ import { IDavCalendar } from 'types/calendar'
 
 export default Unite(
   {
-    state: {},
+    state: {
+      loading: false
+    },
 
     async onLoad() {},
 
     async onReload() {
-      list().then((res) => {
-        this.hooks['setCalendarState'](res as any as IDavCalendar[])
+      this.setState({
+        loading: true
       })
+      list()
+        .then((res) => {
+          this.setState({
+            loading: false
+          })
+          this.hooks['setCalendarState'](res as any as IDavCalendar[])
+        })
+        .catch((err) => {
+          console.log(err)
+          this.setState({
+            loading: false
+          })
+        })
     },
 
     editCalendar(id: string) {
@@ -49,7 +64,8 @@ export default Unite(
     }
   },
 
-  function ({ events }) {
+  function ({ state, events }) {
+    const { loading } = state
     const { onReload, editCalendar } = events
     const [calendars, setCalendarState] = useRecoilState(calendarStore)
 
@@ -65,6 +81,7 @@ export default Unite(
         h5Nav={true}
         onReload={onReload}
         className='pages-calendar-manager-index'
+        loading={loading}
         renderPageTopHeader={() => {
           return <Header title='日程管理' left to={4}></Header>
         }}

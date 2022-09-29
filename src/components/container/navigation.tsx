@@ -253,7 +253,7 @@ export default function Index(props: IProps) {
   const [menuButton, setMenuButton]: any = useRecoilState(menuButtonStore)
   /** 新增属性 */
   const { h5Nav, tabbar = false } = props
-  const wxBrower = brower()
+  const wxbrower = brower()
 
   useDidShow(() => {
     // 设置title
@@ -311,9 +311,9 @@ export default function Index(props: IProps) {
       {process.env.TARO_ENV === 'h5' && !tabbar ? (
         <View
           className={classnames('van-box', {
-            ['van-box--padding']: h5Nav,
-            ['van-box--padding-top']: wxBrower && h5Nav
+            ['van-box--padding']: h5Nav
           })}
+          style={{ paddingTop: wxbrower && h5Nav ? '50px' : '0px' }}
         >
           {props.children}
         </View>

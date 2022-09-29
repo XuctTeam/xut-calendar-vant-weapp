@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-28 02:14:52
+ * @LastEditTime: 2022-09-29 21:36:17
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -11,7 +11,7 @@
 import Unite from '@antmjs/unite'
 import { useEffect } from 'react'
 import { Dialog, Empty, Loading, PowerScrollView } from '@antmjs/vantui'
-import { ScrollView, View } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import Container from '@/components/container'
 import { useRecoilValue } from 'recoil'
@@ -23,7 +23,6 @@ import { cacheGetSync } from '@/cache'
 import { IMenuButton, userInfoStore } from '@/store'
 import { useToast } from 'taro-hooks'
 import { IUserInfo } from 'types/user'
-import classnames from 'classnames'
 import { brower } from '@/utils'
 import { menuButtonStore } from '@/store'
 
@@ -114,7 +113,7 @@ export default Unite(
         if (!menuButton) return 100
         return menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
       }
-      if (brower()) return 100
+      if (brower()) return 50
       return 200
     },
 

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-09-29 16:28:07
+ * @LastEditTime: 2022-09-30 09:05:38
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -71,9 +71,11 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         })
         return reject(error)
       }
-      if (HTTP_STATUS.FAILED_DEPENDENCY === status && !refresh.isRefreshing && !url.includes(OAUTHTOKEN_URL)) {
-        refresh.isRefreshing = true
-        refresh.pageRefreshToken()
+      if (HTTP_STATUS.FAILED_DEPENDENCY === status && !url.includes(OAUTHTOKEN_URL)) {
+        if (!refresh.isRefreshing) {
+          refresh.isRefreshing = true
+          refresh.pageRefreshToken()
+        }
         return new Promise((rev, rej) => {
           refresh.pushTask({
             resolve: rev,

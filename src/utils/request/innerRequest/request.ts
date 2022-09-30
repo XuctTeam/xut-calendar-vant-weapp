@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-15 14:52:03
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-16 15:57:24
+ * @LastEditTime: 2022-09-30 08:55:15
  * @FilePath: \xut-calendar-vant-weapp\src\utils\request\innerRequest\request.ts
  * @Description:
  *
@@ -11,15 +11,13 @@
 import Taro from '@tarojs/taro'
 import { cacheGetSync } from '@/cache'
 import interceptors from './customInterceptor'
+import { DEFUALT_SERVICES } from '@/constants/url'
 
 interceptors.forEach((interceptorItem) => Taro.addInterceptor(interceptorItem))
 
 type RequestOpts = Omit<Taro.request.Option, 'url'>
 type IAnyObject = Record<string, any>
 type IReqData = string | IAnyObject | ArrayBuffer | any
-
-//@ts-ignore
-const BASE_URL = SERVICES_API
 
 export default class httpRequest<T> {
   baseOptions(url: string, options: RequestOpts): Taro.RequestTask<T> {
@@ -37,7 +35,7 @@ export default class httpRequest<T> {
     }
     if (options.header) delete options.header
     return Taro.request({
-      url: BASE_URL + url,
+      url: DEFUALT_SERVICES + url,
       method: 'GET',
       ...options,
       header

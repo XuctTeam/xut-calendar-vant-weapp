@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-26 18:14:25
+ * @LastEditTime: 2022-09-30 09:33:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -512,14 +512,16 @@ export default Unite(
         }}
       >
         <View className='van-page-box'>
-          <Textarea
-            placeholder='输入日程标题'
-            maxlength={120}
-            value={summary}
-            style={{ width: '100%' }}
-            autoFocus
-            onInput={(e) => setSummary(e.detail.value)}
-          />
+          <Cell>
+            <Textarea
+              placeholder='输入日程标题'
+              maxlength={120}
+              value={summary}
+              style={{ width: '100%' }}
+              autoFocus
+              onInput={(e) => setSummary(e.detail.value)}
+            />
+          </Cell>
           <View className='divider'></View>
           <Cell title='全天' className='all-day'>
             <Switch checked={fullDay === 1} onChange={(e) => setFullDay(e.detail ? 1 : 0)} />

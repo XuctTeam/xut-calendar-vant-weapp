@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-29 21:36:17
+ * @LastEditTime: 2022-09-30 09:17:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -178,7 +178,6 @@ export default Unite(
           <View className='header'>
             <GroupHeader addGroup={addGroup}></GroupHeader>
           </View>
-          <View className='divider'></View>
           <PowerScrollView
             className='list'
             finishedText='没有更多了'
@@ -203,37 +202,6 @@ export default Unite(
                 }}
               ></GroupBody>
             ))}
-
-            {/* {loading ? (
-              <View className='loading'>
-                <Loading>加载中...</Loading>
-              </View>
-            ) : (
-              <>
-                {list && list.length > 0 ? (
-                  <>
-                    {list.map((item: IGroup, index: number) => (
-                      <GroupBody
-                        key={index}
-                        group={item}
-                        uid={userInfoState?.id || ''}
-                        remove={deleteGroup}
-                        edit={editGroup}
-                        members={(id: string) => {
-                          Router.toAddressgroupmember({
-                            params: {
-                              id
-                            }
-                          })
-                        }}
-                      ></GroupBody>
-                    ))}
-                  </>
-                ) : (
-                  <Empty description='~空空如也~' />
-                )}
-              </>
-            )} */}
           </PowerScrollView>
         </View>
         <Dialog id='vanGroupMememberDialog' />

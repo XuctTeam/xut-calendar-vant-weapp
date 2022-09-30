@@ -2,12 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-29 17:40:49
+ * @LastEditTime: 2022-09-30 16:20:07
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import Taro from '@tarojs/taro'
 import Unite from '@antmjs/unite'
 import Container from '@/components/container'
 import Header from '@/components/header'
@@ -19,10 +20,9 @@ import ButtonGroup from '@/components/buttongroup'
 import Router from 'tarojs-router-next'
 import { DifferentDay, SameDay } from './ui'
 import { userInfoStore, componentRefreshTimeStore } from '@/store'
-import { formatAlarmText } from '@/utils'
+import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText, alarmCodeToType } from '@/utils'
 import { getById, deleteById, queryComponentMemberIds, getAttendStatus, updateAttendStatus, refuseAttend, getShortUrl } from '@/api/component'
 import { getName } from '@/api/user'
-import { alarmTypeToCode, alarmCodeToType } from '@/utils'
 import { IDavComponent } from 'types/calendar'
 import { useShareAppMessage } from '@tarojs/taro'
 import Images from '@/constants/images'
@@ -48,16 +48,20 @@ export default Unite(
       memberName: '',
       actions: [
         {
-          name: '分享二维码',
-          value: 0
+          name: '复制链接',
+          value: 1
         },
         {
-          name: '编辑',
+          name: '分享二维码',
           value: 2
         },
         {
+          name: '编辑',
+          value: 4
+        },
+        {
           name: '删除',
-          value: 3
+          value: 5
         }
       ],
       id: '',
@@ -91,7 +95,7 @@ export default Unite(
       }
       this._init(id)
       if (process.env.TARO_ENV === 'weapp') {
-        const _actions: IActions[] = [...[{ name: '分享到朋友圈', value: 1 }], ...this.state.actions]
+        const _actions: IActions[] = [...[{ name: '分享到朋友圈', value: 2 }], ...this.state.actions]
         _actions.sort((n1, n2) => {
           // return -1; //返回负值 交换顺序
           // return 0 或者 1 //返回正值 保持顺序不变
@@ -133,10 +137,16 @@ export default Unite(
     setActionChoose(e: any) {
       if (!e.value) return
       switch (e.value) {
+        case 1:
+          this._copyLink()
+          break
         case 2:
+          this._viewSharePoster()
+          break
+        case 4:
           this._editComponent()
           break
-        case 3:
+        case 5:
           this._deleteComponent()
           break
       }
@@ -226,6 +236,67 @@ export default Unite(
               title: '删除失败'
             })
           })
+      })
+    },
+
+    _copyLink() {
+      const that = this
+      this._shareTitle()
+        .then((res) => {
+          Taro.setClipboardData({
+            data: res as any as string,
+            success: function () {
+              that.hooks['toast']({
+                title: '复制成功！'
+              })
+            }
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+
+    _shareTitle() {
+      const array = [
+        {
+          title: '【楚日历】',
+          value: '日程邀请'
+        },
+        {
+          title: '标题',
+          value: this.state.summary
+        },
+        {
+          title: '时间',
+          value: dayjs(this.state.dtstart).isSame(this.state.dtend, 'date')
+            ? formatSameDayTime(this.state.fullDay, this.state.dtstart, this.state.dtend) +
+              ' ' +
+              formateSameDayDuration(this.state.fullDay, this.state.dtstart, this.state.dtend)
+            : formatDifferentDayTime(1, this.state.fullDay, this.state.dtstart) + '\r' + formatDifferentDayTime(2, this.state.fullDay, this.state.dtend)
+        }
+      ]
+      return new Promise((resolve, reject) => {
+        getShortUrl(this.state.id)
+          .then((res) => {
+            array.push({
+              title: '点击加入',
+              value: res as any as string
+            })
+            return resolve(`${array.map((item) => `${item.title}: ${item.value}`).join('\n')}`)
+          })
+          .catch((err) => {
+            console.log(err)
+            reject(err)
+          })
+      })
+    },
+
+    _viewSharePoster() {
+      Router.toComponentshareposter({
+        params: {
+          id: this.state.id
+        }
       })
     },
 

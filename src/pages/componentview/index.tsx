@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-30 16:20:07
+ * @LastEditTime: 2022-10-06 22:52:07
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -48,7 +48,7 @@ export default Unite(
       memberName: '',
       actions: [
         {
-          name: '复制链接',
+          name: '分享链接',
           value: 1
         },
         {
@@ -80,7 +80,7 @@ export default Unite(
       repeatBymonthday: '',
       repeatInterval: 0,
       repeatUntil: '',
-      memberIds: [],
+      f: [],
       alarmType: '',
       alarmTimes: [],
       attendStatus: 0
@@ -125,7 +125,7 @@ export default Unite(
         return
       }
       if (!result || result.length !== 2) return
-      this._setComponent(result[0] as any as IDavComponent, ['11111'])
+      this._setComponent(result[0] as any as IDavComponent, result[1] as any as string[])
     },
 
     setAction(action: boolean) {
@@ -430,7 +430,17 @@ export default Unite(
               <Cell icon='user-o' title='组织者'>
                 {createMemberName}
               </Cell>
-              <Cell icon='friends-o' title={`共邀请（${memberIds.length}）人`}></Cell>
+              <Cell
+                icon='friends-o'
+                title={`共邀请（${memberIds.length}）人`}
+                onClick={() =>
+                  Router.toComponentattend({
+                    params: {
+                      id
+                    }
+                  })
+                }
+              ></Cell>
             </>
           )}
           <View className='divider'></View>

@@ -1,0 +1,78 @@
+.pages-component-attend-index {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+
+  .van-col {
+    text-align: center;
+    border-right: 1px solid #ededed;
+
+    &:last-child {
+      border-right: 0px;
+    }
+  }
+
+  .li {
+    background-color: @white;
+    box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
+    border-radius: @border-radius-lg;
+  }
+
+  .statistics {
+    width: 100%;
+    height: 220px;
+    display: flex;
+
+    .li {
+      width: 100%;
+      margin: 10px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .van-row-wrapper {
+      width: 100%;
+    }
+
+    .count {
+      width: 100%;
+      border-top: 1px solid #ededed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+    }
+  }
+
+  .member-list {
+    flex: 1;
+    overflow-y: auto;
+    margin: 30px 10px 10px 10px;
+
+    .avatar {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .name {
+      margin-left: 20px;
+    }
+  }
+
+  .loading {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 15:24:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-30 17:58:19
+ * @LastEditTime: 2022-10-05 20:43:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareposter\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 
-import Taro from '@tarojs/taro'
+import Taro, { FileSystemManager } from '@tarojs/taro'
 import { useRef } from 'react'
 import Header from '@/components/header'
 import Unite from '@antmjs/unite'
@@ -17,13 +17,31 @@ import Container from '@/components/container'
 import { Canvas, View } from '@tarojs/components'
 import QR from 'qrcode-base64'
 import { Button } from '@antmjs/vantui'
-import { getShortUrl } from '@/api/component'
+import { getShortUrl, getById } from '@/api/component'
 import Images from '@/constants/images'
-
+import dayjs from 'dayjs'
+import { useToast } from 'taro-hooks'
+import { useRecoilValue } from 'recoil'
+import { userInfoStore } from '@/store'
+import { IDavComponent } from 'types/calendar'
+import { formatDifferentDayTime, formateSameDayDuration, formatSameDayTime } from '@/utils'
 import './index.less'
 
 interface IImageOption {
   src: string
+}
+
+interface IPackageTimeOption {
+  dtstart: Date
+  dtend: Date
+  fullDay: number
+  repeatStatus?: string
+  repeatType?: string
+  repeatByday?: string
+  repeatBymonth?: string
+  repeatBymonthday?: string
+  repeatInterval?: number
+  repeatUntil?: string
 }
 
 export default Unite(
@@ -39,50 +57,47 @@ export default Unite(
       this.setState({
         id
       })
-      this._getQrcode(id)
+      this.init(id)
     },
 
-    _getQrcode(id: string) {
-      getShortUrl(id)
-        .then((res) => {
-          this._setQrCode(res as any as string)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+    async init(id: string) {
+      const result = await Promise.all([getById(id), getShortUrl(id)])
+      if (!(result && result.length === 2)) return
+      const component = result[0] as any as IDavComponent
+      this._setQrCode(result[1] as any as string, component.summary, { ...component })
     },
 
-    async _setQrCode(url: string) {
+    async _setQrCode(url: string, summary: string, packageTime: IPackageTimeOption) {
       const qrCode = QR.drawImg(url, {
         typeNumber: 4,
         errorCorrectLevel: 'M',
         size: 500
       })
-      this._draw(qrCode)
-      // if (webEnv) {
-      //   _draw(qrCode)
-      // }
-      // await _removeSave()
-      // _base64ToSave(qrCode)
-      //   .then((rs) => {
-      //     if (!rs) return
-      //     //@ts-ignore
-      //     _draw(rs as any as string)
-      //   })
-      //   .catch((err) => {
-      //     console.log(err)
-      //     return Promise.reject(err)
-      //   })
+      if (process.env.TARO_ENV === 'h5') {
+        this._draw(qrCode, summary, packageTime)
+        return
+      }
+      await this._removeSave()
+      this._base64ToSave(qrCode)
+        .then((rs) => {
+          if (!rs) return
+          //@ts-ignore
+          _draw(rs as any as string)
+        })
+        .catch((err) => {
+          console.log(err)
+          return Promise.reject(err)
+        })
     },
 
-    _draw(qrCode: string) {
+    _draw(qrCode: string, summary: string, packageTime: IPackageTimeOption) {
       const that = this
       Taro.createSelectorQuery()
         .select('#myCanvas')
         .node((res) => {
           if (!res || !res.node) {
             setTimeout(() => {
-              that._draw(qrCode)
+              that._draw(qrCode, summary, packageTime)
             }, 200)
             return
           }
@@ -100,69 +115,64 @@ export default Unite(
           cavs.width = systemInfo.screenWidth * dpr
           cavs.height = _scrHeight * dpr
           ctx.scale(dpr, dpr)
-          ctx.fillStyle = '#ffffff'
-          ctx.fillRect(0, 0, systemInfo.screenWidth, _scrHeight)
+          //ctx.fillStyle = '#ffffff'
+          //ctx.fillRect(0, 0, systemInfo.screenWidth, _scrHeight)
 
-          that.drawRoundedRect(ctx, 'white', '#ccffff', 10, 10, _scrWidth, _scrHeight - 40, 5)
+          /* 背景图*/
+          that._drawRoundedRect(ctx, 'white', '#f4f4f4', 10, 10, _scrWidth, _scrHeight - 20, 5)
 
-          // drawTxt({
-          //   context: ctx,
-          //   text: userInfo.name,
-          //   fillStyle: '#000000',
-          //   broken: true,
-          //   x: 64,
-          //   y: 20,
-          //   font: '13px sans-serif',
-          //   lineHeight: 18,
-          //   maxWidth: 450,
-          //   maxLine: 2
-          // })
+          /* 日程详情 */
+          that._drawRoundedRect(ctx, 'white', '#a4d1eb', 20, 80, _scrWidth - 20, _scrHeight - 200, 5)
 
-          // drawTxt({
-          //   context: ctx,
-          //   text: '给你推荐了日程',
-          //   fillStyle: '#666666',
-          //   broken: true,
-          //   x: 66,
-          //   y: 40,
-          //   font: '10px sans-serif',
-          //   lineHeight: 14,
-          //   maxWidth: 450,
-          //   maxLine: 2
-          // })
-
-          // drawTxt({
-          //   context: ctx,
-          //   text: summary,
-          //   fillStyle: '#000000',
-          //   broken: true,
-          //   x: 20,
-          //   y: 330,
-          //   font: '14px sans-serif',
-          //   lineHeight: 20,
-          //   maxWidth: 276,
-          //   maxLine: 2
-          // })
-
-          this.drawTxt({
+          this._drawTxt({
             context: ctx,
-            text: '123123',
+            text: this.hooks['userInfo'].name || '名称',
             fillStyle: '#000000',
             broken: true,
-            x: 20,
-            y: 350,
-            font: '12px sans-serif',
-            lineHeight: 20,
-            maxWidth: 276,
+            x: 80,
+            y: 30,
+            font: '13px sans-serif',
+            lineHeight: 18,
+            maxWidth: 450,
             maxLine: 2
           })
 
-          this.drawTxt({
+          this._drawTxt({
+            context: ctx,
+            text: '给你推荐了日程',
+            fillStyle: '#666666',
+            broken: true,
+            x: 80,
+            y: 50,
+            font: '10px sans-serif',
+            lineHeight: 14,
+            maxWidth: 450,
+            maxLine: 2
+          })
+
+          this._drawTxt({
+            context: ctx,
+            text: summary,
+            fillStyle: '#fff',
+            broken: true,
+            x: 30,
+            y: 100,
+            font: '14px sans-serif',
+            lineHeight: 20,
+            maxWidth: _scrWidth - 40,
+            maxLine: 2
+          })
+
+          /** 日程时间 */
+          this._packageTime(ctx, _scrWidth, packageTime)
+
+          /** 二维码 */
+          this._drawTxt({
             context: ctx,
             text: `扫码/长按识别二维码查看详情`,
             fillStyle: '#666666',
             broken: true,
-            x: 90,
+            x: 104,
             y: _scrHeight - 100,
             font: '12px sans-serif',
             lineHeight: 17,
@@ -174,13 +184,13 @@ export default Unite(
           let imgList: IImageOption[] = []
           imgList.push(
             {
-              src: Images.DEFAULT_AVATAR
+              src: this.hooks['userInfo'].avatar || Images.DEFAULT_AVATAR
             },
             {
               src: Images.DEFAULT_ATTEND_BACKGROUD
             },
             {
-              src: this.state.qrCode
+              src: qrCode
             }
           )
           // 对Promise.all数组进行图片绘制操作
@@ -191,15 +201,15 @@ export default Unite(
 
             if (index == 0) {
               imgtag.onload = () => {
-                ctx.drawImage(imgtag, 40, 30, _scrWidth - 100, (_scrWidth - 100) * 0.8)
+                this._drawCircleImage(ctx, imgtag, 40, 30, 30)
               }
             } else if (index == 1) {
               imgtag.onload = () => {
-                ctx.drawImage(imgtag, (_scrWidth - 220) / 2, 70, 220, 220)
+                //ctx.drawImage(imgtag, (_scrWidth - 220) / 2, 70, 220, 220)
               }
             } else if (index == 2) {
               imgtag.onload = () => {
-                ctx.drawImage(imgtag, 20, _scrHeight - 100, 56, 56)
+                ctx.drawImage(imgtag, 40, _scrHeight - 100, 60, 60)
               }
             }
           })
@@ -215,6 +225,20 @@ export default Unite(
       return cavs.createImage()
     },
 
+    _drawCircleImage(ctx, img, x, y, width) {
+      ctx.save()
+      //绘制头像
+      ctx.beginPath() //开始绘制
+      //先画个圆，前两个参数确定了圆心 （x,y） 坐标  第三个参数是圆的半径  四参数是绘图方向  默认是false，			  即顺时针
+      ctx.arc(width / 2 + x, width / 2 + y, width / 2, 0, Math.PI * 2, false)
+      ctx.clip() //画好了圆 剪切  原始画布中剪切任意形状和尺寸。
+      // 一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内 这也是我们要save上下文的原因
+      ctx.drawImage(img, x, y, width, width)
+      // ctx.fill();
+      ctx.restore() //恢复之前保存的绘图上下文 恢复之前保存的绘图问下文即状态 还可以继续绘制
+      ctx.closePath()
+    },
+
     /*方法说明
      *@method drawTxt
      *@param context canvas上下文
@@ -228,7 +252,7 @@ export default Unite(
      *@param maxWidth 一行最长长度
      *@param maxLine 最多显示行数
      */
-    drawTxt({ context, text = 'test text', fillStyle = '#000', broken = true, ...rest }) {
+    _drawTxt({ context, text = 'test text', fillStyle = '#000', broken = true, ...rest }) {
       if (!context) throw Error('请传入绘制上下文环境context')
       // 默认设置
       let origin = { x: 0, y: 0, lineHeight: 30, maxWidth: 630, font: 28, maxLine: 2 }
@@ -272,7 +296,7 @@ export default Unite(
       context.fillText(line, x, y)
     },
 
-    drawRoundedRect(ctx, strokeStyle, fillStyle, x, y, width, height, radius) {
+    _drawRoundedRect(ctx, strokeStyle, fillStyle, x, y, width, height, radius) {
       ctx.beginPath()
       this._roundedRect(ctx, x, y, width, height, radius)
       ctx.strokeStyle = strokeStyle
@@ -291,15 +315,179 @@ export default Unite(
       ctx.arcTo(x + width, y + height, x, y + height, radius)
       ctx.arcTo(x, y + height, x, y, radius)
       ctx.arcTo(x, y, x + radius, y, radius)
+    },
+
+    _packageTime(ctx: any, scrWidth: number, timeOption: IPackageTimeOption) {
+      if (dayjs(timeOption.dtstart).isSame(timeOption.dtend, 'date')) {
+        this._drawTxt({
+          context: ctx,
+          text: formatSameDayTime(timeOption.fullDay, timeOption.dtstart, timeOption.dtend),
+          fillStyle: '#fff',
+          broken: true,
+          x: 30,
+          y: 140,
+          font: '12px sans-serif',
+          lineHeight: 20,
+          maxWidth: scrWidth - 40,
+          maxLine: 2
+        })
+        this._drawTxt({
+          context: ctx,
+          text: formateSameDayDuration(timeOption.fullDay, timeOption.dtstart, timeOption.dtend),
+          fillStyle: '#fff',
+          broken: true,
+          x: 30,
+          y: 160,
+          font: '12px sans-serif',
+          lineHeight: 20,
+          maxWidth: scrWidth - 40,
+          maxLine: 2
+        })
+        return
+      }
+      this._drawTxt({
+        context: ctx,
+        text: formatDifferentDayTime(1, timeOption.fullDay, timeOption.dtstart),
+        fillStyle: '#fff',
+        broken: true,
+        x: 30,
+        y: 140,
+        font: '12px sans-serif',
+        lineHeight: 20,
+        maxWidth: scrWidth - 40,
+        maxLine: 2
+      })
+    },
+
+    _removeSave(FILE_BASE_NAME = 'tmp_base64src', format = 'jpg') {
+      return new Promise((resolve) => {
+        // 把文件删除后再写进，防止超过最大范围而无法写入
+        const fsm = Taro.getFileSystemManager() //文件管理器
+        const filePath = `${Taro.env.USER_DATA_PATH}/${FILE_BASE_NAME}.${format}`
+        fsm.unlink({
+          filePath: filePath,
+          success() {
+            console.log('文件删除成功')
+            resolve(true)
+          },
+          fail(e) {
+            console.log('readdir文件删除失败：', e)
+            resolve(true)
+          }
+        })
+      })
+    },
+
+    _base64ToSave(base64data, FILE_BASE_NAME = 'tmp_base64src') {
+      const fsm: FileSystemManager = Taro.getFileSystemManager()
+      return new Promise((resolve, reject) => {
+        //format这个跟base64数据的开头对应
+        const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(base64data) || []
+        if (!format) {
+          reject(new Error('ERROR_BASE64SRC_PARSE'))
+        }
+        const filePath = `${Taro.env.USER_DATA_PATH}/${FILE_BASE_NAME}.${format}`
+        //const buffer = wx.base64ToArrayBuffer(bodyData);
+        if (!bodyData) return
+        fsm.writeFile({
+          filePath,
+          data: bodyData,
+          //data: base64data.split(";base64,")[1],
+          encoding: 'base64',
+          success() {
+            resolve(filePath)
+          },
+          fail() {
+            reject(new Error('ERROR_BASE64SRC_WRITE'))
+          }
+        })
+      })
+    },
+
+    saveQrCode() {
+      if (!this.hooks['canvasRef'].current) return
+      if (process.env.TARO_ENV === 'h5') {
+        return this._downH5QRCode()
+      }
+      this._downWeappQrCode()
+    },
+
+    _downH5QRCode() {
+      const img = new Image()
+      console.log(this.hooks['canvasRef'].current.current)
+      img.setAttribute('crossOrigin', 'anonymous')
+      img.src = this.hooks['canvasRef'].current.toDataURL('image/png')
+      img.onload = function () {
+        const link = document.createElement('a')
+        link.href = img.src
+        link.download = Math.random() + `.png`
+        const event = new MouseEvent('click') // 创建一个单击事件
+        link.dispatchEvent(event) // 主动触发a标签的click事件下载
+      }
+    },
+
+    async _downWeappQrCode() {
+      const that = this
+      Taro.getSetting({
+        success: function (res) {
+          if (!res.authSetting['scope.writePhotosAlbum']) {
+            Taro.authorize({
+              scope: 'scope.writePhotosAlbum',
+              success: function () {
+                that._weappWritePhotosAlbum()
+              }
+            })
+            return
+          }
+          that._weappWritePhotosAlbum()
+        }
+      })
+    },
+
+    _weappWritePhotosAlbum() {
+      Taro.canvasToTempFilePath({
+        x: 0,
+        y: 0,
+        width: 400,
+        height: 500,
+        destWidth: 360,
+        destHeight: 450,
+        canvasId: 'myCanvas',
+        canvas: this.hooks['canvasRef'].current,
+        fileType: 'png'
+      })
+        .then((res) => {
+          console.log(res.tempFilePath)
+          Taro.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath
+          })
+            .then(() => {
+              this.hooks['toast']({ title: '保存成功', icon: 'success' })
+            })
+            .catch(() => {
+              this.hooks['toast']({ title: '图片保存失败' })
+              return
+            })
+        })
+        .catch(() => {
+          this.hooks['toast']({ title: '生成临时图片失败' })
+        })
     }
   },
-  function ({ state, events }) {
+  function ({ events }) {
+    const { saveQrCode } = events
     const systemInfo = Taro.getSystemInfoSync()
     const canvasRef = useRef<any>()
+    const userInfo = useRecoilValue(userInfoStore)
+    const [toast] = useToast({
+      icon: 'error'
+    })
 
     events.setHooks({
       systemInfo: systemInfo,
-      canvasRef: canvasRef
+      canvasRef: canvasRef,
+      userInfo: userInfo,
+      toast: toast
     })
 
     return (
@@ -317,7 +505,7 @@ export default Unite(
           <Canvas type='2d' id='myCanvas' canvasId='myCanvas' style={{ width: '100%', height: '100%' }}></Canvas>
         </View>
         <View className='van-page-button'>
-          <Button block type='danger'>
+          <Button block type='danger' onClick={saveQrCode}>
             保存图片
           </Button>
         </View>

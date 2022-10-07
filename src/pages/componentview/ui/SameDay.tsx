@@ -2,13 +2,12 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-01-18 18:02:45
- * @LastEditTime: 2022-09-26 22:03:31
+ * @LastEditTime: 2022-10-05 20:03:36
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent } from 'react'
 import { View } from '@tarojs/components'
 import { formatSameDayTime, formateSameDayDuration, formatRepeatTime } from '@/utils'
-import dayjs from 'dayjs'
 
 interface IPageOption {
   dtstart: Date

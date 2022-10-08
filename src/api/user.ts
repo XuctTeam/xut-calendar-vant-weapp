@@ -2,19 +2,10 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-10 19:52:50
- * @LastEditTime: 2022-09-26 20:48:05
+ * @LastEditTime: 2022-10-08 08:57:46
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
-
-/**
- * 发送登录短信验证码
- * @param phone
- * @returns
- */
-export const sendSmsCode = (phone: String): Promise<any> => {
-  return httpRequest.post('/uaa/sms', { phone, type: 0 })
-}
 
 /**
  * 退出

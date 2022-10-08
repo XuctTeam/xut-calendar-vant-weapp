@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-29 21:37:57
+ * @LastEditTime: 2022-10-08 18:08:34
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -21,9 +21,10 @@ import { cacheSetSync, cacheRemoveSync } from '@/cache'
 import Container from '@/components/container'
 import { IUserAuth, IUserInfo } from '~/../types/user'
 import { IDavCalendar } from '~/../types/calendar'
+import { sendLoginSmsCode } from '@/api/common'
 import { wechatLogin, phoneLogin, usernameLogin } from '@/api/login'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
-import { sendSmsCode, baseUserInfo, auths } from '@/api/user'
+import { baseUserInfo, auths } from '@/api/user'
 import { list as listQueryCalendar } from '@/api/calendar'
 import { checkMobile, brower } from '@/utils'
 import classnames from 'classnames'
@@ -213,7 +214,7 @@ export default Unite(
         this._error('手机号错误')
         return
       }
-      sendSmsCode(this.state.phone)
+      sendLoginSmsCode(this.state.phone)
         .then((res) => {
           console.log(res)
         })
@@ -354,12 +355,15 @@ export default Unite(
           <View className='logo'>
             <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '140px', height: '120px' }}></Image>
           </View>
-          <View
-            className={classnames('login-form', {
-              ['login-form_bg']: process.env.TARO_ENV !== 'weapp'
-            })}
-          >
-            {process.env.TARO_ENV !== 'weapp' && (
+          <View className='login-form'>
+            {process.env.TARO_ENV === 'h5' ? (
+              <>
+                <View className='form' />
+                <Button type='danger' block onClick={loginByPhoneOrUsername} disabled={loginLoading}>
+                  微信登录
+                </Button>
+              </>
+            ) : (
               <>
                 <View className='form'>
                   {!phoneForm ? (
@@ -428,9 +432,9 @@ export default Unite(
           </View>
           <View className='self'>
             <Checkbox value={self} checkedColor='red' onChange={(e: any) => setSelf(e.detail)}>
-              登录即已同意
+              登录代表您已同意
               {process.env.TARO_ENV === 'weapp' ? (
-                <Navigator url='/pages/privacyrule/index'>《隐私保护政策》</Navigator>
+                <Navigator url='/pages/privacyrule/index'>《隐私政策》</Navigator>
               ) : (
                 <a
                   href='#!'
@@ -440,20 +444,13 @@ export default Unite(
                     Router.toPrivacyrule()
                   }}
                 >
-                  《隐私保护政策》
+                  《隐私政策》
                 </a>
               )}
             </Checkbox>
           </View>
         </View>
-        <View className='footer'>
-          {process.env.TARO_ENV === 'weapp' && (
-            <View className='btn' onClick={loginByCode}>
-              <Icon classPrefix='page-icon' name='weixin1' size='36px'></Icon>
-              <View className='label'>微信</View>
-            </View>
-          )}
-        </View>
+        <View className='footer' />
       </Container>
     )
   },

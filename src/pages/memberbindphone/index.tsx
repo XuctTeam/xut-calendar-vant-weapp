@@ -19,7 +19,7 @@ import Container from '@/components/container'
 import Header from '@/components/header'
 import { userAuthInfoStore } from '@/store'
 import { checkMobile } from '@/utils'
-import { sendUmsSmsCode } from '@/api/common'
+import { sendSmsCode } from '@/api/common'
 import { IUserAuth } from '~/../types/user'
 import { useBack } from '@/utils/taro'
 import { getPhoneNumber, logout, bindPhone, unbindPhone, auths } from '@/api/user'
@@ -44,7 +44,7 @@ export default Unite(
         return
       }
       this._setSmsTextTime()
-      sendUmsSmsCode(!!this.hooks['phoneAuth'], phone)
+      sendSmsCode(!!this.hooks['phoneAuth'], phone)
         .then((res) => {
           console.log(res)
         })

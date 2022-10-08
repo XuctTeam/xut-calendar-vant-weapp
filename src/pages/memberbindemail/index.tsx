@@ -19,7 +19,7 @@ import Container from '@/components/container'
 import { userAuthInfoStore } from '@/store'
 import { checkEmail } from '@/utils'
 import { bindEmail, unbindEmail, auths } from '@/api/user'
-import { sendUmsEmailCode } from '@/api/common'
+import { sendEmailCode } from '@/api/common'
 import { IUserAuth } from '~/../types/user'
 import { useBack } from '@/utils/taro'
 import { create } from '@/utils/countdown'
@@ -42,7 +42,7 @@ export default Unite(
         })
         return
       }
-      sendUmsEmailCode(email, this.hooks['emailAuth'] ? 2 : 1)
+      sendEmailCode(email, this.hooks['emailAuth'] ? 2 : 1)
         .then(() => {})
         .catch((err: any) => {
           console.log(err)

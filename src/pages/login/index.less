@@ -67,10 +67,14 @@
     align-items: center;
     height: 460px;
     padding: 30px;
+    margin: 20px @padding-sm @padding-sm;
+    box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
+    border-radius: @border-radius-lg;
+    padding: @padding-sm;
+    background-color: #fff;
 
     .form {
       flex: 1;
-
       .van-button {
         background: none !important;
       }
@@ -87,13 +91,6 @@
       justify-content: space-between;
       font-size: 28px;
     }
-  }
-
-  .login-form_bg {
-    margin: 20px @padding-sm @padding-sm;
-    box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
-    border-radius: @border-radius-lg;
-    padding: @padding-sm;
   }
 
   .self {
@@ -118,11 +115,6 @@
     justify-content: center;
     background-image: url('https://images.xuct.net.cn/group1/M00/00/00/CgAQDGKEi5SATG9RAAASe0wpWR8167.png');
     background-repeat: no-repeat;
-    .btn {
-      position: absolute;
-      bottom: 80px;
-      font-size: 20px;
-    }
     .label {
       padding-top: 10px;
     }

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:33:18
+ * @LastEditTime: 2022-10-09 21:43:50
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupsearch\index.tsx
  * @Description:
  *
@@ -198,7 +198,7 @@ export default Unite(
           return <Header title='发现群组' left to={2}></Header>
         }}
       >
-        <Pagination complete={complete} loading={loading} data={list}>
+        <View className='search'>
           <Search
             onChange={(e) => setValue(e.detail)}
             placeholder='输入群组名称'
@@ -209,21 +209,26 @@ export default Unite(
             onClear={onClear}
             renderAction={<View onClick={() => setShow(true)}>筛选</View>}
           />
-          {list?.map((item: IGroup, index: number) => {
-            return (
-              <GroupBody
-                id={item.id}
-                key={index}
-                name={item.name}
-                avatar={item?.images}
-                num={item.num}
-                count={item.count || 0}
-                hasPasword={item.hasPasswordJoin === 1 ? true : false}
-                onJoin={onJoin}
-              ></GroupBody>
-            )
-          })}
-        </Pagination>
+        </View>
+        <View className='list'>
+          <Pagination complete={complete} loading={loading} data={list}>
+            {list?.map((item: IGroup, index: number) => {
+              return (
+                <GroupBody
+                  id={item.id}
+                  key={index}
+                  name={item.name}
+                  avatar={item?.images}
+                  num={item.num}
+                  count={item.count || 0}
+                  hasPasword={item.hasPasswordJoin === 1 ? true : false}
+                  onJoin={onJoin}
+                ></GroupBody>
+              )
+            })}
+          </Pagination>
+        </View>
+
         <ConditionSearch
           show={show}
           value={value}

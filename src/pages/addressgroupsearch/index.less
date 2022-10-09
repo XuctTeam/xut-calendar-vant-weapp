@@ -1,8 +1,7 @@
 .address-group-search-index {
-  .van-cell-group,
-  .van-radio-group {
-    background-color: #fff;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   .van-cell-group {
     box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
@@ -12,6 +11,21 @@
 
   .van-radio {
     margin-top: 10px;
+  }
+
+  .search {
+    height: 100px;
+    z-index: 2;
+  }
+
+  .list {
+    flex: 1;
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .components-pagination {
+    overflow-y: auto;
   }
 
   .van-row {

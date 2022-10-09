@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:32:23
+ * @LastEditTime: 2022-10-09 20:23:52
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import { ITouchEvent } from '@tarojs/components'
+import { ITouchEvent, View } from '@tarojs/components'
 import { Search, Tabs, Tab, Dialog } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Header from '@/components/header'
@@ -24,8 +24,75 @@ export default Unite(
   {
     state: {
       active: 0,
-      loading: false,
-      list: []
+      loading: true,
+      list: [
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        },
+        {
+          name: '123'
+        }
+      ]
     },
 
     async onLoad() {
@@ -70,7 +137,7 @@ export default Unite(
       applyMineList()
         .then((res) => {
           this.setState({
-            list: res as any as Array<IGroupMember>,
+            //list: res as any as Array<IGroupMember>,
             loading: false
           })
         })
@@ -185,15 +252,20 @@ export default Unite(
           return <Header title='群组申请' left to={2}></Header>
         }}
       >
-        <Search placeholder='搜索加入群组' shape='round' onFocus={onSearchFouce} />
-        <Tabs swipeable className='box' onClick={(e) => setActive(e.detail.index)}>
-          <Tab title='申请我的'>
-            <MemberList active={active} loading={loading} list={list} agreeJoin={agreeJoin} refuseJoin={refuseJoin} deleteApply={deleteApply}></MemberList>
-          </Tab>
-          <Tab title='我的申请'>
-            <MemberList active={active} loading={loading} list={list} agreeJoin={agreeJoin} refuseJoin={refuseJoin} deleteApply={deleteApply}></MemberList>
-          </Tab>
-        </Tabs>
+        <View className='search'>
+          <Search placeholder='搜索加入群组' shape='round' onFocus={onSearchFouce} />
+        </View>
+        <View className='box'>
+          <Tabs swipeable onClick={(e) => setActive(e.detail.index)}>
+            <Tab title='申请我的'>
+              <MemberList active={active} loading={loading} list={list} agreeJoin={agreeJoin} refuseJoin={refuseJoin} deleteApply={deleteApply}></MemberList>
+            </Tab>
+            <Tab title='我的申请'>
+              <MemberList active={active} loading={loading} list={list} agreeJoin={agreeJoin} refuseJoin={refuseJoin} deleteApply={deleteApply}></MemberList>
+            </Tab>
+          </Tabs>
+        </View>
+
         <Dialog id='vanDialogGroupApply' />
       </Container>
     )

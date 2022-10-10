@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 18:15:14
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-26 13:59:18
+ * @LastEditTime: 2022-10-10 11:50:10
  * @FilePath: \xut-calendar-vant-weapp\src\components\header.tsx
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 import { useBack } from '@/utils/taro'
 import { NavBar } from '@antmjs/vantui'
-import { brower } from '@/utils'
+import { useNav } from '@/utils'
 import './header.less'
 
 interface IPageOption {
@@ -23,7 +23,7 @@ interface IPageOption {
 
 export default function Index(props: IPageOption): JSX.Element {
   const [back] = useBack()
-  const _brower = brower()
+  const _brower = useNav()
 
   const routerToBack = () => {
     if (!props.to) props.to = 1

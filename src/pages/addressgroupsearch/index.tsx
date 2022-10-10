@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-09 21:43:50
+ * @LastEditTime: 2022-10-10 11:59:37
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupsearch\index.tsx
  * @Description:
  *
@@ -15,7 +15,6 @@ import Pagination from '@/components/pagination'
 import { Input, ITouchEvent, View } from '@tarojs/components'
 import { useReachBottom } from '@tarojs/taro'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import { search } from '@/api/group'
 import { ConditionSearch, GroupBody } from './ui'
 import { IGroup } from 'types/group'
@@ -24,6 +23,7 @@ import { apply } from '@/api/groupmember'
 import './index.less'
 import { useBack } from '@/utils/taro'
 import { useToast } from 'taro-hooks'
+import { useNav } from '@/utils'
 
 const PAGE_SIZE = 50
 
@@ -170,6 +170,8 @@ export default Unite(
     const { value, show, list, complete, loading, hasPass, dateScope, numCount } = state
     const { setValue, setShow, onSearch, loadList, onJoin, onClear, onConditionSearch, setHasPass, setDateScope, setNumCount, reset } = events
     const pageRef = useRef<number>(0)
+    const usedNav = useNav()
+
     const [toast] = useToast({
       icon: 'success'
     })
@@ -189,15 +191,7 @@ export default Unite(
       }
     })
     return (
-      <Container
-        navTitle='发现群组'
-        h5Nav={true}
-        enablePagePullDownRefresh={false}
-        className='address-group-search-index'
-        renderPageTopHeader={() => {
-          return <Header title='发现群组' left to={2}></Header>
-        }}
-      >
+      <Container navTitle='发现群组' enablePagePullDownRefresh={false} className='address-group-search-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='search'>
           <Search
             onChange={(e) => setValue(e.detail)}

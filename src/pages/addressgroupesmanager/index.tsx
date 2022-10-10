@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-30 09:17:38
+ * @LastEditTime: 2022-10-10 11:48:25
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -10,12 +10,11 @@
  */
 import Unite from '@antmjs/unite'
 import { useEffect } from 'react'
-import { Dialog, Empty, Loading, PowerScrollView } from '@antmjs/vantui'
+import { Dialog, PowerScrollView } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import Container from '@/components/container'
 import { useRecoilValue } from 'recoil'
-import Header from '@/components/header'
 import { GroupBody, GroupHeader } from './ui'
 import { IGroup } from 'types/group'
 import { groupList, deleteGroup } from '@/api/group'
@@ -23,7 +22,7 @@ import { cacheGetSync } from '@/cache'
 import { IMenuButton, userInfoStore } from '@/store'
 import { useToast } from 'taro-hooks'
 import { IUserInfo } from 'types/user'
-import { brower } from '@/utils'
+import { useNav } from '@/utils'
 import { menuButtonStore } from '@/store'
 
 import './index.less'
@@ -108,13 +107,10 @@ export default Unite(
     },
 
     getTopSize() {
-      if (process.env.TARO_ENV === 'weapp') {
-        const menuButton = this.hooks['menuButton']
-        if (!menuButton) return 100
-        return menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
-      }
-      if (brower()) return 50
-      return 200
+      if (process.env.TARO_ENV === 'h5' && !useNav()) return 0
+      const menuButton = this.hooks['menuButton']
+      if (!menuButton) return 100
+      return menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
     },
 
     _deleteGroup(id: string) {
@@ -165,15 +161,7 @@ export default Unite(
     }, [accessToken])
 
     return (
-      <Container
-        navTitle='通讯录管理'
-        enablePagePullDownRefresh={false}
-        className='pages-address-groupes-manager-index'
-        tabbar
-        renderPageTopHeader={() => {
-          return <Header title='通讯录管理' left={false} to={2}></Header>
-        }}
-      >
+      <Container navTitle='通讯录管理' enablePagePullDownRefresh={false} useNav={useNav()} showMenuBtns={false} className='pages-address-groupes-manager-index'>
         <View className='page-box' style={{ paddingTop: getTopSize() + 'px' }}>
           <View className='header'>
             <GroupHeader addGroup={addGroup}></GroupHeader>

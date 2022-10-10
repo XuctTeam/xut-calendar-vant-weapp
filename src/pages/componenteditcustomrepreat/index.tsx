@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:34:21
+ * @LastEditTime: 2022-10-10 12:53:08
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditcustomrepreat\index.tsx
  * @Description:
  *
@@ -12,12 +12,12 @@ import Unite from '@antmjs/unite'
 import { ActionSheet, Button, Cell } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import dayjs from 'dayjs'
 import { IntervalPicker, Monthly, Weekly } from './ui'
 import { useBack } from '@/utils/taro'
-import './index.less'
 import Router from 'tarojs-router-next'
+import { useNav } from '@/utils'
+import './index.less'
 
 export default Unite(
   {
@@ -133,17 +133,15 @@ export default Unite(
     events.setHooks({
       back: back
     })
+    const usedNav = useNav()
 
     return (
       <Container
         navTitle='自定义循环'
         enablePagePullDownRefresh={false}
         className='pages-component-edit-custom-repeat-index'
-        h5Nav={true}
-        useNav={true}
-        renderPageTopHeader={() => {
-          return <Header title='自定义循环' left={true} to={1}></Header>
-        }}
+        useNav={usedNav}
+        showMenuBtns={usedNav}
       >
         <View className='van-page-box'>
           <Cell title='频率' clickable onClick={() => setRepeatTypeOpen(true)}>

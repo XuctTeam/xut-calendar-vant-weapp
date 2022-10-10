@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:37:39
+ * @LastEditTime: 2022-10-10 13:20:41
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindwechat\index.tsx
  * @Description:
  *
@@ -11,7 +11,6 @@
 import Unite from '@antmjs/unite'
 import { Button, Cell, Empty } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
-import Header from '@/components/header'
 import { useEnv, useLogin, useToast, useUserInfo } from 'taro-hooks'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
@@ -25,6 +24,7 @@ import { IDavCalendar } from '~/../types/calendar'
 import { bindWx, auths, updateWxInfo } from '@/api/user'
 
 import './index.less'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -135,6 +135,7 @@ export default Unite(
     const env = useEnv()
     const [login] = useLogin()
     const [, { getUserProfile }] = useUserInfo()
+    const usedNav = useNav()
     const [toast] = useToast({
       icon: 'error'
     })
@@ -162,15 +163,7 @@ export default Unite(
     }, [])
 
     return (
-      <Container
-        navTitle='微信绑定'
-        enablePagePullDownRefresh={false}
-        className='pages-member-bind-wechat-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='微信绑定' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='微信绑定' enablePagePullDownRefresh={false} className='pages-member-bind-wechat-index' useNav={usedNav} showMenuBtns={usedNav}>
         {wxAuth ? (
           <>
             <View className='van-page-box'>

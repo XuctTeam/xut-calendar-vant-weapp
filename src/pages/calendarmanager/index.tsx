@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-29 21:43:31
+ * @LastEditTime: 2022-10-10 12:01:10
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -13,14 +13,14 @@ import Router from 'tarojs-router-next'
 import { Empty } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import { useRecoilState } from 'recoil'
 import { calendarStore } from '@/store'
 import { CalendarListBody } from './ui'
 import { list } from '@/api/calendar'
+import { IDavCalendar } from 'types/calendar'
+import { useNav } from '@/utils'
 
 import './index.less'
-import { IDavCalendar } from 'types/calendar'
 
 export default Unite(
   {
@@ -68,6 +68,7 @@ export default Unite(
     const { loading } = state
     const { onReload, editCalendar } = events
     const [calendars, setCalendarState] = useRecoilState(calendarStore)
+    const usedNav = useNav()
 
     events.setHooks({
       calendars: calendars,
@@ -78,13 +79,11 @@ export default Unite(
       <Container
         navTitle='日程管理'
         enablePagePullDownRefresh={true}
-        h5Nav={true}
         onReload={onReload}
         className='pages-calendar-manager-index'
         loading={loading}
-        renderPageTopHeader={() => {
-          return <Header title='日程管理' left to={4}></Header>
-        }}
+        useNav={usedNav}
+        showMenuBtns={usedNav}
       >
         {calendars.length === 0 ? (
           <Empty description='~空空如也~' />

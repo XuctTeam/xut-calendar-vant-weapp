@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:36:30
+ * @LastEditTime: 2022-10-10 13:17:02
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -17,13 +17,13 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import Avatar from '@/components/avatar'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
 import Images from '@/constants/images'
-import Header from '@/components/header'
 import { cacheRemoveSync } from '@/cache'
 import { useBack } from '@/utils/taro'
 import { UploadHeader } from './ui'
 import { logout, updateAvatar } from '@/api/user'
 
 import './index.less'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -117,6 +117,7 @@ export default Unite(
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const [userInfoState, setUserInfoState] = useRecoilState(userInfoStore)
     const setCalendarState = useSetRecoilState(calendarStore)
+    const usedNav = useNav()
 
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
     const { headerOpen, loading } = state
@@ -171,15 +172,7 @@ export default Unite(
       setCalendarState: setCalendarState
     })
     return (
-      <Container
-        navTitle='账号与安全'
-        enablePagePullDownRefresh={false}
-        className='pages-member-account-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='账号与安全' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='账号与安全' enablePagePullDownRefresh={false} className='pages-member-account-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Cell title='头像' size='large'>
             <Avatar src={avatar || Images.DEFAULT_AVATAR} shape='circle' size='large' onClick={() => setHeaderOpen(true)} />

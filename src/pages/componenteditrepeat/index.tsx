@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:39:29
+ * @LastEditTime: 2022-10-10 13:14:52
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditrepeat\index.tsx
  * @Description:
  *
@@ -11,14 +11,13 @@
 import Unite from '@antmjs/unite'
 import { Button, Cell, CellGroup, Icon, Radio, RadioGroup } from '@antmjs/vantui'
 import Container from '@/components/container'
-
 import Header from '@/components/header'
 import dayjs from 'dayjs'
 import Router, { NavigateType } from 'tarojs-router-next'
-import { formatRepeatTime } from '@/utils'
+import { formatRepeatTime, useNav } from '@/utils'
 import { View } from '@tarojs/components'
-import './index.less'
 import { useBack } from '@/utils/taro'
+import './index.less'
 
 export default Unite(
   {
@@ -233,18 +232,10 @@ export default Unite(
     events.setHooks({
       back: back
     })
+    const usedNav = useNav()
 
     return (
-      <Container
-        navTitle='循环选择'
-        enablePagePullDownRefresh={false}
-        className='pages-component-edit-repeat-index'
-        h5Nav={true}
-        useNav={true}
-        renderPageTopHeader={() => {
-          return <Header title='循环选择' left={true} to={1}></Header>
-        }}
-      >
+      <Container navTitle='循环选择' enablePagePullDownRefresh={false} className='pages-component-edit-repeat-index' useNav={usedNav} showMenuBtns={usedNav}>
         <RadioGroup className='van-page-box' value={repeatStatus} onChange={(e) => setRepeatChoose(e.detail)}>
           <CellGroup>
             <Cell title='不重复' className='no-repeat'>

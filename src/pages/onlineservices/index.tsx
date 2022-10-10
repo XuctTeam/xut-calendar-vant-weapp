@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-01 09:57:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:39:15
+ * @LastEditTime: 2022-10-10 11:49:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\onlineservices\index.tsx
  * @Description:
  *
@@ -13,8 +13,8 @@ import { Button } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
 import { Image } from '@antmjs/vantui'
-import Header from '@/components/header'
 import Images from '@/constants/images'
+import { useNav } from '@/utils'
 
 import './index.less'
 
@@ -24,16 +24,9 @@ export default Unite(
     async onLoad() {}
   },
   function ({}) {
+    const _useNav = useNav()
     return (
-      <Container
-        navTitle='在线客服'
-        enablePagePullDownRefresh={true}
-        className='pages-online-services-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='在线客服' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='在线客服' useNav={_useNav} showMenuBtns={_useNav} enablePagePullDownRefresh={false} className='pages-online-services-index'>
         <View className='van-page-box'>
           <View className='image'>
             <Image round src={Images.DEFAULT_QR_IMAGE} />

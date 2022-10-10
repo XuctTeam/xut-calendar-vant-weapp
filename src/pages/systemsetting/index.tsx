@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-01 09:57:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:39:43
+ * @LastEditTime: 2022-10-10 13:24:55
  * @FilePath: \xut-calendar-vant-weapp\src\pages\systemsetting\index.tsx
  * @Description:
  *
@@ -14,9 +14,9 @@ import { useRecoilState } from 'recoil'
 import { ActionSheet, Cell, CellGroup, Switch } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { lunarStore, mondayStore, compViewStore } from '@/store'
-import Header from '@/components/header'
 
 import './index.less'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -56,19 +56,12 @@ export default Unite(
     const [lunar, setLunar] = useRecoilState(lunarStore)
     const [monday, setMonday] = useRecoilState(mondayStore)
     const [compView, setCompView] = useRecoilState(compViewStore)
+    const usedNav = useNav()
 
     console.log(getVersion())
     return (
       <>
-        <Container
-          navTitle='设置'
-          enablePagePullDownRefresh={true}
-          h5Nav={true}
-          className='pages-systemsetting-index'
-          renderPageTopHeader={() => {
-            return <Header title='设置' left to={4}></Header>
-          }}
-        >
+        <Container navTitle='设置' enablePagePullDownRefresh={true} useNav={usedNav} showMenuBtns={usedNav} className='pages-systemsetting-index'>
           <CellGroup title='日历设置'>
             <Cell title='切换视图' clickable onClick={() => setViewPicker(true)} value={compView === 'list' ? '列表视图' : '日视图'} />
             <Cell title='显示农历'>

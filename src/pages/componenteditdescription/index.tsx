@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:34:34
+ * @LastEditTime: 2022-10-10 12:54:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditdescription\index.tsx
  * @Description:
  *
@@ -12,9 +12,9 @@ import Unite from '@antmjs/unite'
 import { Button } from '@antmjs/vantui'
 import { Textarea, View } from '@tarojs/components'
 import Container from '@/components/container'
-import Header from '@/components/header'
-import './index.less'
 import { useBack } from '@/utils/taro'
+import { useNav } from '@/utils'
+import './index.less'
 
 export default Unite(
   {
@@ -46,18 +46,10 @@ export default Unite(
     events.setHooks({
       back: back
     })
+    const usedNav = useNav()
 
     return (
-      <Container
-        navTitle='描述信息'
-        enablePagePullDownRefresh={false}
-        className='pages-component-edit-desc-index'
-        h5Nav={true}
-        useNav={true}
-        renderPageTopHeader={() => {
-          return <Header title='描述信息' left={true} to={1}></Header>
-        }}
-      >
+      <Container navTitle='描述信息' enablePagePullDownRefresh={false} className='pages-component-edit-desc-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Textarea
             style={{ width: '100%', padding: '4px', boxSizing: 'border-box' }}

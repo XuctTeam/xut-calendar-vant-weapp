@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-08 18:08:34
+ * @LastEditTime: 2022-10-10 11:52:32
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -26,8 +26,7 @@ import { wechatLogin, phoneLogin, usernameLogin } from '@/api/login'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
 import { baseUserInfo, auths } from '@/api/user'
 import { list as listQueryCalendar } from '@/api/calendar'
-import { checkMobile, brower } from '@/utils'
-import classnames from 'classnames'
+import { checkMobile, useNav } from '@/utils'
 import Images from '@/constants/images'
 import { create } from '@/utils/countdown'
 import './index.less'
@@ -310,7 +309,6 @@ export default Unite(
     const [show] = useToast({
       icon: 'error'
     })
-    const webEnv = brower()
     const setUserInfoState = useSetRecoilState(userInfoStore)
     const setUserAuthState = useSetRecoilState(userAuthInfoStore)
     const setCalendarState = useSetRecoilState(calendarStore)
@@ -344,9 +342,9 @@ export default Unite(
     }, [])
 
     return (
-      <Container navTitle='登录' className='pages-login-index'>
+      <Container navTitle='登录' useNav={false} showMenuBtns={false} className='pages-login-index'>
         <View className='section'>
-          {webEnv && (
+          {useNav() && (
             <View className='navigation_minibar_left_back back-btn' onClick={() => back({ to: 4, data: { isLogin: true } })}>
               <Icon name='arrow-left' />
             </View>

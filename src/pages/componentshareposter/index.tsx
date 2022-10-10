@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 15:24:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-05 20:43:51
+ * @LastEditTime: 2022-10-10 13:15:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareposter\index.tsx
  * @Description:
  *
@@ -24,7 +24,7 @@ import { useToast } from 'taro-hooks'
 import { useRecoilValue } from 'recoil'
 import { userInfoStore } from '@/store'
 import { IDavComponent } from 'types/calendar'
-import { formatDifferentDayTime, formateSameDayDuration, formatSameDayTime } from '@/utils'
+import { formatDifferentDayTime, formateSameDayDuration, formatSameDayTime, useNav } from '@/utils'
 import './index.less'
 
 interface IImageOption {
@@ -489,17 +489,15 @@ export default Unite(
       userInfo: userInfo,
       toast: toast
     })
+    const usedNav = useNav()
 
     return (
       <Container
         navTitle='日程海报分享'
         enablePagePullDownRefresh={true}
         className='pages-component-share-poster-index'
-        h5Nav={true}
-        useNav={true}
-        renderPageTopHeader={() => {
-          return <Header title='日程海报分享' left={true} to={1}></Header>
-        }}
+        useNav={usedNav}
+        showMenuBtns={usedNav}
       >
         <View className='van-page-box'>
           <Canvas type='2d' id='myCanvas' canvasId='myCanvas' style={{ width: '100%', height: '100%' }}></Canvas>

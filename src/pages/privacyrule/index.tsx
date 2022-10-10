@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:36:55
+ * @LastEditTime: 2022-10-10 13:24:16
  * @FilePath: \xut-calendar-vant-weapp\src\pages\privacyrule\index.tsx
  * @Description:
  *
@@ -11,7 +11,7 @@
 import Unite from '@antmjs/unite'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
-import Header from '@/components/header'
+import { useNav } from '@/utils'
 import './index.less'
 
 export default Unite(
@@ -20,16 +20,10 @@ export default Unite(
     async onLoad() {}
   },
   function ({}) {
+    const usedNav = useNav()
+
     return (
-      <Container
-        navTitle='隐私保护协议'
-        h5Nav={true}
-        enablePagePullDownRefresh={true}
-        renderPageTopHeader={() => {
-          return <Header title='隐私保护协议' left to={4}></Header>
-        }}
-        className='pages-privacy-rule-index'
-      >
+      <Container navTitle='隐私保护协议' enablePagePullDownRefresh={false} useNav={usedNav} showMenuBtns={usedNav} className='pages-privacy-rule-index'>
         <View className='header'>
           <View className='title'>楚日历隐私保护协议</View>
         </View>

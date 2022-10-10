@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:39:06
+ * @LastEditTime: 2022-10-10 13:21:11
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberforgetpassword\index.tsx
  * @Description:
  *
@@ -11,13 +11,13 @@
 import Unite from '@antmjs/unite'
 import { Steps } from '@antmjs/vantui'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import { Auth, Password } from './ui'
 import { forgetPasswordCheck, forgetModify } from '@/api/forget'
 import './index.less'
 import { useRef } from 'react'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -67,6 +67,7 @@ export default Unite(
     })
     const memberIdRef = useRef<string>('')
     const codeRef = useRef<number>(-1)
+    const usedNav = useNav()
     events.setHooks({
       toast: toast,
       back: back,
@@ -75,15 +76,7 @@ export default Unite(
     })
 
     return (
-      <Container
-        navTitle='忘记密码'
-        enablePagePullDownRefresh={false}
-        className='pages-member-forget-index'
-        h5Nav
-        renderPageTopHeader={() => {
-          return <Header title='忘记密码' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='忘记密码' enablePagePullDownRefresh={false} className='pages-member-forget-index' useNav={usedNav} showMenuBtns={usedNav}>
         <Steps
           active={step}
           steps={[

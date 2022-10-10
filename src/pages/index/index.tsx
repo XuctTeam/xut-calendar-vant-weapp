@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-29 17:10:40
+ * @LastEditTime: 2022-10-10 11:50:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -17,9 +17,8 @@ import { useWebEnv } from '@/hooks'
 import Router from 'tarojs-router-next'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Collapse, CollapseItem } from '@antmjs/vantui'
-import Header from '@/components/header'
 import dayjs from 'dayjs'
-import { getToday } from '@/utils'
+import { useNav, getToday } from '@/utils'
 import { ICurrentDay } from '~/../types/date'
 import { calendarStore, componentRefreshTimeStore, lunarStore, mondayStore, compViewStore, userInfoStore, userAuthInfoStore } from '@/store'
 import { cacheGetSync } from '@/cache'
@@ -290,16 +289,7 @@ export default Unite(
     })
 
     return (
-      <Container
-        navTitle='日程管理'
-        className='pages-index-index'
-        h5Nav={true}
-        tabbar
-        enablePagePullDownRefresh={true}
-        renderPageTopHeader={() => {
-          return <Header title='日程管理' left={false} to={1}></Header>
-        }}
-      >
+      <Container navTitle='日程管理' useNav={useNav()} className='pages-index-index' showMenuBtns={false} enablePagePullDownRefresh={false}>
         <View className='box'>
           <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
             <CollapseItem

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-06 22:52:07
+ * @LastEditTime: 2022-10-10 13:16:17
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -20,7 +20,7 @@ import ButtonGroup from '@/components/buttongroup'
 import Router from 'tarojs-router-next'
 import { DifferentDay, SameDay } from './ui'
 import { userInfoStore, componentRefreshTimeStore } from '@/store'
-import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText, alarmCodeToType } from '@/utils'
+import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText, alarmCodeToType, useNav } from '@/utils'
 import { getById, deleteById, queryComponentMemberIds, getAttendStatus, updateAttendStatus, refuseAttend, getShortUrl } from '@/api/component'
 import { getName } from '@/api/user'
 import { IDavComponent } from 'types/calendar'
@@ -344,6 +344,7 @@ export default Unite(
     const { setAction, setActionChoose, setAttendStatus } = events
     const setComponentRefreshTime = useSetRecoilState(componentRefreshTimeStore)
     const userInfo = useRecoilValue(userInfoStore)
+    const usedNav = useNav()
     const [toast] = useToast({
       icon: 'success'
     })
@@ -370,16 +371,7 @@ export default Unite(
     })
 
     return (
-      <Container
-        navTitle='日程查看'
-        enablePagePullDownRefresh={false}
-        className='pages-component-view-index'
-        h5Nav={true}
-        useNav={true}
-        renderPageTopHeader={() => {
-          return <Header title='日程查看' left={true} to={1} delta={add ? 2 : 1}></Header>
-        }}
-      >
+      <Container navTitle='日程查看' enablePagePullDownRefresh={false} className='pages-component-view-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Cell className='summany'>
             <View className='event-label' style={{ color: `#${color}`, background: `#${color}` }}></View>

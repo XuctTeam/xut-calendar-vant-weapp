@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:32:08
+ * @LastEditTime: 2022-10-10 11:54:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\aboutus\index.tsx
  * @Description:
  *
@@ -15,8 +15,8 @@ import { Image } from '@antmjs/vantui'
 import { View, Navigator } from '@tarojs/components'
 import Container from '@/components/container'
 import Images from '@/constants/images'
+import { useNav } from '@/utils'
 import './index.less'
-import Header from '@/components/header'
 
 export default Unite(
   {
@@ -30,17 +30,10 @@ export default Unite(
   function ({ events }) {
     const env = useWebEnv()
     const { getVersion } = events
+    const _useNav = useNav()
 
     return (
-      <Container
-        navTitle='关于我们'
-        h5Nav={true}
-        enablePagePullDownRefresh={false}
-        className='pages-aboutus-index'
-        renderPageTopHeader={() => {
-          return <Header title='关于我们' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='关于我们' enablePagePullDownRefresh={false} useNav={_useNav} showMenuBtns={_useNav} className='pages-aboutus-index'>
         <View className='box'>
           <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '220px', height: '180px' }}></Image>
           <View className='title'>楚日历</View>

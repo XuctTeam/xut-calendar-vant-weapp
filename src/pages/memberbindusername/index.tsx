@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:37:52
+ * @LastEditTime: 2022-10-10 13:20:03
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindusername\index.tsx
  * @Description:
  *
@@ -22,6 +22,7 @@ import Header from '@/components/header'
 
 import './index.less'
 import { useBack } from '@/utils/taro'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -69,6 +70,7 @@ export default Unite(
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const userNameAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'user_name') : undefined
     const form = Form.useForm()
+    const usedNav = useNav()
     const [toast] = useToast({
       icon: 'success',
       title: '绑定成功'
@@ -91,15 +93,7 @@ export default Unite(
     }, [])
 
     return (
-      <Container
-        navTitle='用户名绑定'
-        enablePagePullDownRefresh={false}
-        className='pages-member-bind-username-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='用户名绑定' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='用户名绑定' enablePagePullDownRefresh={false} className='pages-member-bind-username-index' useNav={usedNav} showMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
           <CellGroup inset>
             <FormItem

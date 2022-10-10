@@ -2,30 +2,24 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-26 21:15:57
+ * @LastEditTime: 2022-10-10 13:23:08
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import Taro from '@tarojs/taro'
 import Header from '@/components/header'
 import { Button, Icon, Form } from '@antmjs/vantui'
 import { Swiper, SwiperItem, View } from '@tarojs/components'
 import Container from '@/components/container'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
-import { register, captcha as toGetCaptcha } from '@/api/user'
+import { register } from '@/api/user'
 import { UserNameRegister, PhoneRegister, EmailRegister } from './ui'
-
-import './index.less'
 import dayjs from 'dayjs'
-
-interface ICaptcha {
-  image: string
-  key: string
-}
+import { useNav } from '@/utils'
+import './index.less'
 
 interface IUserNameForm {
   captcha: string
@@ -176,6 +170,7 @@ export default Unite(
     const userRef = Form.useForm()
     const emailRef = Form.useForm()
     const phoneRef = Form.useForm()
+    const usedNav = useNav()
 
     const [toast] = useToast({
       icon: 'error'
@@ -190,15 +185,7 @@ export default Unite(
     })
 
     return (
-      <Container
-        navTitle='用户注册'
-        enablePagePullDownRefresh={false}
-        h5Nav
-        renderPageTopHeader={() => {
-          return <Header title='用户注册' left to={4}></Header>
-        }}
-        className='pages-member-reigster-index'
-      >
+      <Container navTitle='用户注册' enablePagePullDownRefresh={false} useNav={usedNav} showMenuBtns={usedNav} className='pages-member-reigster-index'>
         <View className='box'>
           <Swiper
             autoplay={false}

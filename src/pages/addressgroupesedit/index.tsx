@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:40:48
+ * @LastEditTime: 2022-10-10 11:59:31
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesedit\index.tsx
  * @Description:
  *
@@ -12,7 +12,6 @@ import Unite from '@antmjs/unite'
 import { Button, CellGroup, Form, FormItem, Switch, Toast, Uploader } from '@antmjs/vantui'
 import { Input, ITouchEvent, View } from '@tarojs/components'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import { IFormInstanceAPI } from '@antmjs/vantui/types/form'
 import { addGroup, getGroupInfo } from '@/api/group'
 import { cacheGetSync } from '@/cache'
@@ -22,6 +21,7 @@ import { IGroup } from 'types/group'
 import { useFile, useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
 import './index.less'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -156,6 +156,7 @@ export default Unite(
     const { loading } = state
     const { valueFormatUpload, deleteFile, saveOrUpdate } = events
     const { upload } = useFile()
+    const usedNav = useNav()
     const [toast] = useToast({
       icon: 'error'
     })
@@ -170,15 +171,7 @@ export default Unite(
     })
 
     return (
-      <Container
-        navTitle='群组编辑'
-        enablePagePullDownRefresh={false}
-        h5Nav={true}
-        className='pages-address-groupesedit-index'
-        renderPageTopHeader={() => {
-          return <Header title='群组编辑' left to={2}></Header>
-        }}
-      >
+      <Container navTitle='群组编辑' enablePagePullDownRefresh={false} className='pages-address-groupesedit-index' useNav={usedNav} showMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
           <CellGroup inset>
             <FormItem

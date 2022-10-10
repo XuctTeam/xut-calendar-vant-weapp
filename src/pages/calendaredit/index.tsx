@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:33:29
+ * @LastEditTime: 2022-10-10 12:00:32
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendaredit\index.tsx
  * @Description:
  *
@@ -22,7 +22,7 @@ import { calendarStore, userInfoStore } from '@/store'
 import { IDavCalendar } from '~/../types/calendar'
 import { back } from '@/utils/taro'
 import { ColorRadio, AlarmRadio } from './ui'
-
+import { useNav } from '@/utils'
 import './index.less'
 
 export default Unite(
@@ -242,17 +242,10 @@ export default Unite(
       userInfo: userInfo,
       setCalendarStore: setCalendarStore
     })
+    const usedNav = useNav()
 
     return (
-      <Container
-        navTitle='日历编辑'
-        enablePagePullDownRefresh={false}
-        className='pages-calendar-edit-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='日历编辑' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='日历编辑' enablePagePullDownRefresh={false} className='pages-calendar-edit-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='box'>
           <Cell>
             <ColorRadio onChage={(e) => setColor(e)} defaultColor={color}></ColorRadio>

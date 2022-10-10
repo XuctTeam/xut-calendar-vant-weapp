@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:34:44
+ * @LastEditTime: 2022-10-10 12:55:00
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditlocation\index.tsx
  * @Description:
  *
@@ -16,6 +16,7 @@ import Header from '@/components/header'
 import Taro from '@tarojs/taro'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
+import { useNav } from '@/utils'
 import './index.less'
 
 export default Unite(
@@ -115,18 +116,10 @@ export default Unite(
       toast: toast,
       back: back
     })
+    const usedNav = useNav()
 
     return (
-      <Container
-        navTitle='地点选择'
-        enablePagePullDownRefresh={false}
-        className='pages-component-edit-location-index'
-        h5Nav={true}
-        useNav={true}
-        renderPageTopHeader={() => {
-          return <Header title='地点选择' left={true} to={1}></Header>
-        }}
-      >
+      <Container navTitle='地点选择' enablePagePullDownRefresh={false} className='pages-component-edit-location-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Textarea
             style={{ width: '100%', padding: '4px', boxSizing: 'border-box' }}

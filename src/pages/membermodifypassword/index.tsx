@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:37:19
+ * @LastEditTime: 2022-10-10 13:22:25
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifypassword\index.tsx
  * @Description:
  *
@@ -18,6 +18,7 @@ import { useToast } from 'taro-hooks'
 import { password as updatePassword } from '@/api/user'
 
 import './index.less'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -76,6 +77,7 @@ export default Unite(
   function ({ state, events }) {
     const { password, comfirmPassword, loading } = state
     const { setPassword, setComfirmPassword, modifyPassword } = events
+    const usedNav = useNav()
     const [back] = useBack({
       to: 4
     })
@@ -89,15 +91,7 @@ export default Unite(
     })
 
     return (
-      <Container
-        navTitle='修改密码'
-        enablePagePullDownRefresh={true}
-        className='pages-member-modify-password-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='修改密码' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='修改密码' enablePagePullDownRefresh={true} className='pages-member-modify-password-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='box'>
           <CellGroup inset>
             <Field

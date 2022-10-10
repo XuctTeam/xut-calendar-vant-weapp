@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:37:28
+ * @LastEditTime: 2022-10-10 13:21:55
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifyname\index.tsx
  * @Description:
  *
@@ -20,6 +20,7 @@ import { useToast } from 'taro-hooks'
 
 import './index.less'
 import { useBack } from '@/utils/taro'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -79,6 +80,7 @@ export default Unite(
     const [back] = useBack({
       to: 4
     })
+    const usedNav = useNav()
 
     const { setName, updateNames } = events
     const { name, loading } = state
@@ -91,15 +93,7 @@ export default Unite(
     })
 
     return (
-      <Container
-        navTitle='修改姓名'
-        enablePagePullDownRefresh={false}
-        className='pages-member-modidfy-name-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='修改姓名' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='修改姓名' enablePagePullDownRefresh={false} className='pages-member-modidfy-name-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='van-page-box'>
           <CellGroup inset>
             <Field label='姓名' required value={name} placeholder='请输入名称' border={false} onChange={(e) => setName(e.detail)} />

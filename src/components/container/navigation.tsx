@@ -5,8 +5,7 @@ import { View } from '@tarojs/components'
 import { Icon } from '@antmjs/vantui'
 import { useRecoilState } from 'recoil'
 import { menuButtonStore } from '@/store'
-import { brower, setMenuButtonAsync } from '@/utils'
-import classnames from 'classnames'
+import { setMenuButtonAsync } from '@/utils'
 import './navigation.less'
 
 const hackSyncWechatTitle = () => {
@@ -55,14 +54,13 @@ function MenuButton(props: IMenuButtonProps) {
         if (url && url[0] === '/') {
           url = url.substring(1)
         }
-        if (url !== homeUrl) {
+        if (url?.split('?')[0] !== homeUrl) {
           setHomeButton(true)
         }
       }
     },
     [homeUrl]
   )
-
   return (
     <>
       <View
@@ -87,6 +85,7 @@ function MenuButton(props: IMenuButtonProps) {
             <Icon name='arrow-left' />
           </View>
         )}
+
         {homeButton && (
           <View
             className='navigation_minibar_left_home'
@@ -140,7 +139,7 @@ function NavBar(props: INavBarProps) {
     <>
       <View className={`navigation_minibar ${navClassName || ''}`}>
         <>
-          {useNav && process.env.TARO_ENV !== 'h5' && (
+          {useNav && (
             <View
               style={{
                 height: `${navHeight}px`,
@@ -190,74 +189,36 @@ function NavBar(props: INavBarProps) {
   )
 }
 
-function H5PullDownRefresh(props: IH5PullDownRefresh) {
-  const { navClassName, pullDownRefreshStatus, springStyles, renderHeader, enablePullDownRefresh } = props
-
-  const renderStatusText = (): any => {
-    if (pullDownRefreshStatus === 'pulling') return '下拉刷新'
-    if (pullDownRefreshStatus === 'canRelease') return '释放立即刷新'
-    if (pullDownRefreshStatus === 'refreshing') return <View className='navigation_minibar_loading' />
-    if (pullDownRefreshStatus === 'complete') return '刷新成功'
-  }
-  const NView = animated(View)
-  return (
-    <>
-      <View className={`navigation_minibar ${navClassName || ''}`}>
-        <>
-          {renderHeader?.(0, 0, 0)}
-          {enablePullDownRefresh ? (
-            <NView
-              className={'navigation_minibar_pulldown'}
-              style={{
-                ...springStyles
-              }}
-            >
-              {renderStatusText()}
-            </NView>
-          ) : (
-            <></>
-          )}
-        </>
-      </View>
-      <View className='visibility-hidden'>
-        <>
-          <View
-            style={{
-              height: `0px`,
-              width: '100%'
-            }}
-          />
-          {renderHeader?.(0, 0, 0)}
-        </>
-      </View>
-    </>
-  )
-}
-
 type IProps = {
   homeUrl: string
   children: ReactNode
+  showMenuBtns?: boolean
   useNav?: boolean
   navTitle?: ReactNode
   navClassName?: string
   enablePullDownRefresh?: boolean
   pullDownRefreshStatus?: 'pulling' | 'refreshing' | 'complete' | 'canRelease'
   renderHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
-  h5Nav?: boolean
-  tabbar?: boolean
   springStyles: any
 }
 
 export default function Index(props: IProps) {
-  const { useNav = true, navTitle, navClassName, homeUrl, renderHeader, enablePullDownRefresh, pullDownRefreshStatus, springStyles } = props
+  const {
+    useNav = true,
+    showMenuBtns = true,
+    navTitle,
+    navClassName,
+    homeUrl,
+    renderHeader,
+    enablePullDownRefresh,
+    pullDownRefreshStatus,
+    springStyles
+  } = props
   const [menuButton, setMenuButton]: any = useRecoilState(menuButtonStore)
-  /** 新增属性 */
-  const { h5Nav, tabbar = false } = props
-  const wxbrower = brower()
 
   useDidShow(() => {
     // 设置title
-    if (process.env.TARO_ENV === 'h5') {
+    if (process.env.TARO_ENV === 'h5' && !useNav) {
       try {
         document.title = navTitle?.toString?.() || ''
       } catch {
@@ -270,7 +231,7 @@ export default function Index(props: IProps) {
   })
   // 设置导航栏位置
   useEffect(function () {
-    if (process.env.TARO_ENV !== 'h5' && (!menuButton || !menuButton.precise)) {
+    if (!menuButton || !menuButton.precise) {
       setMenuButtonAsync(setMenuButton)
     }
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -284,17 +245,6 @@ export default function Index(props: IProps) {
 
   return (
     <>
-      {process.env.TARO_ENV === 'h5' ? (
-        <H5PullDownRefresh
-          navClassName={navClassName}
-          renderHeader={renderHeader}
-          enablePullDownRefresh={enablePullDownRefresh}
-          pullDownRefreshStatus={pullDownRefreshStatus}
-          springStyles={springStyles}
-        />
-      ) : (
-        <></>
-      )}
       {menuButton && (
         <NavBar
           menuButton={menuButton}
@@ -307,16 +257,15 @@ export default function Index(props: IProps) {
           useNav={useNav}
         />
       )}
-      {menuButton && process.env.TARO_ENV !== 'h5' && process.env.TARO_ENV !== 'alipay' && <MenuButton menuButton={menuButton} homeUrl={homeUrl} />}
-      {process.env.TARO_ENV === 'h5' && !tabbar ? (
-        <View
-          className={classnames('van-box', {
-            ['van-box--padding']: h5Nav
-          })}
-          style={{ paddingTop: wxbrower && h5Nav ? '50px' : '0px' }}
-        >
-          {props.children}
-        </View>
+      {menuButton && showMenuBtns && process.env.TARO_ENV !== 'alipay' && <MenuButton menuButton={menuButton} homeUrl={homeUrl} />}
+      {process.env.TARO_ENV === 'h5' && useNav ? (
+        menuButton ? (
+          <View className='van-box' style={{ paddingTop: menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight) + 'px' }}>
+            {props.children}
+          </View>
+        ) : (
+          <View className='van-box'>{props.children}</View>
+        )
       ) : (
         <>{props.children}</>
       )}

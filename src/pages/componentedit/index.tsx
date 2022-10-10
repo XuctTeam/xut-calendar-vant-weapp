@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-30 09:33:54
+ * @LastEditTime: 2022-10-10 12:02:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -19,7 +19,7 @@ import { calendarStore, userInfoStore, componentRefreshTimeStore } from '@/store
 import { add, getById, queryComponentMemberIds } from '@/api/component'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { IUserInfo } from 'types/user'
-import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode } from '@/utils'
+import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode, useNav } from '@/utils'
 import { IDavCalendar, IDavComponent } from 'types/calendar'
 import { Picker, Time, CalendarAction, SelectCalendar, GridAction, RepeatPicker } from './ui'
 import { useToast, useRequestSubscribeMessage } from 'taro-hooks'
@@ -489,6 +489,7 @@ export default Unite(
     })
 
     const [requestSubscribeMessage] = useRequestSubscribeMessage()
+    const usedNav = useNav()
 
     events.setHooks({
       toast: toast,
@@ -504,12 +505,9 @@ export default Unite(
         navTitle='日程编辑'
         enablePagePullDownRefresh={false}
         className='pages-component-edit-index'
-        h5Nav={true}
-        useNav={true}
+        useNav={usedNav}
+        showMenuBtns={usedNav}
         loading={loading}
-        renderPageTopHeader={() => {
-          return <Header title='日程编辑' left={true} to={1}></Header>
-        }}
       >
         <View className='van-page-box'>
           <Cell>

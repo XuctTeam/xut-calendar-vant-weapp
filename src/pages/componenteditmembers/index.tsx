@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-23 11:35:01
+ * @LastEditTime: 2022-10-10 13:00:12
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
@@ -13,7 +13,6 @@ import { View } from '@tarojs/components'
 import { Cell, Checkbox, CheckboxGroup, CellGroup, Button, Empty, Search, Dialog } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { userInfoStore } from '@/store'
-import Header from '@/components/header'
 import { IUserInfo } from 'types/user'
 import { useRecoilValue } from 'recoil'
 import { useBack } from '@/utils/taro'
@@ -24,6 +23,7 @@ import { queryByIds } from '@/api/groupmember'
 import { IGroupMember } from 'types/group'
 import './index.less'
 import { useRef } from 'react'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -186,18 +186,16 @@ export default Unite(
       toast: toast,
       listRef: listRef
     })
+    const usedNav = useNav()
 
     return (
       <Container
         navTitle='事件邀请者'
         enablePagePullDownRefresh={false}
         className='pages-component-edit-member-index'
-        h5Nav={true}
-        useNav={true}
         loading={loading}
-        renderPageTopHeader={() => {
-          return <Header title='事件邀请者' left={true} to={1}></Header>
-        }}
+        useNav={usedNav}
+        showMenuBtns={usedNav}
       >
         <View className='van-page-box'>
           <Search

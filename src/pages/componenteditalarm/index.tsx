@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:34:05
+ * @LastEditTime: 2022-10-10 12:03:50
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditalarm\index.tsx
  * @Description:
  *
@@ -16,6 +16,7 @@ import Container from '@/components/container'
 import Header from '@/components/header'
 import './index.less'
 import { useBack } from '@/utils/taro'
+import { useNav } from '@/utils'
 
 const alrams = [
   {
@@ -107,18 +108,10 @@ export default Unite(
     events.setHooks({
       back: back
     })
+    const usedNav = useNav()
 
     return (
-      <Container
-        navTitle='提醒选择'
-        enablePagePullDownRefresh={false}
-        className='pages-component-edit-alarm-index'
-        h5Nav={true}
-        useNav={true}
-        renderPageTopHeader={() => {
-          return <Header title='提醒选择' left={true} to={1}></Header>
-        }}
-      >
+      <Container navTitle='提醒选择' enablePagePullDownRefresh={false} className='pages-component-edit-alarm-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Cell title='不提醒'>
             <RadioGroup value={openAlarm} onChange={(e) => setOpenAlarm(e.detail)}>

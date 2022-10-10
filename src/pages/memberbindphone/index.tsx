@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:38:02
+ * @LastEditTime: 2022-10-10 13:19:30
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
@@ -18,7 +18,7 @@ import { useLogin, useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import Header from '@/components/header'
 import { userAuthInfoStore } from '@/store'
-import { checkMobile } from '@/utils'
+import { checkMobile, useNav } from '@/utils'
 import { sendSmsCode } from '@/api/common'
 import { IUserAuth } from '~/../types/user'
 import { useBack } from '@/utils/taro'
@@ -187,6 +187,7 @@ export default Unite(
     })
     const [checkSession] = useLogin()
     const isWechat = process.env.TARO_ENV === 'weapp' && !!phoneAuth
+    const usedNav = useNav()
 
     events.setHooks({
       toast: toast,
@@ -219,15 +220,7 @@ export default Unite(
     }, [])
 
     return (
-      <Container
-        navTitle='手机绑定'
-        enablePagePullDownRefresh={false}
-        className='pages-member-bind-phone-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='手机绑定' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='手机绑定' enablePagePullDownRefresh={false} className='pages-member-bind-phone-index' useNav={usedNav} showMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
           <CellGroup inset>
             <FormItem

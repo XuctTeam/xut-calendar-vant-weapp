@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-15 09:38:13
+ * @LastEditTime: 2022-10-10 13:17:53
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccountmerge\index.tsx
  * @Description:
  *
@@ -11,16 +11,14 @@
 import Unite from '@antmjs/unite'
 import { Button, Checkbox } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
-import Router from 'tarojs-router-next'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
 import Container from '@/components/container'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
 import { merge, logout } from '@/api/user'
-import Header from '@/components/header'
 import { cacheRemoveSync } from '@/cache'
-
+import { useNav } from '@/utils'
 import './index.less'
 
 export default Unite(
@@ -102,6 +100,7 @@ export default Unite(
     const [userInfo, setUserInfoState] = useRecoilState(userInfoStore)
     const setCalendarState = useSetRecoilState(calendarStore)
     const setUserAuthsState = useSetRecoilState(userAuthInfoStore)
+    const usedNav = useNav()
 
     const [toast] = useToast({
       icon: 'error'
@@ -118,15 +117,7 @@ export default Unite(
       setUserAuthsState: setUserAuthsState
     })
     return (
-      <Container
-        navTitle='账号合并'
-        enablePagePullDownRefresh={false}
-        className='pages-member-account-merge-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='账号合并' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='账号合并' enablePagePullDownRefresh={false} className='pages-member-account-merge-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='van-page-box'>
           <View className='alarm'>
             <View className='title'>亲爱的： {userInfo ? userInfo.name : ''} </View>

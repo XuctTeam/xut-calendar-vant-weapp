@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-29 09:38:03
+ * @LastEditTime: 2022-10-10 13:18:57
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindemail\index.tsx
  * @Description:
  *
@@ -17,7 +17,7 @@ import Header from '@/components/header'
 import { useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import { userAuthInfoStore } from '@/store'
-import { checkEmail } from '@/utils'
+import { checkEmail, useNav } from '@/utils'
 import { bindEmail, unbindEmail, auths } from '@/api/user'
 import { sendEmailCode } from '@/api/common'
 import { IUserAuth } from '~/../types/user'
@@ -134,6 +134,7 @@ export default Unite(
     const { smsText, disable, loading } = state
     const { sendSmsCode, bindEmail, setSmsText, setSmsTextEnd } = events
     const form = Form.useForm()
+    const usedNav = useNav()
     const [toast] = useToast({
       icon: 'error'
     })
@@ -175,15 +176,7 @@ export default Unite(
     }, [])
 
     return (
-      <Container
-        navTitle='邮箱绑定'
-        enablePagePullDownRefresh={false}
-        className='pages-member-bind-email-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='邮箱绑定' left to={4}></Header>
-        }}
-      >
+      <Container navTitle='邮箱绑定' enablePagePullDownRefresh={false} className='pages-member-bind-email-index' useNav={usedNav} showMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
           <CellGroup inset>
             <FormItem

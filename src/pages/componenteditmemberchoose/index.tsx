@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-23 11:10:06
+ * @LastEditTime: 2022-10-10 12:56:09
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmemberchoose\index.tsx
  * @Description:
  *
@@ -17,7 +17,7 @@ import { GroupSelect } from './ui'
 import { IGroup, IGroupMember } from 'types/group'
 import { groupList } from '@/api/group'
 import { groupMemberList } from '@/api/groupmember'
-
+import { useNav } from '@/utils'
 import { useBack } from '@/utils/taro'
 
 import './index.less'
@@ -107,17 +107,15 @@ export default Unite(
     events.setHooks({
       back: back
     })
+    const usedNav = useNav()
 
     return (
       <Container
         navTitle='参与人选择'
         enablePagePullDownRefresh={false}
         className='pages-component-edit-member-choose-index'
-        h5Nav={true}
-        useNav={true}
-        renderPageTopHeader={() => {
-          return <Header title='参与人选择' left={true} to={1}></Header>
-        }}
+        useNav={usedNav}
+        showMenuBtns={usedNav}
       >
         <ScrollView className='scrollview' scrollX scrollWithAnimation>
           {groups.map((item: IGroup, index) => {

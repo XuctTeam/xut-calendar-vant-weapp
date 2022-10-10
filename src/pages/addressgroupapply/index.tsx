@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-09 20:23:52
+ * @LastEditTime: 2022-10-10 11:56:29
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\index.tsx
  * @Description:
  *
@@ -12,13 +12,13 @@ import Unite from '@antmjs/unite'
 import { ITouchEvent, View } from '@tarojs/components'
 import { Search, Tabs, Tab, Dialog } from '@antmjs/vantui'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import Router from 'tarojs-router-next'
 import { IGroupMember } from 'types/group'
 import { applyMineList, mineApplyList, applyAgreeJoinGroup, applyRefuseJoinGroup } from '@/api/groupmember'
 import { MemberList } from './ui'
 
 import './index.less'
+import { useNav } from '@/utils'
 
 export default Unite(
   {
@@ -242,16 +242,9 @@ export default Unite(
   function ({ state, events }) {
     const { active, loading, list } = state
     const { setActive, onSearchFouce, agreeJoin, refuseJoin, deleteApply } = events
+    const _useNav = useNav()
     return (
-      <Container
-        navTitle='群组申请'
-        enablePagePullDownRefresh={false}
-        h5Nav={true}
-        className='address-group-apply-index'
-        renderPageTopHeader={() => {
-          return <Header title='群组申请' left to={2}></Header>
-        }}
-      >
+      <Container navTitle='群组申请' enablePagePullDownRefresh={false} className='address-group-apply-index' useNav={_useNav} showMenuBtns={_useNav}>
         <View className='search'>
           <Search placeholder='搜索加入群组' shape='round' onFocus={onSearchFouce} />
         </View>

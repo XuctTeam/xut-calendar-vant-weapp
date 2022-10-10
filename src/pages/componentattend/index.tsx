@@ -2,19 +2,19 @@
  * @Author: Derek Xu
  * @Date: 2022-10-05 21:08:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-06 22:46:40
+ * @LastEditTime: 2022-10-10 12:01:56
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentattend\index.tsx
  * @Description:
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Container from '@/components/container'
-import Header from '@/components/header'
 import Unite from '@antmjs/unite'
 import { Col, Empty, Loading, Row } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { queryComponentMembers, attendStatistics } from '@/api/component'
 import { TMember } from 'types/group'
 import { MemberBody } from './ui'
+import { useNav } from '@/utils'
 import './index.less'
 
 interface IAttendStatistics {
@@ -54,18 +54,12 @@ export default Unite(
       })
     }
   },
-  function ({ state, events }) {
+  function ({ state }) {
     const { loading, nums, accepted, no_accepted, no_operation, list } = state
+    const usedNav = useNav()
+
     return (
-      <Container
-        navTitle='日程邀请人'
-        enablePagePullDownRefresh={false}
-        className='pages-component-attend-index'
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='日程邀请人' left={true} to={1}></Header>
-        }}
-      >
+      <Container navTitle='日程邀请人' enablePagePullDownRefresh={false} className='pages-component-attend-index' useNav={usedNav} showMenuBtns={usedNav}>
         <View className='statistics'>
           <View className='li'>
             <View className='row'>

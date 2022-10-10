@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-08 08:39:38
+ * @LastEditTime: 2022-10-10 11:58:23
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupmember\index.tsx
  * @Description:
  *
@@ -51,16 +51,15 @@ export default Unite(
   function ({ state }) {
     const { list, loading } = state
     const indexList = IndexList()
+    const _useNav = useNav()
     return (
       <Container
         navTitle='群组会员'
         enablePagePullDownRefresh={false}
         className='pages-address-groupes-member-index'
+        useNav={_useNav}
+        showMenuBtns={_useNav}
         loading={loading}
-        h5Nav={true}
-        renderPageTopHeader={() => {
-          return <Header title='群组会员' left={true} to={2}></Header>
-        }}
       >
         <IndexBar indexList={indexList}>
           {list.map((item: IPinYinGroupMember, index: number) => (

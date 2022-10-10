@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 12:55:00
+ * @LastEditTime: 2022-10-10 17:32:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditlocation\index.tsx
  * @Description:
  *
@@ -12,7 +12,6 @@ import Unite from '@antmjs/unite'
 import { Button, Col, Row, Dialog } from '@antmjs/vantui'
 import { Textarea, View } from '@tarojs/components'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import Taro from '@tarojs/taro'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'

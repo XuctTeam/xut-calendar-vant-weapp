@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:16:17
+ * @LastEditTime: 2022-10-10 17:32:47
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -11,7 +11,6 @@
 import Taro from '@tarojs/taro'
 import Unite from '@antmjs/unite'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import { View } from '@tarojs/components'
 import { ActionSheet, Cell, Dialog, Icon, Loading, Overlay } from '@antmjs/vantui'
 import dayjs from 'dayjs'

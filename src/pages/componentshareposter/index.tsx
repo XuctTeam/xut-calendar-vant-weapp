@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 15:24:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:15:28
+ * @LastEditTime: 2022-10-10 17:32:42
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareposter\index.tsx
  * @Description:
  *
@@ -11,7 +11,6 @@
 
 import Taro, { FileSystemManager } from '@tarojs/taro'
 import { useRef } from 'react'
-import Header from '@/components/header'
 import Unite from '@antmjs/unite'
 import Container from '@/components/container'
 import { Canvas, View } from '@tarojs/components'

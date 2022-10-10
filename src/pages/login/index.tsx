@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 11:52:32
+ * @LastEditTime: 2022-10-10 16:46:59
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -29,6 +29,7 @@ import { list as listQueryCalendar } from '@/api/calendar'
 import { checkMobile, useNav } from '@/utils'
 import Images from '@/constants/images'
 import { create } from '@/utils/countdown'
+import classnames from 'classnames'
 import './index.less'
 
 export default Unite(
@@ -353,8 +354,8 @@ export default Unite(
           <View className='logo'>
             <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '140px', height: '120px' }}></Image>
           </View>
-          <View className='login-form'>
-            {process.env.TARO_ENV === 'h5' ? (
+          <View className={classnames('login-form', { ['login-form_bg']: process.env.TARO_ENV === 'h5' })}>
+            {process.env.TARO_ENV === 'weapp' ? (
               <>
                 <View className='form' />
                 <Button type='danger' block onClick={loginByPhoneOrUsername} disabled={loginLoading}>

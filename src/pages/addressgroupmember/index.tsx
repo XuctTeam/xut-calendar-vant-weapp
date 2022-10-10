@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 11:58:23
+ * @LastEditTime: 2022-10-10 17:32:08
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupmember\index.tsx
  * @Description:
  *
@@ -12,11 +12,11 @@ import Unite from '@antmjs/unite'
 import { IndexAnchor, IndexBar } from '@antmjs/vantui'
 import { Block } from '@tarojs/components'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import { groupMemberPinYinList } from '@/api/groupmember'
 import { IPinYinGroupMember } from 'types/group'
 import { IndexList } from '@/constants'
 import { MemberList } from './ui'
+import { useNav } from '@/utils'
 import './index.less'
 
 export default Unite(

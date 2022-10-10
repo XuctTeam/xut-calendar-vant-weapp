@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:14:52
+ * @LastEditTime: 2022-10-10 17:32:40
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditrepeat\index.tsx
  * @Description:
  *
@@ -11,7 +11,6 @@
 import Unite from '@antmjs/unite'
 import { Button, Cell, CellGroup, Icon, Radio, RadioGroup } from '@antmjs/vantui'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import dayjs from 'dayjs'
 import Router, { NavigateType } from 'tarojs-router-next'
 import { formatRepeatTime, useNav } from '@/utils'

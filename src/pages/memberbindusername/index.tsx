@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:20:03
+ * @LastEditTime: 2022-10-10 17:32:57
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindusername\index.tsx
  * @Description:
  *
@@ -18,7 +18,6 @@ import Container from '@/components/container'
 import { useRecoilState } from 'recoil'
 import { bindUserName, auths } from '@/api/user'
 import { IUserAuth } from '~/../types/user'
-import Header from '@/components/header'
 
 import './index.less'
 import { useBack } from '@/utils/taro'

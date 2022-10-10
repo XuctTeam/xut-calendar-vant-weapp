@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:18:57
+ * @LastEditTime: 2022-10-10 17:32:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindemail\index.tsx
  * @Description:
  *
@@ -13,7 +13,6 @@ import { useRecoilState } from 'recoil'
 import { useEffect, useRef } from 'react'
 import { Button, CellGroup, Col, Form, FormItem, Row } from '@antmjs/vantui'
 import { Input, View } from '@tarojs/components'
-import Header from '@/components/header'
 import { useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import { userAuthInfoStore } from '@/store'

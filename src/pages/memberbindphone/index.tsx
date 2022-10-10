@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:19:30
+ * @LastEditTime: 2022-10-10 17:32:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
@@ -16,7 +16,6 @@ import { Button, Cell, CellGroup, Col, Form, FormItem, Row } from '@antmjs/vantu
 import { Input, View, Button as TaroButton, ButtonProps } from '@tarojs/components'
 import { useLogin, useToast } from 'taro-hooks'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import { userAuthInfoStore } from '@/store'
 import { checkMobile, useNav } from '@/utils'
 import { sendSmsCode } from '@/api/common'

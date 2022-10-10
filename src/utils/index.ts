@@ -15,7 +15,7 @@ function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
         height: 32,
         left: document.body.clientWidth - 7 - 87,
         right: document.body.clientWidth - 7,
-        top: 4,
+        top: 10,
         width: 87
       }
     } else {

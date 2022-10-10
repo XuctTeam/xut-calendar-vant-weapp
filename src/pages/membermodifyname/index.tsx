@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:21:55
+ * @LastEditTime: 2022-10-10 17:33:00
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifyname\index.tsx
  * @Description:
  *
@@ -12,7 +12,6 @@ import Unite from '@antmjs/unite'
 import { Button, CellGroup, Field } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { useRecoilState } from 'recoil'
-import Header from '@/components/header'
 import Container from '@/components/container'
 import { userInfoStore } from '@/store'
 import { updateName } from '@/api/user'

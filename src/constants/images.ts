@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-06-20 16:37:16
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-30 16:29:26
+ * @LastEditTime: 2022-10-10 16:38:37
  * @FilePath: \xut-calendar-vant-weapp\src\constants\images.ts
  * @Description:
  *
@@ -23,8 +23,5 @@ export default {
 
   GROUP_ADD: DEFAULT_IMAGES_SERVER + 'group1/M00/00/00/CgAQDGKwT62ASKrrAAAFnqNFSFE176.png',
 
-  GROUP_SEARCH: DEFAULT_IMAGES_SERVER + 'group1/M00/00/00/CgAQDGKwT9qASeuMAAAGmf3CT0c489.png',
-
-  /** 分享二维码背景图 */
-  COMPONENT_SHARE_IMAGE: DEFAULT_IMAGES_SERVER + 'group1/M00/00/00/CgAQDGM2nNCALuVuAAAtyVsaEeA882_big.png'
+  GROUP_SEARCH: DEFAULT_IMAGES_SERVER + 'group1/M00/00/00/CgAQDGKwT9qASeuMAAAGmf3CT0c489.png'
 }

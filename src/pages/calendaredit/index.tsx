@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 12:00:32
+ * @LastEditTime: 2022-10-10 17:32:24
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendaredit\index.tsx
  * @Description:
  *
@@ -14,7 +14,6 @@ import { Button, Cell, CellGroup, Dialog, Field, Loading, Overlay, Switch } from
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { Textarea, View } from '@tarojs/components'
 import Container from '@/components/container'
-import Header from '@/components/header'
 import { list, get, update, create, remove } from '@/api/calendar'
 import { useToast } from 'taro-hooks'
 import { IUserInfo } from '~/../types/user'

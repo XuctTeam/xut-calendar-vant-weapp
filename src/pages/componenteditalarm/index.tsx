@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 12:03:50
+ * @LastEditTime: 2022-10-10 17:32:32
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditalarm\index.tsx
  * @Description:
  *
@@ -12,8 +12,6 @@ import Unite from '@antmjs/unite'
 import { View } from '@tarojs/components'
 import { Button, Cell, CellGroup, Checkbox, RadioGroup, Radio, CheckboxGroup } from '@antmjs/vantui'
 import Container from '@/components/container'
-
-import Header from '@/components/header'
 import './index.less'
 import { useBack } from '@/utils/taro'
 import { useNav } from '@/utils'

@@ -2,14 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:23:08
+ * @LastEditTime: 2022-10-10 17:33:05
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import Header from '@/components/header'
 import { Button, Icon, Form } from '@antmjs/vantui'
 import { Swiper, SwiperItem, View } from '@tarojs/components'
 import Container from '@/components/container'

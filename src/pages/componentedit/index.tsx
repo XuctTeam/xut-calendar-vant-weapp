@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 12:02:54
+ * @LastEditTime: 2022-10-10 17:32:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -13,7 +13,6 @@ import { Textarea, View } from '@tarojs/components'
 import { Button, Cell, Col, Icon, Row, Switch } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Router, { NavigateType } from 'tarojs-router-next'
-import Header from '@/components/header'
 import dayjs, { Dayjs } from 'dayjs'
 import { calendarStore, userInfoStore, componentRefreshTimeStore } from '@/store'
 import { add, getById, queryComponentMemberIds } from '@/api/component'

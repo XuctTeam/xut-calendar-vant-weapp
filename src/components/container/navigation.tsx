@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback, ReactNode } from 'react'
-import { getCurrentInstance, navigateBack, reLaunch, getCurrentPages, useDidShow } from '@tarojs/taro'
+import { getCurrentInstance, navigateBack, reLaunch, getCurrentPages, useDidShow, useRouter } from '@tarojs/taro'
 import { animated } from '@react-spring/web'
 import { View } from '@tarojs/components'
-import { Icon } from '@antmjs/vantui'
+import { CellGroup, Icon } from '@antmjs/vantui'
 import { useRecoilState } from 'recoil'
 import { menuButtonStore } from '@/store'
 import { setMenuButtonAsync } from '@/utils'
+
 import './navigation.less'
 
 const hackSyncWechatTitle = () => {
@@ -27,10 +28,17 @@ interface IMenuButtonProps {
 
 function MenuButton(props: IMenuButtonProps) {
   const { menuButton, homeUrl } = props
+  const router = useRouter()
 
   const handleGoBack = useCallback(() => {
+    const { path, params } = router
+    const { add } = params
+    let delta = 1
+    if (path.indexOf('/componentedit') && add && add === 'true') {
+      delta = 2
+    }
     navigateBack({
-      delta: 1
+      delta: delta
     })
   }, [])
 
@@ -103,14 +111,6 @@ function MenuButton(props: IMenuButtonProps) {
   )
 }
 
-interface IH5PullDownRefresh {
-  navClassName?: string
-  springStyles: any
-  enablePullDownRefresh?: boolean
-  renderHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
-  pullDownRefreshStatus?: 'pulling' | 'refreshing' | 'complete' | 'canRelease'
-}
-
 interface INavBarProps {
   useNav?: boolean
   title?: ReactNode
@@ -158,7 +158,7 @@ function NavBar(props: INavBarProps) {
             </View>
           )}
           {renderHeader?.(navHeight, statusBarHeight, paddingLeftRight)}
-          {enablePullDownRefresh ? (
+          {enablePullDownRefresh && (
             <NView
               className={'navigation_minibar_pulldown'}
               style={{
@@ -167,8 +167,6 @@ function NavBar(props: INavBarProps) {
             >
               {renderStatusText()}
             </NView>
-          ) : (
-            <></>
           )}
         </>
       </View>

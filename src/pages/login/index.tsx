@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 16:46:59
+ * @LastEditTime: 2022-10-14 21:43:36
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -217,12 +217,12 @@ export default Unite(
       sendLoginSmsCode(this.state.phone)
         .then((res) => {
           console.log(res)
+          this._setTextTime()
         })
         .catch((error) => {
           console.log(error)
           this._stopSmsCode()
         })
-      this._setTextTime()
     },
 
     _setTextTime() {

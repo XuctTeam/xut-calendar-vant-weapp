@@ -1,16 +1,17 @@
 /*
  * @Author: Derek Xu
- * @Date: 2022-08-08 21:51:08
+ * @Date: 2022-09-14 18:30:07
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-09 20:19:19
+ * @LastEditTime: 2022-10-19 13:22:13
  * @FilePath: \xut-calendar-vant-weapp\config\webpack\miniChain.js
- * @Description:
- * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by 楚恬商行, All Rights Reserved. 
  */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable import/no-commonjs */
 const MiniFixPlugin = require('@antmjs/plugin-mini-fix')
-const GlobalFixPlugin = require('./globalFixPlugin')
+const GlobalFixPlugin = require('@antmjs/plugin-global-fix')
 
 module.exports = function (chain) {
   // add @antmjs/plugin-mini-fix and @antmjs/mini-fix
@@ -31,7 +32,11 @@ module.exports = function (chain) {
     .add(
       (filename) =>
         /css-loader/.test(filename) ||
-        (/node_modules/.test(filename) && !(/(taro)|(react-spring)|(@antmjs)/.test(filename) && !/tarojs[\\/](runtime|shared|plugin-platform)/.test(filename)))
+        (/node_modules/.test(filename) &&
+          !(
+            /(taro)|(react-spring)|(@antmjs)|(recoil)/.test(filename) &&
+            !/tarojs[\\/](runtime|shared|plugin-platform)/.test(filename)
+          )),
     )
 
   chain.module
@@ -47,9 +52,9 @@ module.exports = function (chain) {
             framework: 'react',
             ts: true,
             // 这里必须要用false即runtime和shared这两个包不能进行polyfill
-            useBuiltIns: false
-          }
-        ]
-      ]
+            useBuiltIns: false,
+          },
+        ],
+      ],
     })
 }

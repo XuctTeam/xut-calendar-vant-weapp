@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 15:24:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:32:42
+ * @LastEditTime: 2022-10-19 15:38:39
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareposter\index.tsx
  * @Description:
  *
@@ -491,13 +491,7 @@ export default Unite(
     const usedNav = useNav()
 
     return (
-      <Container
-        navTitle='日程海报分享'
-        enablePagePullDownRefresh={true}
-        className='pages-component-share-poster-index'
-        useNav={usedNav}
-        showMenuBtns={usedNav}
-      >
+      <Container navTitle='日程海报分享' enablePagePullDownRefresh={true} className='pages-component-share-poster-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Canvas type='2d' id='myCanvas' canvasId='myCanvas' style={{ width: '100%', height: '100%' }}></Canvas>
         </View>

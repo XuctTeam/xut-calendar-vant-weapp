@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:32:38
+ * @LastEditTime: 2022-10-19 15:38:25
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditlocation\index.tsx
  * @Description:
  *
@@ -118,7 +118,7 @@ export default Unite(
     const usedNav = useNav()
 
     return (
-      <Container navTitle='地点选择' enablePagePullDownRefresh={false} className='pages-component-edit-location-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='地点选择' enablePagePullDownRefresh={false} className='pages-component-edit-location-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Textarea
             style={{ width: '100%', padding: '4px', boxSizing: 'border-box' }}

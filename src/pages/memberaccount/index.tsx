@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:17:02
+ * @LastEditTime: 2022-10-19 15:38:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -172,7 +172,7 @@ export default Unite(
       setCalendarState: setCalendarState
     })
     return (
-      <Container navTitle='账号与安全' enablePagePullDownRefresh={false} className='pages-member-account-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='账号与安全' enablePagePullDownRefresh={false} className='pages-member-account-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Cell title='头像' size='large'>
             <Avatar src={avatar || Images.DEFAULT_AVATAR} shape='circle' size='large' onClick={() => setHeaderOpen(true)} />

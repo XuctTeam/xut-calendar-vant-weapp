@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:32:54
+ * @LastEditTime: 2022-10-19 15:39:03
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
@@ -219,7 +219,7 @@ export default Unite(
     }, [])
 
     return (
-      <Container navTitle='手机绑定' enablePagePullDownRefresh={false} className='pages-member-bind-phone-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='手机绑定' enablePagePullDownRefresh={false} className='pages-member-bind-phone-index' useNav={usedNav} useMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
           <CellGroup inset>
             <FormItem

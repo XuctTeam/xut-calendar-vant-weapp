@@ -1,23 +1,14 @@
 /*
  * @Author: Derek Xu
- * @Date: 2022-08-08 21:51:08
+ * @Date: 2022-09-14 18:30:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-09 20:19:07
+ * @LastEditTime: 2022-10-19 13:21:55
  * @FilePath: \xut-calendar-vant-weapp\config\webpack\h5Chain.js
  * @Description:
+ *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-/* eslint-disable import/no-commonjs, @typescript-eslint/no-var-requires */
-const npath = require('path')
-
 module.exports = function (chain) {
-  // 解决h5的api在Taro变量上不存在的问题
-  chain.module
-    .rule('enjectH5Api-loader')
-    .test(/node_modules[\\/]@tarojs[\\/]taro-h5[\\/]dist[\\/]index\.js/i)
-    .pre()
-    .use('enjectH5Api-loader')
-    .loader(npath.join(process.cwd(), 'config/webpack/enjectH5ApiInTaro'))
   // taro内部的配置：scriptRule.exclude = [filename => /css-loader/.test(filename) || (/node_modules/.test(filename) && !(/taro/.test(filename)))];
   // taro内置的webpack配置在编译script的时候使用的是项目根目录的babel.config.js的配置，如果你项目的useBuiltIns设置为'usage'，则runtime和shared都会polyfill，就会导致出错
   // 所以下面重写了exclude的配置，并给runtime和shared单独进行了匹配
@@ -27,9 +18,9 @@ module.exports = function (chain) {
     .exclude.clear()
     .add(
       (filename) =>
-        /webpack[\\/]buildin[\\/]global\.js/.test(filename) ||
         /css-loader/.test(filename) ||
-        (/node_modules/.test(filename) && !(/(taro)|(react-spring)|(@antmjs)/.test(filename) && !/tarojs[\\/](runtime|shared|plugin-platform)/.test(filename)))
+        (/node_modules/.test(filename) &&
+          !(/(taro)|(react-spring)|(@antmjs)|(recoil)/.test(filename) && !/tarojs[\\/](runtime|shared|plugin-platform)/.test(filename)))
     )
 
   chain.module
@@ -44,6 +35,7 @@ module.exports = function (chain) {
           {
             framework: 'react',
             ts: true,
+            hot: false,
             // 这里必须要用false即runtime和shared这两个包不能进行polyfill
             useBuiltIns: false
           }

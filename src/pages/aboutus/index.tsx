@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 11:54:51
+ * @LastEditTime: 2022-10-19 15:37:49
  * @FilePath: \xut-calendar-vant-weapp\src\pages\aboutus\index.tsx
  * @Description:
  *
@@ -33,7 +33,7 @@ export default Unite(
     const _useNav = useNav()
 
     return (
-      <Container navTitle='关于我们' enablePagePullDownRefresh={false} useNav={_useNav} showMenuBtns={_useNav} className='pages-aboutus-index'>
+      <Container navTitle='关于我们' enablePagePullDownRefresh={false} useNav={_useNav} useMenuBtns={_useNav} className='pages-aboutus-index'>
         <View className='box'>
           <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '220px', height: '180px' }}></Image>
           <View className='title'>楚日历</View>

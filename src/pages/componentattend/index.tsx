@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-10-05 21:08:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 12:01:56
+ * @LastEditTime: 2022-10-19 15:38:14
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentattend\index.tsx
  * @Description:
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -59,7 +59,7 @@ export default Unite(
     const usedNav = useNav()
 
     return (
-      <Container navTitle='日程邀请人' enablePagePullDownRefresh={false} className='pages-component-attend-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='日程邀请人' enablePagePullDownRefresh={false} className='pages-component-attend-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='statistics'>
           <View className='li'>
             <View className='row'>

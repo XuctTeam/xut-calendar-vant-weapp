@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:00:12
+ * @LastEditTime: 2022-10-19 15:38:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
@@ -195,7 +195,7 @@ export default Unite(
         className='pages-component-edit-member-index'
         loading={loading}
         useNav={usedNav}
-        showMenuBtns={usedNav}
+        useMenuBtns={usedNav}
       >
         <View className='van-page-box'>
           <Search

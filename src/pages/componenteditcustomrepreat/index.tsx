@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 12:53:08
+ * @LastEditTime: 2022-10-19 15:38:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditcustomrepreat\index.tsx
  * @Description:
  *
@@ -141,7 +141,7 @@ export default Unite(
         enablePagePullDownRefresh={false}
         className='pages-component-edit-custom-repeat-index'
         useNav={usedNav}
-        showMenuBtns={usedNav}
+        useMenuBtns={usedNav}
       >
         <View className='van-page-box'>
           <Cell title='频率' clickable onClick={() => setRepeatTypeOpen(true)}>

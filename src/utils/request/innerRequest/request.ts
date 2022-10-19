@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-15 14:52:03
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-30 08:55:15
+ * @LastEditTime: 2022-10-17 17:50:56
  * @FilePath: \xut-calendar-vant-weapp\src\utils\request\innerRequest\request.ts
  * @Description:
  *
@@ -25,7 +25,7 @@ export default class httpRequest<T> {
       'Content-Type': 'application/json',
       ...options?.header
     }
-    if (!(url.includes('/uaa/sms') || url.includes('/uaa/captcha') || url.includes('/register'))) {
+    if (!(url.includes('/ums/sms') || url.includes('/uaa/captcha') || url.includes('/register'))) {
       /* 非登录接口都要通过token请求 */
       if (!url.includes('/oauth2/token')) {
         header['Authorization'] = cacheGetSync('accessToken')

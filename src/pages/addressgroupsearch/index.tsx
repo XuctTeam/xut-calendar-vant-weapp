@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 11:59:37
+ * @LastEditTime: 2022-10-19 15:38:02
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupsearch\index.tsx
  * @Description:
  *
@@ -191,7 +191,7 @@ export default Unite(
       }
     })
     return (
-      <Container navTitle='发现群组' enablePagePullDownRefresh={false} className='address-group-search-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='发现群组' enablePagePullDownRefresh={false} className='address-group-search-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='search'>
           <Search
             onChange={(e) => setValue(e.detail)}

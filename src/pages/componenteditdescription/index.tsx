@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 12:54:13
+ * @LastEditTime: 2022-10-19 15:38:22
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditdescription\index.tsx
  * @Description:
  *
@@ -49,7 +49,7 @@ export default Unite(
     const usedNav = useNav()
 
     return (
-      <Container navTitle='描述信息' enablePagePullDownRefresh={false} className='pages-component-edit-desc-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='描述信息' enablePagePullDownRefresh={false} className='pages-component-edit-desc-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Textarea
             style={{ width: '100%', padding: '4px', boxSizing: 'border-box' }}

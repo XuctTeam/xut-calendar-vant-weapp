@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:32:32
+ * @LastEditTime: 2022-10-19 15:38:29
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditalarm\index.tsx
  * @Description:
  *
@@ -109,7 +109,7 @@ export default Unite(
     const usedNav = useNav()
 
     return (
-      <Container navTitle='提醒选择' enablePagePullDownRefresh={false} className='pages-component-edit-alarm-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='提醒选择' enablePagePullDownRefresh={false} className='pages-component-edit-alarm-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Cell title='不提醒'>
             <RadioGroup value={openAlarm} onChange={(e) => setOpenAlarm(e.detail)}>

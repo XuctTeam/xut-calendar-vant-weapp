@@ -1,14 +1,16 @@
 /*
  * @Author: Derek Xu
- * @Date: 2022-07-14 15:50:29
+ * @Date: 2022-08-09 19:10:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-11 11:11:33
+ * @LastEditTime: 2022-10-19 13:56:25
  * @FilePath: \xut-calendar-vant-weapp\src\hooks.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { nextTick, useDidShow as useDidShowInTaro, useRouter as useRouterInTaro } from '@tarojs/taro'
+import { parse } from '@antmjs/utils'
 import { debounce, throttle } from 'lodash'
 import { useCallback, useRef } from 'react'
 
@@ -34,22 +36,34 @@ export function useThrottle(fn: any, ms?: number): any {
   return result
 }
 
-//判断是否为web环境
-export function useWebEnv(): boolean {
+export function useDidShow(fn: any): void {
+  useDidShowInTaro(() => {
+    // Taro的生命周期里面会先执行useDidShow，再执行useEffect(() => {//后执行}, [])
+    // 这里加nextTick延后执行
+    nextTick(fn)
+  })
+}
+
+export function useRouter() {
+  const routerInfo: Taro.RouterInfo = useRouterInTaro()
+  if (process.env.TARO_ENV === 'h5') {
+    const query = parse(location.search ? location.search.slice(1) : '')
+    routerInfo.params = { ...routerInfo.params, ...query }
+  }
+}
+
+export function useWebEnv() {
   return process.env.TARO_ENV === 'h5'
 }
 
-//判断是否在微信浏览器中
-export function useWxBrowser(): boolean {
-  if (/(micromessenger)/i.test(navigator.userAgent)) {
-    //是否电脑微信或者微信开发者工具
-    if (/(WindowsWechat)/i.test(navigator.userAgent) || /(wechatdevtools)/i.test(navigator.userAgent)) {
-      return true
-    } else {
-      //手机微信打开的浏览器
-      return true
-    }
+export function useWxBrowser() {
+  const match = /(micromessenger)/i.test(navigator.userAgent)
+  if (!match) return
+  //是否电脑微信或者微信开发者工具
+  if (/(WindowsWechat)/i.test(navigator.userAgent) || /(wechatdevtools)/i.test(navigator.userAgent)) {
+    return true
   } else {
-    return false
+    //手机微信打开的浏览器
+    return true
   }
 }

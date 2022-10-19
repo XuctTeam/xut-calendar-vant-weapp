@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 11:48:25
+ * @LastEditTime: 2022-10-19 16:47:29
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -106,13 +106,6 @@ export default Unite(
       })
     },
 
-    getTopSize() {
-      if (process.env.TARO_ENV === 'h5' && !useNav()) return 0
-      const menuButton = this.hooks['menuButton']
-      if (!menuButton) return 100
-      return menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight)
-    },
-
     _deleteGroup(id: string) {
       this.setState({
         loading: true
@@ -161,8 +154,8 @@ export default Unite(
     }, [accessToken])
 
     return (
-      <Container navTitle='通讯录管理' enablePagePullDownRefresh={false} useNav={useNav()} showMenuBtns={false} className='pages-address-groupes-manager-index'>
-        <View className='page-box' style={{ paddingTop: getTopSize() + 'px' }}>
+      <Container navTitle='通讯录管理' enablePagePullDownRefresh={false} useNav={useNav()} useMenuBtns={false} className='pages-address-groupes-manager-index'>
+        <View className='page-box'>
           <View className='header'>
             <GroupHeader addGroup={addGroup}></GroupHeader>
           </View>

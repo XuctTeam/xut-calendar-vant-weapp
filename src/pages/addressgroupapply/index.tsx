@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 11:56:29
+ * @LastEditTime: 2022-10-19 15:37:52
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\index.tsx
  * @Description:
  *
@@ -244,7 +244,7 @@ export default Unite(
     const { setActive, onSearchFouce, agreeJoin, refuseJoin, deleteApply } = events
     const _useNav = useNav()
     return (
-      <Container navTitle='群组申请' enablePagePullDownRefresh={false} className='address-group-apply-index' useNav={_useNav} showMenuBtns={_useNav}>
+      <Container navTitle='群组申请' enablePagePullDownRefresh={false} className='address-group-apply-index' useNav={_useNav} useMenuBtns={_useNav}>
         <View className='search'>
           <Search placeholder='搜索加入群组' shape='round' onFocus={onSearchFouce} />
         </View>

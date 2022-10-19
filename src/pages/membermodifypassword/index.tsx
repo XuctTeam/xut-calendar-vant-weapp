@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:33:02
+ * @LastEditTime: 2022-10-19 15:39:16
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifypassword\index.tsx
  * @Description:
  *
@@ -90,7 +90,7 @@ export default Unite(
     })
 
     return (
-      <Container navTitle='修改密码' enablePagePullDownRefresh={true} className='pages-member-modify-password-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='修改密码' enablePagePullDownRefresh={true} className='pages-member-modify-password-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='box'>
           <CellGroup inset>
             <Field

@@ -1,9 +1,9 @@
 import { getSystemInfo, getMenuButtonBoundingClientRect } from '@tarojs/taro'
 import { SetterOrUpdater } from 'recoil'
-import { cacheGet, cacheSet, cacheGetSync } from '@/cache'
+import { cacheGet, cacheGetSync, cacheSet } from '@/cache'
 import { IMenuButton } from '@/store'
 import dayjs from 'dayjs'
-import { ICurrentDay } from '../../types/date'
+import { ICurrentDay } from 'types/date'
 import { lunarDay } from './date'
 
 function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
@@ -15,7 +15,7 @@ function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
         height: 32,
         left: document.body.clientWidth - 7 - 87,
         right: document.body.clientWidth - 7,
-        top: 10,
+        top: 4,
         width: 87
       }
     } else {
@@ -34,6 +34,13 @@ function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
           top: menuButton.top,
           statusBarHeight: sysInfo.statusBarHeight ?? menuButton.top - 4
         })
+        cacheSet({
+          key: 'menuButton',
+          data: {
+            ...menuButton,
+            marginRight: sysInfo.screenWidth - menuButton.right
+          }
+        })
       } else {
         setStore({
           precise: false,
@@ -46,11 +53,11 @@ function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
           top: menuButton.top,
           statusBarHeight: menuButton.top - 4
         })
+        cacheSet({
+          key: 'menuButton',
+          data: menuButton
+        })
       }
-      cacheSet({
-        key: 'menuButton',
-        data: menuButton
-      })
     } else {
       setStore({
         precise: false,
@@ -136,7 +143,7 @@ export function setMenuButtonAsync(setStore: SetterOrUpdater<IMenuButton>) {
           width: mb.width,
           left: mb.left,
           right: mb.right,
-          marginRight: si.screenWidth - mb.right,
+          marginRight: mb.marginRight ?? si.screenWidth - mb.right,
           top: mb.top,
           statusBarHeight: si.statusBarHeight ?? mb.top - 4
         })
@@ -181,13 +188,6 @@ export function randomNum(min: number, max: number) {
   return Math.floor(Math.random() * (max + 1 - min) + min)
 }
 
-export function setWxBrower(is: boolean) {
-  cacheSet({
-    key: 'wxBrower',
-    data: is
-  })
-}
-
 export function bound(position: number, min: number | undefined, max: number | undefined) {
   let ret = position
   if (min !== undefined) {
@@ -211,6 +211,13 @@ export function rubberbandIfOutOfBounds(position: number, min: number, max: numb
 }
 
 export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
+
+export function setWxBrower(is: boolean) {
+  cacheSet({
+    key: 'wxBrower',
+    data: is
+  })
+}
 
 export const useNav = () => !(process.env.TARO_ENV === 'h5' && cacheGetSync('wxBrower'))
 

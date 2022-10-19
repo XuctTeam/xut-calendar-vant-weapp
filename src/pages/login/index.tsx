@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 16:46:59
+ * @LastEditTime: 2022-10-19 17:30:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -217,12 +217,11 @@ export default Unite(
       sendLoginSmsCode(this.state.phone)
         .then((res) => {
           console.log(res)
+          this._setTextTime()
         })
         .catch((error) => {
           console.log(error)
-          this._stopSmsCode()
         })
-      this._setTextTime()
     },
 
     _setTextTime() {
@@ -343,7 +342,7 @@ export default Unite(
     }, [])
 
     return (
-      <Container navTitle='登录' useNav={false} showMenuBtns={false} className='pages-login-index'>
+      <Container navTitle='登录' useNav={false} useMenuBtns={false} className='pages-login-form-index' enablePagePullDownRefresh={false}>
         <View className='section'>
           {useNav() && (
             <View className='navigation_minibar_left_back back-btn' onClick={() => back({ to: 4, data: { isLogin: true } })}>
@@ -358,7 +357,7 @@ export default Unite(
             {process.env.TARO_ENV === 'weapp' ? (
               <>
                 <View className='form' />
-                <Button type='danger' block onClick={loginByPhoneOrUsername} disabled={loginLoading}>
+                <Button type='danger' block onClick={loginByCode} disabled={loginLoading}>
                   微信登录
                 </Button>
               </>
@@ -405,7 +404,7 @@ export default Unite(
                         label='验证码'
                         titleWidth='50px'
                         placeholder='请输入验证码'
-                        maxlength={4}
+                        maxlength={6}
                         type='number'
                         value={smsCode}
                         onChange={(e: ITouchEvent) => setSmsCode(e.detail)}

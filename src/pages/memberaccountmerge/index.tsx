@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:17:53
+ * @LastEditTime: 2022-10-19 15:38:57
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccountmerge\index.tsx
  * @Description:
  *
@@ -117,7 +117,7 @@ export default Unite(
       setUserAuthsState: setUserAuthsState
     })
     return (
-      <Container navTitle='账号合并' enablePagePullDownRefresh={false} className='pages-member-account-merge-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='账号合并' enablePagePullDownRefresh={false} className='pages-member-account-merge-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='van-page-box'>
           <View className='alarm'>
             <View className='title'>亲爱的： {userInfo ? userInfo.name : ''} </View>

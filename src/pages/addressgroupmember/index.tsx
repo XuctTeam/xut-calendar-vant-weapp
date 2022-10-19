@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:32:08
+ * @LastEditTime: 2022-10-19 15:37:59
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupmember\index.tsx
  * @Description:
  *
@@ -58,7 +58,7 @@ export default Unite(
         enablePagePullDownRefresh={false}
         className='pages-address-groupes-member-index'
         useNav={_useNav}
-        showMenuBtns={_useNav}
+        useMenuBtns={_useNav}
         loading={loading}
       >
         <IndexBar indexList={indexList}>

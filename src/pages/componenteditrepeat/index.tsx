@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:32:40
+ * @LastEditTime: 2022-10-19 15:38:42
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditrepeat\index.tsx
  * @Description:
  *
@@ -234,7 +234,7 @@ export default Unite(
     const usedNav = useNav()
 
     return (
-      <Container navTitle='循环选择' enablePagePullDownRefresh={false} className='pages-component-edit-repeat-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='循环选择' enablePagePullDownRefresh={false} className='pages-component-edit-repeat-index' useNav={usedNav} useMenuBtns={usedNav}>
         <RadioGroup className='van-page-box' value={repeatStatus} onChange={(e) => setRepeatChoose(e.detail)}>
           <CellGroup>
             <Cell title='不重复' className='no-repeat'>

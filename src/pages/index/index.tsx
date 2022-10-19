@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 11:50:54
+ * @LastEditTime: 2022-10-19 15:38:49
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -289,7 +289,7 @@ export default Unite(
     })
 
     return (
-      <Container navTitle='日程管理' useNav={useNav()} className='pages-index-index' showMenuBtns={false} enablePagePullDownRefresh={false}>
+      <Container navTitle='日程管理' useNav={useNav()} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
         <View className='box'>
           <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
             <CollapseItem

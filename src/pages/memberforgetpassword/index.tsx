@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:21:11
+ * @LastEditTime: 2022-10-19 15:39:11
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberforgetpassword\index.tsx
  * @Description:
  *
@@ -76,7 +76,7 @@ export default Unite(
     })
 
     return (
-      <Container navTitle='忘记密码' enablePagePullDownRefresh={false} className='pages-member-forget-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='忘记密码' enablePagePullDownRefresh={false} className='pages-member-forget-index' useNav={usedNav} useMenuBtns={usedNav}>
         <Steps
           active={step}
           steps={[

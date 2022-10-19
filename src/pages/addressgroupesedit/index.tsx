@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-12 20:15:32
+ * @LastEditTime: 2022-10-19 15:37:55
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesedit\index.tsx
  * @Description:
  *
@@ -171,7 +171,7 @@ export default Unite(
     })
 
     return (
-      <Container navTitle='群组编辑' enablePagePullDownRefresh={false} className='pages-address-groupesedit-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='群组编辑' enablePagePullDownRefresh={false} className='pages-address-groupesedit-index' useNav={usedNav} useMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
           <CellGroup inset>
             <FormItem

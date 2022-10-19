@@ -1,12 +1,20 @@
-.pages-popup-login-index {
-  position: relative;
+.pages-login-index {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
   padding: 0 50px;
+
   .logo {
     width: 392px;
     height: 392px;
     display: block;
     margin: 274px auto 0;
   }
+
   .login-btn {
     font-size: 32px;
     font-weight: 800;
@@ -18,9 +26,11 @@
     bottom: 203px;
     left: 50%;
     transform: translateX(-50%);
+
     &::before {
       border: none;
     }
+
     &::after {
       border: none;
     }

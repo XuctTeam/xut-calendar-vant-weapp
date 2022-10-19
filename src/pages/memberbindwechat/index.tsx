@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:20:41
+ * @LastEditTime: 2022-10-19 15:39:08
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindwechat\index.tsx
  * @Description:
  *
@@ -163,7 +163,7 @@ export default Unite(
     }, [])
 
     return (
-      <Container navTitle='微信绑定' enablePagePullDownRefresh={false} className='pages-member-bind-wechat-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='微信绑定' enablePagePullDownRefresh={false} className='pages-member-bind-wechat-index' useNav={usedNav} useMenuBtns={usedNav}>
         {wxAuth ? (
           <>
             <View className='van-page-box'>

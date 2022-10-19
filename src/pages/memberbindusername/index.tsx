@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:32:57
+ * @LastEditTime: 2022-10-19 15:39:05
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindusername\index.tsx
  * @Description:
  *
@@ -92,7 +92,7 @@ export default Unite(
     }, [])
 
     return (
-      <Container navTitle='用户名绑定' enablePagePullDownRefresh={false} className='pages-member-bind-username-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='用户名绑定' enablePagePullDownRefresh={false} className='pages-member-bind-username-index' useNav={usedNav} useMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
           <CellGroup inset>
             <FormItem

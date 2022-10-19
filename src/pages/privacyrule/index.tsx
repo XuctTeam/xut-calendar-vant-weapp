@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 13:24:16
+ * @LastEditTime: 2022-10-19 15:39:29
  * @FilePath: \xut-calendar-vant-weapp\src\pages\privacyrule\index.tsx
  * @Description:
  *
@@ -23,7 +23,7 @@ export default Unite(
     const usedNav = useNav()
 
     return (
-      <Container navTitle='隐私保护协议' enablePagePullDownRefresh={false} useNav={usedNav} showMenuBtns={usedNav} className='pages-privacy-rule-index'>
+      <Container navTitle='隐私保护协议' enablePagePullDownRefresh={false} useNav={usedNav} useMenuBtns={usedNav} className='pages-privacy-rule-index'>
         <View className='header'>
           <View className='title'>楚日历隐私保护协议</View>
         </View>

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 12:01:10
+ * @LastEditTime: 2022-10-19 15:38:09
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -83,7 +83,7 @@ export default Unite(
         className='pages-calendar-manager-index'
         loading={loading}
         useNav={usedNav}
-        showMenuBtns={usedNav}
+        useMenuBtns={usedNav}
       >
         {calendars.length === 0 ? (
           <Empty description='~空空如也~' />

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:32:35
+ * @LastEditTime: 2022-10-19 15:38:36
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmemberchoose\index.tsx
  * @Description:
  *
@@ -114,7 +114,7 @@ export default Unite(
         enablePagePullDownRefresh={false}
         className='pages-component-edit-member-choose-index'
         useNav={usedNav}
-        showMenuBtns={usedNav}
+        useMenuBtns={usedNav}
       >
         <ScrollView className='scrollview' scrollX scrollWithAnimation>
           {groups.map((item: IGroup, index) => {

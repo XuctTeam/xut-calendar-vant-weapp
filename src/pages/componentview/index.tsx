@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-10 17:32:47
+ * @LastEditTime: 2022-10-19 15:38:46
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -370,7 +370,7 @@ export default Unite(
     })
 
     return (
-      <Container navTitle='日程查看' enablePagePullDownRefresh={false} className='pages-component-view-index' useNav={usedNav} showMenuBtns={usedNav}>
+      <Container navTitle='日程查看' enablePagePullDownRefresh={false} className='pages-component-view-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='van-page-box'>
           <Cell className='summany'>
             <View className='event-label' style={{ color: `#${color}`, background: `#${color}` }}></View>

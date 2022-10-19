@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-30 13:24:21
- * @LastEditTime: 2022-09-16 16:19:23
+ * @LastEditTime: 2022-10-19 22:33:44
  * @LastEditors: Derek Xu
  */
 const codeMessage = {
@@ -21,7 +21,7 @@ const codeMessage = {
   // '424': '验证失败',
 
   '400': '业务系统错误',
-  401: '用户信息无效',
+  401: '登录信息错误',
   404: '请求资源不存在',
   500: '服务器异常',
   502: '网关错误',

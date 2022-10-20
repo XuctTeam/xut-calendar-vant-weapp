@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:39:05
+ * @LastEditTime: 2022-10-20 18:23:40
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindusername\index.tsx
  * @Description:
  *
@@ -94,40 +94,38 @@ export default Unite(
     return (
       <Container navTitle='用户名绑定' enablePagePullDownRefresh={false} className='pages-member-bind-username-index' useNav={usedNav} useMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
-          <CellGroup inset>
-            <FormItem
-              label='用户名'
-              name='username'
-              required
-              rules={[
-                {
-                  message: '8到16位（字母、数字、下划线、减号）',
-                  rule: /^[a-zA-Z0-9_-]{8,16}$/
-                }
-              ]}
-              trigger='onInput'
-              validateTrigger='onBlur'
-              valueFormat={(e) => e.detail.value}
-            >
-              <Input placeholder='用户名' disabled={!!userNameAuth} />
-            </FormItem>
-            <FormItem
-              label='密码'
-              name='password'
-              required
-              rules={[
-                {
-                  rule: /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,30}$/,
-                  message: '密码规则不匹配'
-                }
-              ]}
-              trigger='onInput'
-              validateTrigger='onBlur'
-              valueFormat={(e) => e.detail.value}
-            >
-              <Input password placeholder='密码' disabled={!!userNameAuth} />
-            </FormItem>
-          </CellGroup>
+          <FormItem
+            label='用户名'
+            name='username'
+            required
+            rules={[
+              {
+                message: '8到16位（字母、数字、下划线、减号）',
+                rule: /^[a-zA-Z0-9_-]{8,16}$/
+              }
+            ]}
+            trigger='onInput'
+            validateTrigger='onBlur'
+            valueFormat={(e) => e.detail.value}
+          >
+            <Input placeholder='用户名' disabled={!!userNameAuth} />
+          </FormItem>
+          <FormItem
+            label='密码'
+            name='password'
+            required
+            rules={[
+              {
+                rule: /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,30}$/,
+                message: '密码规则不匹配'
+              }
+            ]}
+            trigger='onInput'
+            validateTrigger='onBlur'
+            valueFormat={(e) => e.detail.value}
+          >
+            <Input password placeholder='密码' disabled={!!userNameAuth} />
+          </FormItem>
           <CellGroup title='密码规则' className='tips'>
             <Cell label='密码至少为8位的字母、数字和特殊符号的组合' />
           </CellGroup>

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:39:14
+ * @LastEditTime: 2022-10-20 18:18:44
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifyname\index.tsx
  * @Description:
  *
@@ -94,9 +94,7 @@ export default Unite(
     return (
       <Container navTitle='修改姓名' enablePagePullDownRefresh={false} className='pages-member-modidfy-name-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='van-page-box'>
-          <CellGroup inset>
-            <Field label='姓名' required value={name} placeholder='请输入名称' border={false} onChange={(e) => setName(e.detail)} />
-          </CellGroup>
+          <Field label='姓名' required value={name} placeholder='请输入名称' border={false} onChange={(e) => setName(e.detail)} />
         </View>
         <View className='van-page-button'>
           <Button type='info' block loading={loading} onClick={updateNames}>

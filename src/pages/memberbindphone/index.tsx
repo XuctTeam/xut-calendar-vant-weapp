@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:39:03
+ * @LastEditTime: 2022-10-20 18:24:35
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
@@ -221,32 +221,30 @@ export default Unite(
     return (
       <Container navTitle='手机绑定' enablePagePullDownRefresh={false} className='pages-member-bind-phone-index' useNav={usedNav} useMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
-          <CellGroup inset>
-            <FormItem
-              label='手机号'
-              name='phone'
-              required
-              trigger='onInput'
-              validateTrigger='onBlur'
-              rules={[{ rule: /^1[3|4|5|8][0-9]\d{4,8}/, message: '手机号格式错误' }]}
-              // taro的input的onInput事件返回对应表单的最终值为e.detail.value
-              valueFormat={(e) => e.detail.value}
-            >
-              <Input placeholder='请输入手机号' disabled={!!phoneAuth}></Input>
-            </FormItem>
-            <FormItem label='验证码' name='code' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
-              <Row gutter='20' className='van-sms-cell'>
-                <Col span='13' className='dark'>
-                  <Input placeholder='请输入验证码' type='number' maxlength={6} />
-                </Col>
-                <Col span='11' className='dark'>
-                  <Button size='small' plain type='info' onClick={sendSmsCode} disabled={disable}>
-                    {smsText}
-                  </Button>
-                </Col>
-              </Row>
-            </FormItem>
-          </CellGroup>
+          <FormItem
+            label='手机号'
+            name='phone'
+            required
+            trigger='onInput'
+            validateTrigger='onBlur'
+            rules={[{ rule: /^1[3|4|5|8][0-9]\d{4,8}/, message: '手机号格式错误' }]}
+            // taro的input的onInput事件返回对应表单的最终值为e.detail.value
+            valueFormat={(e) => e.detail.value}
+          >
+            <Input placeholder='请输入手机号' disabled={!!phoneAuth}></Input>
+          </FormItem>
+          <FormItem label='验证码' name='code' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
+            <Row gutter='20' className='van-sms-cell'>
+              <Col span='13' className='dark'>
+                <Input placeholder='请输入验证码' type='number' maxlength={6} />
+              </Col>
+              <Col span='11' className='dark'>
+                <Button size='small' plain type='info' onClick={sendSmsCode} disabled={disable}>
+                  {smsText}
+                </Button>
+              </Col>
+            </Row>
+          </FormItem>
         </Form>
         <CellGroup inset>
           <Cell label='解绑手机号后日程将无法同步~~' />

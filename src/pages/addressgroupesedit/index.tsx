@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:37:55
+ * @LastEditTime: 2022-10-20 17:58:27
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesedit\index.tsx
  * @Description:
  *
@@ -173,79 +173,77 @@ export default Unite(
     return (
       <Container navTitle='群组编辑' enablePagePullDownRefresh={false} className='pages-address-groupesedit-index' useNav={usedNav} useMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
-          <CellGroup inset>
-            <FormItem
-              name='file'
-              layout='vertical'
-              mutiLevel
-              className='van-upload-form-item'
-              label='上传图片(图片大小不得大于 0.1M)'
-              valueKey='fileList'
-              valueFormat={valueFormatUpload}
-              trigger='onAfterRead'
-              validateTrigger='onAfterRead'
-              rules={[
-                {
-                  rule: (values: any, call: any) => {
-                    values.forEach((item: any, index: number) => {
-                      if (item.size > 1 * 1024 * 1024) {
-                        return call(`图片(${index + 1})大小不得大于 0.1M`)
-                      }
-                      call(null)
-                    })
-                  }
-                }
-              ]}
-            >
-              <Uploader name='file1' maxCount={1} onDelete={deleteFile}></Uploader>
-            </FormItem>
-            <FormItem
-              label='名称'
-              name='name'
-              required
-              trigger='onInput'
-              validateTrigger='onBlur'
-              // taro的input的onInput事件返回对应表单的最终值为e.detail.value
-              valueFormat={(e) => e.detail.value}
-            >
-              <Input placeholder='请输入名称' />
-            </FormItem>
-            <FormItem
-              name='num'
-              label='人数'
-              required
-              rules={[
-                {
-                  rule: (val: any, call: any) => {
-                    if (!(val <= 200 && val >= 2)) {
-                      return call('最大200最小2')
+          <FormItem
+            name='file'
+            layout='vertical'
+            mutiLevel
+            className='van-upload-form-item'
+            label='上传图片(图片大小不得大于 0.1M)'
+            valueKey='fileList'
+            valueFormat={valueFormatUpload}
+            trigger='onAfterRead'
+            validateTrigger='onAfterRead'
+            rules={[
+              {
+                rule: (values: any, call: any) => {
+                  values.forEach((item: any, index: number) => {
+                    if (item.size > 1 * 1024 * 1024) {
+                      return call(`图片(${index + 1})大小不得大于 0.1M`)
                     }
                     call(null)
-                  }
+                  })
                 }
-              ]}
-              trigger='onInput'
-              validateTrigger='onBlur'
-              // taro的input的onInput事件返回对应表单的最终值为e.detail.value
-              valueFormat={(e) => e.detail.value}
-            >
-              <Input placeholder='请输入人数' type='number' />
-            </FormItem>
-            <FormItem
-              label='口令'
-              name='password'
-              rules={[{ rule: /^\d{6,9}$/, message: '整数且6-9位' }]}
-              trigger='onInput'
-              validateTrigger='onBlur'
-              // taro的input的onInput事件返回对应表单的最终值为e.detail.value
-              valueFormat={(e) => e.detail.value}
-            >
-              <Input placeholder='请输入口令' maxlength={8} />
-            </FormItem>
-            <FormItem label='允许搜索' name='power' valueKey='checked'>
-              <Switch activeColor='#07c160' inactiveColor='#07c160' />
-            </FormItem>
-          </CellGroup>
+              }
+            ]}
+          >
+            <Uploader name='file1' maxCount={1} onDelete={deleteFile}></Uploader>
+          </FormItem>
+          <FormItem
+            label='名称'
+            name='name'
+            required
+            trigger='onInput'
+            validateTrigger='onBlur'
+            // taro的input的onInput事件返回对应表单的最终值为e.detail.value
+            valueFormat={(e) => e.detail.value}
+          >
+            <Input placeholder='请输入名称' />
+          </FormItem>
+          <FormItem
+            name='num'
+            label='人数'
+            required
+            rules={[
+              {
+                rule: (val: any, call: any) => {
+                  if (!(val <= 200 && val >= 2)) {
+                    return call('最大200最小2')
+                  }
+                  call(null)
+                }
+              }
+            ]}
+            trigger='onInput'
+            validateTrigger='onBlur'
+            // taro的input的onInput事件返回对应表单的最终值为e.detail.value
+            valueFormat={(e) => e.detail.value}
+          >
+            <Input placeholder='请输入人数' type='number' />
+          </FormItem>
+          <FormItem
+            label='口令'
+            name='password'
+            rules={[{ rule: /^\d{6,9}$/, message: '整数且6-9位' }]}
+            trigger='onInput'
+            validateTrigger='onBlur'
+            // taro的input的onInput事件返回对应表单的最终值为e.detail.value
+            valueFormat={(e) => e.detail.value}
+          >
+            <Input placeholder='请输入口令' maxlength={8} />
+          </FormItem>
+          <FormItem label='允许搜索' name='power' valueKey='checked'>
+            <Switch activeColor='#07c160' inactiveColor='#07c160' />
+          </FormItem>
         </Form>
         <View className='van-page-button'>
           <Button type='info' block loading={loading} onClick={saveOrUpdate}>

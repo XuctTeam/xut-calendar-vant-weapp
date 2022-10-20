@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 17:30:19
+ * @LastEditTime: 2022-10-20 11:10:25
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -351,82 +351,84 @@ export default Unite(
           )}
           <View className='right-top-sign' />
           <View className='logo'>
-            <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '140px', height: '120px' }}></Image>
+            <Image src={Images.DEFAULT_LOG_IMAGE} style={{ width: '100px', height: '100px' }}></Image>
           </View>
-          <View className={classnames('login-form', { ['login-form_bg']: process.env.TARO_ENV === 'h5' })}>
-            {process.env.TARO_ENV === 'weapp' ? (
-              <>
-                <View className='form' />
-                <Button type='danger' block onClick={loginByCode} disabled={loginLoading}>
-                  微信登录
-                </Button>
-              </>
-            ) : (
-              <>
-                <View className='form'>
-                  {!phoneForm ? (
-                    <CellGroup>
-                      <Field
-                        label='账号'
-                        titleWidth='50px'
-                        placeholder='支持账号/邮箱/手机号'
-                        value={username}
-                        onChange={(e: ITouchEvent) => {
-                          setUsername(e.detail)
-                        }}
-                      />
-                      <Field
-                        label='密码'
-                        titleWidth='50px'
-                        password
-                        placeholder='请输入密码'
-                        value={password}
-                        onChange={(e: ITouchEvent) => setPassword(e.detail)}
-                        renderButton={
-                          <Button size='small' plain type='info' onClick={() => Router.toMemberforgetpassword()}>
-                            忘记密码
-                          </Button>
-                        }
-                      ></Field>
-                    </CellGroup>
-                  ) : (
-                    <CellGroup>
-                      <Field
-                        label='手机号'
-                        titleWidth='50px'
-                        placeholder='请输入手机号'
-                        value={phone}
-                        maxlength={11}
-                        type='number'
-                        onChange={(e: ITouchEvent) => setPhone(e.detail)}
-                      ></Field>
-                      <Field
-                        label='验证码'
-                        titleWidth='50px'
-                        placeholder='请输入验证码'
-                        maxlength={6}
-                        type='number'
-                        value={smsCode}
-                        onChange={(e: ITouchEvent) => setSmsCode(e.detail)}
-                        renderButton={
-                          <Button size='small' plain type='info' disabled={smsLoading} onClick={pushCode}>
-                            {smsText}
-                          </Button>
-                        }
-                      ></Field>
-                    </CellGroup>
-                  )}
-                  <View className='btn'>
-                    <View onClick={() => setPhoneForm(!phoneForm)}>{phoneForm ? '账号密码登录' : '验证码登录'}</View>
-                    <View onClick={() => Router.toMemberregister()}>立即注册</View>
+          <View>
+            <View className={classnames('login-form', { ['login-form_bg']: process.env.TARO_ENV === 'h5' })}>
+              {process.env.TARO_ENV === 'weapp' ? (
+                <>
+                  <View className='form' />
+                  <Button type='danger' block onClick={loginByCode} disabled={loginLoading}>
+                    微信登录
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <View className='form'>
+                    {!phoneForm ? (
+                      <CellGroup>
+                        <Field
+                          label='账号'
+                          titleWidth='50px'
+                          placeholder='支持账号/邮箱/手机号'
+                          value={username}
+                          onChange={(e: ITouchEvent) => {
+                            setUsername(e.detail)
+                          }}
+                        />
+                        <Field
+                          label='密码'
+                          titleWidth='50px'
+                          password
+                          placeholder='请输入密码'
+                          value={password}
+                          onChange={(e: ITouchEvent) => setPassword(e.detail)}
+                          renderButton={
+                            <Button size='small' plain type='info' onClick={() => Router.toMemberforgetpassword()}>
+                              忘记密码
+                            </Button>
+                          }
+                        ></Field>
+                      </CellGroup>
+                    ) : (
+                      <CellGroup>
+                        <Field
+                          label='手机号'
+                          titleWidth='50px'
+                          placeholder='请输入手机号'
+                          value={phone}
+                          maxlength={11}
+                          type='number'
+                          onChange={(e: ITouchEvent) => setPhone(e.detail)}
+                        ></Field>
+                        <Field
+                          label='验证码'
+                          titleWidth='50px'
+                          placeholder='请输入验证码'
+                          maxlength={6}
+                          type='number'
+                          value={smsCode}
+                          onChange={(e: ITouchEvent) => setSmsCode(e.detail)}
+                          renderButton={
+                            <Button size='small' plain type='info' disabled={smsLoading} onClick={pushCode}>
+                              {smsText}
+                            </Button>
+                          }
+                        ></Field>
+                      </CellGroup>
+                    )}
+                    <View className='btn'>
+                      <View onClick={() => setPhoneForm(!phoneForm)}>{phoneForm ? '账号密码登录' : '验证码登录'}</View>
+                      <View onClick={() => Router.toMemberregister()}>立即注册</View>
+                    </View>
                   </View>
-                </View>
 
-                <Button type='danger' block onClick={loginByPhoneOrUsername} disabled={loginLoading}>
-                  登录
-                </Button>
-              </>
-            )}
+                  <Button type='danger' block onClick={loginByPhoneOrUsername} disabled={loginLoading}>
+                    登录
+                  </Button>
+                </>
+              )}
+            </View>
           </View>
           <View className='self'>
             <Checkbox value={self} checkedColor='red' onChange={(e: any) => setSelf(e.detail)}>

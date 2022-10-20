@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-03 09:31:21
- * @LastEditTime: 2022-10-19 20:54:24
+ * @LastEditTime: 2022-10-20 16:51:00
  * @LastEditors: Derek Xu
  */
 import http from '@/utils/request/innerRequest'
@@ -30,7 +30,7 @@ export const wechatLogin = (code: string, iv: string, encryptedData: string): Pr
  * @author: Derek Xu
  */
 export const phoneLogin = (phone: string, code: string): Promise<any> => {
-  return http.post(`/uaa/oauth2/token?grant_type=app&scope=server&username=${phone}&code=${code}&loginType=phone`, {})
+  return http.post(`/uaa/oauth2/token?grant_type=app&scope=server&phone=${phone}&code=${code}&login_type=phone`, {})
 }
 
 /**
@@ -41,7 +41,7 @@ export const phoneLogin = (phone: string, code: string): Promise<any> => {
  * @author: Derek Xu
  */
 export const usernameLogin = (username: string, password: string): Promise<any> => {
-  return http.post(`/uaa/oauth2/token?grant_type=app&scope=server&username=${username}&password=${password}&loginType=password`, {})
+  return http.post(`/uaa/oauth2/token?grant_type=app&scope=server&username=${username}&password=${password}&login_type=password`, {})
 }
 
 /**

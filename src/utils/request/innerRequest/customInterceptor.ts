@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-09-30 09:05:38
+ * @LastEditTime: 2022-10-20 17:10:47
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -31,38 +31,37 @@ const customInterceptor = (chain: Chain): Promise<any> => {
         reject()
         return
       }
-      const { statusCode } = res
-      if (statusCode === HTTP_STATUS.NOT_FOUND || statusCode === HTTP_STATUS.BAD_GATEWAY || statusCode === HTTP_STATUS.CLIENT_ERROR) {
+      const { statusCode, data } = res
+      if (statusCode !== 200) {
         return Promise.reject({
           status: res.statusCode,
-          statusText: codeMessage[res.statusCode]
+          message: data.message
         })
       }
-
-      if (res.statusCode === HTTP_STATUS.SUCCESS) {
-        if (url.includes(OAUTHTOKEN_URL)) {
-          return resolve(res.data)
-        }
-        if (res.data.code !== 200) {
-          return Promise.reject({
-            status: res.statusCode,
-            statusText: res.data.message || codeKeys[res.data.code]
-          })
-        }
-        return resolve(res.data.data)
+      if (url.includes(OAUTHTOKEN_URL)) {
+        return resolve(data)
       }
-      return Promise.reject({
-        status: res.statusCode,
-        code: res.data.code,
-        statusText: res.data.message || codeKeys[res.data.code]
-      })
+      const { code, message } = data
+      if (code !== 200) {
+        return Promise.reject({
+          status: 200,
+          message
+        })
+      }
+      return resolve(data.data)
     }).catch((error: any) => {
       const { status, statusText, message } = error
       //不是刷新token异常
       if (HTTP_STATUS.FAILED_DEPENDENCY !== status && HTTP_STATUS.AUTHENTICATE !== status) {
-        let msg = '请求异常'
-        if (HTTP_STATUS.SERVICE_UNAVAILABLE === status || HTTP_STATUS.GATEWAY_TIMEOUT === status) {
+        let msg = ''
+        if (HTTP_STATUS.BAD_GATEWAY === status || HTTP_STATUS.SERVICE_UNAVAILABLE === status || HTTP_STATUS.GATEWAY_TIMEOUT === status) {
           msg = codeKeys[status]
+        }
+        if (!msg && message) {
+          msg = message
+        }
+        if (!msg) {
+          msg = '请求异常'
         }
         Taro.showToast({
           icon: 'error',

@@ -242,7 +242,7 @@ export default Unite(
             <Input placeholder='请输入口令' maxlength={8} />
           </FormItem>
           <FormItem label='允许搜索' name='power' valueKey='checked'>
-            <Switch activeColor='#07c160' inactiveColor='#07c160' />
+            <Switch />
           </FormItem>
         </Form>
         <View className='van-page-button'>

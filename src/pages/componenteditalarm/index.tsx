@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:29
+ * @LastEditTime: 2022-10-21 11:19:05
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditalarm\index.tsx
  * @Description:
  *
@@ -48,7 +48,8 @@ export default Unite(
       if (alarmType === undefined) return
       if (alarmType.toString() === '0') {
         this.setState({
-          openAlarm: '1'
+          openAlarm: '1',
+          alarmTime: []
         })
         return
       }
@@ -130,7 +131,7 @@ export default Unite(
             <CellGroup></CellGroup>
           </CheckboxGroup>
           <View className='divider'></View>
-          <CellGroup title='提醒方式' border={false}>
+          <CellGroup title='提醒方式' className='alarm'>
             <RadioGroup direction='horizontal' value={alarmType} disabled={openAlarm === '1'} onChange={(e) => setAlarmType(e.detail)}>
               <Radio name='1'>站内信</Radio>
               <Radio name='2'>邮箱</Radio>

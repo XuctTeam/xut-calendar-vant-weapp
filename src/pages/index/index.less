@@ -385,6 +385,9 @@
     height: 100px;
     right: 50px;
 
+    padding-bottom: constant(safe-area-inset-bottom); /*兼容 IOS<11.2*/
+    padding-bottom: env(safe-area-inset-bottom); /*兼容 IOS>11.2*/
+
     .van-button {
       border-radius: 50%;
       width: 100px;

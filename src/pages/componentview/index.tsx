@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:46
+ * @LastEditTime: 2022-10-21 09:17:40
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -20,7 +20,7 @@ import Router from 'tarojs-router-next'
 import { DifferentDay, SameDay } from './ui'
 import { userInfoStore, componentRefreshTimeStore } from '@/store'
 import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText, alarmCodeToType, useNav } from '@/utils'
-import { getById, deleteById, queryComponentMemberIds, getAttendStatus, updateAttendStatus, refuseAttend, getShortUrl } from '@/api/component'
+import { getById, deleteById, queryComponentMembers, getAttendStatus, updateAttendStatus, refuseAttend, getShortUrl } from '@/api/component'
 import { getName } from '@/api/user'
 import { IDavComponent } from 'types/calendar'
 import { useShareAppMessage } from '@tarojs/taro'
@@ -79,7 +79,7 @@ export default Unite(
       repeatBymonthday: '',
       repeatInterval: 0,
       repeatUntil: '',
-      f: [],
+      memberIds: [],
       alarmType: '',
       alarmTimes: [],
       attendStatus: 0
@@ -115,7 +115,7 @@ export default Unite(
       })
       let result
       try {
-        result = await Promise.all([getById(id), queryComponentMemberIds(id)])
+        result = await Promise.all([getById(id), queryComponentMembers('', id)])
       } catch (err) {
         this.setState({
           loading: false
@@ -374,8 +374,8 @@ export default Unite(
         <View className='van-page-box'>
           <Cell className='summany'>
             <View className='event-label' style={{ color: `#${color}`, background: `#${color}` }}></View>
-            <View class='calendar'>
-              <View class='margin-left event-calendar'>
+            <View className='calendar'>
+              <View className='margin-left event-calendar'>
                 <View className='title'>{summary}</View>
                 <View>{calendarName}</View>
               </View>

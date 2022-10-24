@@ -14,7 +14,6 @@ export type PullToRefreshProps = {
   threshold?: number
   statusBarHeight: number
   onRefresh: <T extends boolean>(catchRefresh?: T) => T extends true ? Promise<{ code: string; message: string; data?: any }> : void
-  onReload?: () => Promise<any>
 }
 
 function PullDownRefresh(
@@ -38,17 +37,12 @@ function PullDownRefresh(
     api.start({ transform: `translateX(-50%) scale(1)`, opacity: 1 })
     setStatus('refreshing')
     try {
-      let res
-      if (props.onReload && props.onReload instanceof Function) {
-        res = props.onReload()
-      } else {
-        res = await props.onRefresh(true)
-        if (res.code !== '200') {
-          showToast({
-            title: res.message,
-            icon: 'none'
-          })
-        }
+      const res = await props.onRefresh(true)
+      if (res.code !== '200') {
+        showToast({
+          title: res.message,
+          icon: 'none'
+        })
       }
       setStatus('complete')
     } catch {}

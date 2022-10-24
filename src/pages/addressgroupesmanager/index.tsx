@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 16:47:29
+ * @LastEditTime: 2022-10-24 17:27:45
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -44,8 +44,7 @@ export default Unite(
         return
       }
       this.setState({
-        loading: true,
-        list: []
+        loading: true
       })
       groupList()
         .then((res) => {
@@ -66,7 +65,9 @@ export default Unite(
 
     async addGroup() {
       try {
-        const res: any = Router.toAddressgroupesedit()
+        const res: any = Router.toAddressgroupesedit({
+          params: {}
+        })
         if (!res) return
         const { edit } = res
         if (!!edit) {

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:09
+ * @LastEditTime: 2022-10-24 17:17:04
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 import Unite from '@antmjs/unite'
 import Router from 'tarojs-router-next'
-import { Empty } from '@antmjs/vantui'
+import { Empty, PowerScrollView } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
 import { useRecoilState } from 'recoil'
@@ -27,8 +27,6 @@ export default Unite(
     state: {
       loading: false
     },
-
-    async onLoad() {},
 
     async onReload() {
       this.setState({
@@ -66,7 +64,7 @@ export default Unite(
 
   function ({ state, events }) {
     const { loading } = state
-    const { onReload, editCalendar } = events
+    const { editCalendar, onReload } = events
     const [calendars, setCalendarState] = useRecoilState(calendarStore)
     const usedNav = useNav()
 
@@ -76,19 +74,19 @@ export default Unite(
     })
 
     return (
-      <Container
-        navTitle='日程管理'
-        enablePagePullDownRefresh={true}
-        onReload={onReload}
-        className='pages-calendar-manager-index'
-        loading={loading}
-        useNav={usedNav}
-        useMenuBtns={usedNav}
-      >
+      <Container navTitle='日程管理' enablePagePullDownRefresh={false} className='pages-calendar-manager-index' useNav={usedNav} useMenuBtns={usedNav}>
         {calendars.length === 0 ? (
           <Empty description='~空空如也~' />
         ) : (
-          <View className='list'>
+          <PowerScrollView
+            finishedText='没有更多了'
+            successText='刷新成功'
+            emptyDescription='~空空如也~'
+            onScrollToUpper={onReload}
+            // onScrollToLower={basicsLoadMore}
+            current={calendars.length}
+            finished={!loading}
+          >
             {calendars?.map((item: IDavCalendar, index: number) => {
               return (
                 <View className='li' key={index}>
@@ -96,7 +94,7 @@ export default Unite(
                 </View>
               )
             })}
-          </View>
+          </PowerScrollView>
         )}
       </Container>
     )

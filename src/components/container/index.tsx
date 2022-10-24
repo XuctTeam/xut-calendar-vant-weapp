@@ -71,7 +71,6 @@ type IProps = {
   loading?: any
   ignoreError?: boolean
   enablePagePullDownRefresh?: boolean
-  onReload?: () => Promise<any>
   renderPageTopHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
 }
 
@@ -213,7 +212,7 @@ export default function Index(props: IProps) {
         {useNav && ctx.error?.code !== LOGIN_CODE && <Navigation navTitle={navTitle} navClassName={navClassName} renderHeader={renderPageTopHeader} />}
         {useMenuBtns && ctx.error?.code !== LOGIN_CODE && <LeftBtns homeUrl='pages/index/index' />}
         {ctx.uniteConfig.page && enablePagePullDownRefresh ? (
-          <PullDownRefresh onRefresh={ctx.onRefresh} statusBarHeight={statusBarHeight} onReload={props.onReload}>
+          <PullDownRefresh onRefresh={ctx.onRefresh} statusBarHeight={statusBarHeight}>
             <Render ctx={ctx} menuButton={menuButton} {...props} />
           </PullDownRefresh>
         ) : (

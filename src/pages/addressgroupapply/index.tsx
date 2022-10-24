@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:37:52
+ * @LastEditTime: 2022-10-24 17:40:58
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\index.tsx
  * @Description:
  *
@@ -25,74 +25,7 @@ export default Unite(
     state: {
       active: 0,
       loading: true,
-      list: [
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        },
-        {
-          name: '123'
-        }
-      ]
+      list: []
     },
 
     async onLoad() {
@@ -117,8 +50,7 @@ export default Unite(
       return
     },
 
-    async onSearchFouce(e: ITouchEvent) {
-      e.stopPropagation()
+    async onSearchFouce() {
       const active = this.state.active
       try {
         const result = await Router.toAddressgroupsearch()
@@ -137,7 +69,7 @@ export default Unite(
       applyMineList()
         .then((res) => {
           this.setState({
-            //list: res as any as Array<IGroupMember>,
+            list: res as any as Array<IGroupMember>,
             loading: false
           })
         })
@@ -246,7 +178,7 @@ export default Unite(
     return (
       <Container navTitle='群组申请' enablePagePullDownRefresh={false} className='address-group-apply-index' useNav={_useNav} useMenuBtns={_useNav}>
         <View className='search'>
-          <Search placeholder='搜索加入群组' shape='round' onFocus={onSearchFouce} />
+          <Search placeholder='搜索加入群组' shape='round' disabled onClickInput={onSearchFouce} />
         </View>
         <View className='box'>
           <Tabs swipeable onClick={(e) => setActive(e.detail.index)}>

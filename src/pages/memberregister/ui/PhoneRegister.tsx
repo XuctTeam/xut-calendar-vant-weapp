@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:24:53
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 09:27:40
+ * @LastEditTime: 2022-10-25 18:28:10
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\PhoneRegister.tsx
  * @Description:
  *
@@ -76,7 +76,7 @@ const PhoneRegister: FunctionComponent<IPageOption> = (props) => {
   }
 
   return (
-    <Form className='form' form={props.form}>
+    <Form form={props.form}>
       <CellGroup inset>
         <FormItem
           label='手机号'

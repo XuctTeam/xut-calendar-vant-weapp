@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-24 17:27:39
+ * @LastEditTime: 2022-10-25 18:47:55
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesedit\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import { Button, Form, FormItem, Switch, Toast, Uploader } from '@antmjs/vantui'
+import { Button, CellGroup, Form, FormItem, Switch, Toast, Uploader } from '@antmjs/vantui'
 import { Input, ITouchEvent, View } from '@tarojs/components'
 import Container from '@/components/container'
 import { IFormInstanceAPI } from '@antmjs/vantui/types/form'
@@ -20,8 +20,9 @@ import { upload as uploadPath } from '@/api/common'
 import { IGroup } from 'types/group'
 import { useFile, useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
-import './index.less'
 import { useNav } from '@/utils'
+
+import './index.less'
 
 export default Unite(
   {
@@ -36,24 +37,20 @@ export default Unite(
       }
     },
 
-    _init(id: string) {
-      getGroupInfo(id).then((res) => {
-        const { name, power, password, num, images } = res as any as IGroup
-        this.hooks['form'].setFields({
-          name: name,
-          password,
-          power: 'PUBLIC' === power,
-          num,
-          file: images
-            ? [
-                {
-                  url: images,
-                  type: 'image',
-                  edit: true
-                }
-              ]
-            : []
-        })
+    async _init(id: string) {
+      let res
+      try {
+        res = await getGroupInfo(id)
+      } catch (err) {
+        console.log(err)
+      }
+      const { name, power, password, num, images } = res as any as IGroup
+      this.hooks['form'].setFields({
+        name: name,
+        password,
+        power: 'PUBLIC' === power,
+        num: num,
+        file: images ? [{ url: images }] : []
       })
     },
 
@@ -109,7 +106,7 @@ export default Unite(
       const uploadResult = await this.hooks['upload']({
         url,
         filePath: file[0].url,
-        name: 'smsfile',
+        name: 'file',
         header: { Authorization: cacheGetSync('accessToken') }
       })
       if (uploadResult?.statusCode !== 200) {
@@ -173,77 +170,79 @@ export default Unite(
     return (
       <Container navTitle='群组编辑' enablePagePullDownRefresh={false} className='pages-address-groupesedit-index' useNav={usedNav} useMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
-          <FormItem
-            name='file'
-            layout='vertical'
-            mutiLevel
-            className='van-upload-form-item'
-            label='上传图片(图片大小不得大于 0.1M)'
-            valueKey='fileList'
-            valueFormat={valueFormatUpload}
-            trigger='onAfterRead'
-            validateTrigger='onAfterRead'
-            rules={[
-              {
-                rule: (values: any, call: any) => {
-                  values.forEach((item: any, index: number) => {
-                    if (item.size > 1 * 1024 * 1024) {
-                      return call(`图片(${index + 1})大小不得大于 0.1M`)
+          <CellGroup inset>
+            <FormItem
+              name='file'
+              layout='vertical'
+              mutiLevel
+              className='van-upload-form-item'
+              label='上传图片(图片大小不得大于 0.1M)'
+              valueKey='fileList'
+              valueFormat={valueFormatUpload}
+              trigger='onAfterRead'
+              validateTrigger='onAfterRead'
+              rules={[
+                {
+                  rule: (values: any, call: any) => {
+                    values.forEach((item: any, index: number) => {
+                      if (item.size > 1 * 1024 * 1024) {
+                        return call(`图片(${index + 1})大小不得大于 0.1M`)
+                      }
+                      call(null)
+                    })
+                  }
+                }
+              ]}
+            >
+              <Uploader name='file1' maxCount={1} onDelete={deleteFile}></Uploader>
+            </FormItem>
+            <FormItem
+              label='名称'
+              name='name'
+              required
+              trigger='onInput'
+              validateTrigger='onBlur'
+              // taro的input的onInput事件返回对应表单的最终值为e.detail.value
+              valueFormat={(e) => e.detail.value}
+            >
+              <Input placeholder='请输入名称' />
+            </FormItem>
+            <FormItem
+              name='num'
+              label='人数'
+              required
+              rules={[
+                {
+                  rule: (val: any, call: any) => {
+                    if (!(val <= 200 && val >= 2)) {
+                      return call('最大200最小2')
                     }
                     call(null)
-                  })
-                }
-              }
-            ]}
-          >
-            <Uploader name='file1' maxCount={1} onDelete={deleteFile}></Uploader>
-          </FormItem>
-          <FormItem
-            label='名称'
-            name='name'
-            required
-            trigger='onInput'
-            validateTrigger='onBlur'
-            // taro的input的onInput事件返回对应表单的最终值为e.detail.value
-            valueFormat={(e) => e.detail.value}
-          >
-            <Input placeholder='请输入名称' />
-          </FormItem>
-          <FormItem
-            name='num'
-            label='人数'
-            required
-            rules={[
-              {
-                rule: (val: any, call: any) => {
-                  if (!(val <= 200 && val >= 2)) {
-                    return call('最大200最小2')
                   }
-                  call(null)
                 }
-              }
-            ]}
-            trigger='onInput'
-            validateTrigger='onBlur'
-            // taro的input的onInput事件返回对应表单的最终值为e.detail.value
-            valueFormat={(e) => e.detail.value}
-          >
-            <Input placeholder='请输入人数' type='number' />
-          </FormItem>
-          <FormItem
-            label='口令'
-            name='password'
-            rules={[{ rule: /^\d{6,9}$/, message: '整数且6-9位' }]}
-            trigger='onInput'
-            validateTrigger='onBlur'
-            // taro的input的onInput事件返回对应表单的最终值为e.detail.value
-            valueFormat={(e) => e.detail.value}
-          >
-            <Input placeholder='请输入口令' maxlength={8} />
-          </FormItem>
-          <FormItem label='允许搜索' name='power' valueKey='checked'>
-            <Switch />
-          </FormItem>
+              ]}
+              trigger='onInput'
+              validateTrigger='onBlur'
+              // taro的input的onInput事件返回对应表单的最终值为e.detail.value
+              valueFormat={(e) => e.detail.value}
+            >
+              <Input placeholder='请输入人数' type='number' />
+            </FormItem>
+            <FormItem
+              label='口令'
+              name='password'
+              rules={[{ rule: /^\d{6,9}$/, message: '整数且6-9位' }]}
+              trigger='onInput'
+              validateTrigger='onBlur'
+              // taro的input的onInput事件返回对应表单的最终值为e.detail.value
+              valueFormat={(e) => e.detail.value}
+            >
+              <Input placeholder='请输入口令' maxlength={8} />
+            </FormItem>
+            <FormItem label='允许搜索' name='power' valueKey='checked'>
+              <Switch />
+            </FormItem>
+          </CellGroup>
         </Form>
         <View className='van-page-button'>
           <Button type='info' block loading={loading} onClick={saveOrUpdate}>

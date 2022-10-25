@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:39:08
+ * @LastEditTime: 2022-10-25 18:39:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindwechat\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import { Button, Cell, Empty } from '@antmjs/vantui'
+import { Button, Cell, CellGroup, Empty } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { useEnv, useLogin, useToast, useUserInfo } from 'taro-hooks'
 import { useRecoilState, useSetRecoilState } from 'recoil'
@@ -167,10 +167,12 @@ export default Unite(
         {wxAuth ? (
           <>
             <View className='van-page-box'>
-              <Cell title='头像' size='large' className='van-avatar-cell'>
-                <Avatar src={wxAuth?.avatar} shape='circle' size='large' />
-              </Cell>
-              <Cell title='昵称'>{wxAuth.nickName}</Cell>
+              <CellGroup inset className='van-form-cell-group'>
+                <Cell title='头像' size='large' className='van-avatar-cell'>
+                  <Avatar src={wxAuth?.avatar} shape='circle' size='large' />
+                </Cell>
+                <Cell title='昵称'>{wxAuth.nickName}</Cell>
+              </CellGroup>
             </View>
             <View className='van-page-button'>
               <Button type='info' block onClick={modifyMemberNameAndAvatar}>

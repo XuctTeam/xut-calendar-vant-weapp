@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-24 16:14:18
+ * @LastEditTime: 2022-10-25 18:45:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifypassword\index.tsx
  * @Description:
  *
@@ -92,28 +92,30 @@ export default Unite(
     return (
       <Container navTitle='修改密码' enablePagePullDownRefresh={true} className='pages-member-modify-password-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='box'>
-          <Field
-            label='密码'
-            required
-            placeholder='请输入密码'
-            maxlength={16}
-            type='password'
-            clearable
-            value={password}
-            onChange={(e) => setPassword(e.detail)}
-            onClear={() => setPassword('')}
-          ></Field>
-          <Field
-            label='确认密码'
-            required
-            placeholder='请输入确认密码'
-            maxlength={16}
-            clearable
-            type='password'
-            value={comfirmPassword}
-            onChange={(e) => setComfirmPassword(e.detail.value)}
-            onClear={() => setComfirmPassword('')}
-          ></Field>
+          <CellGroup inset className='van-form-cell-group'>
+            <Field
+              label='密码'
+              required
+              placeholder='请输入密码'
+              maxlength={16}
+              type='password'
+              clearable
+              value={password}
+              onChange={(e) => setPassword(e.detail)}
+              onClear={() => setPassword('')}
+            ></Field>
+            <Field
+              label='确认密码'
+              required
+              placeholder='请输入确认密码'
+              maxlength={16}
+              clearable
+              type='password'
+              value={comfirmPassword}
+              onChange={(e) => setComfirmPassword(e.detail.value)}
+              onClear={() => setComfirmPassword('')}
+            ></Field>
+          </CellGroup>
         </View>
         <View className='button'>
           <Button type='info' block loading={loading} onClick={() => modifyPassword()}>

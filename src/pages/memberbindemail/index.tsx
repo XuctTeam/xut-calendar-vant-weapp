@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-20 18:22:30
+ * @LastEditTime: 2022-10-25 18:28:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindemail\index.tsx
  * @Description:
  *
@@ -177,30 +177,32 @@ export default Unite(
     return (
       <Container navTitle='邮箱绑定' enablePagePullDownRefresh={false} className='pages-member-bind-email-index' useNav={usedNav} useMenuBtns={usedNav}>
         <Form form={form} className='van-page-box'>
-          <FormItem
-            label='邮箱'
-            name='email'
-            required
-            trigger='onInput'
-            validateTrigger='onBlur'
-            rules={[{ rule: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/, message: '邮箱格式错误' }]}
-            // taro的input的onInput事件返回对应表单的最终值为e.detail.value
-            valueFormat={(e) => e.detail.value}
-          >
-            <Input placeholder='请输入邮箱' disabled={!!emailAuth}></Input>
-          </FormItem>
-          <FormItem label='验证码' name='code' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
-            <Row gutter='20' className='van-sms-cell'>
-              <Col span='13' className='dark'>
-                <Input placeholder='请输入验证码' type='number' maxlength={6} />
-              </Col>
-              <Col span='11' className='dark'>
-                <Button size='small' plain type='info' onClick={sendSmsCode} disabled={disable}>
-                  {smsText}
-                </Button>
-              </Col>
-            </Row>
-          </FormItem>
+          <CellGroup inset>
+            <FormItem
+              label='邮箱'
+              name='email'
+              required
+              trigger='onInput'
+              validateTrigger='onBlur'
+              rules={[{ rule: /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/, message: '邮箱格式错误' }]}
+              // taro的input的onInput事件返回对应表单的最终值为e.detail.value
+              valueFormat={(e) => e.detail.value}
+            >
+              <Input placeholder='请输入邮箱' disabled={!!emailAuth}></Input>
+            </FormItem>
+            <FormItem label='验证码' name='code' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
+              <Row gutter='20' className='van-sms-cell'>
+                <Col span='13' className='dark'>
+                  <Input placeholder='请输入验证码' type='number' maxlength={6} />
+                </Col>
+                <Col span='11' className='dark'>
+                  <Button size='small' plain type='info' onClick={sendSmsCode} disabled={disable}>
+                    {smsText}
+                  </Button>
+                </Col>
+              </Row>
+            </FormItem>
+          </CellGroup>
         </Form>
         <View className='van-page-button'>
           <Button block type='info' disabled={loading} onClick={bindEmail}>

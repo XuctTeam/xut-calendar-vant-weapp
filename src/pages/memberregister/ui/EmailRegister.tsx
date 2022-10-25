@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:25:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-08 09:28:49
+ * @LastEditTime: 2022-10-25 18:28:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\EmailRegister.tsx
  * @Description:
  *
@@ -78,7 +78,7 @@ const EmailRegister: FunctionComponent<IPageOption> = (props) => {
   }
 
   return (
-    <Form className='form' form={props.form}>
+    <Form form={props.form}>
       <CellGroup inset>
         <FormItem
           label='邮箱'

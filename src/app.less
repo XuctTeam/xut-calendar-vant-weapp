@@ -35,18 +35,6 @@ html {
   align-items: center;
 }
 
-// 可以用的类
-// .van-hairline,
-// .van-hairline--top,
-// .van-hairline--left,
-// .van-hairline--right,
-// .van-hairline--bottom,
-// .van-hairline--top-bottom,
-// .van-hairline--surround
-// .van-ellipsis
-// .van-multi-ellipsis--l2
-// .van-multi-ellipsis--l3
-
 //页面通用属性
 .van-page-box {
   flex: 1;
@@ -119,16 +107,50 @@ html {
   color: #fff !important;
 }
 
-.vant-form-formItem-wrappe {
-  border-bottom: 1px solid #ededed;
+/* 覆盖form表单样式 */
+.vant-form {
+  .vant-form-formItem-wrapper,
+  .vant-form-formItem {
+    background-color: #fff !important;
+  }
+
+  .vant-form-formItem {
+    border-bottom: 1px solid #ededed !important;
+    line-height: inherit !important;
+  }
+
+  .vant-form-formItem-wrapper:last-child {
+    .vant-form-formItem {
+      border-bottom: 0px !important;
+    }
+  }
+
+  .vant-form-label,
+  .vant-form-formItem-controll-item {
+    font-size: var(--cell-font-size, 28px);
+  }
+
+  .van-cell-group {
+    margin-top: 20px !important;
+  }
+}
+.van-form-cell-group {
+  margin-top: 20px !important;
 }
 
-.vant-form-formItem {
-  line-height: inherit !important;
-  border-bottom: 1px solid #ededed !important;
+.van-steps {
+  margin: 30px 30px 10px 30px;
+  border-radius: var(--cell-group-inset-border-radius, 0.4rem);
 }
 
-.vant-form-label,
-.vant-form-formItem-controll-item {
-  font-size: var(--cell-font-size, 28px);
-}
+// 可以用的类
+// .van-hairline,
+// .van-hairline--top,
+// .van-hairline--left,
+// .van-hairline--right,
+// .van-hairline--bottom,
+// .van-hairline--top-bottom,
+// .van-hairline--surround
+// .van-ellipsis
+// .van-multi-ellipsis--l2
+// .van-multi-ellipsis--l3

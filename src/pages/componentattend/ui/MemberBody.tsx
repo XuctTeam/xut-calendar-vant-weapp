@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-19 20:50:47
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-06 10:02:35
+ * @LastEditTime: 2022-10-25 15:25:37
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentattend\ui\MemberBody.tsx
  * @Description:
  *
@@ -24,7 +24,13 @@ const MemberBody: FC<IPageOption> = (props) => {
   return (
     <Cell className='member'>
       <View className='avatar'>
-        {avatar ? <Avatar src={avatar} size='small'></Avatar> : <Avatar size='small'>{name ? props.name.substring(0, 1) : ''}</Avatar>}
+        {avatar ? (
+          <Avatar src={avatar} size='small'></Avatar>
+        ) : (
+          <Avatar size='small' className='van-avatar'>
+            {name ? props.name.substring(0, 1) : ''}
+          </Avatar>
+        )}
         <View className='name'>{name}</View>
       </View>
     </Cell>

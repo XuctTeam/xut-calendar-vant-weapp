@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:24:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-30 08:56:19
+ * @LastEditTime: 2022-10-25 18:28:15
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\UserNameRegister.tsx
  * @Description:
  *
@@ -27,7 +27,7 @@ const BASE_URL = SERVICES_API
 const UserNameRegister: FC<IPageOption> = (props) => {
   const { randomStr } = props
   return (
-    <Form className='form' form={props.form}>
+    <Form form={props.form}>
       <CellGroup inset>
         <FormItem
           label='用户名'

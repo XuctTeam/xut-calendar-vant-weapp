@@ -4,7 +4,7 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-27 15:04:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-07 12:58:56
+ * @LastEditTime: 2022-10-26 18:14:31
  */
 import { FunctionComponent, useState } from 'react'
 import { View } from '@tarojs/components'
@@ -56,7 +56,7 @@ const Password: FunctionComponent<IPageOption> = (props) => {
           <Cell className='label'>密码至少为8位的字母、数字和特殊符号的组合</Cell>
         </CellGroup>
       </View>
-      <View className='button'>
+      <View className='van-page-button'>
         <Button type='info' block onClick={modifyPassword}>
           保存
         </Button>

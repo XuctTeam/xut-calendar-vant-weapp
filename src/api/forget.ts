@@ -2,10 +2,19 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-28 16:02:47
- * @LastEditTime: 2022-07-16 17:03:30
+ * @LastEditTime: 2022-10-26 17:49:39
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
+
+/**
+ * @description: 忘记密码 -> 发送短信验证码
+ * @param phone
+ * @returns
+ */
+export const sendForgetSmsCode = (phone) => {
+  return httpRequest.post('/ums/api/app/v1/sms/anno/forget', { phone, type: 0 })
+}
 
 /**
  * @description: 忘记密码 -> 发送验证码
@@ -15,8 +24,8 @@ import httpRequest from '@/utils/request/innerRequest'
  * @return {*}
  * @author: Derek Xu
  */
-export const sendForgetPasswordCode = (phone: string, email: string, type: number) => {
-  return httpRequest.post('/uaa/forget/password/code', { phone, email, type })
+export const sendForgetEmailCode = (email: string) => {
+  return httpRequest.post('/ums/api/app/v1/email/anno/forget', { email, type: 4 })
 }
 
 /**
@@ -29,7 +38,7 @@ export const sendForgetPasswordCode = (phone: string, email: string, type: numbe
  * @author: Derek Xu
  */
 export const forgetPasswordCheck = (phone: string, email: string, code: string, type: number) => {
-  return httpRequest.post('/uaa/forget/password/check', { phone, email, code, type })
+  return httpRequest.post('/ums/api/app/v1/member/anno/forget/check', { phone, email, code, type })
 }
 
 /**
@@ -41,5 +50,5 @@ export const forgetPasswordCheck = (phone: string, email: string, code: string, 
  * @author: Derek Xu
  */
 export const forgetModify = (memberId: string, pwd: string, code: string) => {
-  return httpRequest.post('/uaa/forget/password/modify', { memberId, password: pwd, code })
+  return httpRequest.post('/ums/api/app/v1/member/anno/forget/modify', { memberId, password: pwd, code })
 }

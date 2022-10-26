@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:39:11
+ * @LastEditTime: 2022-10-26 17:38:53
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberforgetpassword\index.tsx
  * @Description:
  *
@@ -13,11 +13,11 @@ import { Steps } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { Auth, Password } from './ui'
 import { forgetPasswordCheck, forgetModify } from '@/api/forget'
-import './index.less'
 import { useRef } from 'react'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
 import { useNav } from '@/utils'
+import './index.less'
 
 export default Unite(
   {

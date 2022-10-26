@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-27 03:47:42
- * @LastEditTime: 2022-08-10 09:05:59
+ * @LastEditTime: 2022-10-26 18:11:40
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
@@ -10,7 +10,8 @@ import { View } from '@tarojs/components'
 import { useToast } from 'taro-hooks'
 import { checkMobile, checkEmail } from '@/utils'
 import { Button, CellGroup, Field } from '@antmjs/vantui'
-import { sendForgetPasswordCode } from '@/api/forget'
+import { sendForgetSmsCode, sendForgetEmailCode } from '@/api/forget'
+import { create } from '@/utils/countdown'
 
 interface IPageOption {
   checkMemberCode: (phone: string, mail: string, code: string, form: number) => void
@@ -19,7 +20,6 @@ interface IPageOption {
 const Auth: FunctionComponent<IPageOption> = (props) => {
   const [phoneSmsText, setPhoneSmsText] = useState<string>('发送验证码')
   const [phoneDisable, setPhoneDisable] = useState<boolean>(false)
-  const smsCodeRef = useRef<number>(0)
   const [phoneForm, setPhoneForm] = useState<boolean>(true)
   const [phone, setPhone] = useState<string>('')
   const [phoneSmsCode, setPhoneSmsCode] = useState<string>('')
@@ -27,24 +27,40 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
   const [emailSmsCode, setEmailSmsCode] = useState<string>('')
   const [emailSmsText, setEmailSmsText] = useState('发送验证码')
   const [emailDisable, setEmailDisable] = useState<boolean>(false)
-  const emailSmsCodeRef = useRef<number>(0)
+
+  const countDownRef = useRef<any>()
 
   const [toast] = useToast({
     icon: 'error'
   })
 
   useEffect(() => {
+    countDownRef.current = create(
+      Date.now() + 1000 * 100,
+      ({ d, h, m, s }) => {
+        console.log(`${d}天${h}时${m}分${s}秒`)
+        setSmsText(m * 60 + s)
+      },
+      () => {
+        setSmsTextEnd()
+      }
+    )
     return () => {
-      if (smsCodeRef.current > 0) {
-        window.clearTimeout(smsCodeRef.current)
-        smsCodeRef.current = 0
-      }
-      if (emailSmsCodeRef.current > 0) {
-        window.clearTimeout(emailSmsCodeRef.current)
-        emailSmsCodeRef.current = 0
-      }
+      countDownRef.current.clean()
     }
   }, [])
+
+  const setSmsText = (num) => {
+    setPhoneSmsText('重发(' + num + ')')
+    setEmailSmsText('重发(' + num + ')')
+  }
+
+  const setSmsTextEnd = () => {
+    setPhoneSmsText('发送验证码')
+    setPhoneDisable(false)
+    setEmailSmsText('发送验证码')
+    setEmailDisable(false)
+  }
 
   const sendPhoneSmsCode = () => {
     if (!phone || !checkMobile(phone)) {
@@ -53,32 +69,15 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
       })
       return
     }
-    sendForgetPasswordCode(phone, '', 1)
+    sendForgetSmsCode(phone)
       .then(() => {
-        setPhoneSmsTextTime(120)
+        setPhoneDisable(true)
+        setEmailDisable(true)
+        countDownRef.current.start(0, 2, 0)
       })
       .catch((err) => {
         console.log(err)
       })
-  }
-
-  const setPhoneSmsTextTime = (num: number) => {
-    if (num === 0) {
-      setPhoneSmsText('发送验证码')
-      setPhoneDisable(false)
-
-      if (smsCodeRef.current > 0) {
-        window.clearTimeout(smsCodeRef.current)
-        smsCodeRef.current = 0
-      }
-      return
-    }
-    setPhoneSmsText('重发(' + num + ')')
-    setPhoneDisable(true)
-
-    smsCodeRef.current = window.setTimeout(() => {
-      setPhoneSmsTextTime(num - 1)
-    }, 1000)
   }
 
   const sendEmailSmsCode = () => {
@@ -88,32 +87,15 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
       })
       return
     }
-    sendForgetPasswordCode('', mail, 2)
+    sendForgetEmailCode(mail)
       .then(() => {
-        setEmailSmsTextTime(120)
+        setPhoneDisable(true)
+        setEmailDisable(true)
+        countDownRef.current.start(0, 2, 0)
       })
       .catch((err) => {
         console.log(err)
       })
-  }
-
-  const setEmailSmsTextTime = (num: number) => {
-    if (num === 0) {
-      setEmailSmsText('发送验证码')
-      setEmailDisable(false)
-
-      if (emailSmsCodeRef.current > 0) {
-        window.clearTimeout(emailSmsCodeRef.current)
-        emailSmsCodeRef.current = 0
-      }
-      return
-    }
-    setEmailSmsText('重发(' + num + ')')
-    setEmailDisable(true)
-
-    emailSmsCodeRef.current = window.setTimeout(() => {
-      setEmailSmsTextTime(num - 1)
-    }, 1000)
   }
 
   const validateFormHandler = () => {
@@ -157,13 +139,13 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
               <Field label='手机号' placeholder='请输入手机号' value={phone} onChange={(e: any) => setPhone(e.detail)} />
               <Field
                 label='短信验证码'
-                placeholder='请输入短信验证码'
+                placeholder='请输入验证码'
                 value={phoneSmsCode}
                 type='number'
-                maxlength={4}
+                maxlength={6}
                 onChange={(e) => setPhoneSmsCode(e.detail)}
                 renderButton={
-                  <Button size='small' type='info' onClick={sendPhoneSmsCode} disabled={phoneDisable}>
+                  <Button size='small' plain type='info' onClick={sendPhoneSmsCode} disabled={phoneDisable}>
                     {phoneSmsText}
                   </Button>
                 }
@@ -174,13 +156,13 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
               <Field label='邮箱' placeholder='请输入邮箱' value={mail} onChange={(e) => setMail(e.detail)} />
               <Field
                 label='邮箱验证码'
-                placeholder='请输入邮箱验证码'
+                placeholder='请输入验证码'
                 value={emailSmsCode}
                 type='number'
-                maxlength={4}
+                maxlength={6}
                 onChange={(e) => setEmailSmsCode(e.detail)}
                 renderButton={
-                  <Button size='small' type='info' onClick={sendEmailSmsCode} disabled={emailDisable}>
+                  <Button size='small' plain type='info' onClick={sendEmailSmsCode} disabled={emailDisable}>
                     {emailSmsText}
                   </Button>
                 }
@@ -190,8 +172,8 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
         </View>
 
         <View className='swtch'>
-          <View>没有绑定过的手机无法找回</View>
-          <Button type='warning' size='small' onClick={() => setPhoneForm(!phoneForm)}>
+          <View>没有绑定过的手机或邮箱无法找回</View>
+          <Button type='warning' size='small' plain onClick={() => setPhoneForm(!phoneForm)}>
             {phoneForm ? '邮箱找回' : '手机号找回'}
           </Button>
         </View>

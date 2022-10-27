@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-27 03:47:42
- * @LastEditTime: 2022-10-26 18:11:40
+ * @LastEditTime: 2022-10-27 09:11:39
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
@@ -14,6 +14,7 @@ import { sendForgetSmsCode, sendForgetEmailCode } from '@/api/forget'
 import { create } from '@/utils/countdown'
 
 interface IPageOption {
+  disabled: boolean
   checkMemberCode: (phone: string, mail: string, code: string, form: number) => void
 }
 
@@ -27,6 +28,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
   const [emailSmsCode, setEmailSmsCode] = useState<string>('')
   const [emailSmsText, setEmailSmsText] = useState('发送验证码')
   const [emailDisable, setEmailDisable] = useState<boolean>(false)
+  const { disabled } = props
 
   const countDownRef = useRef<any>()
 
@@ -46,6 +48,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
       }
     )
     return () => {
+      console.log('close timer')
       countDownRef.current.clean()
     }
   }, [])
@@ -179,7 +182,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
         </View>
       </View>
       <View className='van-page-button'>
-        <Button type='info' block onClick={validateFormHandler}>
+        <Button type='info' block onClick={validateFormHandler} disabled={disabled}>
           下一步
         </Button>
       </View>

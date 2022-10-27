@@ -2,10 +2,11 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-03 09:31:21
- * @LastEditTime: 2022-10-21 09:05:23
+ * @LastEditTime: 2022-10-27 14:47:20
  * @LastEditors: Derek Xu
  */
 import http from '@/utils/request/innerRequest'
+import qs from 'qs'
 
 /**
  * @description: 微信登录
@@ -41,7 +42,8 @@ export const phoneLogin = (phone: string, code: string): Promise<any> => {
  * @author: Derek Xu
  */
 export const usernameLogin = (username: string, password: string): Promise<any> => {
-  return http.post(`/uaa/oauth2/token?grant_type=app&scope=server&username=${username}&password=${password}&login_type=password`, {})
+  let dataObj = qs.stringify({ username: username, password: password })
+  return http.post(`/uaa/oauth2/token?grant_type=app&scope=server&login_type=password`, dataObj, 'application/x-www-form-urlencoded')
 }
 
 /**

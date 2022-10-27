@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-26 17:38:53
+ * @LastEditTime: 2022-10-27 09:12:52
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberforgetpassword\index.tsx
  * @Description:
  *
@@ -22,21 +22,29 @@ import './index.less'
 export default Unite(
   {
     state: {
-      step: 0
+      step: 0,
+      disabled: false
     },
     async onLoad() {},
 
     checkMemberCode(phone: string, email: string, code: string, type: number) {
+      this.setState({
+        disabled: true
+      })
       forgetPasswordCheck(phone, email, code, type)
         .then((res) => {
           this.hooks['memberIdRef'].current = res as any as string
           this.hooks['codeRef'].current = code
           this.setState({
-            step: 2
+            step: 1,
+            disabled: false
           })
         })
         .catch((err) => {
           console.log(err)
+          this.setState({
+            disabled: false
+          })
         })
     },
 
@@ -56,7 +64,7 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const { step } = state
+    const { disabled, step } = state
     const { checkMemberCode, modifyPassword } = events
     const [toast] = useToast({
       icon: 'success',
@@ -90,7 +98,11 @@ export default Unite(
             }
           ]}
         ></Steps>
-        {step === 0 ? <Auth checkMemberCode={checkMemberCode}></Auth> : <Password modifyPassword={modifyPassword}></Password>}
+        {step === 0 ? (
+          <Auth checkMemberCode={checkMemberCode} disabled={disabled}></Auth>
+        ) : (
+          <Password modifyPassword={modifyPassword} disabled={disabled}></Password>
+        )}
       </Container>
     )
   },

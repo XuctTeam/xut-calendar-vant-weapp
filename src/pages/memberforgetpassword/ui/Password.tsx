@@ -4,7 +4,7 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-27 15:04:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-26 18:14:31
+ * @LastEditTime: 2022-10-27 09:12:22
  */
 import { FunctionComponent, useState } from 'react'
 import { View } from '@tarojs/components'
@@ -13,6 +13,7 @@ import { checkPassowrd } from '@/utils'
 import { Button, Cell, CellGroup, Field } from '@antmjs/vantui'
 
 interface IPageOption {
+  disabled: boolean
   modifyPassword: (password: string) => void
 }
 
@@ -53,11 +54,11 @@ const Password: FunctionComponent<IPageOption> = (props) => {
           <Field label='确认密码' password placeholder='请输入确认密码' value={confirmPassword} onChange={(e) => setConfirmPassword(e.detail)} />
         </CellGroup>
         <CellGroup title='密码规则'>
-          <Cell className='label'>密码至少为8位的字母、数字和特殊符号的组合</Cell>
+          <Cell>至少为8位的字母、数字和特殊符号的组合</Cell>
         </CellGroup>
       </View>
       <View className='van-page-button'>
-        <Button type='info' block onClick={modifyPassword}>
+        <Button type='info' block onClick={modifyPassword} disabled={props.disabled}>
           保存
         </Button>
       </View>

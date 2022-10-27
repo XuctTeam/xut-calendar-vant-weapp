@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-10-20 17:10:47
+ * @LastEditTime: 2022-10-27 20:34:55
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -91,10 +91,14 @@ const customInterceptor = (chain: Chain): Promise<any> => {
           })
       }
       if (status === HTTP_STATUS.AUTHENTICATE) {
-        const { grant_type } = requestParams.data
-        if (url.includes(OAUTHTOKEN_URL) && grant_type && grant_type === 'refresh_token') {
-          refresh.fail()
-          return reject('refresh token error')
+        if (url.includes(OAUTHTOKEN_URL)) {
+          if (requestParams && requestParams.data) {
+            const { grant_type } = requestParams.data
+            if (grant_type && grant_type === 'refresh_token') {
+              refresh.fail()
+              return reject('refresh token error')
+            }
+          }
         }
       }
       let msg = message || codeKeys[status] || statusText

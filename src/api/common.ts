@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-02 08:59:45
- * @LastEditTime: 2022-10-26 17:31:48
+ * @LastEditTime: 2022-10-27 22:03:40
  * @LastEditors: Derek Xu
  */
 import request from '@/utils/request/innerRequest'
@@ -13,7 +13,7 @@ export const upload = (): string => {
 }
 
 export const sendLoginSmsCode = (phone: string) => {
-  return request.post('/ums/api/v1/app/sms/anno/login', { phone, type: 0 })
+  return request.post('/ums/api/app/v1/sms/anno/login', { phone, type: 0 })
 }
 
 /**

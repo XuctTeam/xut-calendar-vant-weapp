@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-10-27 20:34:55
+ * @LastEditTime: 2022-10-28 10:16:56
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -51,7 +51,16 @@ const customInterceptor = (chain: Chain): Promise<any> => {
       return resolve(data.data)
     }).catch((error: any) => {
       const { status, statusText, message } = error
-      //不是刷新token异常
+      /** 网络问题直接返回 */
+      if (!status) {
+        Taro.showToast({
+          icon: 'error',
+          title: '请求异常',
+          duration: 1500
+        })
+        return reject(error)
+      }
+      /** 不是刷新token异常  */
       if (HTTP_STATUS.FAILED_DEPENDENCY !== status && HTTP_STATUS.AUTHENTICATE !== status) {
         let msg = ''
         if (HTTP_STATUS.BAD_GATEWAY === status || HTTP_STATUS.SERVICE_UNAVAILABLE === status || HTTP_STATUS.GATEWAY_TIMEOUT === status) {

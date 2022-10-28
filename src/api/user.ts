@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-10 19:52:50
- * @LastEditTime: 2022-10-08 08:57:46
+ * @LastEditTime: 2022-10-28 17:41:46
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
@@ -173,15 +173,6 @@ export const updateWxInfo = () => {
  */
 export const merge = (phone: string) => {
   return httpRequest.post('/ums/api/app/v1/member/merge', { phone })
-}
-
-/**
- * @description: 获取注册图形码
- * @param {*} Promise
- * @return {*}
- */
-export const captcha = (randomStr: string): Promise<any> => {
-  return httpRequest.get('/code?randomStr=' + randomStr)
 }
 
 /**

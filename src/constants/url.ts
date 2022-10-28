@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 08:52:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-30 08:55:02
+ * @LastEditTime: 2022-10-28 17:38:56
  * @FilePath: \xut-calendar-vant-weapp\src\constants\url.ts
  * @Description:
  *
@@ -14,4 +14,12 @@ const DEFAULT_IMAGES_SERVER = SERVICES_IMAGES
 //@ts-ignore
 const DEFUALT_SERVICES = SERVICES_API
 
-export { DEFAULT_IMAGES_SERVER, DEFUALT_SERVICES }
+const SECURITY_OAUTH2_IGNORE_URL = [
+  '/api/app/v1/sms/anno/login',
+  '/api/app/v1/sms/anno/forget',
+  '/api/app/v1/email/anno/forget',
+  '/api/app/v1/member/anno/forget/modify',
+  '/api/app/v1/member/anno/forget/check'
+]
+
+export { DEFAULT_IMAGES_SERVER, DEFUALT_SERVICES, SECURITY_OAUTH2_IGNORE_URL }

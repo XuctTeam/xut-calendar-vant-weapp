@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-15 14:52:03
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-17 17:50:56
+ * @LastEditTime: 2022-10-28 17:37:56
  * @FilePath: \xut-calendar-vant-weapp\src\utils\request\innerRequest\request.ts
  * @Description:
  *
@@ -11,7 +11,7 @@
 import Taro from '@tarojs/taro'
 import { cacheGetSync } from '@/cache'
 import interceptors from './customInterceptor'
-import { DEFUALT_SERVICES } from '@/constants/url'
+import { DEFUALT_SERVICES, SECURITY_OAUTH2_IGNORE_URL } from '@/constants/url'
 
 interceptors.forEach((interceptorItem) => Taro.addInterceptor(interceptorItem))
 
@@ -25,7 +25,8 @@ export default class httpRequest<T> {
       'Content-Type': 'application/json',
       ...options?.header
     }
-    if (!(url.includes('/ums/sms') || url.includes('/uaa/captcha') || url.includes('/register'))) {
+    const match = SECURITY_OAUTH2_IGNORE_URL.some((item) => url.indexOf(item) > -1)
+    if (!match) {
       /* 非登录接口都要通过token请求 */
       if (!url.includes('/oauth2/token')) {
         header['Authorization'] = cacheGetSync('accessToken')

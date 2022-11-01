@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:24:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-28 17:40:46
+ * @LastEditTime: 2022-11-01 18:52:15
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\UserNameRegister.tsx
  * @Description:
  *
@@ -48,13 +48,18 @@ const UserNameRegister: FC<IPageOption> = (props) => {
         >
           <Input password placeholder='密码' />
         </FormItem>
-        <FormItem label='图形码' className='captcha' name='captcha' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
+        <FormItem label='图形码' name='captcha' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
           <Row gutter='20'>
-            <Col span='14' className='dark'>
+            <Col span='14'>
               <Input placeholder='请输入图形码' maxlength={5} />
             </Col>
-            <Col span='10' className='dark' style={{ height: '30px' }}>
-              <Image src={DEFUALT_SERVICES + '/code?randomStr=' + randomStr} style={{ marginTop: '-4px' }} onClick={props.getCaptcha} />
+            <Col span='10' className='image'>
+              <Image
+                className='op'
+                style={{ height: '30px' }}
+                src={DEFUALT_SERVICES + '/code?imgType=register&randomStr=' + randomStr}
+                onClick={props.getCaptcha}
+              />
             </Col>
           </Row>
         </FormItem>

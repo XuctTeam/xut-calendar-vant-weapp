@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:24:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-01 18:52:15
+ * @LastEditTime: 2022-11-01 22:01:26
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\UserNameRegister.tsx
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 
 import { FC } from 'react'
-import { Input } from '@tarojs/components'
+import { Input, View } from '@tarojs/components'
 import { CellGroup, Col, Form, FormItem, Row } from '@antmjs/vantui'
 import { Image } from '@tarojs/components'
 import { DEFUALT_SERVICES } from '@/constants/url'
@@ -22,6 +22,15 @@ interface IPageOption {
 }
 
 const UserNameRegister: FC<IPageOption> = (props) => {
+  function Captcha(props) {
+    return (
+      <View className='image-item'>
+        <View>sdfsdf</View>
+        <View>sdfsdf</View>
+      </View>
+    )
+  }
+
   const { randomStr } = props
   return (
     <Form form={props.form}>
@@ -49,19 +58,12 @@ const UserNameRegister: FC<IPageOption> = (props) => {
           <Input password placeholder='密码' />
         </FormItem>
         <FormItem label='图形码' name='captcha' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
-          <Row gutter='20'>
-            <Col span='14'>
-              <Input placeholder='请输入图形码' maxlength={5} />
-            </Col>
-            <Col span='10' className='image'>
-              <Image
-                className='op'
-                style={{ height: '30px' }}
-                src={DEFUALT_SERVICES + '/code?imgType=register&randomStr=' + randomStr}
-                onClick={props.getCaptcha}
-              />
-            </Col>
-          </Row>
+          <View className='image-item'>
+            <Input placeholder='请输入图形码' maxlength={5} />
+            <View className='op'>
+              <Image src={DEFUALT_SERVICES + '/code?imgType=register&randomStr=' + randomStr} onClick={props.getCaptcha} />
+            </View>
+          </View>
         </FormItem>
       </CellGroup>
     </Form>

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:24:53
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-01 18:45:49
+ * @LastEditTime: 2022-11-04 01:23:58
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\PhoneRegister.tsx
  * @Description:
  *
@@ -14,6 +14,7 @@ import { Form, FormItem, CellGroup, Button, Row, Col } from '@antmjs/vantui'
 import { checkMobile } from '@/utils'
 import { sendRegisterSms } from '@/api/user'
 import { Input } from '@tarojs/components'
+import { create } from '@/utils/countdown'
 
 interface IPageOption {
   form: any
@@ -22,18 +23,27 @@ interface IPageOption {
 const PhoneRegister: FunctionComponent<IPageOption> = (props) => {
   const [phoneSmsText, setPhoneSmsText] = useState<string>('发送验证码')
   const [phoneDisable, setPhoneDisable] = useState<boolean>(false)
-  const smsCodeRef = useRef<number>(0)
+
+  const countDownRef = useRef<any>()
 
   const [toast] = useToast({
     icon: 'error'
   })
 
   useEffect(() => {
-    return () => {
-      if (smsCodeRef.current > 0) {
-        window.clearTimeout(smsCodeRef.current)
-        smsCodeRef.current = 0
+    countDownRef.current = create(
+      Date.now() + 1000 * 100,
+      ({ d, h, m, s }) => {
+        console.log(`${d}天${h}时${m}分${s}秒`)
+        setSmsText(m * 60 + s)
+      },
+      () => {
+        setSmsTextEnd()
       }
+    )
+    return () => {
+      console.log('close timer')
+      countDownRef.current.clean()
     }
   }, [])
 
@@ -47,7 +57,7 @@ const PhoneRegister: FunctionComponent<IPageOption> = (props) => {
     }
     sendRegisterSms(phone)
       .then(() => {
-        setPhoneSmsTextTime(120)
+        countDownRef.current.start(0, 2, 0)
       })
       .catch((err) => {
         console.log(err)
@@ -56,23 +66,13 @@ const PhoneRegister: FunctionComponent<IPageOption> = (props) => {
       })
   }
 
-  const setPhoneSmsTextTime = (num: number) => {
-    if (num === 0) {
-      setPhoneSmsText('发送验证码')
-      setPhoneDisable(false)
-
-      if (smsCodeRef.current > 0) {
-        window.clearTimeout(smsCodeRef.current)
-        smsCodeRef.current = 0
-      }
-      return
-    }
+  const setSmsText = (num) => {
     setPhoneSmsText('重发(' + num + ')')
-    setPhoneDisable(true)
+  }
 
-    smsCodeRef.current = window.setTimeout(() => {
-      setPhoneSmsTextTime(num - 1)
-    }, 1000)
+  const setSmsTextEnd = () => {
+    setPhoneSmsText('发送验证码')
+    setPhoneDisable(false)
   }
 
   return (

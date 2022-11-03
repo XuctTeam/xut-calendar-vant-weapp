@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-10 19:52:50
- * @LastEditTime: 2022-10-28 17:41:46
+ * @LastEditTime: 2022-11-03 23:11:51
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
@@ -181,7 +181,7 @@ export const merge = (phone: string) => {
  * @return {*}
  */
 export const sendRegisterSms = (phone: string) => {
-  return httpRequest.post('/uaa/register/sms', { phone })
+  return httpRequest.post('/ums/api/app/v1/sms/anno/register', { phone })
 }
 
 /**

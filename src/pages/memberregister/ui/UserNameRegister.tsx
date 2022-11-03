@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:24:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-01 22:01:26
+ * @LastEditTime: 2022-11-03 18:49:05
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\UserNameRegister.tsx
  * @Description:
  *
@@ -22,15 +22,6 @@ interface IPageOption {
 }
 
 const UserNameRegister: FC<IPageOption> = (props) => {
-  function Captcha(props) {
-    return (
-      <View className='image-item'>
-        <View>sdfsdf</View>
-        <View>sdfsdf</View>
-      </View>
-    )
-  }
-
   const { randomStr } = props
   return (
     <Form form={props.form}>

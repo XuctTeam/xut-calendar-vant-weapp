@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-25 18:27:51
+ * @LastEditTime: 2022-11-07 21:30:46
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
@@ -21,7 +21,7 @@ import { checkMobile, useNav } from '@/utils'
 import { sendSmsCode } from '@/api/common'
 import { IUserAuth } from '~/../types/user'
 import { useBack } from '@/utils/taro'
-import { getPhoneNumber, logout, bindPhone, unbindPhone, auths } from '@/api/user'
+import { getPhoneNumber, bindPhone, unbindPhone, auths } from '@/api/user'
 import { create } from '@/utils/countdown'
 
 import './index.less'
@@ -104,6 +104,7 @@ export default Unite(
             if (exist && merge) {
               that.setState({
                 loading: false,
+                disable: false,
                 smsText: '发送验证码'
               })
               this.hooks['countDownRef'].current.clean()
@@ -168,13 +169,16 @@ export default Unite(
         })
         .catch((err) => {
           console.log(err)
+          this.setState({
+            loading: false
+          })
         })
     }
   },
   function ({ state, events }) {
     const form = Form.useForm()
     const { smsText, disable, loading } = state
-    const { sendSmsCode, setSmsText, bindPhone, setSmsTextEnd, onGetPhoneNumber, uuid } = events
+    const { sendSmsCode, setSmsText, bindPhone, setSmsTextEnd, onGetPhoneNumber } = events
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const phoneAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'phone') : undefined
     const countDownRef = useRef<any>()
@@ -235,16 +239,14 @@ export default Unite(
               <Input placeholder='请输入手机号' disabled={!!phoneAuth}></Input>
             </FormItem>
             <FormItem label='验证码' name='code' required trigger='onInput' validateTrigger='onBlur' valueFormat={(e) => e.detail.value}>
-              <Row gutter='20' className='van-sms-cell'>
-                <Col span='13' className='dark'>
-                  <Input placeholder='请输入验证码' type='number' maxlength={6} />
-                </Col>
-                <Col span='11' className='dark'>
+              <View className='sms-item'>
+                <Input placeholder='请输入验证码' type='number' maxlength={6} />
+                <View className='btn'>
                   <Button size='small' plain type='info' onClick={sendSmsCode} disabled={disable}>
                     {smsText}
                   </Button>
-                </Col>
-              </Row>
+                </View>
+              </View>
             </FormItem>
           </CellGroup>
         </Form>

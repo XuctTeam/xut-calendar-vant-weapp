@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-07 16:21:26
+ * @LastEditTime: 2022-11-07 20:59:12
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
@@ -95,14 +95,10 @@ export default Unite(
     },
 
     _userNameRegister(data: IUserNameForm) {
+      debugger
       register({
-        formType: this.state.formType,
-        username: {
-          username: data.username,
-          password: data.password,
-          // key: this.state.key,
-          captcha: data.captcha
-        }
+        formType: 'username',
+        username: Object.assign({ ...data }, { randomStr: this.state.randomStr })
       })
         .then(() => {
           this._success()
@@ -115,7 +111,7 @@ export default Unite(
 
     _phoneRegister(data: IPhoneForm) {
       register({
-        formType: this.state.formType,
+        formType: 'phone',
         phone: {
           ...data
         }
@@ -131,7 +127,7 @@ export default Unite(
 
     _emailRegister(data: IEmailForm) {
       register({
-        formType: this.state.formType,
+        formType: 'email',
         email: {
           ...data
         }

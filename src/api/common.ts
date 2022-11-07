@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-02 08:59:45
- * @LastEditTime: 2022-10-27 22:03:40
+ * @LastEditTime: 2022-11-07 21:14:44
  * @LastEditors: Derek Xu
  */
 import request from '@/utils/request/innerRequest'
@@ -24,7 +24,7 @@ export const sendLoginSmsCode = (phone: string) => {
  * @author: Derek Xu
  */
 export const sendSmsCode = (edit: boolean, phone: string): Promise<any> => {
-  return request.post('/ums/api/app/v1/sms', { type: edit ? 2 : 1, phone })
+  return request.post('/ums/api/app/v1/sms', { type: edit ? 4 : 3, phone })
 }
 
 /**

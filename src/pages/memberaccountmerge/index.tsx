@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:57
+ * @LastEditTime: 2022-11-07 21:19:48
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccountmerge\index.tsx
  * @Description:
  *
@@ -53,6 +53,9 @@ export default Unite(
         })
         .catch((err: any) => {
           console.log(err)
+          this.setState({
+            loading: false
+          })
         })
     },
 

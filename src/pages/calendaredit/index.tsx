@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:05
+ * @LastEditTime: 2022-11-07 21:35:27
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendaredit\index.tsx
  * @Description:
  *
@@ -177,6 +177,9 @@ export default Unite(
           })
           .catch((err) => {
             console.log(err)
+            this.setState({
+              disable: true
+            })
           })
       })
     },

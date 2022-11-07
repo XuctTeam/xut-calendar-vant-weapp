@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:24:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-03 18:49:05
+ * @LastEditTime: 2022-11-07 20:52:24
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\UserNameRegister.tsx
  * @Description:
  *
@@ -30,7 +30,7 @@ const UserNameRegister: FC<IPageOption> = (props) => {
           label='用户名'
           required
           name='username'
-          rules={[{ message: '8-16位且为字母、数字、下划线、减号', rule: /^[a-zA-Z0-9_-]{8,16}$/ }]}
+          rules={[{ message: '8-16位且至少一个字母和一个数字', rule: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/ }]}
           trigger='onInput'
           validateTrigger='onBlur'
           valueFormat={(e) => e.detail.value}

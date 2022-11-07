@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-05 21:20:10
+ * @LastEditTime: 2022-11-07 08:46:48
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -10,6 +10,7 @@
  */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 export default defineAppConfig({
+  animation: true,
   pages: [
     'pages/index/index',
     'pages/pagination/index',

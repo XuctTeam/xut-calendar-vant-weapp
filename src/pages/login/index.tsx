@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-27 22:17:12
+ * @LastEditTime: 2022-11-07 18:28:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -26,11 +26,12 @@ import { wechatLogin, phoneLogin, usernameLogin } from '@/api/login'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
 import { baseUserInfo, auths } from '@/api/user'
 import { list as listQueryCalendar } from '@/api/calendar'
-import { checkMobile, useNav } from '@/utils'
+import { checkMobile, encryption, useNav } from '@/utils'
 import Images from '@/constants/images'
 import { create } from '@/utils/countdown'
 import classnames from 'classnames'
 import './index.less'
+import { ENCRYPTION_CODE } from '@/constants'
 
 export default Unite(
   {
@@ -162,7 +163,12 @@ export default Unite(
 
     _usernameLogin() {
       this.setLoginLoading(true)
-      return usernameLogin(this.state.username, this.state.password)
+      const user = encryption({
+        data: { username: this.state.username, password: this.state.password },
+        key: ENCRYPTION_CODE,
+        param: ['password']
+      })
+      return usernameLogin(user.username, user.password)
         .then((res) => {
           this._saveTokenToCache(res.access_token, res.refresh_token)
         })

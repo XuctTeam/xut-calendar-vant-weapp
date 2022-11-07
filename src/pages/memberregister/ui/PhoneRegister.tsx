@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:24:53
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-04 01:23:58
+ * @LastEditTime: 2022-11-07 16:45:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\PhoneRegister.tsx
  * @Description:
  *
@@ -42,7 +42,7 @@ const PhoneRegister: FunctionComponent<IPageOption> = (props) => {
       }
     )
     return () => {
-      console.log('close timer')
+      console.log('phone close timer')
       countDownRef.current.clean()
     }
   }, [])
@@ -58,6 +58,7 @@ const PhoneRegister: FunctionComponent<IPageOption> = (props) => {
     sendRegisterSms(phone)
       .then(() => {
         countDownRef.current.start(0, 2, 0)
+        setPhoneDisable(true)
       })
       .catch((err) => {
         console.log(err)

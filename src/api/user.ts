@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-10 19:52:50
- * @LastEditTime: 2022-11-03 23:11:51
+ * @LastEditTime: 2022-11-07 17:39:09
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
@@ -181,7 +181,7 @@ export const merge = (phone: string) => {
  * @return {*}
  */
 export const sendRegisterSms = (phone: string) => {
-  return httpRequest.post('/ums/api/app/v1/sms/anno/register', { phone })
+  return httpRequest.post('/ums/api/app/v1/sms/anno/register', { phone, type: 1 })
 }
 
 /**
@@ -190,7 +190,7 @@ export const sendRegisterSms = (phone: string) => {
  * @return {*}
  */
 export const sendRegisterEmail = (email: string) => {
-  return httpRequest.post('/uaa/register/email/code', { email })
+  return httpRequest.post('/ums/api/app/v1/email/anno/register', { email, type: 1 })
 }
 
 /**
@@ -200,5 +200,5 @@ export const sendRegisterEmail = (email: string) => {
  * @author: Derek Xu
  */
 export const register = (formData: any) => {
-  return httpRequest.post('/uaa/register', formData)
+  return httpRequest.post('/ums/api/app/v1/member/anno/register', formData)
 }

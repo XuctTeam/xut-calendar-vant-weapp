@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-28 16:02:47
- * @LastEditTime: 2022-11-03 23:10:57
+ * @LastEditTime: 2022-11-07 17:48:14
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
@@ -25,7 +25,7 @@ export const sendForgetSmsCode = (phone) => {
  * @author: Derek Xu
  */
 export const sendForgetEmailCode = (email: string) => {
-  return httpRequest.post('/ums/api/app/v1/email/anno/forget', { email, type: 4 })
+  return httpRequest.post('/ums/api/app/v1/email/anno/forget', { email, type: 2 })
 }
 
 /**

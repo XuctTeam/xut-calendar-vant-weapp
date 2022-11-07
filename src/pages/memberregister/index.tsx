@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:39:20
+ * @LastEditTime: 2022-11-07 16:21:26
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
@@ -117,9 +117,7 @@ export default Unite(
       register({
         formType: this.state.formType,
         phone: {
-          phone: data.phone,
-          password: data.password,
-          smsCode: data.code
+          ...data
         }
       })
         .then(() => {
@@ -135,9 +133,7 @@ export default Unite(
       register({
         formType: this.state.formType,
         email: {
-          email: data.email,
-          password: data.password,
-          code: data.code
+          ...data
         }
       })
         .then(() => {

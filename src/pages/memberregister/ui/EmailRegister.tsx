@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:25:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-01 18:45:56
+ * @LastEditTime: 2022-11-07 16:45:23
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\EmailRegister.tsx
  * @Description:
  *
@@ -16,6 +16,7 @@ import { Input } from '@tarojs/components'
 import { useToast } from 'taro-hooks'
 import { checkEmail } from '@/utils'
 import { sendRegisterEmail } from '@/api/user'
+import { create } from '@/utils/countdown'
 
 interface IPageOption {
   form: any
@@ -24,18 +25,26 @@ interface IPageOption {
 const EmailRegister: FunctionComponent<IPageOption> = (props) => {
   const [emailSmsText, setEmailSmsText] = useState('发送验证码')
   const [emailDisable, setEmailDisable] = useState<boolean>(false)
+  const countDownRef = useRef<any>()
 
-  const emailSmsCodeRef = useRef<number>(0)
   const [toast] = useToast({
     icon: 'error'
   })
 
   useEffect(() => {
-    return () => {
-      if (emailSmsCodeRef.current > 0) {
-        window.clearTimeout(emailSmsCodeRef.current)
-        emailSmsCodeRef.current = 0
+    countDownRef.current = create(
+      Date.now() + 1000 * 100,
+      ({ d, h, m, s }) => {
+        console.log(`${d}天${h}时${m}分${s}秒`)
+        setSmsText(m * 60 + s)
+      },
+      () => {
+        setSmsTextEnd()
       }
+    )
+    return () => {
+      console.log('email close timer')
+      countDownRef.current.clean()
     }
   }, [])
 
@@ -49,7 +58,8 @@ const EmailRegister: FunctionComponent<IPageOption> = (props) => {
     }
     sendRegisterEmail(mail)
       .then(() => {
-        setEmailSmsTextTime(120)
+        setEmailDisable(true)
+        countDownRef.current.start(0, 2, 0)
       })
       .catch((err) => {
         console.log(err)
@@ -58,23 +68,13 @@ const EmailRegister: FunctionComponent<IPageOption> = (props) => {
       })
   }
 
-  const setEmailSmsTextTime = (num: number) => {
-    if (num === 0) {
-      setEmailSmsText('发送验证码')
-      setEmailDisable(false)
-
-      if (emailSmsCodeRef.current > 0) {
-        window.clearTimeout(emailSmsCodeRef.current)
-        emailSmsCodeRef.current = 0
-      }
-      return
-    }
+  const setSmsText = (num) => {
     setEmailSmsText('重发(' + num + ')')
-    setEmailDisable(true)
+  }
 
-    emailSmsCodeRef.current = window.setTimeout(() => {
-      setEmailSmsTextTime(num - 1)
-    }, 1000)
+  const setSmsTextEnd = () => {
+    setEmailSmsText('发送验证码')
+    setEmailDisable(false)
   }
 
   return (

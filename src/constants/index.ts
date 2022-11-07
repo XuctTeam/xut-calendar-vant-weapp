@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-10 13:38:16
- * @LastEditTime: 2022-09-14 19:34:14
+ * @LastEditTime: 2022-11-07 18:28:37
  * @LastEditors: Derek Xu
  */
 export const colors = [
@@ -105,5 +105,7 @@ export const IndexList = (): string[] => {
   indexList.push('#')
   return indexList
 }
+
+export const ENCRYPTION_CODE = 'thanks,pig4cloud'
 
 export const LOGIN_CODE = '206'

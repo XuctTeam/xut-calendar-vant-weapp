@@ -5,6 +5,7 @@ import { IMenuButton } from '@/store'
 import dayjs from 'dayjs'
 import { ICurrentDay } from 'types/date'
 import { lunarDay } from './date'
+import * as CryptoJS from 'crypto-js'
 
 function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
   try {
@@ -217,6 +218,33 @@ export function setWxBrower(is: boolean) {
     key: 'wxBrower',
     data: is
   })
+}
+
+/**
+ *加密处理
+ */
+export const encryption = (params) => {
+  let { data, type, param, key } = params
+  const result = JSON.parse(JSON.stringify(data))
+  if (type === 'Base64') {
+    param.forEach((ele) => {
+      result[ele] = base64(result[ele])
+    })
+  } else {
+    param.forEach((ele) => {
+      var data = result[ele]
+      key = CryptoJS.enc.Latin1.parse(key)
+      var iv = key
+      // 加密
+      var encrypted = CryptoJS.AES.encrypt(data, key, {
+        iv: iv,
+        mode: CryptoJS.mode.CFB,
+        padding: CryptoJS.pad.NoPadding
+      })
+      result[ele] = encrypted.toString()
+    })
+  }
+  return result
 }
 
 export const useNav = () => !(process.env.TARO_ENV === 'h5' && cacheGetSync('wxBrower'))

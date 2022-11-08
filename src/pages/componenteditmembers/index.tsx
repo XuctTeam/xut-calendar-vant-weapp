@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:33
+ * @LastEditTime: 2022-11-08 21:55:39
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
@@ -124,7 +124,7 @@ export default Unite(
       }
 
       Dialog.confirm({
-        title: '确认',
+        title: '提示',
         message: '确认删除吗？',
         selector: 'componentEditMemberDialog'
       }).then((value) => {

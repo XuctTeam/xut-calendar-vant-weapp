@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-24 17:40:58
+ * @LastEditTime: 2022-11-08 21:55:07
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\index.tsx
  * @Description:
  *
@@ -104,7 +104,7 @@ export default Unite(
      */
     agreeJoin(gmid: string) {
       Dialog.confirm({
-        title: '确认',
+        title: '提示',
         message: '确认同意申请吗？',
         selector: 'vanDialogGroupApply'
       }).then((value) => {
@@ -129,7 +129,7 @@ export default Unite(
      */
     refuseJoin(gmid: string) {
       Dialog.confirm({
-        title: '确认',
+        title: '提示',
         message: '确认拒绝申请吗？',
         selector: 'vanDialogGroupApply'
       }).then((value) => {
@@ -153,7 +153,7 @@ export default Unite(
      */
     deleteApply(gmid: string) {
       Dialog.confirm({
-        title: '确认',
+        title: '提示',
         message: '确认撤回申请吗？',
         selector: 'vanDialogGroupApply'
       }).then((value) => {

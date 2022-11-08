@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 15:09:23
+ * @LastEditTime: 2022-11-08 21:55:22
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -99,7 +99,7 @@ export default Unite(
 
     deleteGroup(id: string) {
       Dialog.confirm({
-        title: '确认消息',
+        title: '提示',
         message: '是否删除?',
         selector: 'vanGroupMememberDialog'
       }).then((value) => {

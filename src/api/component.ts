@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-01-04 10:39:35
- * @LastEditTime: 2022-11-08 17:02:17
+ * @LastEditTime: 2022-11-08 21:58:40
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
@@ -111,16 +111,6 @@ export const getAttendStatus = (componentId: string) => {
  */
 export const updateAttendStatus = (componentId: string, status: number) => {
   return httpRequest.post('/cms/api/app/v1/component/attend/status', { componentId, status })
-}
-
-/**
- * @description:  拒绝邀请
- * @param {string} componentId
- * @return {*}
- * @author: Derek Xu
- */
-export const refuseAttend = (componentId: string) => {
-  return httpRequest.delete('/cms/api/app/v1/component/attend/'.concat(componentId))
 }
 
 /**

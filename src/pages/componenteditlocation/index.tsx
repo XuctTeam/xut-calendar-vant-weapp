@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:25
+ * @LastEditTime: 2022-11-08 21:55:34
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditlocation\index.tsx
  * @Description:
  *
@@ -64,7 +64,7 @@ export default Unite(
           var statu = res.authSetting
           if (!statu['scope.userLocation']) {
             Dialog.confirm({
-              title: '是否授权当前位置',
+              title: '提示',
               message: '需要获取您的地理位置',
               selector: 'locationDialog'
             }).then((value) => {

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:02
+ * @LastEditTime: 2022-11-08 21:55:27
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupsearch\index.tsx
  * @Description:
  *
@@ -133,7 +133,7 @@ export default Unite(
         return this._join(id)
       }
       Dialog.confirm({
-        title: '加入密码',
+        title: '提示',
         message: <Input placeholder='请输入密码' value={this.state.password} onInput={(e) => this.setPassword(e.detail.value)} />,
         selector: 'vanDialogGroupSearch'
       }).then((value) => {

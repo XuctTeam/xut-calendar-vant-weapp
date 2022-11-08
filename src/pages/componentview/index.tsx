@@ -2,13 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 11:50:34
+ * @LastEditTime: 2022-11-08 22:04:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Taro, { ShareTimelineReturnObject, useShareTimeline } from '@tarojs/taro'
+import Taro from '@tarojs/taro'
 import Unite from '@antmjs/unite'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
@@ -20,7 +20,7 @@ import Router from 'tarojs-router-next'
 import { DifferentDay, SameDay } from './ui'
 import { userInfoStore, componentRefreshTimeStore } from '@/store'
 import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText, alarmCodeToType, useNav } from '@/utils'
-import { getById, deleteById, queryComponentMembers, getAttendStatus, updateAttendStatus, refuseAttend, getShortUrl } from '@/api/component'
+import { getById, deleteById, queryComponentMembers, getAttendStatus, updateAttendStatus, getShortUrl } from '@/api/component'
 import { getName } from '@/api/user'
 import { IDavComponent } from 'types/calendar'
 import { useShareAppMessage } from '@tarojs/taro'
@@ -134,9 +134,16 @@ export default Unite(
     },
 
     setAttendStatus(attendStatus: number) {
+      if (attendStatus === this.state.attendStatus) return
       this.setState({
         attendStatus
       })
+
+      updateAttendStatus(this.state.id, attendStatus)
+        .then(() => {})
+        .catch((err) => {
+          console.log(err)
+        })
     },
 
     async _setComponent(component: IDavComponent, memberIds: string[]) {
@@ -152,37 +159,44 @@ export default Unite(
         })
       }
 
+      if (component.creatorMemberId !== this.hooks['userInfo'].id) {
+        /* 邀请者不可以编辑事件 */
+        this.setState({
+          actions: this.state.actions.filter((i) => i.value !== 4)
+        })
+
+        try {
+          /**加载组织者 */
+          if (memberIds.length !== 0) {
+            const nameResult = await getName(component.creatorMemberId)
+            this.setState({
+              createMemberName: nameResult
+            })
+          }
+          const attendStatusResult = await getAttendStatus(component.id)
+          this.setState({
+            attendStatus: attendStatusResult as any as number
+          })
+          this.setState({
+            loading: false
+          })
+        } catch (err) {
+          console.log(err)
+          this.setState({
+            loading: false
+          })
+        }
+        return
+      }
+
       // if (component.endTime && dayjs(Number.parseInt(comp.endTime)).isBefore(dayjs())) {
       //   setExpire(true)
       // }
-      if (component.creatorMemberId === this.hooks['userInfo'].id) {
-        this.setState({
-          createMemberName: this.hooks['userInfo'].name,
-          loading: false
-        })
-        return
-      }
-      try {
-        /**加载组织者 */
-        if (memberIds.length !== 0) {
-          const nameResult = await getName(component.creatorMemberId)
-          this.setState({
-            createMemberName: nameResult
-          })
-        }
-        const attendStatusResult = await getAttendStatus(component.id)
-        this.setState({
-          attendStatus: attendStatusResult as any as number
-        })
-        this.setState({
-          loading: false
-        })
-      } catch (err) {
-        console.log(err)
-        this.setState({
-          loading: false
-        })
-      }
+      this.setState({
+        createMemberName: this.hooks['userInfo'].name,
+        loading: false
+      })
+      return
     },
 
     _editComponent() {
@@ -195,7 +209,7 @@ export default Unite(
 
     _deleteComponent() {
       Dialog.confirm({
-        title: '删除日程',
+        title: '提示',
         message: '确定删除吗？',
         selector: 'deleteDialog2'
       }).then((value) => {

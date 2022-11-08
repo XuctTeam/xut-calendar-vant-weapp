@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-08 13:08:13
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 17:02:43
+ * @LastEditTime: 2022-11-08 21:26:53
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareview\index.tsx
  * @Description:
  *
@@ -14,14 +14,16 @@ import { View } from '@tarojs/components'
 import { DifferentDay, SameDay } from './ui'
 import { useNav } from '@/utils'
 import dayjs from 'dayjs'
-import { Button, Cell, Tag } from '@antmjs/vantui'
-import { getShareInfo } from '@/api/component'
+import { Button, Cell, Dialog, Loading, Overlay } from '@antmjs/vantui'
+import { acceptAttend, getShareInfo } from '@/api/component'
 import { IDavComponent } from 'types/calendar'
 import { cacheGetSync } from '@/cache'
-import { useRecoilValue } from 'recoil'
-import { userInfoStore } from '@/store'
-import './index.less'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { componentRefreshTimeStore, userInfoStore } from '@/store'
+
 import Router from 'tarojs-router-next'
+import { useToast } from 'taro-hooks'
+import './index.less'
 
 interface IShareComponent extends IDavComponent {
   attend: boolean
@@ -50,7 +52,8 @@ export default Unite(
       repeatBymonthday: '',
       repeatInterval: 0,
       repeatUntil: '',
-      attend: false
+      attend: false,
+      saving: false
     },
 
     async onLoad() {
@@ -58,7 +61,7 @@ export default Unite(
       if (!id) return
       getShareInfo(id)
         .then((res) => {
-          this.setState({ ...(res as any as IShareComponent), loading: false })
+          this.setState({ ...(res as any as IShareComponent), id: id, loading: false })
         })
         .catch((err) => {
           console.log(err)
@@ -66,12 +69,43 @@ export default Unite(
             loading: false
           })
         })
+    },
+
+    attendComponent() {
+      Dialog.confirm({
+        title: '提示',
+        message: '确定接受吗？',
+        selector: 'componentShareDialog'
+      }).then((value) => {
+        if (value === 'cancel') return
+        this.setState({
+          saving: true
+        })
+        this._acceppt()
+      })
+    },
+
+    _acceppt() {
+      const that = this
+      acceptAttend(this.state.id)
+        .then(() => {
+          that.setState({
+            attend: true,
+            saving: false
+          })
+          that.hooks['setComponentRefreshTime'](dayjs().valueOf())
+        })
+        .catch((err) => {
+          console.log(err)
+          this.setState({
+            saving: false
+          })
+        })
     }
   },
   function ({ state, events }) {
     const {
       loading,
-      id,
       color,
       summary,
       location,
@@ -88,11 +122,24 @@ export default Unite(
       repeatBymonth,
       repeatBymonthday,
       repeatInterval,
-      repeatUntil
+      repeatUntil,
+      attend,
+      saving
     } = state
+    const { attendComponent } = events
     const usedNav = useNav()
     const accessToken = cacheGetSync('accessToken')
     const userInfo = useRecoilValue(userInfoStore)
+    const [toast] = useToast({
+      icon: 'error'
+    })
+
+    const setComponentRefreshTime = useSetRecoilState(componentRefreshTimeStore)
+
+    events.setHooks({
+      toast: toast,
+      setComponentRefreshTime: setComponentRefreshTime
+    })
 
     return (
       <Container
@@ -146,11 +193,14 @@ export default Unite(
           </Cell>
 
           <View className='divider'></View>
-          <Cell className='description' icon='description'>
-            {description || '无描述'}
+          <Cell className='location' icon='location-o' title='地点'>
+            {location || ''}
           </Cell>
           <Cell icon='user-o' title='组织者'>
-            <Tag>{createMemberName}</Tag>
+            {createMemberName}
+          </Cell>
+          <Cell className='description' icon='description'>
+            {description || '无描述'}
           </Cell>
         </View>
         <View className='van-page-button'>
@@ -160,14 +210,20 @@ export default Unite(
             </Button>
           ) : (
             <>
-              {creatorMemberId !== userInfo?.id && (
-                <Button type='danger' block>
+              {creatorMemberId !== userInfo?.id && !attend && (
+                <Button type='danger' block onClick={attendComponent}>
                   接受
                 </Button>
               )}
             </>
           )}
         </View>
+        <Dialog id='componentShareDialog' />
+        <Overlay show={saving}>
+          <Loading size='24px' type='spinner' vertical color='#000'>
+            加载中...
+          </Loading>
+        </Overlay>
       </Container>
     )
   },

@@ -2,17 +2,17 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-21 09:17:40
+ * @LastEditTime: 2022-11-08 11:50:34
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Taro from '@tarojs/taro'
+import Taro, { ShareTimelineReturnObject, useShareTimeline } from '@tarojs/taro'
 import Unite from '@antmjs/unite'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
-import { ActionSheet, Cell, Dialog, Icon, Loading, Overlay } from '@antmjs/vantui'
+import { ActionSheet, Cell, Dialog, Icon } from '@antmjs/vantui'
 import dayjs from 'dayjs'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import ButtonGroup from '@/components/buttongroup'
@@ -32,11 +32,6 @@ import { useBack } from '@/utils/taro'
 import './index.less'
 
 const DEFAULT_ATTEND_BACKGROUD = Images.DEFAULT_ATTEND_BACKGROUD
-
-interface IActions {
-  name: string
-  value: number
-}
 
 export default Unite(
   {
@@ -93,20 +88,6 @@ export default Unite(
         })
       }
       this._init(id)
-      if (process.env.TARO_ENV === 'weapp') {
-        const _actions: IActions[] = [...[{ name: '分享到朋友圈', value: 2 }], ...this.state.actions]
-        _actions.sort((n1, n2) => {
-          // return -1; //返回负值 交换顺序
-          // return 0 或者 1 //返回正值 保持顺序不变
-          console.log(n1, n2)
-          return n1.value - n2.value
-          // n2 - n1 从大到小
-          // n1 - n2 从小到大
-        })
-        this.setState({
-          actions: _actions
-        })
-      }
     },
 
     async _init(id: string) {
@@ -148,6 +129,7 @@ export default Unite(
         case 5:
           this._deleteComponent()
           break
+        case 3:
       }
     },
 
@@ -370,7 +352,14 @@ export default Unite(
     })
 
     return (
-      <Container navTitle='日程查看' enablePagePullDownRefresh={false} className='pages-component-view-index' useNav={usedNav} useMenuBtns={usedNav}>
+      <Container
+        navTitle='日程查看'
+        enablePagePullDownRefresh={false}
+        className='pages-component-view-index'
+        useNav={usedNav}
+        useMenuBtns={usedNav}
+        loading={loading}
+      >
         <View className='van-page-box'>
           <Cell className='summany'>
             <View className='event-label' style={{ color: `#${color}`, background: `#${color}` }}></View>
@@ -461,9 +450,6 @@ export default Unite(
           onCancel={() => setAction(false)}
           onClose={() => setAction(false)}
         />
-        <Overlay show={loading} className='overlay'>
-          <Loading type='spinner'>加载中...</Loading>
-        </Overlay>
         <Dialog id='deleteDialog2' />
       </Container>
     )
@@ -473,5 +459,6 @@ export default Unite(
 
 definePageConfig({
   // 这里不要设置标题，在Container组件上面设置
-  navigationBarTitleText: ''
+  navigationBarTitleText: '',
+  enableShareAppMessage: true
 })

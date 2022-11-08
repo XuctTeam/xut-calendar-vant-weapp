@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-13 10:03:33
- * @LastEditTime: 2022-08-01 09:55:35
+ * @LastEditTime: 2022-11-08 09:53:04
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent } from 'react'
@@ -17,11 +17,11 @@ interface IColorPropState {
 const ColorRadio: FunctionComponent<IColorPropState> = (props) => {
   return (
     <RadioGroup value={props.defaultColor} onChange={(e) => props.onChage(e.detail)}>
-      <Grid border={false} columnNum={5} gutter={10}>
+      <Grid border={false} columnNum={5}>
         {colors.map((c, i) => {
           return (
             <GridItem key={i}>
-              <Radio key={i} name={c.value} checkedColor={`#${c.value}`}></Radio>
+              <Radio key={i} name={c.value} checkedColor={`#${c.value}`} iconSize='26px'></Radio>
             </GridItem>
           )
         })}

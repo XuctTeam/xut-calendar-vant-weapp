@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-25 10:31:59
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-23 16:14:31
+ * @LastEditTime: 2022-11-08 10:47:11
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\component\DayEventView.tsx
  * @Description:
  *
@@ -42,14 +42,13 @@ const DayEventView: FunctionComponent<IPageOption> = (props) => {
       .filter((c) => c.fullDay === 0)
       .forEach((c) => {
         const _time = dayjs(c.dtstart).hour()
-        const _key = _time > 10 ? _time + ':00' : '0' + _time + ':00'
+        const _key = _time >= 10 ? _time + ':00' : '0' + _time + ':00'
         if (map.has(_key)) {
           map.get(_key)?.push(c)
           return
         }
         map.set(_key, [c])
       })
-    console.log(map)
     setTimeMap(map)
   }
 

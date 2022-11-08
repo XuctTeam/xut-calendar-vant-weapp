@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-24 17:17:04
+ * @LastEditTime: 2022-11-08 17:30:07
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -78,23 +78,26 @@ export default Unite(
         {calendars.length === 0 ? (
           <Empty description='~空空如也~' />
         ) : (
-          <PowerScrollView
-            finishedText='没有更多了'
-            successText='刷新成功'
-            emptyDescription='~空空如也~'
-            onScrollToUpper={onReload}
-            // onScrollToLower={basicsLoadMore}
-            current={calendars.length}
-            finished={!loading}
-          >
-            {calendars?.map((item: IDavCalendar, index: number) => {
-              return (
-                <View className='li' key={index}>
-                  <CalendarListBody item={item} editCalendar={editCalendar}></CalendarListBody>
-                </View>
-              )
-            })}
-          </PowerScrollView>
+          <View className='list'>
+            <PowerScrollView
+              className='scroll'
+              finishedText='没有更多了'
+              successText='刷新成功'
+              emptyDescription='~空空如也~'
+              onScrollToUpper={onReload}
+              current={calendars.length}
+              finished={!loading}
+              style={{ height: '100%' }}
+            >
+              {calendars?.map((item: IDavCalendar, index: number) => {
+                return (
+                  <View className='li' key={index}>
+                    <CalendarListBody item={item} editCalendar={editCalendar}></CalendarListBody>
+                  </View>
+                )
+              })}
+            </PowerScrollView>
+          </View>
         )}
       </Container>
     )

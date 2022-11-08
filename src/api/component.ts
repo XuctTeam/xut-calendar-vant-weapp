@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-01-04 10:39:35
- * @LastEditTime: 2022-10-06 22:45:47
+ * @LastEditTime: 2022-11-08 17:02:17
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
@@ -140,7 +140,7 @@ export const attendStatistics = (componentId: string) => {
  * @author: Derek Xu
  */
 export const getShareInfo = (componentId: string) => {
-  return httpRequest.get('/cms/api/v1/anon/component', { componentId })
+  return httpRequest.get('/cms/api/app/v1/component/anno/share', { componentId })
 }
 
 /**

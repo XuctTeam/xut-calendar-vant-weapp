@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 15:24:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:39
+ * @LastEditTime: 2022-11-08 16:09:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareposter\index.tsx
  * @Description:
  *
@@ -76,17 +76,25 @@ export default Unite(
         this._draw(qrCode, summary, packageTime)
         return
       }
-      await this._removeSave()
-      this._base64ToSave(qrCode)
-        .then((rs) => {
-          if (!rs) return
-          //@ts-ignore
-          _draw(rs as any as string)
-        })
-        .catch((err) => {
-          console.log(err)
-          return Promise.reject(err)
-        })
+      try {
+        await this._removeSave()
+      } catch (err) {
+        console.log(err)
+      }
+      try {
+        this._base64ToSave(qrCode)
+          .then((rs) => {
+            if (!rs) return
+            //@ts-ignore
+            this._draw(rs as any as string, summary, packageTime)
+          })
+          .catch((err) => {
+            console.log(err)
+            return Promise.reject(err)
+          })
+      } catch (err) {
+        debugger
+      }
     },
 
     _draw(qrCode: string, summary: string, packageTime: IPackageTimeOption) {
@@ -123,7 +131,7 @@ export default Unite(
           /* 日程详情 */
           that._drawRoundedRect(ctx, 'white', '#a4d1eb', 20, 80, _scrWidth - 20, _scrHeight - 200, 5)
 
-          this._drawTxt({
+          that._drawTxt({
             context: ctx,
             text: this.hooks['userInfo'].name || '名称',
             fillStyle: '#000000',
@@ -136,7 +144,7 @@ export default Unite(
             maxLine: 2
           })
 
-          this._drawTxt({
+          that._drawTxt({
             context: ctx,
             text: '给你推荐了日程',
             fillStyle: '#666666',
@@ -149,7 +157,7 @@ export default Unite(
             maxLine: 2
           })
 
-          this._drawTxt({
+          that._drawTxt({
             context: ctx,
             text: summary,
             fillStyle: '#fff',
@@ -163,10 +171,10 @@ export default Unite(
           })
 
           /** 日程时间 */
-          this._packageTime(ctx, _scrWidth, packageTime)
+          that._packageTime(ctx, _scrWidth, packageTime)
 
           /** 二维码 */
-          this._drawTxt({
+          that._drawTxt({
             context: ctx,
             text: `扫码/长按识别二维码查看详情`,
             fillStyle: '#666666',
@@ -199,8 +207,10 @@ export default Unite(
             imgtag.crossOrigin = 'Anonymous'
 
             if (index == 0) {
+              imgtag.src += `?timestamp= ${Date.now()}`
               imgtag.onload = () => {
-                this._drawCircleImage(ctx, imgtag, 40, 30, 30)
+                console.log(imgtag.src)
+                this._drawCircleImage(ctx, imgtag, 30, 24, 44)
               }
             } else if (index == 1) {
               imgtag.onload = () => {
@@ -491,7 +501,13 @@ export default Unite(
     const usedNav = useNav()
 
     return (
-      <Container navTitle='日程海报分享' enablePagePullDownRefresh={true} className='pages-component-share-poster-index' useNav={usedNav} useMenuBtns={usedNav}>
+      <Container
+        navTitle='日程海报分享'
+        enablePagePullDownRefresh={false}
+        className='pages-component-share-poster-index'
+        useNav={usedNav}
+        useMenuBtns={usedNav}
+      >
         <View className='van-page-box'>
           <Canvas type='2d' id='myCanvas' canvasId='myCanvas' style={{ width: '100%', height: '100%' }}></Canvas>
         </View>

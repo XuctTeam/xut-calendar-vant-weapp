@@ -1,25 +1,27 @@
 .pages-calendar-manager-index {
-  display: flex;
   height: 100%;
+  display: flex;
   flex-direction: column;
   overflow: hidden;
 
   .list {
-    padding-top: 10px;
-    flex: 1;
+    height: 100%;
     overflow-y: auto;
+  }
+
+  .scroll {
+    height: 100%;
+    padding-top: 10px;
+    box-sizing: border-box;
   }
 
   .li {
     min-height: 200px;
-    margin: 20px;
     box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
     border-radius: @border-radius-lg;
     padding: @padding-sm;
-    &:first-child {
-      margin-top: 4px;
-    }
     background-color: #fff;
+    margin: 0px 20px 20px 20px;
   }
 
   .header {

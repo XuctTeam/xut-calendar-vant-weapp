@@ -1,29 +1,8 @@
 .pages-address-groupes-manager-index {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   overflow: hidden;
-
-  .page-box {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-  }
-
-  .van-power-scroll-view {
-    overflow-y: auto;
-  }
-
-  .page-box-padding {
-    padding-top: 100px;
-  }
-
-  .page-box-wx-padding {
-    padding-top: 170px;
-  }
 
   .loading {
     height: 100%;
@@ -81,6 +60,11 @@
 
   .list {
     flex: 1;
+    overflow-y: auto;
+
+    .scroll {
+      height: 100%;
+    }
 
     .box {
       display: flex;

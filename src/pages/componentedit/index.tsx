@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:16
+ * @LastEditTime: 2022-11-08 11:09:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 import Unite from '@antmjs/unite'
 import { Textarea, View } from '@tarojs/components'
-import { Button, Cell, Col, Icon, Row, Switch } from '@antmjs/vantui'
+import { Button, Cell, Col, Icon, Loading, Overlay, Row, Switch } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Router, { NavigateType } from 'tarojs-router-next'
 import dayjs, { Dayjs } from 'dayjs'
@@ -356,9 +356,15 @@ export default Unite(
           //要刷新首页列表
           that.hooks['setComponentRefreshTime'](dayjs().valueOf())
           if (process.env.TARO_ENV !== 'weapp') {
+            this.setState({
+              saving: false
+            })
             this._toView(addOrUpdateComponent.id)
             return
           }
+          this.setState({
+            saving: false
+          })
           that._subscribeMessage(addOrUpdateComponent.id)
         })
         .catch((err) => {
@@ -403,9 +409,6 @@ export default Unite(
           title: '编辑成功'
         })
         window.setTimeout(() => {
-          this.setState({
-            saving: false
-          })
           this.hooks['back']({
             delta: 2
           })
@@ -417,9 +420,6 @@ export default Unite(
         title: '新增成功'
       })
       window.setTimeout(() => {
-        this.setState({
-          saving: false
-        })
         Router.toComponentview({
           params: {
             id,
@@ -473,8 +473,7 @@ export default Unite(
       setRepeatPickerOpen,
       setRepeatUntilChoose,
       setMembersChoose,
-      saveOrUpdateComponent,
-      setSaving
+      saveOrUpdateComponent
     } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const calendars = useRecoilValue(calendarStore)
@@ -599,7 +598,7 @@ export default Unite(
         </View>
 
         <View className='van-page-button'>
-          <Button type='info' block onClick={saveOrUpdateComponent} loading={saving}>
+          <Button type='info' block onClick={saveOrUpdateComponent}>
             保存
           </Button>
         </View>
@@ -629,6 +628,11 @@ export default Unite(
           onClose={() => setRepeatPickerOpen(false)}
           onConfirm={setRepeatUntilChoose}
         ></RepeatPicker>
+        <Overlay show={saving}>
+          <Loading size='24px' type='spinner' vertical color='#000'>
+            加载中...
+          </Loading>
+        </Overlay>
       </Container>
     )
   },

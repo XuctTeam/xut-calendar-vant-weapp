@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-24 17:27:45
+ * @LastEditTime: 2022-11-08 15:09:23
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -46,21 +46,22 @@ export default Unite(
       this.setState({
         loading: true
       })
-      groupList()
-        .then((res) => {
-          const list = res as any as IGroup[]
-          const _list = [...list, ...list, ...list, ...list]
-          this.setState({
-            loading: false,
-            list: _list
-          })
+      let res
+      try {
+        res = await groupList()
+      } catch (err) {
+        console.log(err)
+        this.setState({
+          loading: false
         })
-        .catch((err) => {
-          console.log(err)
-          this.setState({
-            loading: false
-          })
-        })
+      }
+      if (!res) return
+      const list = res as any as IGroup[]
+      const _list = [...list, ...list, ...list, ...list]
+      this.setState({
+        loading: false,
+        list: _list
+      })
     },
 
     async addGroup() {
@@ -136,7 +137,7 @@ export default Unite(
   },
   function ({ state, events }) {
     const { list, loading } = state
-    const { addGroup, editGroup, deleteGroup, query, getTopSize } = events
+    const { addGroup, editGroup, deleteGroup, query } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const menuButton: IMenuButton | undefined = useRecoilValue(menuButtonStore)
     const accessToken = cacheGetSync('accessToken')
@@ -156,17 +157,19 @@ export default Unite(
 
     return (
       <Container navTitle='通讯录管理' enablePagePullDownRefresh={false} useNav={useNav()} useMenuBtns={false} className='pages-address-groupes-manager-index'>
-        <View className='page-box'>
-          <View className='header'>
-            <GroupHeader addGroup={addGroup}></GroupHeader>
-          </View>
+        <View className='header'>
+          <GroupHeader addGroup={addGroup}></GroupHeader>
+        </View>
+        <View className='list'>
           <PowerScrollView
-            className='list'
             finishedText='没有更多了'
             emptyDescription='~空空如也~'
             current={list.length}
+            refresherEnabled
+            scrollY
             onScrollToUpper={query}
             finished={!loading}
+            className='scroll'
           >
             {list.map((item: IGroup, index: number) => (
               <GroupBody

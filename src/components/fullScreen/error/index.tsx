@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 21:51:08
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-09 20:53:35
+ * @LastEditTime: 2022-11-08 11:26:58
  * @FilePath: \xut-calendar-vant-weapp\src\components\fullScreen\error\index.tsx
  * @Description:
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 21:55:22
+ * @LastEditTime: 2022-11-09 18:36:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -57,7 +57,7 @@ export default Unite(
       }
       if (!res) return
       const list = res as any as IGroup[]
-      const _list = [...list, ...list, ...list, ...list]
+      const _list = [...list]
       this.setState({
         loading: false,
         list: _list

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 22:04:28
+ * @LastEditTime: 2022-11-09 14:13:49
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -426,6 +426,7 @@ export default Unite(
               </Cell>
               <Cell
                 icon='friends-o'
+                clickable
                 title={`共邀请（${memberIds.length}）人`}
                 onClick={() =>
                   Router.toComponentattend({

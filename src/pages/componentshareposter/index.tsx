@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 15:24:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 16:09:38
+ * @LastEditTime: 2022-11-09 14:06:34
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareposter\index.tsx
  * @Description:
  *
@@ -93,7 +93,7 @@ export default Unite(
             return Promise.reject(err)
           })
       } catch (err) {
-        debugger
+        console.log(err)
       }
     },
 
@@ -114,7 +114,7 @@ export default Unite(
           this.hooks['canvasRef'].current = node
           const cavs: any = node
           const _scrWidth = systemInfo.screenWidth - 20
-          const _scrHeight = 420
+          const _scrHeight = 500
 
           const ctx = cavs.getContext('2d')
 
@@ -126,19 +126,22 @@ export default Unite(
           //ctx.fillRect(0, 0, systemInfo.screenWidth, _scrHeight)
 
           /* 背景图*/
-          that._drawRoundedRect(ctx, 'white', '#f4f4f4', 10, 10, _scrWidth, _scrHeight - 20, 5)
+          that._drawRoundedRect(ctx, 'white', '#ffcb4b', 10, 10, _scrWidth, _scrHeight - 20, 5)
 
           /* 日程详情 */
-          that._drawRoundedRect(ctx, 'white', '#a4d1eb', 20, 80, _scrWidth - 20, _scrHeight - 200, 5)
+          that._drawRoundedRect(ctx, 'white', '#fff', 30, 30, _scrWidth - 40, _scrHeight - 160, 5)
+
+          /**  */
+          that._drawScreen(ctx, 40, 100, _scrWidth - 24)
 
           that._drawTxt({
             context: ctx,
             text: this.hooks['userInfo'].name || '名称',
             fillStyle: '#000000',
             broken: true,
-            x: 80,
-            y: 30,
-            font: '13px sans-serif',
+            x: 100,
+            y: 44,
+            font: '16px sans-serif',
             lineHeight: 18,
             maxWidth: 450,
             maxLine: 2
@@ -149,8 +152,8 @@ export default Unite(
             text: '给你推荐了日程',
             fillStyle: '#666666',
             broken: true,
-            x: 80,
-            y: 50,
+            x: 100,
+            y: 66,
             font: '10px sans-serif',
             lineHeight: 14,
             maxWidth: 450,
@@ -163,29 +166,15 @@ export default Unite(
             fillStyle: '#fff',
             broken: true,
             x: 30,
-            y: 100,
-            font: '14px sans-serif',
+            y: _scrHeight - 100,
+            font: '28px sans-serif',
             lineHeight: 20,
             maxWidth: _scrWidth - 40,
             maxLine: 2
           })
 
           /** 日程时间 */
-          that._packageTime(ctx, _scrWidth, packageTime)
-
-          /** 二维码 */
-          that._drawTxt({
-            context: ctx,
-            text: `扫码/长按识别二维码查看详情`,
-            fillStyle: '#666666',
-            broken: true,
-            x: 104,
-            y: _scrHeight - 100,
-            font: '12px sans-serif',
-            lineHeight: 17,
-            maxWidth: 116,
-            maxLine: 2
-          })
+          that._packageTime(ctx, _scrWidth, _scrHeight - 60, packageTime)
 
           // 将要绘制的图片放在一个数组中
           let imgList: IImageOption[] = []
@@ -210,7 +199,7 @@ export default Unite(
               imgtag.src += `?timestamp= ${Date.now()}`
               imgtag.onload = () => {
                 console.log(imgtag.src)
-                this._drawCircleImage(ctx, imgtag, 30, 24, 44)
+                this._drawCircleImage(ctx, imgtag, 50, 40, 44)
               }
             } else if (index == 1) {
               imgtag.onload = () => {
@@ -218,7 +207,7 @@ export default Unite(
               }
             } else if (index == 2) {
               imgtag.onload = () => {
-                ctx.drawImage(imgtag, 40, _scrHeight - 100, 60, 60)
+                ctx.drawImage(imgtag, (_scrWidth - 180) / 2, 120, 200, 200)
               }
             }
           })
@@ -305,6 +294,17 @@ export default Unite(
       context.fillText(line, x, y)
     },
 
+    _drawScreen(ctx, x, y, w) {
+      ctx.setLineDash([8, 8])
+      ctx.lineWidth = 2
+      ctx.strokeStyle = '#c0c0c0'
+
+      ctx.beginPath()
+      ctx.moveTo(x, y)
+      ctx.lineTo(w, y)
+      ctx.stroke()
+    },
+
     _drawRoundedRect(ctx, strokeStyle, fillStyle, x, y, width, height, radius) {
       ctx.beginPath()
       this._roundedRect(ctx, x, y, width, height, radius)
@@ -326,7 +326,7 @@ export default Unite(
       ctx.arcTo(x, y, x + radius, y, radius)
     },
 
-    _packageTime(ctx: any, scrWidth: number, timeOption: IPackageTimeOption) {
+    _packageTime(ctx: any, scrWidth: number, _scrHeight: number, timeOption: IPackageTimeOption) {
       if (dayjs(timeOption.dtstart).isSame(timeOption.dtend, 'date')) {
         this._drawTxt({
           context: ctx,
@@ -334,7 +334,7 @@ export default Unite(
           fillStyle: '#fff',
           broken: true,
           x: 30,
-          y: 140,
+          y: _scrHeight,
           font: '12px sans-serif',
           lineHeight: 20,
           maxWidth: scrWidth - 40,
@@ -346,7 +346,7 @@ export default Unite(
           fillStyle: '#fff',
           broken: true,
           x: 30,
-          y: 160,
+          y: _scrHeight + 20,
           font: '12px sans-serif',
           lineHeight: 20,
           maxWidth: scrWidth - 40,
@@ -509,7 +509,9 @@ export default Unite(
         useMenuBtns={usedNav}
       >
         <View className='van-page-box'>
-          <Canvas type='2d' id='myCanvas' canvasId='myCanvas' style={{ width: '100%', height: '100%' }}></Canvas>
+          <View className='box'>
+            <Canvas type='2d' id='myCanvas' canvasId='myCanvas' style={{ width: '100%', height: '100%' }}></Canvas>
+          </View>
         </View>
         <View className='van-page-button'>
           <Button block type='danger' onClick={saveQrCode}>

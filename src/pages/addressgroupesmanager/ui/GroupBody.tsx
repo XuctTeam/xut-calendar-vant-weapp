@@ -4,13 +4,13 @@
  * @Autor: Derek Xu
  * @Date: 2022-02-07 21:52:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-31 16:40:17
+ * @LastEditTime: 2022-11-09 14:39:10
  */
 import { FunctionComponent } from 'react'
 import { View } from '@tarojs/components'
 import dayjs from 'dayjs'
 import { IGroup } from 'types/group'
-import { Button, Col, Row, Tag, Icon } from '@antmjs/vantui'
+import { Col, Row, Tag, Icon } from '@antmjs/vantui'
 import Avatar from '@/components/avatar'
 
 interface IPageStateProps {
@@ -53,9 +53,19 @@ const GroupBody: FunctionComponent<IPageStateProps> = (props) => {
       </View>
       <View className='lbr'></View>
       <View className='btns'>
-        {props.uid === createMemberId && <Icon classPrefix='page-icon' name='bianji' size='28px' onClick={() => props.edit(id || '')}></Icon>}
-        {props.uid === createMemberId && <Icon classPrefix='page-icon' name='shanchu' size='28px' onClick={() => props.remove(id || '')}></Icon>}
-        <Icon classPrefix='page-icon' name='yonghuguanli' size='28px' onClick={() => props.members(id || '')}></Icon>
+        {props.uid === createMemberId && (
+          <View className='cell' onClick={() => props.edit(id || '')}>
+            <Icon classPrefix='page-icon' name='bianji'></Icon>
+          </View>
+        )}
+        {props.uid === createMemberId && (
+          <View className='cell' onClick={() => props.remove(id || '')}>
+            <Icon classPrefix='page-icon' name='shanchu'></Icon>
+          </View>
+        )}
+        <View className='cell' onClick={() => props.members(id || '')}>
+          <Icon classPrefix='page-icon' name='yonghuguanli'></Icon>
+        </View>
       </View>
     </View>
   )

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-14 11:31:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-16 20:55:44
+ * @LastEditTime: 2022-11-09 18:17:25
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupmember\ui\Member.tsx
  * @Description:
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -22,11 +22,7 @@ const Member: FC<IPageOption> = (props) => {
     <View className='cell' hoverClass='cell--hover hover-class' hoverStayTime={70}>
       <Row>
         <Col span={4}>
-          {props.avatar ? (
-            <Avatar size='medium' src={props.avatar}></Avatar>
-          ) : (
-            <Avatar className='avatar'>{props.name ? props.name.substring(0, 1) : ''}</Avatar>
-          )}
+          {props.avatar ? <Avatar size='mini' src={props.avatar}></Avatar> : <Avatar className='avatar'>{props.name ? props.name.substring(0, 1) : ''}</Avatar>}
         </Col>
         <Col span={20}>{props.name}</Col>
       </Row>

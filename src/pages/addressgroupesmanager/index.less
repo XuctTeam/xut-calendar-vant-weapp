@@ -61,19 +61,21 @@
   .list {
     flex: 1;
     overflow-y: auto;
+    margin: 10px 20px;
 
     .scroll {
       height: 100%;
+      box-sizing: border-box;
     }
 
     .box {
       display: flex;
       flex-direction: column;
       background: #fff;
-      margin: 20px;
       box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
       border-radius: @border-radius-lg;
       padding: @padding-sm 2px 4px 2px;
+      margin-bottom: 10px;
     }
 
     .title {
@@ -140,10 +142,14 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
+    height: 100px;
 
     .page-icon {
-      margin-right: 30px;
-      width: 50px;
+      font-size: 60px !important;
+    }
+
+    .cell {
+      width: 100px;
     }
   }
 }

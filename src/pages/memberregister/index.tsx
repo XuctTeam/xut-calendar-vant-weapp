@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-07 20:59:12
+ * @LastEditTime: 2022-11-10 09:21:49
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
@@ -95,7 +95,6 @@ export default Unite(
     },
 
     _userNameRegister(data: IUserNameForm) {
-      debugger
       register({
         formType: 'username',
         username: Object.assign({ ...data }, { randomStr: this.state.randomStr })

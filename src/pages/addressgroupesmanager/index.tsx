@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-09 18:36:51
+ * @LastEditTime: 2022-11-10 10:27:47
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -14,28 +14,29 @@ import { Dialog, PowerScrollView } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
 import Container from '@/components/container'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { GroupBody, GroupHeader } from './ui'
 import { IGroup } from 'types/group'
 import { groupList, deleteGroup } from '@/api/group'
 import { cacheGetSync } from '@/cache'
-import { IMenuButton, userInfoStore } from '@/store'
+import { groupRefreshTimeStore, IMenuButton, userInfoStore } from '@/store'
 import { useToast } from 'taro-hooks'
 import { IUserInfo } from 'types/user'
 import { useNav } from '@/utils'
 import { menuButtonStore } from '@/store'
 
 import './index.less'
+import dayjs from 'dayjs'
 
 export default Unite(
   {
     state: {
       list: [],
-      loading: false
+      loading: false,
+      refreshTime: 0
     },
 
-    async query(data?: any) {
-      console.log(data)
+    async query() {
       if (!this.hooks['accessToken']) {
         this.setState({
           list: [],
@@ -56,11 +57,31 @@ export default Unite(
         })
       }
       if (!res) return
+      const refreshDate = dayjs().valueOf()
       const list = res as any as IGroup[]
       const _list = [...list]
       this.setState({
         loading: false,
-        list: _list
+        list: _list,
+        refreshTime: refreshDate
+      })
+      this.hooks['setGroupRefreshTimeStore'](refreshDate)
+    },
+
+    async onShow() {
+      console.log(6666666666666)
+      console.log(this.hooks['groupRefreshState'])
+      console.log(this.state.refreshTime)
+      if (this.hooks['groupRefreshState'] > this.state.refreshTime || this.state.refreshTime === 0) {
+        this.query()
+      }
+    },
+
+    clean() {
+      if (this.hooks['accessToken']) return
+      this.setState({
+        list: [],
+        loading: false
       })
     },
 
@@ -137,9 +158,10 @@ export default Unite(
   },
   function ({ state, events }) {
     const { list, loading } = state
-    const { addGroup, editGroup, deleteGroup, query } = events
+    const { addGroup, editGroup, deleteGroup, query, clean } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const menuButton: IMenuButton | undefined = useRecoilValue(menuButtonStore)
+    const [groupRefreshState, setGroupRefreshTimeStore] = useRecoilState(groupRefreshTimeStore)
     const accessToken = cacheGetSync('accessToken')
     const [toast] = useToast({
       icon: 'error'
@@ -148,11 +170,13 @@ export default Unite(
     events.setHooks({
       toast: toast,
       accessToken: accessToken,
-      menuButton: menuButton
+      menuButton: menuButton,
+      groupRefreshState: groupRefreshState,
+      setGroupRefreshTimeStore: setGroupRefreshTimeStore
     })
 
     useEffect(() => {
-      query()
+      clean()
     }, [accessToken])
 
     return (

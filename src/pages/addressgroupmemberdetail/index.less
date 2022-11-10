@@ -2,4 +2,27 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  .van-cell {
+    background-color: #fff;
+  }
+
+  .van-overlay {
+    background-color: var(--overlay-background-color, rgba(0, 0, 0, 0.2));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .avatar {
+    .van-cell__value {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  .avatar-bg {
+    background-color: coral;
+    color: #fff;
+  }
 }

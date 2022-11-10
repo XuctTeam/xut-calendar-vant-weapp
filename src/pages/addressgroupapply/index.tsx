@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 21:55:07
+ * @LastEditTime: 2022-11-10 10:20:56
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import { ITouchEvent, View } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { Search, Tabs, Tab, Dialog } from '@antmjs/vantui'
 import Container from '@/components/container'
 import Router from 'tarojs-router-next'
@@ -19,6 +19,9 @@ import { MemberList } from './ui'
 
 import './index.less'
 import { useNav } from '@/utils'
+import { useSetRecoilState } from 'recoil'
+import { groupRefreshTimeStore } from '@/store'
+import dayjs from 'dayjs'
 
 export default Unite(
   {
@@ -112,6 +115,7 @@ export default Unite(
         applyAgreeJoinGroup(gmid, 1)
           .then(() => {
             if (this.state.active === 0) {
+              this.hooks['setGroupRefreshTimeStore'](dayjs().valueOf())
               this._applyMine()
               return
             }
@@ -175,6 +179,11 @@ export default Unite(
     const { active, loading, list } = state
     const { setActive, onSearchFouce, agreeJoin, refuseJoin, deleteApply } = events
     const _useNav = useNav()
+    const setGroupRefreshTimeStore = useSetRecoilState(groupRefreshTimeStore)
+    events.setHooks({
+      setGroupRefreshTimeStore: setGroupRefreshTimeStore
+    })
+
     return (
       <Container navTitle='群组申请' enablePagePullDownRefresh={false} className='address-group-apply-index' useNav={_useNav} useMenuBtns={_useNav}>
         <View className='search'>

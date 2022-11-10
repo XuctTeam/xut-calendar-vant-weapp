@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-01 09:57:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:39:32
+ * @LastEditTime: 2022-11-10 16:49:39
  * @FilePath: \xut-calendar-vant-weapp\src\pages\systemsetting\index.tsx
  * @Description:
  *
@@ -61,7 +61,7 @@ export default Unite(
     console.log(getVersion())
     return (
       <>
-        <Container navTitle='设置' enablePagePullDownRefresh={true} useNav={usedNav} useMenuBtns={usedNav} className='pages-systemsetting-index'>
+        <Container navTitle='设置' enablePagePullDownRefresh={false} useNav={usedNav} useMenuBtns={usedNav} className='pages-systemsetting-index'>
           <CellGroup title='日历设置'>
             <Cell title='切换视图' clickable onClick={() => setViewPicker(true)} value={compView === 'list' ? '列表视图' : '日视图'} />
             <Cell title='显示农历'>

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-10 10:20:56
+ * @LastEditTime: 2022-11-10 16:44:53
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupapply\index.tsx
  * @Description:
  *
@@ -16,12 +16,11 @@ import Router from 'tarojs-router-next'
 import { IGroupMember } from 'types/group'
 import { applyMineList, mineApplyList, applyAgreeJoinGroup, applyRefuseJoinGroup } from '@/api/groupmember'
 import { MemberList } from './ui'
-
-import './index.less'
 import { useNav } from '@/utils'
 import { useSetRecoilState } from 'recoil'
 import { groupRefreshTimeStore } from '@/store'
 import dayjs from 'dayjs'
+import './index.less'
 
 export default Unite(
   {

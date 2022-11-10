@@ -8,20 +8,27 @@
     width: 40px;
   }
 
-  .van-empty {
-    width: 100%;
+  .at-calendar {
+    background-color: #fff;
   }
 
-  .van-collapse {
-    border-radius: 0 0 0.34rem 0.34rem;
-    -webkit-box-shadow: 0 0.13rem 0.38rem 1px rgb(0 0 0 / 8%);
-    box-shadow: 0 0.13rem 0.38rem 1px rgba(0, 0, 0, 0.08);
+  .click-icon {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACcUlEQVRYhe2WvWtUURDFf8dNVk1ETViMX4WNna22CopELBQUkYASgzFFUPBPsLGSgAqJGDRGBEUsRA0KIthaip2I/4CEoIR8JyP33lldl7fuR1AL9xSP3Xfvmzlz7pl5jyaa+O+hq0NDqDEV8sBGYA3wDZirP4TFhxvFApAD1gPz5TGqF2Xx2pK5puwA9uuPPUA30A48Bd43Ukg2gWpQTHwe2Iax5GRuA6//BoFuwQDQaUF6xaPYBFzCYryXf4yAoAc44We/INjgJvzqGwYwWg2e1Rqzogmt9MwTjgGngBXvgLB8Axh1HyiuiV7BwVoJ1KpAqPqMu70dtFbYNWDC7SqwfoMp0r9BLHbHi2qBa2nDk0A/aAmUF9oscR1pAikJIR4g3RXqUFIoxD0nOLQqAoLjwFlgOuyVKCDGve3KMY54BOqMrBTVDSQON0rgqLfajJCF5IJ7SmdeifBIICgISgQSbUCPYH+9BI4Ag8BidLzY4VXf+V01TmIM9BhU8Gc7gNOCfVn7s0y4N1SuNNuXhbYDDwU3qyX/QUIMm7Eo6HNj7gQueKe8KyfQ4guh2gPAZW+zWdAW4Al1JC+RYjTMBKA3xYpdcZE0O974rlxIXvDeDhv6gF1Kg6UrnrcYqTv5TwwLpi0VFRTd6oTmQB/AckUPrMS5LjpR9MU6n+2rSV7EfRQH1orSwOoC2w0WlQ+XZZ9qs/57CnQFLMnk47A4FdXYx8MYMJl8ECN9hPgSyxdNGM7qC3DLibyt9Ea3rHtmFddK8DzlURvYZ1c5GrA4ueZBr5S8EPp3JjNgyc061QgvsE9gk/4x0+qKN9FEE/8QwHd9qo6ectzgFAAAAABJRU5ErkJggg==');
+    background-size: 100% auto;
+    width: 32rpx;
+    height: 32rpx;
+  }
 
-    .van-cell,
-    .content-class,
-    .van-empty {
-      background-color: #fff;
-    }
+  .fold {
+    transform: rotate(0deg);
+  }
+
+  .unfold {
+    transform: rotate(180deg);
+  }
+
+  .van-empty {
+    width: 100%;
   }
 
   .box {
@@ -29,6 +36,8 @@
     width: 100%;
     overflow-y: auto;
     background-color: #fff;
+    margin-top: 110px;
+    padding-top: 20px;
   }
 
   .event-list-wrapper {
@@ -398,5 +407,24 @@
     .van-icon {
       color: #fff;
     }
+  }
+}
+
+.page-index-header {
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  height: 100px;
+  align-items: center;
+  justify-content: space-between;
+
+  .left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #000;
+    padding-left: 20px;
+    font-size: 30px;
+    font-weight: bold;
   }
 }

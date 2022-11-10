@@ -2,21 +2,20 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:49
+ * @LastEditTime: 2022-11-10 23:07:15
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import React, { useRef } from 'react'
-import { Button, Icon } from '@antmjs/vantui'
+import React, { useRef, useState } from 'react'
+import { Button, Divider, Icon, Search } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
 import { useWebEnv } from '@/hooks'
 import Router from 'tarojs-router-next'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { Collapse, CollapseItem } from '@antmjs/vantui'
 import dayjs from 'dayjs'
 import { useNav, getToday } from '@/utils'
 import { ICurrentDay } from '~/../types/date'
@@ -24,12 +23,14 @@ import { calendarStore, componentRefreshTimeStore, lunarStore, mondayStore, comp
 import { cacheGetSync } from '@/cache'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
-import { Calendar, UserInfo, EventList } from './ui'
+import { Calendar, UserInfo, EventList, Header } from './ui'
 import { componentsDaysById } from '@/api/component'
 import Images from '@/constants/images'
+import { useDidShow } from '@tarojs/taro'
+import Expanse from '@/components/expanse'
 
 import './index.less'
-import { useDidShow } from '@tarojs/taro'
+import classnames from 'classnames'
 
 const day: ICurrentDay = getToday()
 
@@ -38,6 +39,7 @@ export default Unite(
     state: {
       collapse: ['1'],
       popOpen: false,
+      show: true,
       selectedDay: day.current,
       componentLoading: false,
       calendarComponents: [],
@@ -232,11 +234,17 @@ export default Unite(
       this.setState({
         marks: marks
       })
+    },
+
+    setShow() {
+      this.setState({
+        show: !this.state.show
+      })
     }
   },
 
   function ({ state, events }) {
-    const { popOpen, collapse, selectedDay, marks, calendarComponents } = state
+    const { popOpen, collapse, selectedDay, marks, calendarComponents, show } = state
     const {
       componentRefresh,
       selectMonthChage,
@@ -247,7 +255,8 @@ export default Unite(
       calendarPopOpen,
       calendarPopClose,
       calendarSelected,
-      viewComponent
+      viewComponent,
+      setShow
     } = events
     const env = useWebEnv()
     const [calendars, setCalendars] = useRecoilState(calendarStore)
@@ -289,9 +298,46 @@ export default Unite(
     })
 
     return (
-      <Container navTitle='日程管理' useNav={useNav()} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
+      <Container
+        navTitle='日程管理'
+        useNav={useNav()}
+        className='pages-index-index'
+        renderPageTopHeader={() => {
+          return (
+            <>
+              <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen}></Header>
+            </>
+          )
+        }}
+        useMenuBtns={false}
+        enablePagePullDownRefresh={false}
+      >
         <View className='box'>
-          <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
+          <Expanse show={show}>
+            <View style={{ width: '100%', background: '#f2f2f2' }}>
+              <Calendar
+                ref={calRef}
+                currentDay={dayjs(selectedDay).format('YYYY/MM/DD')}
+                marks={marks}
+                isLunar={!!lunar}
+                isMonfirst={!!monday}
+                selectMonthChage={selectMonthChage}
+                selectDayLongClick={selectDayLongClick}
+                selectDayClick={selectDayClickHadnle}
+              ></Calendar>
+            </View>
+          </Expanse>
+          <Divider
+            contentPosition='center'
+            style='color: #1989fa; borderColor: #1989fa; fontSize: 18px;'
+            onClick={(e) => {
+              e.preventDefault()
+              setShow()
+            }}
+          >
+            <View className={classnames('click-icon', { ['fold']: show, ['unfold']: !show })}></View>
+          </Divider>
+          {/* <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
             <CollapseItem
               name='1'
               renderTitle={
@@ -321,7 +367,7 @@ export default Unite(
                 selectDayClick={selectDayClickHadnle}
               ></Calendar>
             </CollapseItem>
-          </Collapse>
+          </Collapse>*/}
 
           <EventList
             loading={false}

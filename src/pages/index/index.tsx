@@ -2,14 +2,14 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-10 23:07:15
+ * @LastEditTime: 2022-11-11 17:25:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Divider, Icon, Search } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
@@ -27,19 +27,19 @@ import { Calendar, UserInfo, EventList, Header } from './ui'
 import { componentsDaysById } from '@/api/component'
 import Images from '@/constants/images'
 import { useDidShow } from '@tarojs/taro'
-import Expanse from '@/components/expanse'
+import Expanse from '@/components/expanse/index'
 
 import './index.less'
 import classnames from 'classnames'
+import Taro from '@tarojs/taro'
 
 const day: ICurrentDay = getToday()
 
 export default Unite(
   {
     state: {
-      collapse: ['1'],
       popOpen: false,
-      show: true,
+      animationShowHeight: 0,
       selectedDay: day.current,
       componentLoading: false,
       calendarComponents: [],
@@ -236,27 +236,26 @@ export default Unite(
       })
     },
 
-    setShow() {
+    setAnimationShowHeight(height: number) {
       this.setState({
-        show: !this.state.show
+        animationShowHeight: height
       })
     }
   },
 
   function ({ state, events }) {
-    const { popOpen, collapse, selectedDay, marks, calendarComponents, show } = state
+    const { popOpen, animationShowHeight, selectedDay, marks, calendarComponents } = state
     const {
       componentRefresh,
       selectMonthChage,
       selectDayLongClick,
       selectDayClickHadnle,
-      collapseChage,
+      setAnimationShowHeight,
       currentClickHandle,
       calendarPopOpen,
       calendarPopClose,
       calendarSelected,
-      viewComponent,
-      setShow
+      viewComponent
     } = events
     const env = useWebEnv()
     const [calendars, setCalendars] = useRecoilState(calendarStore)
@@ -270,6 +269,7 @@ export default Unite(
     const localRefrestTimeRef = useRef<number>(0)
     const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(componentRefreshTimeStore)
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
+    const _useNav = useNav()
     const phoneAuth =
       userAuths && userAuths.length > 0
         ? userAuths.find((i) => i.identityType === 'phone')
@@ -297,46 +297,32 @@ export default Unite(
       componentRefresh()
     })
 
+    useEffect(() => {
+      Taro.createSelectorQuery()
+        .select('.at-calendar')
+        .boundingClientRect(function (rect) {
+          setAnimationShowHeight(rect.height + 4)
+        })
+        .exec()
+    }, [])
+
     return (
-      <Container
-        navTitle='日程管理'
-        useNav={useNav()}
-        className='pages-index-index'
-        renderPageTopHeader={() => {
-          return (
-            <>
-              <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen}></Header>
-            </>
-          )
-        }}
-        useMenuBtns={false}
-        enablePagePullDownRefresh={false}
-      >
+      <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
+        <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen}></Header>
         <View className='box'>
-          <Expanse show={show}>
-            <View style={{ width: '100%', background: '#f2f2f2' }}>
-              <Calendar
-                ref={calRef}
-                currentDay={dayjs(selectedDay).format('YYYY/MM/DD')}
-                marks={marks}
-                isLunar={!!lunar}
-                isMonfirst={!!monday}
-                selectMonthChage={selectMonthChage}
-                selectDayLongClick={selectDayLongClick}
-                selectDayClick={selectDayClickHadnle}
-              ></Calendar>
-            </View>
+          <Expanse animationShowHeight={animationShowHeight}>
+            <Calendar
+              ref={calRef}
+              currentDay={dayjs(selectedDay).format('YYYY/MM/DD')}
+              marks={marks}
+              isLunar={!!lunar}
+              isMonfirst={!!monday}
+              selectMonthChage={selectMonthChage}
+              selectDayLongClick={selectDayLongClick}
+              selectDayClick={selectDayClickHadnle}
+            ></Calendar>
           </Expanse>
-          <Divider
-            contentPosition='center'
-            style='color: #1989fa; borderColor: #1989fa; fontSize: 18px;'
-            onClick={(e) => {
-              e.preventDefault()
-              setShow()
-            }}
-          >
-            <View className={classnames('click-icon', { ['fold']: show, ['unfold']: !show })}></View>
-          </Divider>
+
           {/* <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
             <CollapseItem
               name='1'

@@ -1,90 +1,80 @@
 /*
  * @Author: Derek Xu
- * @Date: 2022-11-10 21:53:03
+ * @Date: 2022-11-11 16:03:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-10 21:53:06
+ * @LastEditTime: 2022-11-11 17:29:53
  * @FilePath: \xut-calendar-vant-weapp\src\components\expanse\index.tsx
  * @Description:
+ *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import { memo, ReactNode } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import Taro from '@tarojs/taro'
+import { View } from '@tarojs/components'
+import { FunctionComponent, ReactNode, useEffect, useRef, useState } from 'react'
+import { Divider } from '@antmjs/vantui'
+import classnames from 'classnames'
+import './index.less'
 
-export type ExpanseProps = {
-  show: boolean
+interface IPageOption {
+  animationShowHeight: number
   children?: ReactNode
 }
-const elTransition = '0.3s height ease-in-out, 0.3s padding-top ease-in-out, 0.3s padding-bottom ease-in-out'
 
-export default memo(function Expanse(props: ExpanseProps) {
-  const { show } = props
-  const onEnter = (el: any) => {
-    el.style.transition = elTransition
-    if (!el.dataset) el.dataset = {}
+const Expanse: FunctionComponent<IPageOption> = (props) => {
+  const { animationShowHeight } = props
+  const [animationData, setAnimationData] = useState<any>({})
 
-    el.dataset.oldPaddingTop = el.style.paddingTop
-    el.dataset.oldPaddingBottom = el.style.paddingBottom
+  const [show, setShow] = useState<boolean>(false)
+  const ref = useRef<any>()
 
-    el.style.height = 0
-    el.style.paddingTop = 0
-    el.style.paddingBottom = 0
-  }
-  const onEntering = (el: any) => {
-    el.dataset.oldOverflow = el.style.overflow
-    if (el.scrollHeight !== 0) {
-      el.style.height = el.scrollHeight + 'px'
-      el.style.paddingTop = el.dataset.oldPaddingTop
-      el.style.paddingBottom = el.dataset.oldPaddingBottom
-    } else {
-      el.style.height = ''
-      el.style.paddingTop = el.dataset.oldPaddingTop
-      el.style.paddingBottom = el.dataset.oldPaddingBottom
+  useEffect(() => {
+    var _animation = Taro.createAnimation({
+      transformOrigin: '50% 50%',
+      duration: 1000,
+      timingFunction: 'ease',
+      delay: 0
+    })
+    ref.current = _animation
+  }, [])
+
+  const toggle = () => {
+    if (show) {
+      _up()
+      return
     }
+    _down()
+  }
 
-    el.style.overflow = 'hidden'
+  // 下来
+  const _down = () => {
+    ref.current.height(animationShowHeight).step()
+    setAnimationData(ref.current.export())
+    setShow(true)
   }
-  const onEntered = (el: any) => {
-    el.style.transition = ''
-    el.style.height = ''
-    el.style.overflow = el.dataset.oldOverflow
+  // 上去
+  const _up = () => {
+    ref.current.height(80).step()
+    setAnimationData(ref.current.export())
+    setShow(false)
   }
-  const onExit = (el: any) => {
-    if (!el.dataset) el.dataset = {}
-    el.dataset.oldPaddingTop = el.style.paddingTop
-    el.dataset.oldPaddingBottom = el.style.paddingBottom
-    el.dataset.oldOverflow = el.style.overflow
 
-    el.style.height = el.scrollHeight + 'px'
-    el.style.overflow = 'hidden'
-  }
-  const onExiting = (el: any) => {
-    if (el.scrollHeight !== 0) {
-      el.style.transition = elTransition
-      el.style.height = 0
-      el.style.paddingTop = 0
-      el.style.paddingBottom = 0
-    }
-  }
-  const onExited = (el: any) => {
-    el.style.transition = ''
-    el.style.height = ''
-    el.style.overflow = el.dataset.oldOverflow
-    el.style.paddingTop = el.dataset.oldPaddingTop
-    el.style.paddingBottom = el.dataset.oldPaddingBottom
-  }
   return (
-    <CSSTransition
-      in={show}
-      timeout={300}
-      unmountOnExit
-      onEnter={onEnter}
-      onEntering={onEntering}
-      onEntered={onEntered}
-      onExit={onExit}
-      onExiting={onExiting}
-      onExited={onExited}
-    >
-      {props.children}
-    </CSSTransition>
+    <>
+      <View style={{ overflow: 'hidden', height: '80px' }} animation={animationData}>
+        {props.children}
+      </View>
+      <Divider
+        contentPosition='center'
+        style='fontSize: 18px;'
+        onClick={(e) => {
+          e.preventDefault()
+          toggle()
+        }}
+      >
+        <View className={classnames('expanse-click-icon', { ['expanse-fold']: show, ['expanse-unfold']: !show })}></View>
+      </Divider>
+    </>
   )
-})
+}
+
+export default Expanse

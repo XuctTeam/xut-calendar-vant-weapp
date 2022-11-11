@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-07 18:28:51
+ * @LastEditTime: 2022-11-11 15:40:32
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -30,8 +30,8 @@ import { checkMobile, encryption, useNav } from '@/utils'
 import Images from '@/constants/images'
 import { create } from '@/utils/countdown'
 import classnames from 'classnames'
-import './index.less'
 import { ENCRYPTION_CODE } from '@/constants'
+import './index.less'
 
 export default Unite(
   {

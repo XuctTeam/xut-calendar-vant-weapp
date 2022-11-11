@@ -5,57 +5,80 @@
     background-color: var(--cell-background-color, #fff);
   }
 
+  .van-avatar {
+    width: 160px;
+    height: 160px;
+    position: absolute;
+    top: 140px;
+  }
+
   .head {
-    width: 100%;
-    height: 200rpx;
     position: relative;
-    z-index: -1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-left: 30px;
-    z-index: 99;
-    justify-content: space-between;
+    width: 100%;
+    height: 380rpx;
+    z-index: 1;
+    padding: 50px;
+    box-sizing: border-box;
   }
 
   .head::after {
     content: '';
     width: 140%;
-    height: 200rpx;
+    height: 380rpx;
     position: absolute;
     z-index: -1;
     left: -20%;
     top: 0;
     border-radius: 0 0 50% 50%;
-    background: #a4d1eb;
+    background-color: @navBack;
   }
 
   .info {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
     align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    height: 200px;
+    box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
+    border-radius: @border-radius-lg;
+    padding: @padding-sm;
+    margin-top: 200px;
   }
 
   .top-info {
     font-size: 24px;
-    padding-left: 30px;
-    color: #fff;
+    color: #000;
+    margin-top: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     .top-info_need {
       font-size: 30px;
       font-weight: 600;
       font-weight: bold;
     }
+
+    .top-info_text {
+      font-size: 24px;
+      color: gray;
+      margin-top: 10px;
+    }
   }
 
   .top-refresh {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+
     .top-user {
       font-size: 32px;
-      margin-left: 20px;
-      color: #fff;
-      margin-right: 20px;
+      color: grey;
     }
 
     .button {
@@ -70,7 +93,7 @@
     box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
     border-radius: @border-radius-lg;
     padding: @padding-sm;
-    margin: 20px;
+    margin: 80px 20px;
     background: #fff;
   }
 

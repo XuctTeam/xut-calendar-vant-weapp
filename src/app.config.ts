@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-09 21:56:32
+ * @LastEditTime: 2022-11-11 13:55:24
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -15,6 +15,7 @@ export default defineAppConfig({
     'pages/index/index',
     'pages/pagination/index',
     'pages/login/index',
+    'pages/messagemanager/index',
     'pages/componentedit/index',
     'pages/componenteditlocation/index',
     'pages/componenteditdescription/index',
@@ -46,6 +47,7 @@ export default defineAppConfig({
     'pages/addressgroupapply/index',
     'pages/addressgroupsearch/index',
     'pages/addressgroupmemberdetail/index',
+    'pages/interactionmanager/index',
     'pages/onlineservices/index',
     'pages/systemsetting/index',
     'pages/aboutus/index',
@@ -78,12 +80,12 @@ export default defineAppConfig({
         iconPath: 'assets/icon/group.png',
         selectedIconPath: 'assets/icon/group_focus.png'
       },
-      // {
-      //   pagePath: 'pages/messagemanager/index',
-      //   text: '消息',
-      //   iconPath: 'assets/icon/message.png',
-      //   selectedIconPath: 'assets/icon/message_focus.png',
-      // },
+      {
+        pagePath: 'pages/interactionmanager/index',
+        text: '参与',
+        iconPath: 'assets/icon/interaction.png',
+        selectedIconPath: 'assets/icon/interaction_focus.png'
+      },
       {
         pagePath: 'pages/memberuserinfo/index',
         text: '我的',

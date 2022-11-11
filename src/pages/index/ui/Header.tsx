@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-10 22:26:54
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-10 22:39:53
+ * @LastEditTime: 2022-11-11 15:19:54
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\ui\Header.tsx
  * @Description:
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -11,6 +11,7 @@
 import { Icon } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { FC } from 'react'
+import Router from 'tarojs-router-next'
 
 interface IPageOption {
   selectedDay: string
@@ -20,21 +21,23 @@ interface IPageOption {
 const Header: FC<IPageOption> = (props) => {
   const { selectedDay, calendarPopOpen } = props
   return (
-    <View className='page-index-header'>
+    <View className='index-header'>
       <View className='left'>
         <Icon
           classPrefix='page-icon'
           name='rili'
-          size={50}
+          size={48}
           onClick={(e) => {
-            e.stopPropagation()
             e.preventDefault()
             calendarPopOpen()
           }}
         ></Icon>
         <View className='label'>{selectedDay}</View>
       </View>
-      <View>sdfsdf</View>
+      <View className='right'>
+        <Icon color='#fff' name='search' size='24px' className='icon'></Icon>
+        <Icon color='#fff' name='chat' size='24px' className='icon' dot onClick={() => Router.toMessagemanager()}></Icon>
+      </View>
     </View>
   )
 }

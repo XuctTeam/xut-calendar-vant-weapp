@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:26:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:39:23
+ * @LastEditTime: 2022-11-11 10:52:34
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberuserinfo\index.tsx
  * @Description:
  *
@@ -18,6 +18,7 @@ import { userInfoStore } from '@/store'
 import { IUserInfo } from '~/../types/user'
 import { User, Menu } from './ui'
 import './index.less'
+import Router from 'tarojs-router-next'
 
 export default Unite(
   {
@@ -35,6 +36,9 @@ export default Unite(
           hasLogin={!!accessToken}
           nickname={userInfo ? userInfo.name : ''}
           avatar={userInfo && userInfo.avatar ? userInfo.avatar : Images.DEFAULT_AVATAR}
+          to={() => {
+            Router.toLogin()
+          }}
         ></User>
         <Menu accessToken={accessToken || ''}></Menu>
       </Container>

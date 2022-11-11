@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-10 10:27:47
+ * @LastEditTime: 2022-11-11 14:50:29
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -69,9 +69,6 @@ export default Unite(
     },
 
     async onShow() {
-      console.log(6666666666666)
-      console.log(this.hooks['groupRefreshState'])
-      console.log(this.state.refreshTime)
       if (this.hooks['groupRefreshState'] > this.state.refreshTime || this.state.refreshTime === 0) {
         this.query()
       }

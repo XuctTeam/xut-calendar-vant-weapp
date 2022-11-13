@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:26:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-11 10:52:34
+ * @LastEditTime: 2022-11-11 21:43:48
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberuserinfo\index.tsx
  * @Description:
  *
@@ -19,6 +19,7 @@ import { IUserInfo } from '~/../types/user'
 import { User, Menu } from './ui'
 import './index.less'
 import Router from 'tarojs-router-next'
+import { View } from '@tarojs/components'
 
 export default Unite(
   {
@@ -32,6 +33,7 @@ export default Unite(
     useReachBottom(() => {})
     return (
       <Container navTitle='个人信息' enablePagePullDownRefresh={false} className='pages-member-info-index' useNav={false} useMenuBtns={false}>
+        <View className='head'></View>
         <User
           hasLogin={!!accessToken}
           nickname={userInfo ? userInfo.name : ''}

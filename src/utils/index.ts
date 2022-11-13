@@ -33,7 +33,7 @@ function _setMenuButton(sysInfo: any, setStore: SetterOrUpdater<IMenuButton>) {
           right: menuButton.right,
           marginRight: sysInfo.screenWidth - menuButton.right,
           top: menuButton.top,
-          statusBarHeight: sysInfo.statusBarHeight ?? menuButton.top - 4
+          statusBarHeight: sysInfo.statusBarHeight && sysInfo.statusBarHeight !== NaN ? sysInfo.statusBarHeight : menuButton.top - 4
         })
         cacheSet({
           key: 'menuButton',

@@ -2,15 +2,16 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-11 17:25:13
+ * @LastEditTime: 2022-11-12 23:16:05
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
+import Taro from '@tarojs/taro'
 import Unite from '@antmjs/unite'
-import React, { useEffect, useRef, useState } from 'react'
-import { Button, Divider, Icon, Search } from '@antmjs/vantui'
+import React, { useEffect, useRef } from 'react'
+import { Button } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
 import { useWebEnv } from '@/hooks'
@@ -28,10 +29,9 @@ import { componentsDaysById } from '@/api/component'
 import Images from '@/constants/images'
 import { useDidShow } from '@tarojs/taro'
 import Expanse from '@/components/expanse/index'
+import { count } from '@/api/message'
 
 import './index.less'
-import classnames from 'classnames'
-import Taro from '@tarojs/taro'
 
 const day: ICurrentDay = getToday()
 
@@ -43,10 +43,21 @@ export default Unite(
       selectedDay: day.current,
       componentLoading: false,
       calendarComponents: [],
-      marks: []
+      marks: [],
+      messageCount: 0
     },
 
-    async onLoad() {},
+    async onLoad() {
+      const that = this
+      Taro.createSelectorQuery()
+        .select('.at-calendar')
+        .boundingClientRect(function (rect) {
+          that.setState({
+            animationShowHeight: rect.height + 4
+          })
+        })
+        .exec()
+    },
 
     async onShow() {},
 
@@ -88,12 +99,6 @@ export default Unite(
         dayjs(this.state.selectedDay).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
         dayjs(this.state.selectedDay).endOf('month').format('YYYY-MM-DD HH:mm:ss')
       )
-    },
-
-    collapseChage(value: any) {
-      this.setState({
-        collapse: value
-      })
     },
 
     /**
@@ -222,6 +227,7 @@ export default Unite(
      * @returns
      */
     _fillMarkDay(components: Array<ICalendarComponent>) {
+      debugger
       if (components.length === 0) return
       const daySet: Set<string> = new Set<string>([])
       components.forEach((comp) => {
@@ -240,22 +246,43 @@ export default Unite(
       this.setState({
         animationShowHeight: height
       })
+    },
+
+    setMessageCount() {
+      count()
+        .then((res) => {
+          this.setState({
+            messageCount: res as any as number
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+
+    clear() {
+      this.setState({
+        marks: [],
+        messageCount: 0
+      })
+      this.hooks['localRefrestTimeRef'].current = 0
     }
   },
 
   function ({ state, events }) {
-    const { popOpen, animationShowHeight, selectedDay, marks, calendarComponents } = state
+    const { popOpen, animationShowHeight, selectedDay, marks, calendarComponents, messageCount } = state
     const {
       componentRefresh,
       selectMonthChage,
       selectDayLongClick,
       selectDayClickHadnle,
-      setAnimationShowHeight,
       currentClickHandle,
       calendarPopOpen,
       calendarPopClose,
       calendarSelected,
-      viewComponent
+      viewComponent,
+      setMessageCount,
+      clear
     } = events
     const env = useWebEnv()
     const [calendars, setCalendars] = useRecoilState(calendarStore)
@@ -293,22 +320,21 @@ export default Unite(
 
     useDidShow(() => {
       if (!accessToken) return
+      /** 增加刷新消息中心 */
+      setMessageCount()
       if (localRefrestTimeRef.current !== 0 && componentRefreshTime !== 0 && localRefrestTimeRef.current >= componentRefreshTime) return
       componentRefresh()
     })
 
     useEffect(() => {
-      Taro.createSelectorQuery()
-        .select('.at-calendar')
-        .boundingClientRect(function (rect) {
-          setAnimationShowHeight(rect.height + 4)
-        })
-        .exec()
-    }, [])
+      if (!accessToken) {
+        clear()
+      }
+    }, [accessToken])
 
     return (
       <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
-        <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen}></Header>
+        <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen} messageCount={messageCount}></Header>
         <View className='box'>
           <Expanse animationShowHeight={animationShowHeight}>
             <Calendar
@@ -322,38 +348,6 @@ export default Unite(
               selectDayClick={selectDayClickHadnle}
             ></Calendar>
           </Expanse>
-
-          {/* <Collapse value={collapse} onChange={(e) => collapseChage(e.detail)}>
-            <CollapseItem
-              name='1'
-              renderTitle={
-                <View className='calendar-title'>
-                  <Icon
-                    classPrefix='page-icon'
-                    name='rili'
-                    size={50}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      e.preventDefault()
-                      calendarPopOpen()
-                    }}
-                  ></Icon>
-                  <View className='label'>{selectedDay}</View>
-                </View>
-              }
-            >
-              <Calendar
-                ref={calRef}
-                currentDay={dayjs(selectedDay).format('YYYY/MM/DD')}
-                marks={marks}
-                isLunar={!!lunar}
-                isMonfirst={!!monday}
-                selectMonthChage={selectMonthChage}
-                selectDayLongClick={selectDayLongClick}
-                selectDayClick={selectDayClickHadnle}
-              ></Calendar>
-            </CollapseItem>
-          </Collapse>*/}
 
           <EventList
             loading={false}

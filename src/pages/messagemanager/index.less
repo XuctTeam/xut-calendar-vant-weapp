@@ -1,13 +1,112 @@
-.pages-tabandsearchpagination-index {
-  .li {
-    background-color: @white;
-    min-height: 200px;
-    margin: 0 @padding-sm @padding-sm;
-    box-shadow: 0 0 12px 4px rgba(194, 194, 194, 0.2);
-    border-radius: @border-radius-lg;
-    padding: @padding-sm;
-    &:first-child {
-      margin-top: @padding-sm;
+.page-message-manager-index {
+  display: flex;
+  flex-direction: column;
+
+  .message-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+
+    .all {
+      font-size: 28px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .clean {
+      font-size: 24px;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .search {
+      font-size: 24px;
+    }
+  }
+
+  .notice-message {
+    display: flex;
+    flex-direction: row;
+    box-shadow: 0 5px 10px #0002;
+    border-radius: 10px;
+    margin: 0px 20px;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+
+    svg {
+      padding: 4px 4px 0px 10px;
+    }
+
+    .summary {
+      padding-left: 20px;
+      width: 100%;
+      font-size: 28px;
+
+      .service {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .time {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .br {
+    width: 100%;
+    height: 10px;
+    background-color: #fff;
+    margin: 10px 0px 20px 0px;
+  }
+
+  .list {
+    flex: 1;
+    overflow: scroll;
+
+    .cell {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 20px;
+      background-color: #fff;
+
+      .label {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+
+    .title {
+      font-size: 26px;
+      display: flex;
+      color: black;
+      align-items: center;
+      justify-content: space-between;
+
+      .read {
+        text-align: center;
+        margin-right: 10px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: red;
+      }
+
+      .left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
     }
   }
 }

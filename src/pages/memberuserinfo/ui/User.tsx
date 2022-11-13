@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 13:27:57
- * @LastEditTime: 2022-11-11 10:54:59
+ * @LastEditTime: 2022-11-11 21:49:16
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent } from 'react'
@@ -21,8 +21,8 @@ interface IPageOption {
 const User: FunctionComponent<IPageOption> = (props) => {
   const { hasLogin, nickname, avatar, to } = props
   return (
-    <View className='head'>
-      <View className='info'>
+    <View className='info'>
+      <View className='info-box'>
         <Avatar src={avatar} size='large' shape='circle' />
         <View className='top'>
           {!hasLogin ? (

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-09 14:13:49
+ * @LastEditTime: 2022-11-14 14:19:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -37,7 +37,6 @@ export default Unite(
   {
     state: {
       loading: true,
-      add: false,
       action: false,
       memberName: '',
       actions: [
@@ -77,14 +76,15 @@ export default Unite(
       memberIds: [],
       alarmType: '',
       alarmTimes: [],
-      attendStatus: 0
+      attendStatus: 0,
+      from: '0' /** 1.首页点击 2.新增后 3.搜索 */
     },
     async onLoad() {
-      const { id, add } = this.location.params
+      const { id, from } = this.location.params
       if (!id) return
-      if (add && Boolean(add)) {
+      if (from) {
         this.setState({
-          add: true
+          from
         })
       }
       this._init(id)
@@ -304,15 +304,19 @@ export default Unite(
       })
       this.hooks['setComponentRefreshTime'](dayjs().valueOf())
       window.setTimeout(() => {
-        this.hooks['back']()
+        this.hooks['back']({
+          data: {
+            isRemove: true
+          }
+        })
       }, 500)
     }
   },
   function ({ state, events }) {
     const {
       loading,
-      add,
       action,
+      from,
       actions,
       id,
       color,
@@ -344,7 +348,7 @@ export default Unite(
       icon: 'success'
     })
     const [back] = useBack({
-      to: add ? 2 : 1
+      to: from === '2' ? 2 : 1
     })
     events.setHooks({
       toast: toast,

@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-02-21 15:28:49
- * @LastEditTime: 2022-11-12 21:37:07
+ * @LastEditTime: 2022-11-14 13:46:05
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent } from 'react'
@@ -10,13 +10,16 @@ import { View } from '@tarojs/components'
 import dayjs from 'dayjs'
 import { IMessage } from 'types/message'
 import { Cell, Tag } from '@antmjs/vantui'
+import classnames from 'classnames'
 
 interface IPageStateProps {
   message: IMessage
-  viewHandler: (id: string) => void
+  viewHandler: (id: string, status: number) => void
 }
 
 const MessageBody: FunctionComponent<IPageStateProps> = (props) => {
+  const { id, title, status, type, operation, createTime } = props.message
+
   const messageType = (type: string): string => {
     switch (type) {
       case 'SYSTEM':
@@ -103,24 +106,24 @@ const MessageBody: FunctionComponent<IPageStateProps> = (props) => {
   }
 
   const view = () => {
-    props.viewHandler(props.message.id ? props.message.id : '')
+    props.viewHandler(id || '', status)
   }
 
-  const { title, status, type, operation, createTime } = props.message
   return (
     <Cell onClick={() => view()} clickable className='cell'>
       <View className='title'>
         <View className='left'>
-          {status === 0 && <View className='read' />}
-          {title}
+          <View className={classnames('read', { ['read-circle']: status === 0 })} />
+          <View>{title}</View>
         </View>
-        <View className='right'>{messageType(type)}</View>
+        <View className='right'>
+          <View>{operateType(type, operation)}</View>
+        </View>
       </View>
       <View className='cell'>
         <Tag mark={true} type={getTagColor(type)}>
-          <View>{operateType(type, operation)}</View>
+          {messageType(type)}
         </Tag>
-
         <View>{dayjs(createTime).format('YYYY-MM-DD HH:mm')}</View>
       </View>
     </Cell>

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-11 14:50:29
+ * @LastEditTime: 2022-11-14 09:34:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -27,6 +27,7 @@ import { menuButtonStore } from '@/store'
 
 import './index.less'
 import dayjs from 'dayjs'
+import Taro from '@tarojs/taro'
 
 export default Unite(
   {
@@ -34,6 +35,12 @@ export default Unite(
       list: [],
       loading: false,
       refreshTime: 0
+    },
+
+    async onLoad() {
+      Taro.eventCenter.on('logout', () => {
+        this.clean()
+      })
     },
 
     async query() {
@@ -78,7 +85,8 @@ export default Unite(
       if (this.hooks['accessToken']) return
       this.setState({
         list: [],
-        loading: false
+        loading: false,
+        refreshTime: 0
       })
     },
 
@@ -155,7 +163,7 @@ export default Unite(
   },
   function ({ state, events }) {
     const { list, loading } = state
-    const { addGroup, editGroup, deleteGroup, query, clean } = events
+    const { addGroup, editGroup, deleteGroup, query } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const menuButton: IMenuButton | undefined = useRecoilValue(menuButtonStore)
     const [groupRefreshState, setGroupRefreshTimeStore] = useRecoilState(groupRefreshTimeStore)
@@ -171,10 +179,6 @@ export default Unite(
       groupRefreshState: groupRefreshState,
       setGroupRefreshTimeStore: setGroupRefreshTimeStore
     })
-
-    useEffect(() => {
-      clean()
-    }, [accessToken])
 
     return (
       <Container navTitle='通讯录管理' enablePagePullDownRefresh={false} useNav={useNav()} useMenuBtns={false} className='pages-address-groupes-manager-index'>

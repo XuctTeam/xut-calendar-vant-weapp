@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-10 22:26:54
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-12 22:55:15
+ * @LastEditTime: 2022-11-14 14:08:30
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\ui\Header.tsx
  * @Description:
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -36,7 +36,7 @@ const Header: FC<IPageOption> = (props) => {
         <View className='label'>{selectedDay}</View>
       </View>
       <View className='right'>
-        <Icon color='#fff' name='search' size='24px' className='icon'></Icon>
+        <Icon color='#fff' name='search' size='24px' className='icon' onClick={() => Router.toComponentsearch()}></Icon>
         <Icon color='#fff' name='chat' size='24px' className='icon' dot={messageCount > 0} onClick={() => Router.toMessagemanager()}></Icon>
       </View>
     </View>

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 21:55:34
+ * @LastEditTime: 2022-11-14 10:59:12
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditlocation\index.tsx
  * @Description:
  *
@@ -129,18 +129,12 @@ export default Unite(
         </View>
 
         <View className='van-page-button'>
-          <Row>
-            <Col span={12}>
-              <Button type='info' onClick={saveLoaction}>
-                保存
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button type='warning' onClick={chooseLocation}>
-                获取地址
-              </Button>
-            </Col>
-          </Row>
+          <Button type='warning' block onClick={chooseLocation}>
+            获取地址
+          </Button>
+          <Button type='info' block onClick={saveLoaction}>
+            保存
+          </Button>
         </View>
         <Dialog id='locationDialog' />
       </Container>

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-11 13:55:24
+ * @LastEditTime: 2022-11-14 14:04:38
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -16,7 +16,9 @@ export default defineAppConfig({
     'pages/pagination/index',
     'pages/login/index',
     'pages/messagemanager/index',
+    'pages/messagedetailedit/index',
     'pages/componentedit/index',
+    'pages/componentsearch/index',
     'pages/componenteditlocation/index',
     'pages/componenteditdescription/index',
     'pages/componenteditalarm/index',

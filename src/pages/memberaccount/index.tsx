@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:54
+ * @LastEditTime: 2022-11-14 09:38:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -15,7 +15,7 @@ import Router from 'tarojs-router-next'
 import Container from '@/components/container'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import Avatar from '@/components/avatar'
-import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
+import { userInfoStore, userAuthInfoStore, calendarStore, groupRefreshTimeStore, componentRefreshTimeStore } from '@/store'
 import Images from '@/constants/images'
 import { cacheRemoveSync } from '@/cache'
 import { useBack } from '@/utils/taro'
@@ -24,6 +24,7 @@ import { logout, updateAvatar } from '@/api/user'
 
 import './index.less'
 import { useNav } from '@/utils'
+import Taro from '@tarojs/taro'
 
 export default Unite(
   {
@@ -75,6 +76,11 @@ export default Unite(
           this.hooks['setUserInfoState'](undefined)
           this.hooks['setUserAuthsState']([])
           this.hooks['setCalendarState']([])
+          this.hooks['setGroupRefreshTimeStore'](0)
+          this.hooks['setComponentRefreshTimeStore'](0)
+
+          /** 广播消息 */
+          Taro.eventCenter.trigger('logout')
           window.setTimeout(() => {
             this.setState({
               loading: false
@@ -117,6 +123,8 @@ export default Unite(
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const [userInfoState, setUserInfoState] = useRecoilState(userInfoStore)
     const setCalendarState = useSetRecoilState(calendarStore)
+    const setGroupRefreshTimeStore = useSetRecoilState(groupRefreshTimeStore)
+    const setComponentRefreshTimeStore = useSetRecoilState(componentRefreshTimeStore)
     const usedNav = useNav()
 
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
@@ -169,7 +177,9 @@ export default Unite(
       userInfo: userInfoState,
       setUserInfoState: setUserInfoState,
       setUserAuthsState: setUserAuthsState,
-      setCalendarState: setCalendarState
+      setCalendarState: setCalendarState,
+      setGroupRefreshTimeStore: setGroupRefreshTimeStore,
+      setComponentRefreshTimeStore: setComponentRefreshTimeStore
     })
     return (
       <Container navTitle='账号与安全' enablePagePullDownRefresh={false} className='pages-member-account-index' useNav={usedNav} useMenuBtns={usedNav}>

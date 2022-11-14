@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 11:09:33
+ * @LastEditTime: 2022-11-14 14:17:39
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -423,7 +423,7 @@ export default Unite(
         Router.toComponentview({
           params: {
             id,
-            add: true
+            from: '2'
           }
         })
       }, 1500)

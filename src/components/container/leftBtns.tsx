@@ -19,8 +19,9 @@ function MenuButton(props: IMenuButtonProps) {
     /** 日程新增到观看页，返回到首页 */
     let delta = 1
     const { path, params } = router
-    const { add } = params
-    if (path.includes('/pages/componentview/index') && add) {
+    /** 1.首页点击 2.新增后 3.搜索 */
+    const { from } = params
+    if (path.includes('/pages/componentview/index') && from && from === '2') {
       delta = 2
     }
     navigateBack({

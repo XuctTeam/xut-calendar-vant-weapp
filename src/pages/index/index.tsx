@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-12 23:16:05
+ * @LastEditTime: 2022-11-14 14:17:24
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -57,6 +57,10 @@ export default Unite(
           })
         })
         .exec()
+
+      Taro.eventCenter.on('logout', () => {
+        this.clear()
+      })
     },
 
     async onShow() {},
@@ -162,7 +166,7 @@ export default Unite(
       Router.toComponentview({
         params: {
           id: component.id,
-          add: false
+          from: '0'
         }
       })
     },
@@ -227,7 +231,6 @@ export default Unite(
      * @returns
      */
     _fillMarkDay(components: Array<ICalendarComponent>) {
-      debugger
       if (components.length === 0) return
       const daySet: Set<string> = new Set<string>([])
       components.forEach((comp) => {
@@ -281,8 +284,7 @@ export default Unite(
       calendarPopClose,
       calendarSelected,
       viewComponent,
-      setMessageCount,
-      clear
+      setMessageCount
     } = events
     const env = useWebEnv()
     const [calendars, setCalendars] = useRecoilState(calendarStore)
@@ -325,12 +327,6 @@ export default Unite(
       if (localRefrestTimeRef.current !== 0 && componentRefreshTime !== 0 && localRefrestTimeRef.current >= componentRefreshTime) return
       componentRefresh()
     })
-
-    useEffect(() => {
-      if (!accessToken) {
-        clear()
-      }
-    }, [accessToken])
 
     return (
       <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>

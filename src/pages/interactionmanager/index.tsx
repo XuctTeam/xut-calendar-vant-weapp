@@ -2,8 +2,8 @@
  * @Author: Derek Xu
  * @Date: 2022-11-11 13:44:25
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-11 14:40:47
- * @FilePath: \xut-calendar-vant-weapp\src\pages\Interactionmanager\index.tsx
+ * @LastEditTime: 2022-11-14 17:04:03
+ * @FilePath: \xut-calendar-vant-weapp\src\pages\interactionmanager\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -13,17 +13,27 @@ import { useNav } from '@/utils'
 import Unite from '@antmjs/unite'
 import { Icon } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
+import Router from 'tarojs-router-next'
 import './index.less'
 
 export default Unite(
   {
-    state: {}
+    state: {},
+
+    views(op: number) {
+      switch (op) {
+        case 1:
+          Router.toSigninmanager()
+          return
+      }
+    }
   },
-  function ({ state, events, loading }) {
+  function ({ events }) {
+    const { views } = events
     return (
       <Container navTitle='日程参与' enablePagePullDownRefresh={false} useNav={useNav()} useMenuBtns={false} className='pages-interactionmanager-index'>
         <>
-          <View className='li'>
+          <View className='li' onClick={() => views(1)}>
             <View className='circle sign'>
               <Icon classPrefix='page-icon' name='qiandao' size={50} onClick={(e) => {}}></Icon>
             </View>

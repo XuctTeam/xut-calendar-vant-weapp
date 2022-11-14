@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 14:04:38
+ * @LastEditTime: 2022-11-14 17:04:45
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -13,7 +13,6 @@ export default defineAppConfig({
   animation: true,
   pages: [
     'pages/index/index',
-    'pages/pagination/index',
     'pages/login/index',
     'pages/messagemanager/index',
     'pages/messagedetailedit/index',
@@ -52,6 +51,7 @@ export default defineAppConfig({
     'pages/interactionmanager/index',
     'pages/onlineservices/index',
     'pages/systemsetting/index',
+    'pages/signinmanager/index',
     'pages/aboutus/index',
     'pages/privacyrule/index'
   ],

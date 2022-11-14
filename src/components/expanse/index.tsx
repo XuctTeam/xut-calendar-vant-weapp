@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-11 16:03:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-11 17:29:53
+ * @LastEditTime: 2022-11-14 16:50:11
  * @FilePath: \xut-calendar-vant-weapp\src\components\expanse\index.tsx
  * @Description:
  *
@@ -53,14 +53,14 @@ const Expanse: FunctionComponent<IPageOption> = (props) => {
   }
   // 上去
   const _up = () => {
-    ref.current.height(80).step()
+    ref.current.height(70).step()
     setAnimationData(ref.current.export())
     setShow(false)
   }
 
   return (
     <>
-      <View style={{ overflow: 'hidden', height: '80px' }} animation={animationData}>
+      <View style={{ overflow: 'hidden', height: '70px' }} animation={animationData}>
         {props.children}
       </View>
       <Divider

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:39:29
+ * @LastEditTime: 2022-11-14 16:45:08
  * @FilePath: \xut-calendar-vant-weapp\src\pages\privacyrule\index.tsx
  * @Description:
  *
@@ -92,25 +92,33 @@ export default Unite(
                   如果我们要将您的个人信息用于本指引未载明的其它用途，或基于特定目的将收集而来的信息用于其他目的，我们将以合理的方式向您告知，并在使用前再次征得您的同意。
                 </View>
                 <View className='itemize'>
-                  <View className='title'>3.1 注册及登录楚日历账户</View>
-                  <View>
-                    您注册并登陆楚日历平台账户时，我们需要首先认证您身份的真实性，为此您需要向我们提供以下信息：【账户名称、头像和手机号码（用于账号认证）】。如您拒绝提供手机号码进行账号认证，将导致注册不成功，但是您可以退出注册页面后进入仅浏览模式。
+                  <View className='title'>3.1 当您注册使用楚日历个人账号时，我们需要您提供一些信息：</View>
+                  <View className='desc'>
+                    <View className='ul'>
+                      <View>3.1.1 </View>
+                      <View className='right'>如果您选择新建账号，您需要输入您的账号/邮箱/手机号及密码，用于根据您的要求为您建立服务账号。</View>
+                    </View>
+                    <View className='ul'>
+                      <View>3.1.2 </View>
+                      <View className='right'>
+                        如果您选择使用微信（微信ID）注册，您需要提供您的微信账号、头像、手机号码、地区（位置），用于建立您的账号服务。
+                      </View>
+                    </View>
                   </View>
                 </View>
                 <View className='itemize'>
-                  <View className='title'>3.2 实名验证和商品寄送</View>
-                  <View>
-                    如您通过楚日历平台购买商品或参与抽奖，您需要向我们提供以下信息进行实名认证，并用于商品寄送：【个人姓名、身份证号、手机号码、地址信息等】。
+                  <View className='title'>
+                    3.2 当您使用楚日历时，我们会收集您的IP地址，我们使用此数据为了让您连接我们的服务器，如果您拒绝提供，则无法正常使用我们的服务。
                   </View>
                 </View>
                 <View className='itemize'>
                   <View className='title'>3.3 在您使用服务过程中收集的信息 为了向您提供更优质的产品和服务，我们可能需要收集下述信息:</View>
                   <View className='regulations'>
-                    <View>（一）楚日历平台会收集您在使用楚日历平台过程中产生的保单信息用于向您展示及便于您对保单进行管理。</View>
+                    <View>（一）我们可能使用Cookice标识符及其他相关技术收集您的信息，为您提供个性化的服务体验。</View>
                     <View>
                       <View> （二）定向推送</View>
                       <View>
-                        为向您提供个性化的信息搜索及交易服务，楚日历平台可能会自动接收并记录的您的手机上的信息，包括但不限于您使用的语言、访问日期和时间、软硬件特征信息、您主动填写的个人信息（姓名、身份证号、手机号、地址等用于向您寄送商品和为您提供服务的必要信息）及您需求的网页记录等数据信息来实现上述功能，如您拒绝使用上述推送功能，您可随时通过关闭设备的通知访问权限取消推送功能。
+                        为向您使用终端适配消息推送功能，楚日历平台可能会自动接收并记录的您的手机上的信息，包括但不限于您使用的语言、访问日期和时间、软硬件特征信息、您主动填写的个人信息（姓名、手机号、地址等用于提供服务）及您需求的网页记录等数据信息来实现上述功能，如您拒绝使用上述推送功能，您可随时通过关闭设备的通知访问权限取消推送功能。
                       </View>
                     </View>
                     <View>
@@ -160,7 +168,7 @@ export default Unite(
                   <View className='desc'>
                     <View className='ul'>
                       <View>4.1.1 </View>
-                      <View className='right'>为向您提供电商网络技术支持辅助服务；</View>
+                      <View className='right'>为向您提供软件技术支持辅助服务；</View>
                     </View>
                     <View className='ul'>
                       <View>4.1.2 </View>

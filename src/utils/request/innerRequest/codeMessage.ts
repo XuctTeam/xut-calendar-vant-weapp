@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-30 13:24:21
- * @LastEditTime: 2022-10-20 16:50:12
+ * @LastEditTime: 2022-11-16 09:34:13
  * @LastEditors: Derek Xu
  */
 const codeMessage = {
@@ -20,7 +20,7 @@ const codeMessage = {
   // '422': '当创建一个对象时，发生一个验证错误',
   // '424': '验证失败',
 
-  '400': '业务系统错误',
+  400: '业务系统错误',
   401: '登录信息错误',
   428: '请求参数错误',
   404: '请求资源不存在',

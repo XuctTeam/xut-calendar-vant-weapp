@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-25 18:45:06
+ * @LastEditTime: 2022-11-24 10:56:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifypassword\index.tsx
  * @Description:
  *
@@ -17,7 +17,7 @@ import { useToast } from 'taro-hooks'
 import { password as updatePassword } from '@/api/user'
 
 import './index.less'
-import { useNav } from '@/utils'
+import { checkPassowrd, useNav } from '@/utils'
 
 export default Unite(
   {
@@ -44,8 +44,17 @@ export default Unite(
         this.hooks['toast']({ title: '密码不能为空' })
         return
       }
+      if (!checkPassowrd(this.state.password)) {
+        this.hooks['toast']({ title: '密码格式错误' })
+        return
+      }
+
       if (!this.state.comfirmPassword) {
         this.hooks['toast']({ title: '确认密码不能为空' })
+        return
+      }
+      if (!checkPassowrd(this.state.comfirmPassword)) {
+        this.hooks['toast']({ title: '确认密码格式错误' })
         return
       }
       if (this.state.password !== this.state.comfirmPassword) {

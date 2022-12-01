@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-02 17:45:23
- * @LastEditTime: 2022-09-02 09:23:04
+ * @LastEditTime: 2022-12-01 23:52:54
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/utils/request/innerRequest'
@@ -15,8 +15,6 @@ import { IDavCalendar } from 'types/calendar'
  * @author: Derek Xu
  */
 export const list = (): Promise<any> => {
-  //return httpRequest.get('/cms/api/app/v1/calendar/list')
-
   return httpRequest.get('/cms/api/app/v1/calendar/list')
 }
 

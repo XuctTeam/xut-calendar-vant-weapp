@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-09 09:11:18
- * @LastEditTime: 2022-11-08 16:56:20
+ * @LastEditTime: 2022-12-05 14:30:19
  * @LastEditors: Derek Xu
  */
 import Taro, { Chain } from '@tarojs/taro'
@@ -99,15 +99,12 @@ const customInterceptor = (chain: Chain): Promise<any> => {
             reject(err)
           })
       }
-      if (status === HTTP_STATUS.AUTHENTICATE) {
-        if (url.includes(OAUTHTOKEN_URL)) {
-          if (requestParams && requestParams.data) {
-            const { grant_type } = requestParams.data
-            if (grant_type && grant_type === 'refresh_token') {
-              refresh.fail()
-              return reject('refresh token error')
-            }
-          }
+      if (status === HTTP_STATUS.AUTHENTICATE && url.includes(OAUTHTOKEN_URL)) {
+        const params = refresh.getParams(url)
+        const refreshToken = params.filter((item) => item.key === 'refresh_token')
+        if (refreshToken) {
+          refresh.fail()
+          return reject('refresh token error')
         }
       }
       let msg = message || codeKeys[status] || statusText

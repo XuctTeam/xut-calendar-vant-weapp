@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-12 12:49:07
- * @LastEditTime: 2022-09-30 09:06:30
+ * @LastEditTime: 2022-12-05 14:28:12
  * @LastEditors: Derek Xu
  */
 import Taro from '@tarojs/taro'
@@ -104,6 +104,21 @@ class Refresh {
       toIndex()
     }, 500)
     return false
+  }
+
+  getParams(url: string) {
+    let data
+    if (url.indexOf('?') === -1) return data
+    const index = url.indexOf('?')
+    const str = url.substring(index + 1, url.length)
+    data = str.split('&')
+    return data.map((item) => {
+      const param = item.split('=')
+      return {
+        key: param[0],
+        value: param[1]
+      }
+    })
   }
 
   /**

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:42
+ * @LastEditTime: 2022-12-07 13:22:47
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditrepeat\index.tsx
  * @Description:
  *
@@ -40,8 +40,8 @@ export default Unite(
     setRepeatChoose(value: string) {
       let repeatType: string = '',
         repeatByday: string = '',
-        repeatBymonth: number = 0,
-        repeatBymonthday: number = 0
+        repeatBymonth: string = '',
+        repeatBymonthday: string = ''
       if (value === '1') {
         repeatType = 'DAILY'
       } else if (value === '2') {
@@ -55,20 +55,20 @@ export default Unite(
         repeatByday = '0:6'
       } else if (value === '5') {
         repeatType = 'MONTHLY'
-        repeatBymonthday = dayjs(this.state.selectedDate).get('date')
+        repeatBymonthday = `${dayjs(this.state.selectedDate).get('date')}`
       } else if (value === '6') {
         repeatType = 'MONTHLY'
         repeatByday = Math.ceil(this.state.selectedDate.getDate() / 7) + ':' + dayjs(this.state.selectedDate).day()
       } else if (value === '7') {
         repeatType = 'YEARLY'
-        repeatBymonth = dayjs(this.state.selectedDate).get('month') + 1
-        repeatBymonthday = dayjs(this.state.selectedDate).get('date')
+        repeatBymonth = `${dayjs(this.state.selectedDate).get('month') + 1}`
+        repeatBymonthday = `${dayjs(this.state.selectedDate).get('date')}`
       }
       this.setState({
         repeatType: repeatType,
         repeatByday: repeatByday,
-        repeatBymonth: repeatBymonth + '',
-        repeatBymonthday: repeatBymonthday + '',
+        repeatBymonth: repeatBymonth,
+        repeatBymonthday: repeatBymonthday,
         repeatStatus: value,
         repeatInterval: 1
       })

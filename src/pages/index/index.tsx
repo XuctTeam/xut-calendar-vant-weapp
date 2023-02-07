@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 14:17:24
+ * @LastEditTime: 2023-02-07 16:16:46
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -25,6 +25,7 @@ import { cacheGetSync } from '@/cache'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
 import { Calendar, UserInfo, EventList, Header } from './ui'
+import Calendartest from '@/components/calendartest'
 import { componentsDaysById } from '@/api/component'
 import Images from '@/constants/images'
 import { useDidShow } from '@tarojs/taro'
@@ -49,14 +50,14 @@ export default Unite(
 
     async onLoad() {
       const that = this
-      Taro.createSelectorQuery()
-        .select('.at-calendar')
-        .boundingClientRect(function (rect) {
-          that.setState({
-            animationShowHeight: rect.height + 4
-          })
-        })
-        .exec()
+      // Taro.createSelectorQuery()
+      //   .select('.at-calendar')
+      //   .boundingClientRect(function (rect) {
+      //     that.setState({
+      //       animationShowHeight: rect.height + 4
+      //     })
+      //   })
+      //   .exec()
 
       Taro.eventCenter.on('logout', () => {
         this.clear()
@@ -245,11 +246,11 @@ export default Unite(
       })
     },
 
-    setAnimationShowHeight(height: number) {
-      this.setState({
-        animationShowHeight: height
-      })
-    },
+    // setAnimationShowHeight(height: number) {
+    //   this.setState({
+    //     animationShowHeight: height
+    //   })
+    // },
 
     setMessageCount() {
       count()
@@ -332,8 +333,8 @@ export default Unite(
       <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
         <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen} messageCount={messageCount}></Header>
         <View className='box'>
-          <Expanse animationShowHeight={animationShowHeight}>
-            <Calendar
+          {/* <Expanse animationShowHeight={animationShowHeight}>
+             <Calendar
               ref={calRef}
               currentDay={dayjs(selectedDay).format('YYYY/MM/DD')}
               marks={marks}
@@ -342,8 +343,10 @@ export default Unite(
               selectMonthChage={selectMonthChage}
               selectDayLongClick={selectDayLongClick}
               selectDayClick={selectDayClickHadnle}
-            ></Calendar>
-          </Expanse>
+            ></Calendar> 
+          </Expanse> */}
+
+          <Calendartest currentDay={dayjs(selectedDay).toDate()}></Calendartest>
 
           <EventList
             loading={false}

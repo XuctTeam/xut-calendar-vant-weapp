@@ -1,0 +1,218 @@
+.lunc-calendar {
+  background-color: #fff;
+
+  // 头部
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    height: 90rpx;
+    line-height: 90rpx;
+    border-bottom: 1px solid #ddd;
+
+    .head-month {
+      font-size: 36rpx;
+      padding: 0 40rpx;
+    }
+
+    .go-to-today {
+      position: absolute;
+      right: 0;
+      top: 26rpx;
+      padding: 8rpx 12rpx 8rpx 22rpx;
+      background-color: rgba(255, 184, 0, 1);
+      border-radius: 22rpx 0 0 22rpx;
+      font-size: 24rpx;
+      line-height: 24rpx;
+      color: #fff;
+    }
+
+    .head-icon {
+      width: 20rpx;
+      height: 20rpx;
+      margin-top: 36rpx;
+    }
+
+    .head-icon::after {
+      content: '';
+      display: block;
+      width: 18rpx;
+      height: 18rpx;
+      border-top: 2rpx solid #606266;
+      border-left: 2rpx solid #606266;
+    }
+
+    .head-icon.head-pre-month {
+      transform: rotate(-45deg);
+    }
+
+    .head-icon.head-next-month {
+      transform: rotate(135deg);
+    }
+  }
+
+  // 星期
+  .week-area {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 16rpx 0;
+    // margin: 0 10rpx;
+
+    .week-font {
+      flex: 1;
+      text-align: center;
+      color: #666;
+      font-size: 28rpx;
+    }
+  }
+
+  // 日历
+  .calendar-data {
+    // transition: all 300ms;
+
+    .swiper-item {
+      position: relative;
+      display: -webkit-box;
+
+      .month-bg {
+        position: absolute;
+        font-size: 240px;
+        font-weight: bold;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -55%);
+        color: #eee;
+        opacity: 0.4;
+        z-index: -1;
+        word-break: initial;
+      }
+
+      .month-days {
+        width: 100%;
+        margin-top: 14rpx;
+        position: relative;
+        // transition: all 300ms;
+
+        .week-days {
+          display: flex;
+          flex-direction: row;
+
+          .day {
+            flex: 1;
+            width: 14.28%;
+            text-align: center;
+            height: 84rpx;
+            color: #000;
+            padding: 0 6rpx;
+            box-sizing: border-box;
+
+            .day-info {
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-start;
+              align-items: center;
+              position: relative;
+
+              .day-solar {
+                display: block;
+                font-size: 34rpx;
+                line-height: 34rpx;
+                margin-top: 18rpx;
+              }
+
+              .day-lunar,
+              .day-sign {
+                color: #909399;
+                font-size: 24rpx;
+                line-height: 24rpx;
+                transform: scale(0.8);
+                white-space: nowrap;
+              }
+
+              .day-sign {
+                color: #f75858 !important;
+              }
+
+              .day-tag {
+                content: '';
+                position: absolute;
+                top: 8rpx;
+                right: 8rpx;
+                width: 10rpx;
+                height: 10rpx;
+                border-radius: 50%;
+                display: inline-block;
+                background-color: #f75858;
+              }
+            }
+
+            // 非当月日期
+            .day-info.un-month {
+              opacity: 0.25;
+              transition: all 300ms;
+            }
+
+            // 今天日期
+            .is-today .day-solar,
+            .is-today .day-sign,
+            .is-today .day-lunar {
+              color: #409eff;
+            }
+
+            // 周末
+            .week-end .day-solar {
+              color: #ff9595;
+            }
+
+            // 法定假日
+            .is-holiday .day-solar,
+            .is-holiday .day-sign,
+            .is-holiday .day-lunar {
+              color: #f75858 !important;
+            }
+
+            // 当前选中的日期
+            .is-sel {
+              background-color: rgba(198, 226, 255, 1);
+              border-radius: 6rpx;
+            }
+          }
+        }
+
+        .week-days.week-hide {
+          display: none;
+        }
+      }
+
+      .item-week {
+        .un-month {
+          opacity: 1 !important;
+        }
+      }
+    }
+  }
+
+  // 收缩按钮
+  .shrink {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60rpx;
+    border-top: 1px solid #ddd;
+
+    .shrink-btn {
+      width: 32rpx;
+      height: 32rpx;
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAMhJREFUOE/dky8LAkEQxd9w0WjV72KxWXfggmAyWWzXxHbNYjIJhoOZarvid9FqNB4jCyes3h9OLghu3fceb36zS+h5qKcf/xYgIisAayJKnHMa8lFVZ2YpgB0z7193FQYisgCwAXA3s8QLicgbhwC2zHwMgxshBkFeXzE2Nvh2rW8NsiybRFE0ZuZTXZCIzIuiuMZxfKltICJTAAciegDwIM9eqKozAKmZDQAsmTlvHSGY/1YKR00cWl9iGYRP8p220BXm7//CE8WyQBHBXZb9AAAAAElFTkSuQmCC);
+      // transition: all 300ms;
+    }
+
+    .shrink-close {
+      transform: rotate(-180deg);
+    }
+  }
+}

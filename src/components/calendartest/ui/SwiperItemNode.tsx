@@ -28,9 +28,6 @@ const SwiperItemNode: FC<IPageState> = ({ showBg, shrinkType, selDate, days }) =
   const _getIsSelDay = useMemo(() => {
     return (d) => {
       let { year, month, day } = selDate
-      console.log(selDate)
-      console.log(d)
-      console.log(year == d.year && month == d.month && day == d.day)
       return year == d.year && month == d.month && day == d.day
     }
   }, [selDate])

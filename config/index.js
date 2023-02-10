@@ -41,14 +41,9 @@ const config = {
     WX_CLIENT: JSON.stringify(wx_client)
   },
   alias: {
-    '@babel/runtime-corejs3/regenerator': npath.resolve(process.cwd(), './node_modules/regenerator-runtime'),
-    '@babel/runtime/regenerator': npath.resolve(process.cwd(), './node_modules/regenerator-runtime'),
     '@': npath.resolve(process.cwd(), 'src')
   },
   defineConstants: {
-    // 解决Recoil报错问题
-    Window: 'function () {}',
-
     /* 腾讯地图使用 */
     LOCATION_APIKEY: JSON.stringify('5Y6BZ-LHMWU-HM2VX-45SUU-RDESJ-4VBGR'),
 
@@ -59,13 +54,7 @@ const config = {
     patterns: [],
     options: {}
   },
-  compiler: {
-    type: 'webpack5',
-    prebundle: {
-      // 暂时不要开启，开启会报错
-      enable: false
-    }
-  },
+  compiler: 'webpack5',
   framework: 'react',
   cache: {
     enable: false // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
@@ -77,9 +66,7 @@ const config = {
     lessLoaderOption: {
       lessOptions: {
         modifyVars: {
-          hack: `true; @import "${npath.join(process.cwd(), 'src/styles/index.less')}";${
-            process.env.TARO_ENV === 'kwai' ? `@import "${npath.join(process.cwd(), 'src/styles/kwai.less')}";` : ''
-          }`
+          hack: `true; @import "${npath.join(process.cwd(), 'src/styles/index.less')}";`
         }
       }
       // 适用于全局引入样式

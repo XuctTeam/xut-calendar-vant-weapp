@@ -2,13 +2,12 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 17:04:45
+ * @LastEditTime: 2023-02-09 16:15:12
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 export default defineAppConfig({
   animation: true,
   pages: [

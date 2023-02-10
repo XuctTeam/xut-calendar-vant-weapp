@@ -1,4 +1,4 @@
-import { Swiper, View, Text } from '@tarojs/components'
+import { Swiper, View, Text, SwiperItem } from '@tarojs/components'
 import classNames from 'classnames'
 import React, { Component } from 'react'
 import solarLunar from 'solarlunar-es'
@@ -22,14 +22,15 @@ interface State {
   today: CALENDAR.DAY
   selDate: CALENDAR.DAY
   allMonthList: any[]
-  //tranIndex: number
+  tranIndex: number
   allWeekList: any[]
-  //tranCurrent: number
+  tranCurrent: number
   tranDuration: number
   signArr: any[]
   showToday: Boolean
   shrinkType: Boolean
   deterChange: Boolean
+  index: number
 }
 
 export default class calendartest extends React.Component<IPageState, Readonly<State>> {
@@ -41,10 +42,10 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
     firstDayOfWeek: 'monday',
     weekend: true,
     shrinkState: 'month',
-    weekType: '周'
+    weekType: '周',
+    tranIndex: 1,
+    tranCurrent: 1
   }
-  tranIndex: number
-  tranCurrent: number
 
   public constructor(props: IPageState) {
     super(props)
@@ -53,20 +54,17 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
       weekArr: ['一', '二', '三', '四', '五', '六', '日'], //星期数组
       today: { year: 0, month: 0, day: 0 }, //今天日期 -> year, month, day
       selDate: { year: 0, month: 0, day: 0 }, //选中日期信息 -> year, month, day
-
       allMonthList: [], // 月份数据 -> [[[周],[周]],[月],[月]]
-      //tranIndex: 1, // 月份轮播所在位置
+      tranIndex: 1, // 月份轮播所在位置
       allWeekList: [], // 周月份数据 -> [[[周]],[月],[月]]
-      //tranCurrent: 1, // 周轮播所在位置
+      tranCurrent: 1, // 周轮播所在位置
       tranDuration: 300, //轮播时间(单位毫秒)
       signArr: props.signList || [], // 标记列表
       showToday: false, //显示回到今天(非当月才显示)
       shrinkType: false, // 收缩状态，true:收起(显示周)，false展开(显示月)
-      deterChange: true // 防止切换月份过快
+      deterChange: true, // 防止切换月份过快
+      index: 1
     }
-
-    this.tranIndex = 1
-    this.tranCurrent = 1
 
     this.initDate = this.initDate.bind(this)
     this.getMonthData = this.getMonthData.bind(this)
@@ -87,6 +85,7 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
     this.changeShrink = this.changeShrink.bind(this)
     this.judgeShowToday = this.judgeShowToday.bind(this)
     this.swiperChange = this.swiperChange.bind(this)
+    this.onswiperChange = this.onswiperChange.bind(this)
   }
 
   componentDidMount(): void {
@@ -117,7 +116,10 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
     this.setState({
       allMonthList: [prevMonthList, monthList, nextMonthList]
     })
-    this.tranIndex = 1
+    this.setState({
+      tranIndex: 1
+    })
+    //this.state.tranIndex = 1
     if (this.props.shrinkState == 'week' && !this.state.shrinkType) {
       this.changeShrink()
     }
@@ -201,7 +203,7 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
   }
 
   // 点击收缩按钮，切换显示月份或显示周
-  changeShrink() {
+  async changeShrink() {
     const _shrinkType = !this.state.shrinkType
     this.setState({
       shrinkType: _shrinkType
@@ -213,7 +215,8 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
       })
     }
     if (_shrinkType) {
-      this.tranCurrent = 1
+      //this.tranCurrent = 1
+      //await this.setSwperIndex({ tranCurrent: 1 })
       this.getAllWeekData()
     }
     this.returnShrinkChange()
@@ -264,19 +267,19 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
    * 获取月份数据
    * @param {String} type=[pre|next]
    */
-  getOtherData(type: string) {
+  getOtherData(type: string, swiperIndex: number) {
     let nowMont = this.getMonthDate(this.state.selDate, type == 'prev' ? -1 : 1) // 获取当前月份
     // 切换月份后设置选中的日期
     this.setState({
       selDate: nowMont
     })
-    debugger
     let monthData = this.getMonthData(this.getMonthDate(nowMont, type == 'prev' ? -1 : 1))
     // 获取上月或下月轮播所在位置
-    let current = this.getTranIndex(type).prevNum
+    let current = this.getTranIndex(type, swiperIndex).prevNum
     if (type == 'next') {
-      current = this.getTranIndex(type).nextNum
+      current = this.getTranIndex(type, swiperIndex).nextNum
     }
+    debugger
     const _allMonthList = [...this.state.allMonthList]
     _allMonthList.splice(current, 1, monthData)
     this.setState({
@@ -287,9 +290,9 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
   }
 
   // 从月历中获取周数据，切换周后获取上周或下周数据
-  getWeekData(type) {
-    const { prevNum: prevIndex, nowNum: nowIndex, nextNum: nextIndex } = this.getTranIndex('month')
-    const { prevNum: prevCurrent, nowNum: nowCurrent, nextNum: nextCurrent } = this.getTranIndex('week')
+  getWeekData(type, swiperIndex: number) {
+    const { prevNum: prevIndex, nowNum: nowIndex, nextNum: nextIndex } = this.getTranIndex('month', swiperIndex)
+    const { prevNum: prevCurrent, nowNum: nowCurrent, nextNum: nextCurrent } = this.getTranIndex('week', swiperIndex)
     const { year: selYear, month: selMonth, day: selDay } = this.state.selDate
     let sDate = selYear + '-' + selMonth + '-' + selDay
     let prevMonthList = this.state.allMonthList[prevIndex]
@@ -323,21 +326,23 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
    * 获取周数据
    * @param {String} type=[pre|next]
    */
-  getOtherWeekData(type) {
+  async getOtherWeekData(type, swiperIndex: number) {
     let oldSel = this.state.selDate // 原选中的日期
     let newSel = this.getDateByDateAndDay(oldSel, type == 'prev' ? -7 : 7) // 获取7天前或后的日期
     if (oldSel.month != newSel.month) {
       // 跨月，先设置跨月后的月历
       // 设置月轮播位置
-      let current = this.getTranIndex('month').prevNum
-      if (type == 'next') current = this.getTranIndex('month').nextNum
-      this.tranIndex = current
-      this.getOtherData(type)
+      let current = this.getTranIndex('month', swiperIndex).prevNum
+      if (type == 'next') {
+        current = this.getTranIndex('month', swiperIndex).nextNum
+      }
+      //await this.setSwperIndex({ tranIndex: current })
+      this.getOtherData(type, swiperIndex)
     }
     this.setState({
       selDate: newSel
     })
-    this.getWeekData(type)
+    this.getWeekData(type, swiperIndex)
     this.judgeShowToday()
   }
 
@@ -377,11 +382,11 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
    * @param {String} type = [month|week] 轮播类型，月轮播(tranIndex),周轮播(tranCurrent)
    * @returns {Object} {prevNum, nowNum, nextNum}
    */
-  getTranIndex(type = 'month') {
-    let current = this.tranIndex
-    if (type == 'week') {
-      current = this.tranCurrent
-    }
+  getTranIndex(type = 'month', current: number) {
+    // let current = this.state.tranIndex
+    // if (type == 'week') {
+    //   current = this.state.tranCurrent
+    // }
     let prevNum = current - 1 < 0 ? 2 : current - 1
     let nowNum = current
     let nextNum = current + 1 > 2 ? 0 : current + 1
@@ -510,17 +515,15 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
    */
   swiperChange(e) {
     let current = e.detail.current
-    let oldIndex = this.state.shrinkType ? this.tranCurrent : this.tranIndex
+    let oldIndex = this.state.shrinkType ? this.state.tranCurrent : this.state.tranIndex
     let type = oldIndex - current == -1 || oldIndex - current == 2 ? 'next' : 'prev'
     if (this.state.shrinkType) {
-      this.tranCurrent = current
-      if (current != oldIndex) {
-        this.getOtherWeekData(type)
-      }
+      this.setState({ tranCurrent: current })
+      this.getOtherWeekData(type, current)
     } else {
-      this.tranIndex = current
+      this.setState({ tranIndex: current })
       if (current != oldIndex) {
-        this.getOtherData(type)
+        this.getOtherData(type, current)
       }
     }
   }
@@ -532,8 +535,18 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
     })
   }
 
+  onswiperChange(e) {
+    console.log(333333)
+    console.log(e.detail.current)
+    this.setState({ index: e.detail.current })
+  }
+
   get allData() {
     return this.state.shrinkType ? this.state.allWeekList : this.state.allMonthList
+  }
+
+  get swiperIndex() {
+    return this.state.shrinkType ? this.state.tranCurrent : this.state.tranIndex
   }
 
   render() {
@@ -560,18 +573,22 @@ export default class calendartest extends React.Component<IPageState, Readonly<S
         </View>
         <Swiper
           className='calendar-data'
-          circular
-          duration={this.state.tranDuration}
-          current={this.state.shrinkType ? this.tranCurrent : this.tranIndex}
-          onChange={this.swiperChange}
-          onAnimationFinish={this.swiperEndChange}
+          circular={true}
+          //duration={this.state.tranDuration}
+          current={this.state.index}
+          onChange={this.onswiperChange}
+          //onAnimationFinish={this.swiperEndChange}
           style={{ height: `${this.state.shrinkType ? 56 : 266}px` }}
         >
-          {this.allData.map((a, index) => {
+          <SwiperItem>1</SwiperItem>
+          <SwiperItem>2</SwiperItem>
+          <SwiperItem>3</SwiperItem>
+          {/* {this.allData.map((a, index) => {
             return (
               <SwiperItemNode showBg={this.props.showMonthBg || true} selDate={this.state.selDate} shrinkType={this.state.shrinkType} days={a} key={index} />
             )
           })}
+           */}
         </Swiper>
         <View className='shrink' onClick={this.changeShrink}>
           <Text className={classNames('shrink-btn', { ['shrink-open']: this.state.shrinkType, ['shrink-close']: !this.state.shrinkType })}></Text>

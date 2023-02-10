@@ -20,7 +20,7 @@
     // default: module === AMD or UMD or System or ES6, then Classic otherwise Node
     "moduleResolution": "Node",
     "target": "es5",
-    "lib": ["ESNext", "dom", "es5", "es2015.promise" ,"es2015", "es2017"],
+    "lib": ["ESNext", "dom", "es5", "es2015.promise", "es2015", "es2017"],
     /** emit */
     "noEmit": true,
     /** Interop Constraints */
@@ -42,7 +42,7 @@
     "./config",
     "./types",
     "./babel.config.js",
-    "./eslint.config.js",
+    ".eslintrc.js",
     "./lint-staged.config.js",
     "./stylelint.config.js",
     "./_antm.config.js",

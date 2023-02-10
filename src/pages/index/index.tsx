@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-02-07 16:16:46
+ * @LastEditTime: 2023-02-09 14:24:12
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -25,7 +25,6 @@ import { cacheGetSync } from '@/cache'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import CalendarTypes from '@/components/calendar/types/calendar'
 import { Calendar, UserInfo, EventList, Header } from './ui'
-import Calendartest from '@/components/calendartest'
 import { componentsDaysById } from '@/api/component'
 import Images from '@/constants/images'
 import { useDidShow } from '@tarojs/taro'

@@ -1,13 +1,3 @@
-/*
- * @Author: Derek Xu
- * @Date: 2022-09-14 18:30:07
- * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 13:22:13
- * @FilePath: \xut-calendar-vant-weapp\config\webpack\miniChain.js
- * @Description: 
- * 
- * Copyright (c) 2022 by 楚恬商行, All Rights Reserved. 
- */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable import/no-commonjs */
 const MiniFixPlugin = require('@antmjs/plugin-mini-fix')
@@ -33,10 +23,7 @@ module.exports = function (chain) {
       (filename) =>
         /css-loader/.test(filename) ||
         (/node_modules/.test(filename) &&
-          !(
-            /(taro)|(react-spring)|(@antmjs)|(recoil)/.test(filename) &&
-            !/tarojs[\\/](runtime|shared|plugin-platform)/.test(filename)
-          )),
+          !(/(taro)|(react-spring)|(@antmjs)|(recoil)|(buffer)|(qrcode)/.test(filename) && !/tarojs[\\/](runtime|shared|plugin-platform)/.test(filename)))
     )
 
   chain.module
@@ -53,8 +40,9 @@ module.exports = function (chain) {
             ts: true,
             // 这里必须要用false即runtime和shared这两个包不能进行polyfill
             useBuiltIns: false,
-          },
-        ],
-      ],
+            hot: false
+          }
+        ]
+      ]
     })
 }

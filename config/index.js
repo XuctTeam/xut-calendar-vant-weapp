@@ -23,7 +23,6 @@ function getWxTemplate() {
   return { IDS: ['m3tIRN2yvI2mdFuGHV9mXS0uIHf9oz-u6U51HRHTcLQ'] }
 }
 const template = getWxTemplate()
-const version = getVersion()
 const app_client = 'YXBwOmFwcA=='
 const wx_client = 'd3g6d3g='
 

@@ -2,21 +2,20 @@
  * @Author: Derek Xu
  * @Date: 2022-11-14 10:21:30
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 13:40:10
+ * @LastEditTime: 2023-10-09 18:22:06
  * @FilePath: \xut-calendar-vant-weapp\src\pages\messagedetailedit\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Container from '@/components/container'
 import Unite from '@antmjs/unite'
 import { Button, Dialog, Loading, Overlay } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
-import { EventBody, GroupBody, SystemBody } from './ui'
+import Container from '@/components/container'
 import { get, remove } from '@/calendar/api/modules/message'
+import calendar from '@/calendar'
 import { IMessage } from 'types/message'
-import { useNav } from '@/calendar/utils'
-import { useBack } from '@/utils/taro'
+import { EventBody, GroupBody, SystemBody } from './ui'
 import './index.less'
 
 export default Unite(
@@ -89,8 +88,8 @@ export default Unite(
   function ({ state, events }) {
     const { saving } = state
     const { view, remove } = events
-    const usedNav = useNav()
-    const [back] = useBack()
+    const usedNav = calendar.$hooks.useNav()
+    const back = calendar.$hooks.back({ to: 1 })
 
     events.setHooks({
       back: back

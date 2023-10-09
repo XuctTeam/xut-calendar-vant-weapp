@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-09 19:10:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:24:58
+ * @LastEditTime: 2023-10-09 17:58:29
  * @FilePath: \xut-calendar-vant-weapp\src\calendar\hooks\hooks.ts
  * @Description:
  *
@@ -58,12 +58,14 @@ export function useWebEnv() {
 
 export function useWxBrowser() {
   const match = /(micromessenger)/i.test(navigator.userAgent)
-  if (!match) return
-  //是否电脑微信或者微信开发者工具
-  if (/(WindowsWechat)/i.test(navigator.userAgent) || /(wechatdevtools)/i.test(navigator.userAgent)) {
-    return true
-  } else {
-    //手机微信打开的浏览器
-    return true
+  if (!match) {
+    return false
   }
+  return /(WindowsWechat)/i.test(navigator.userAgent) || /(wechatdevtools)/i.test(navigator.userAgent)
+}
+
+export function useNav() {
+  const wx = useWxBrowser()
+  const h5 = !useWebEnv()
+  return wx && h5
 }

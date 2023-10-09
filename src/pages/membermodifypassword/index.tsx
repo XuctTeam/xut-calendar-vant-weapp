@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-24 10:56:28
+ * @LastEditTime: 2023-10-09 18:25:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifypassword\index.tsx
  * @Description:
  *
@@ -11,13 +11,11 @@
 import Unite from '@antmjs/unite'
 import { Button, CellGroup, Field } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
-import { useBack } from '@/utils/taro'
-import Container from '@/components/container'
 import { useToast } from 'taro-hooks'
-import { password as updatePassword } from '@/calendar/api/modules/user'
-
+import Container from '@/components/container'
+import calendar from '@/calendar'
 import './index.less'
-import { checkPassowrd, useNav } from '@/calendar/utils'
+import { checkPassowrd } from '@/calendar/utils'
 
 export default Unite(
   {
@@ -64,7 +62,8 @@ export default Unite(
       this.setState({
         loading: true
       })
-      updatePassword(this.state.password)
+      calendar.$api.user
+        .password(this.state.password)
         .then(() => {
           this.setState({
             loading: true
@@ -85,10 +84,8 @@ export default Unite(
   function ({ state, events }) {
     const { password, comfirmPassword, loading } = state
     const { setPassword, setComfirmPassword, modifyPassword } = events
-    const usedNav = useNav()
-    const [back] = useBack({
-      to: 4
-    })
+    const usedNav = calendar.$hooks.useNav()
+    const back = calendar.$hooks.back({ to: 4 })
     const [toast] = useToast({
       icon: 'error'
     })

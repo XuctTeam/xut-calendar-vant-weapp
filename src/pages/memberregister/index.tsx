@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-10 09:21:49
+ * @LastEditTime: 2023-10-09 18:23:27
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\index.tsx
  * @Description:
  *
@@ -11,13 +11,11 @@
 import Unite from '@antmjs/unite'
 import { Button, Icon, Form } from '@antmjs/vantui'
 import { Swiper, SwiperItem, View } from '@tarojs/components'
-import Container from '@/components/container'
 import { useToast } from 'taro-hooks'
-import { useBack } from '@/utils/taro'
-import { register } from '@/calendar/api/modules/user'
-import { UserNameRegister, PhoneRegister, EmailRegister } from './ui'
 import dayjs from 'dayjs'
-import { useNav } from '@/calendar/utils'
+import Container from '@/components/container'
+import calendar from '@/calendar'
+import { UserNameRegister, PhoneRegister, EmailRegister } from './ui'
 import './index.less'
 
 interface IUserNameForm {
@@ -95,10 +93,11 @@ export default Unite(
     },
 
     _userNameRegister(data: IUserNameForm) {
-      register({
-        formType: 'username',
-        username: Object.assign({ ...data }, { randomStr: this.state.randomStr })
-      })
+      calendar.$api.user
+        .register({
+          formType: 'username',
+          username: Object.assign({ ...data }, { randomStr: this.state.randomStr })
+        })
         .then(() => {
           this._success()
         })
@@ -109,12 +108,13 @@ export default Unite(
     },
 
     _phoneRegister(data: IPhoneForm) {
-      register({
-        formType: 'phone',
-        phone: {
-          ...data
-        }
-      })
+      calendar.$api.user
+        .register({
+          formType: 'phone',
+          phone: {
+            ...data
+          }
+        })
         .then(() => {
           this._success()
         })
@@ -125,12 +125,13 @@ export default Unite(
     },
 
     _emailRegister(data: IEmailForm) {
-      register({
-        formType: 'email',
-        email: {
-          ...data
-        }
-      })
+      calendar.$api.user
+        .register({
+          formType: 'email',
+          email: {
+            ...data
+          }
+        })
         .then(() => {
           this._success()
         })
@@ -160,12 +161,13 @@ export default Unite(
     const userRef = Form.useForm()
     const emailRef = Form.useForm()
     const phoneRef = Form.useForm()
-    const usedNav = useNav()
+    const usedNav = calendar.$hooks.useNav()
+    const back = calendar.$hooks.back({ to: 1 })
 
     const [toast] = useToast({
       icon: 'error'
     })
-    const [back] = useBack()
+
     events.setHooks({
       toast: toast,
       back: back,

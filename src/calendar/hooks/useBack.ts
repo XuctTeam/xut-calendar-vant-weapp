@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /*
  * @Description:
- * @Author: Derek Xu
- * @Date: 2021-11-26 10:50:22
- * @LastEditTime: 2022-09-29 16:05:57
+ * @Version: 1.0
+ * @Autor: Derek Xu
+ * @Date: 2022-02-28 21:26:26
  * @LastEditors: Derek Xu
+ * @LastEditTime: 2023-10-09 17:52:10
  */
+import { useCallback, useEffect, useRef } from 'react'
 import Router, { NavigateType } from 'tarojs-router-next'
-import useBack from './useBack'
 
 export interface ToastOption {
   title: string
@@ -21,6 +23,8 @@ export interface BackOption {
   data?: any
   delta?: number
 }
+
+export type Back = (option?: Partial<BackOption>) => Promise<TaroGeneral.CallbackResult>
 
 export const toIndex = () => {
   Router.navigate({ url: '/pages/index/index' }, { type: NavigateType.redirectTo })
@@ -59,6 +63,34 @@ const back = (backOption: BackOption): Promise<TaroGeneral.CallbackResult> => {
         return Router.toIndex({ type: NavigateType.switchTab })
     }
   }
+}
+
+const useBack = (option?: Partial<BackOption>): [Back] => {
+  const initialOption = useRef<Partial<BackOption>>()
+
+  useEffect(() => {
+    initialOption.current = option
+  }, [option])
+
+  const backAsync = useCallback<Back>(
+    (option?: Partial<BackOption>) => {
+      return new Promise((resolve, reject) => {
+        try {
+          if (!option && !initialOption.current) {
+            console.warn('please provide a option')
+            return reject(new Error('please provide a option'))
+          } else {
+            const options = Object.assign({ to: 1 }, initialOption.current || {}, option || {})
+            resolve(back({ ...(options as BackOption) }))
+          }
+        } catch (e) {
+          reject(e)
+        }
+      })
+    },
+    [initialOption]
+  )
+  return [backAsync]
 }
 
 export { back, useBack }

@@ -2,16 +2,16 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 12:00:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-26 18:43:30
- * @FilePath: \xut-calendar-vant-weapp\src\store\calendar.ts
+ * @LastEditTime: 2023-10-09 18:06:49
+ * @FilePath: \xut-calendar-vant-weapp\src\calendar\store\calendar.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { atom } from 'recoil'
-import { cacheGetSync } from '@/calendar/cache/cache'
 import { IDavCalendar } from '~/../types/calendar'
-import { list } from '@/calendar/api/modules/calendar'
+import cache from '../cache'
+import calendarApi from '../api/modules/calendar'
 
 /**
  * @description: 日历集合
@@ -20,10 +20,10 @@ import { list } from '@/calendar/api/modules/calendar'
 export const calendarStore = atom<IDavCalendar[]>({
   key: 'calendarStore',
   default: (async () => {
-    if (!cacheGetSync('accessToken')) {
+    if (!cache.cacheGetSync('accessToken')) {
       return []
     }
-    const res = await list().catch((err) => {
+    const res = await calendarApi.list().catch((err) => {
       console.log(err)
       return []
     })

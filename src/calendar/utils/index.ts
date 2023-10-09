@@ -185,6 +185,23 @@ export function setSysInfoAsync(force = false) {
   }
 }
 
+/**
+ * 同步请求的封装
+ * @param fn
+ * @returns
+ */
+
+export function asyncPackage(fn: any): Promise<any> {
+  return new Promise(async (resolve: any) => {
+    try {
+      const res = await fn
+      resolve([null, res])
+    } catch (err) {
+      resolve([err, null])
+    }
+  })
+}
+
 export function randomNum(min: number, max: number) {
   return Math.floor(Math.random() * (max + 1 - min) + min)
 }

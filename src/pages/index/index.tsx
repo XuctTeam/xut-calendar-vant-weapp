@@ -2,15 +2,15 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:46:28
+ * @LastEditTime: 2023-10-09 18:04:41
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import Unite from '@antmjs/unite'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Button } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
@@ -18,12 +18,10 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import dayjs from 'dayjs'
 import Images from '@/calendar/constants/images'
 import CalendarTypes from '@/components/calendar/types/calendar'
-import { cacheGetSync } from '@/calendar/cache/cache'
-import { calendarStore, componentRefreshTimeStore, lunarStore, mondayStore, compViewStore, userInfoStore, userAuthInfoStore } from '@/calendar/store/store'
-import { useNav, getToday } from '@/calendar/utils'
-import { useWebEnv } from '@/calendar/hooks/hooks'
+import { getToday } from '@/calendar/utils'
 import Container from '@/components/container'
 import { count } from '@/calendar/api/modules/message'
+import calendar from '@/calendar'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import { ICurrentDay } from '~/../types/date'
 import { Calendar, UserInfo, EventList, Header } from './ui'
@@ -45,7 +43,6 @@ export default Unite(
     },
 
     async onLoad() {
-      const that = this
       // Taro.createSelectorQuery()
       //   .select('.at-calendar')
       //   .boundingClientRect(function (rect) {
@@ -183,10 +180,11 @@ export default Unite(
       })
 
       const pList: Array<Promise<any>> = []
-      calList.forEach((calendar) => {
+      calList.forEach((item) => {
         pList.push(
           new Promise(function (resolve, reject) {
-            componentsDaysById(calendar.calendarId, start, end)
+            calendar.$api.component
+              .componentsDaysById(item.calendarId, start, end)
               .then((res: any) => {
                 resolve(res)
               })
@@ -210,7 +208,7 @@ export default Unite(
             componentLoading: false
           })
           const now = dayjs().valueOf()
-          this.hooks['localRefrestTimeRef'].current = now
+          this.hooks['localRefreshTimeRef'].current = now
           this.hooks['setComponentRefreshTime'](now)
         })
         .catch((error) => {
@@ -233,7 +231,6 @@ export default Unite(
       components.forEach((comp) => {
         daySet.add(dayjs(comp.day).format('YYYY/MM/DD'))
       })
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       const marks: Array<CalendarTypes.Mark> = Array.from(daySet).map((i) => {
         return { value: i }
       })
@@ -283,19 +280,19 @@ export default Unite(
       viewComponent,
       setMessageCount
     } = events
-    const env = useWebEnv()
-    const [calendars, setCalendars] = useRecoilState(calendarStore)
-    const userInfoState = useRecoilValue(userInfoStore)
-    const userAuths = useRecoilValue(userAuthInfoStore)
-    const lunar = useRecoilValue(lunarStore)
-    const monday = useRecoilValue(mondayStore)
-    const view = useRecoilValue(compViewStore)
-    const accessToken = cacheGetSync('accessToken')
+    const env = calendar.$hooks.useWebEnv()
+    const [calendars, setCalendars] = useRecoilState(calendar.$store.calendarStore)
+    const userInfoState = useRecoilValue(calendar.$store.userInfoStore)
+    const userAuths = useRecoilValue(calendar.$store.userAuthInfoStore)
+    const lunar = useRecoilValue(calendar.$store.lunarStore)
+    const monday = useRecoilValue(calendar.$store.mondayStore)
+    const view = useRecoilValue(calendar.$store.compViewStore)
+    const accessToken = calendar.$cache.cacheGetSync('accessToken')
     const calRef = React.createRef()
-    const localRefrestTimeRef = useRef<number>(0)
-    const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(componentRefreshTimeStore)
+    const localRefreshTimeRef = useRef<number>(0)
+    const [componentRefreshTime, setComponentRefreshTime] = useRecoilState(calendar.$store.componentRefreshTimeStore)
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
-    const _useNav = useNav()
+    const _useNav = calendar.$hooks.useNav()
     const phoneAuth =
       userAuths && userAuths.length > 0
         ? userAuths.find((i) => i.identityType === 'phone')
@@ -310,7 +307,7 @@ export default Unite(
     events.setHooks({
       calRef: calRef,
       componentRefreshTime: componentRefreshTime,
-      localRefrestTimeRef: localRefrestTimeRef,
+      localRefreshTimeRef: localRefreshTimeRef,
       setComponentRefreshTime: setComponentRefreshTime,
       calendars: calendars,
       setCalendars: setCalendars
@@ -321,7 +318,7 @@ export default Unite(
       if (!accessToken) return
       /** 增加刷新消息中心 */
       setMessageCount()
-      if (localRefrestTimeRef.current !== 0 && componentRefreshTime !== 0 && localRefrestTimeRef.current >= componentRefreshTime) return
+      if (localRefreshTimeRef.current !== 0 && componentRefreshTime !== 0 && localRefreshTimeRef.current >= componentRefreshTime) return
       componentRefresh()
     })
 
@@ -342,7 +339,7 @@ export default Unite(
             ></Calendar>
           </Expanse> */}
 
-          <Calendartest currentDay={dayjs(selectedDay).toDate()}></Calendartest>
+          {/* <Calendartest currentDay={dayjs(selectedDay).toDate()}></Calendartest> */}
 
           <EventList
             loading={false}

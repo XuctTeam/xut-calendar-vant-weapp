@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 14:19:28
+ * @LastEditTime: 2023-10-09 17:45:55
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -18,13 +18,13 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import ButtonGroup from '@/components/buttongroup'
 import Router from 'tarojs-router-next'
 import { DifferentDay, SameDay } from './ui'
-import { userInfoStore, componentRefreshTimeStore } from '@/store'
-import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText, alarmCodeToType, useNav } from '@/utils'
-import { getById, deleteById, queryComponentMembers, getAttendStatus, updateAttendStatus, getShortUrl } from '@/api/component'
-import { getName } from '@/api/user'
+import { userInfoStore, componentRefreshTimeStore } from '@/calendar/store/store'
+import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText, alarmCodeToType, useNav } from '@/calendar/utils'
+import { getById, deleteById, queryComponentMembers, getAttendStatus, updateAttendStatus, getShortUrl } from '@/calendar/api/modules/component'
+import { getName } from '@/calendar/api/modules/user'
 import { IDavComponent } from 'types/calendar'
 import { useShareAppMessage } from '@tarojs/taro'
-import Images from '@/constants/images'
+import Images from '@/calendar/constants/images'
 
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'

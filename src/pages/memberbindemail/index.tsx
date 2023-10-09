@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-25 18:28:28
+ * @LastEditTime: 2023-10-09 17:46:25
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindemail\index.tsx
  * @Description:
  *
@@ -15,10 +15,10 @@ import { Button, CellGroup, Col, Form, FormItem, Row } from '@antmjs/vantui'
 import { Input, View } from '@tarojs/components'
 import { useToast } from 'taro-hooks'
 import Container from '@/components/container'
-import { userAuthInfoStore } from '@/store'
-import { checkEmail, useNav } from '@/utils'
-import { bindEmail, unbindEmail, auths } from '@/api/user'
-import { sendEmailCode } from '@/api/common'
+import { userAuthInfoStore } from '@/calendar/store/store'
+import { checkEmail, useNav } from '@/calendar/utils'
+import { bindEmail, unbindEmail, auths } from '@/calendar/api/modules/user'
+import { sendEmailCode } from '@/calendar/api/modules/common'
 import { IUserAuth } from '~/../types/user'
 import { useBack } from '@/utils/taro'
 import { create } from '@/utils/countdown'

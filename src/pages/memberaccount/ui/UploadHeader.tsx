@@ -9,8 +9,8 @@
 import { FunctionComponent, useCallback, useEffect, useState } from 'react'
 import { useToast, useFile } from 'taro-hooks'
 import { Button, Popup, Uploader } from '@antmjs/vantui'
-import { cacheGetSync } from '@/cache'
-import { upload as uploadPath } from '@/api/common'
+import { cacheGetSync } from '@/calendar/cache/cache'
+import { upload as uploadPath } from '@/calendar/api/modules/common'
 import { IUploadInfo } from '~/../types/common'
 
 import { View } from '@tarojs/components'

@@ -15,7 +15,7 @@ import Container from '@/components/container'
 import Taro from '@tarojs/taro'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 export default Unite(

@@ -11,19 +11,19 @@
 import Unite from '@antmjs/unite'
 import { useRef } from 'react'
 import { Dialog, Search } from '@antmjs/vantui'
-import Pagination from '@/components/pagination'
 import { Input, ITouchEvent, View } from '@tarojs/components'
 import { useReachBottom } from '@tarojs/taro'
+import { useToast } from 'taro-hooks'
+import Pagination from '@/components/pagination'
 import Container from '@/components/container'
-import { search } from '@/api/group'
-import { ConditionSearch, GroupBody } from './ui'
+import { search } from '@/calendar/api/modules/group'
+import { apply } from '@/calendar/api/modules/groupMember'
 import { IGroup } from 'types/group'
-import { apply } from '@/api/groupmember'
+import { ConditionSearch, GroupBody } from './ui'
 
 import './index.less'
 import { useBack } from '@/utils/taro'
-import { useToast } from 'taro-hooks'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 
 const PAGE_SIZE = 50
 

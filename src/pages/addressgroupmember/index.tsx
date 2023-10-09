@@ -11,14 +11,14 @@
 import Unite from '@antmjs/unite'
 import { Empty, IndexAnchor, IndexBar } from '@antmjs/vantui'
 import { Block } from '@tarojs/components'
-import Container from '@/components/container'
-import { groupMemberPinYinList } from '@/api/groupmember'
-import { IPinYinGroupMember } from 'types/group'
-import { IndexList } from '@/constants'
-import { MemberList } from './ui'
-import { useNav } from '@/utils'
-import './index.less'
 import Router from 'tarojs-router-next'
+import Container from '@/components/container'
+import { groupMemberPinYinList } from '@/calendar/api/modules/groupMember'
+import { IndexList } from '@/calendar/constants'
+import { useNav } from '@/calendar/utils'
+import { IPinYinGroupMember } from 'types/group'
+import { MemberList } from './ui'
+import './index.less'
 
 export default Unite(
   {

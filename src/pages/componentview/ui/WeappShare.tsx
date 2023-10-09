@@ -9,7 +9,7 @@
 import { FunctionComponent } from 'react'
 import { Button, View } from '@tarojs/components'
 import { useShareAppMessage } from '@tarojs/taro'
-import Images from '@/constants/images'
+import Images from '@/calendar/constants/images'
 
 const DEFAULT_ATTEND_BACKGROUD = Images.DEFAULT_ATTEND_BACKGROUD
 

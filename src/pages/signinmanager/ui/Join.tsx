@@ -10,10 +10,12 @@
  */
 import { FC } from 'react'
 
-interface IPageOption {}
+interface IPageOption {
+  type?: string
+}
 
-const Join: FC<IPageOption> = (props) => {
-  return <>111</>
+const Join: FC<IPageOption> = ({ type }) => {
+  return <>{type}</>
 }
 
 export default Join

@@ -6,7 +6,7 @@
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent } from 'react'
-import { colors } from '@/constants/index'
+import { colors } from '@/calendar/constants/index'
 import { RadioGroup, Grid, GridItem, Radio } from '@antmjs/vantui'
 
 interface IColorPropState {

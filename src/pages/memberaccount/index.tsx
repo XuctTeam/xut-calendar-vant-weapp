@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 09:38:13
+ * @LastEditTime: 2023-10-09 17:46:02
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -15,15 +15,15 @@ import Router from 'tarojs-router-next'
 import Container from '@/components/container'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import Avatar from '@/components/avatar'
-import { userInfoStore, userAuthInfoStore, calendarStore, groupRefreshTimeStore, componentRefreshTimeStore } from '@/store'
-import Images from '@/constants/images'
-import { cacheRemoveSync } from '@/cache'
+import { userInfoStore, userAuthInfoStore, calendarStore, groupRefreshTimeStore, componentRefreshTimeStore } from '@/calendar/store/store'
+import Images from '@/calendar/constants/images'
+import { cacheRemoveSync } from '@/calendar/cache/cache'
 import { useBack } from '@/utils/taro'
 import { UploadHeader } from './ui'
-import { logout, updateAvatar } from '@/api/user'
+import { logout, updateAvatar } from '@/calendar/api/modules/user'
 
 import './index.less'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import Taro from '@tarojs/taro'
 
 export default Unite(

@@ -9,9 +9,9 @@
 import { FunctionComponent } from 'react'
 import { View } from '@tarojs/components'
 import dayjs from 'dayjs'
-import { IGroup } from 'types/group'
 import { Col, Row, Tag, Icon } from '@antmjs/vantui'
 import Avatar from '@/components/avatar'
+import { IGroup } from 'types/group'
 
 interface IPageStateProps {
   group: IGroup

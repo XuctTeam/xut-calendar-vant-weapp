@@ -6,7 +6,7 @@
  * @LastEditors: Derek Xu
  */
 import React from 'react'
-import { formatWeek } from '@/utils'
+import { formatWeek } from '@/calendar/utils'
 import { Cell, CellGroup, Checkbox, CheckboxGroup } from '@antmjs/vantui'
 
 interface IPageOption {

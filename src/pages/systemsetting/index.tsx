@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-01 09:57:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-10 16:49:39
+ * @LastEditTime: 2023-10-09 17:46:09
  * @FilePath: \xut-calendar-vant-weapp\src\pages\systemsetting\index.tsx
  * @Description:
  *
@@ -13,10 +13,10 @@ import Taro from '@tarojs/taro'
 import { useRecoilState } from 'recoil'
 import { ActionSheet, Cell, CellGroup, Switch } from '@antmjs/vantui'
 import Container from '@/components/container'
-import { lunarStore, mondayStore, compViewStore } from '@/store'
+import { lunarStore, mondayStore, compViewStore } from '@/calendar/store/store'
 
 import './index.less'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 
 export default Unite(
   {

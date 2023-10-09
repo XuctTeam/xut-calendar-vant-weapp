@@ -21,5 +21,6 @@
   },
   "stylelint.enable": true,
   "stylelint.validate": ["css", "less", "postcss", "scss"],
-  "stylelint.configFile": "stylelint.config.js"
+  "stylelint.configFile": "stylelint.config.js",
+  "cSpell.words": ["antmjs", "kwai", "npath", "tarojs", "vantui", "weapp", "wechat"]
 }

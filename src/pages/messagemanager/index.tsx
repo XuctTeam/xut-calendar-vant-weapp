@@ -2,24 +2,24 @@
  * @Author: Derek Xu
  * @Date: 2022-11-10 18:25:26
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 14:26:09
+ * @LastEditTime: 2023-06-13 11:26:56
  * @FilePath: \xut-calendar-vant-weapp\src\pages\messagemanager\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Container from '@/components/container'
 
 import Unite from '@antmjs/unite'
 import { View } from '@tarojs/components'
-import { Dialog, Icon, PowerScrollView } from '@antmjs/vantui'
-import { MessageBody, NoticeMsg } from './ui'
-import { useNav } from '@/utils'
-import { list, clear, read, count } from '@/api/message'
-import { cacheGetSync } from '@/cache'
-import { IMessage, IMessagePageComponent } from 'types/message'
+import { Dialog, Icon, InfiniteScroll } from '@antmjs/vantui'
 import { useRef } from 'react'
 import Router from 'tarojs-router-next'
+import { useNav } from '@/calendar/utils'
+import { list, clear, read, count } from '@/calendar/api/modules/message'
+import { cacheGetSync } from '@/calendar/cache/cache'
+import Container from '@/components/container'
+import { IMessage, IMessagePageComponent } from 'types/message'
+import { MessageBody, NoticeMsg } from './ui'
 import './index.less'
 
 export default Unite(
@@ -148,7 +148,7 @@ export default Unite(
         <NoticeMsg></NoticeMsg>
         <View className='br'></View>
         <View className='list'>
-          <PowerScrollView
+          {/* <PowerScrollView
             finishedText='没有更多了'
             successText='刷新成功'
             style={{ height: '100%' }}
@@ -160,7 +160,7 @@ export default Unite(
             {messages.map((item, i) => (
               <MessageBody key={i} message={item} viewHandler={viewDetail}></MessageBody>
             ))}
-          </PowerScrollView>
+          </PowerScrollView> */}
         </View>
         <Dialog id='messageManagerDialog' />
       </Container>

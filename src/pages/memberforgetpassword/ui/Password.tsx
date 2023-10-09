@@ -9,7 +9,7 @@
 import { FunctionComponent, useState } from 'react'
 import { View } from '@tarojs/components'
 import { useToast } from 'taro-hooks'
-import { checkPassowrd } from '@/utils'
+import { checkPassowrd } from '@/calendar/utils'
 import { Button, Cell, CellGroup, Field } from '@antmjs/vantui'
 
 interface IPageOption {

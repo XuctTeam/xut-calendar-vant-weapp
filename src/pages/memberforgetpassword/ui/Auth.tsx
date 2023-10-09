@@ -8,9 +8,9 @@
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
 import { View } from '@tarojs/components'
 import { useToast } from 'taro-hooks'
-import { checkMobile, checkEmail } from '@/utils'
+import { checkMobile, checkEmail } from '@/calendar/utils'
 import { Button, CellGroup, Field } from '@antmjs/vantui'
-import { sendForgetSmsCode, sendForgetEmailCode } from '@/api/forget'
+import { sendForgetSmsCode, sendForgetEmailCode } from '@/calendar/api/modules/forget'
 import { create } from '@/utils/countdown'
 
 interface IPageOption {

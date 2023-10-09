@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-25 18:39:13
+ * @LastEditTime: 2023-10-09 17:45:59
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindwechat\index.tsx
  * @Description:
  *
@@ -13,7 +13,7 @@ import { Button, Cell, CellGroup, Empty } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { useEnv, useLogin, useToast, useUserInfo } from 'taro-hooks'
 import { useRecoilState, useSetRecoilState } from 'recoil'
-import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
+import { userInfoStore, userAuthInfoStore, calendarStore } from '@/calendar/store/store'
 import Container from '@/components/container'
 import Avatar from '@/components/avatar'
 import { IUserInfo } from 'taro-hooks/dist/useUserInfo'
@@ -21,10 +21,10 @@ import { useEffect } from 'react'
 import { useBack } from '@/utils/taro'
 import { IUserInfo as IMemberUserInfo, IUserAuth } from '~/../types/user'
 import { IDavCalendar } from '~/../types/calendar'
-import { bindWx, auths, updateWxInfo } from '@/api/user'
+import { bindWx, auths, updateWxInfo } from '@/calendar/api/modules/user'
 
 import './index.less'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 
 export default Unite(
   {

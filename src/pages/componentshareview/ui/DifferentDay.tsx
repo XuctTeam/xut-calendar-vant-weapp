@@ -8,7 +8,7 @@
 import React from 'react'
 import { View } from '@tarojs/components'
 import dayjs from 'dayjs'
-import { formatDifferentDayTime, formatRepeatTime } from '@/utils'
+import { formatDifferentDayTime, formatRepeatTime } from '@/calendar/utils'
 
 interface IPageOption {
   dtstart: Date

@@ -10,14 +10,14 @@
  */
 import Unite from '@antmjs/unite'
 import { Cell, CellGroup, CheckboxGroup, Checkbox, Empty, Loading, Button } from '@antmjs/vantui'
-import Container from '@/components/container'
 import { ScrollView, View } from '@tarojs/components'
-import { GroupSelect } from './ui'
-import { IGroup, IGroupMember } from 'types/group'
-import { groupList } from '@/api/group'
-import { groupMemberList } from '@/api/groupmember'
-import { useNav } from '@/utils'
+import Container from '@/components/container'
+import { groupList } from '@/calendar/api/modules/group'
+import { groupMemberList } from '@/calendar/api/modules/groupMember'
+import { useNav } from '@/calendar/utils'
 import { useBack } from '@/utils/taro'
+import { IGroup, IGroupMember } from 'types/group'
+import { GroupSelect } from './ui'
 
 import './index.less'
 

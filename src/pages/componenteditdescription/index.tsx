@@ -13,7 +13,7 @@ import { Button } from '@antmjs/vantui'
 import { Textarea, View } from '@tarojs/components'
 import Container from '@/components/container'
 import { useBack } from '@/utils/taro'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 export default Unite(

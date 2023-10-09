@@ -1,17 +1,7 @@
-/*
- * @Author: Derek Xu
- * @Date: 2022-10-17 17:35:27
- * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-11 21:03:47
- * @FilePath: \xut-calendar-vant-weapp\src\components\container\navigation.tsx
- * @Description:
- *
- * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
- */
 import { ReactNode } from 'react'
 import { View } from '@tarojs/components'
 import { useRecoilValue } from 'recoil'
-import { menuButtonStore } from '@/store'
+import { menuButtonStore } from '@/calendar/store/store'
 import './navigation.less'
 
 interface INavBarProps {

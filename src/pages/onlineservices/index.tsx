@@ -13,8 +13,8 @@ import { Button } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
 import { Image } from '@antmjs/vantui'
-import Images from '@/constants/images'
-import { useNav } from '@/utils'
+import Images from '@/calendar/constants/images'
+import { useNav } from '@/calendar/utils'
 
 import './index.less'
 

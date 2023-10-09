@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-11 15:40:32
+ * @LastEditTime: 2023-10-09 17:45:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -17,20 +17,20 @@ import dayjs from 'dayjs'
 import { useSetRecoilState } from 'recoil'
 import { useLogin, useUserInfo, useToast } from 'taro-hooks'
 import { back } from '@/utils/taro'
-import { cacheSetSync, cacheRemoveSync } from '@/cache'
+import { cacheSetSync, cacheRemoveSync } from '@/calendar/cache/cache'
 import Container from '@/components/container'
 import { IUserAuth, IUserInfo } from '~/../types/user'
 import { IDavCalendar } from '~/../types/calendar'
-import { sendLoginSmsCode } from '@/api/common'
-import { wechatLogin, phoneLogin, usernameLogin } from '@/api/login'
-import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
-import { baseUserInfo, auths } from '@/api/user'
-import { list as listQueryCalendar } from '@/api/calendar'
-import { checkMobile, encryption, useNav } from '@/utils'
-import Images from '@/constants/images'
+import { sendLoginSmsCode } from '@/calendar/api/modules/common'
+import { wechatLogin, phoneLogin, usernameLogin } from '@/calendar/api/modules/login'
+import { userInfoStore, userAuthInfoStore, calendarStore } from '@/calendar/store/store'
+import { baseUserInfo, auths } from '@/calendar/api/modules/user'
+import { list as listQueryCalendar } from '@/calendar/api/modules/calendar'
+import { checkMobile, encryption, useNav } from '@/calendar/utils'
+import Images from '@/calendar/constants/images'
 import { create } from '@/utils/countdown'
 import classnames from 'classnames'
-import { ENCRYPTION_CODE } from '@/constants'
+import { ENCRYPTION_CODE } from '@/calendar/constants'
 import './index.less'
 
 export default Unite(

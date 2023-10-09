@@ -2,16 +2,16 @@
  * @Author: Derek Xu
  * @Date: 2022-11-14 16:55:08
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 17:40:16
+ * @LastEditTime: 2023-06-13 10:37:47
  * @FilePath: \xut-calendar-vant-weapp\src\pages\signinmanager\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Container from '@/components/container'
-import { useNav } from '@/utils'
 import Unite from '@antmjs/unite'
 import { Tab, Tabs } from '@antmjs/vantui'
+import Container from '@/components/container'
+import { useNav } from '@/calendar/utils'
 import { Join, Mine } from './ui'
 import './index.less'
 

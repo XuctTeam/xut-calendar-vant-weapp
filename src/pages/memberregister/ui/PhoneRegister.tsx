@@ -11,9 +11,9 @@
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
 import { useToast } from 'taro-hooks'
 import { Form, FormItem, CellGroup, Button, Row, Col } from '@antmjs/vantui'
-import { checkMobile } from '@/utils'
-import { sendRegisterSms } from '@/api/user'
 import { Input } from '@tarojs/components'
+import { checkMobile } from '@/calendar/utils'
+import { sendRegisterSms } from '@/calendar/api/modules/user'
 import { create } from '@/utils/countdown'
 
 interface IPageOption {

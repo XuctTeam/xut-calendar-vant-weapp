@@ -11,7 +11,7 @@
 import Unite from '@antmjs/unite'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 export default Unite(

@@ -11,10 +11,10 @@ import Container from '@/components/container'
 import Unite from '@antmjs/unite'
 import { Col, Empty, Loading, Row } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
-import { queryComponentMembers, attendStatistics } from '@/api/component'
+import { queryComponentMembers, attendStatistics } from '@/calendar/api/modules/component'
 import { TMember } from 'types/group'
 import { MemberBody } from './ui'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 interface IAttendStatistics {

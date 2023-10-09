@@ -16,7 +16,7 @@ import dayjs from 'dayjs'
 import { IntervalPicker, Monthly, Weekly } from './ui'
 import { useBack } from '@/utils/taro'
 import Router from 'tarojs-router-next'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 export default Unite(

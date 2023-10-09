@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:24:33
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-07 20:52:24
+ * @LastEditTime: 2023-06-13 12:40:00
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\UserNameRegister.tsx
  * @Description:
  *
@@ -10,10 +10,10 @@
  */
 
 import { FC } from 'react'
-import { Input, View } from '@tarojs/components'
-import { CellGroup, Col, Form, FormItem, Row } from '@antmjs/vantui'
-import { Image } from '@tarojs/components'
-import { DEFUALT_SERVICES } from '@/constants/url'
+import { Input, View, Image } from '@tarojs/components'
+import { CellGroup, Form, FormItem } from '@antmjs/vantui'
+
+import { DEFAULT_SERVICES } from '@/calendar/constants/url'
 
 interface IPageOption {
   randomStr: string
@@ -52,7 +52,7 @@ const UserNameRegister: FC<IPageOption> = (props) => {
           <View className='image-item'>
             <Input placeholder='请输入图形码' maxlength={5} />
             <View className='op'>
-              <Image src={DEFUALT_SERVICES + '/code?imgType=register&randomStr=' + randomStr} onClick={props.getCaptcha} />
+              <Image src={DEFAULT_SERVICES + '/code?imgType=register&randomStr=' + randomStr} onClick={props.getCaptcha} />
             </View>
           </View>
         </FormItem>

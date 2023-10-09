@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from 'react'
-import { navigateBack, reLaunch, getCurrentPages, useRouter } from '@tarojs/taro'
+import { navigateBack, reLaunch, getCurrentPages } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { Icon } from '@antmjs/vantui'
 import { useRecoilValue } from 'recoil'
-import { menuButtonStore } from '@/store'
+import { menuButtonStore } from '@/calendar/store/store'
 import './leftBtns.less'
 
 interface IMenuButtonProps {
@@ -13,19 +13,10 @@ interface IMenuButtonProps {
 
 function MenuButton(props: IMenuButtonProps) {
   const { menuButton, homeUrl } = props
-  const router = useRouter()
 
   const handleGoBack = useCallback(() => {
-    /** 日程新增到观看页，返回到首页 */
-    let delta = 1
-    const { path, params } = router
-    /** 1.首页点击 2.新增后 3.搜索 */
-    const { from } = params
-    if (path.includes('/pages/componentview/index') && from && from === '2') {
-      delta = 2
-    }
     navigateBack({
-      delta
+      delta: 1
     })
   }, [])
 

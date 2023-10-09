@@ -1,18 +1,9 @@
-/*
- * @Author: Derek Xu
- * @Date: 2022-08-29 15:04:54
- * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 13:55:23
- * @FilePath: \xut-calendar-vant-weapp\src\components\fullScreen\login\index.tsx
- * @Description:
- *
- * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
- */
 import { View } from '@tarojs/components'
 import Taro, { hideLoading, showLoading, showToast } from '@tarojs/taro'
 import { MiniPhoneButton } from '@antmjs/vantui'
 import { useEffect, useState } from 'react'
-import { cacheSetSync } from '@/cache'
+import { cacheSetSync } from '@/calendar/cache/cache'
+import { loginCommon } from '@/actions/simple/common'
 import './index.less'
 interface IProps {
   onRefresh: () => void
@@ -61,10 +52,10 @@ export default function Index(props: IProps) {
     showLoading({
       title: '登录中...'
     })
-    //const res = await loginCommon(_params)
-    // hideLoading()
-    // cacheSetSync('token', res.token)
-    // setError(undefined)
+    const res = await loginCommon(_params)
+    hideLoading()
+    cacheSetSync('token', res.token)
+    setError(undefined)
     onRefresh()
   }
 

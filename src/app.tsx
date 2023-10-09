@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-26 19:09:47
+ * @LastEditTime: 2023-10-09 17:18:26
  * @FilePath: \xut-calendar-vant-weapp\src\app.tsx
  * @Description:
  *
@@ -10,14 +10,11 @@
  */
 import React, { useEffect } from 'react'
 import { RecoilRoot } from 'recoil'
-import { useWxBrowser } from '@/hooks'
-import { useDidShow, useDidHide, getUpdateManager, showModal, nextTick, useReady } from '@tarojs/taro'
-import { setSysInfoAsync, setWxBrower } from '@/utils'
+import { useDidShow, useDidHide, nextTick } from '@tarojs/taro'
 import * as dayjs from 'dayjs'
 import isLeapYear from 'dayjs/plugin/isLeapYear'
+import calendar from '@/calendar'
 import 'dayjs/locale/zh-cn'
-
-import './cache'
 import './app.less'
 import './router'
 
@@ -33,8 +30,6 @@ export default function App(props: IProps) {
   // 可以使用所有的 React Hooks
   useEffect(() => {
     console.log('app launch')
-    //保存浏览器配置
-    setWxBrower(useWxBrowser())
     return function () {
       // 这个暂时不确定会不会触发
       console.log('app unlaunch')
@@ -45,35 +40,7 @@ export default function App(props: IProps) {
   // 对应 onShow
   useDidShow(() => {
     nextTick(() => {
-      setSysInfoAsync()
-      if (process.env.TARO_ENV !== 'h5') {
-        const updateManager: any = getUpdateManager()
-        updateManager.onCheckForUpdate(async (res: any) => {
-          if (res.hasUpdate) {
-          }
-        })
-        updateManager.onUpdateReady(() => {
-          showModal({
-            title: '更新提示',
-            content: '新版本已经准备好，立即重启应用？',
-            confirmText: '我知道了',
-            showCancel: false
-          }).then(function (mRes: any): void {
-            if (mRes.confirm) {
-              updateManager.applyUpdate()
-            }
-          })
-        })
-
-        updateManager.onUpdateFailed(() => {
-          showModal({
-            title: '更新失败',
-            content: '请删除小程序后重新打开',
-            confirmText: '我知道了',
-            showCancel: false
-          }).then(function (): void {})
-        })
-      }
+      calendar.$platform.load()
     })
   })
 

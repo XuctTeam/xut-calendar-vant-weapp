@@ -9,7 +9,7 @@ import React from 'react'
 import dayjs from 'dayjs'
 import ComponentBody from './ComponentBody'
 import { IDavComponent } from 'types/calendar'
-import { formatWeek } from '@/utils'
+import { formatWeek } from '@/calendar/utils'
 import { CellGroup } from '@antmjs/vantui'
 
 interface IPageOption {

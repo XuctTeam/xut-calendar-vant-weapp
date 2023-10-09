@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 17:30:07
+ * @LastEditTime: 2023-10-09 17:45:16
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -10,15 +10,15 @@
  */
 import Unite from '@antmjs/unite'
 import Router from 'tarojs-router-next'
-import { Empty, PowerScrollView } from '@antmjs/vantui'
+import { Empty, InfiniteScroll } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
-import Container from '@/components/container'
 import { useRecoilState } from 'recoil'
-import { calendarStore } from '@/store'
-import { CalendarListBody } from './ui'
-import { list } from '@/api/calendar'
+import Container from '@/components/container'
+import { calendarStore } from '@/calendar/store/store'
+import { list } from '@/calendar/api/modules/calendar'
+import { useNav } from '@/calendar/utils'
 import { IDavCalendar } from 'types/calendar'
-import { useNav } from '@/utils'
+import { CalendarListBody } from './ui'
 
 import './index.less'
 
@@ -59,12 +59,18 @@ export default Unite(
           calendarId: calendar.id
         }
       })
+    },
+
+    async loadMore(): Promise<any> {
+      return new Promise(async (resolve) => {
+        resolve('complete')
+      })
     }
   },
 
   function ({ state, events }) {
     const { loading } = state
-    const { editCalendar, onReload } = events
+    const { editCalendar, onReload, loadMore } = events
     const [calendars, setCalendarState] = useRecoilState(calendarStore)
     const usedNav = useNav()
 
@@ -79,16 +85,7 @@ export default Unite(
           <Empty description='~空空如也~' />
         ) : (
           <View className='list'>
-            <PowerScrollView
-              className='scroll'
-              finishedText='没有更多了'
-              successText='刷新成功'
-              emptyDescription='~空空如也~'
-              onScrollToUpper={onReload}
-              current={calendars.length}
-              finished={!loading}
-              style={{ height: '100%' }}
-            >
+            <InfiniteScroll className='scroll' loadMore={loadMore} style={{ height: '100%' }}>
               {calendars?.map((item: IDavCalendar, index: number) => {
                 return (
                   <View className='li' key={index}>
@@ -96,7 +93,7 @@ export default Unite(
                   </View>
                 )
               })}
-            </PowerScrollView>
+            </InfiniteScroll>
           </View>
         )}
       </Container>

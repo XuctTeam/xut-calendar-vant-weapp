@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 15:24:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-09 14:06:34
+ * @LastEditTime: 2023-10-09 17:46:18
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareposter\index.tsx
  * @Description:
  *
@@ -16,14 +16,14 @@ import Container from '@/components/container'
 import { Canvas, View } from '@tarojs/components'
 import QR from 'qrcode-base64'
 import { Button } from '@antmjs/vantui'
-import { getShortUrl, getById } from '@/api/component'
-import Images from '@/constants/images'
+import { getShortUrl, getById } from '@/calendar/api/modules/component'
+import Images from '@/calendar/constants/images'
 import dayjs from 'dayjs'
 import { useToast } from 'taro-hooks'
 import { useRecoilValue } from 'recoil'
-import { userInfoStore } from '@/store'
+import { userInfoStore } from '@/calendar/store/store'
 import { IDavComponent } from 'types/calendar'
-import { formatDifferentDayTime, formateSameDayDuration, formatSameDayTime, useNav } from '@/utils'
+import { formatDifferentDayTime, formateSameDayDuration, formatSameDayTime, useNav } from '@/calendar/utils'
 import './index.less'
 
 interface IImageOption {

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-25 18:47:55
+ * @LastEditTime: 2023-06-13 13:42:22
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesedit\index.tsx
  * @Description:
  *
@@ -11,16 +11,16 @@
 import Unite from '@antmjs/unite'
 import { Button, CellGroup, Form, FormItem, Switch, Toast, Uploader } from '@antmjs/vantui'
 import { Input, ITouchEvent, View } from '@tarojs/components'
-import Container from '@/components/container'
 import { IFormInstanceAPI } from '@antmjs/vantui/types/form'
-import { addGroup, getGroupInfo } from '@/api/group'
-import { cacheGetSync } from '@/cache'
-import { IUploadInfo } from 'types/common'
-import { upload as uploadPath } from '@/api/common'
-import { IGroup } from 'types/group'
 import { useFile, useToast } from 'taro-hooks'
+import Container from '@/components/container'
+import { addGroup, getGroupInfo } from '@/calendar/api/modules/group'
+import { cacheGetSync } from '@/calendar/cache/cache'
+import { upload as uploadPath } from '@/calendar/api/modules/common'
 import { useBack } from '@/utils/taro'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
+import { IUploadInfo } from 'types/common'
+import { IGroup } from 'types/group'
 
 import './index.less'
 

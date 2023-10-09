@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-07 21:19:48
+ * @LastEditTime: 2023-10-09 17:45:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccountmerge\index.tsx
  * @Description:
  *
@@ -15,10 +15,10 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
 import Container from '@/components/container'
-import { userInfoStore, userAuthInfoStore, calendarStore } from '@/store'
-import { merge, logout } from '@/api/user'
-import { cacheRemoveSync } from '@/cache'
-import { useNav } from '@/utils'
+import { userInfoStore, userAuthInfoStore, calendarStore } from '@/calendar/store/store'
+import { merge, logout } from '@/calendar/api/modules/user'
+import { cacheRemoveSync } from '@/calendar/cache/cache'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 export default Unite(

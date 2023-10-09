@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-08 13:08:13
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 21:26:53
+ * @LastEditTime: 2023-10-09 17:46:22
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareview\index.tsx
  * @Description:
  *
@@ -12,14 +12,14 @@ import Unite from '@antmjs/unite'
 import Container from '@/components/container'
 import { View } from '@tarojs/components'
 import { DifferentDay, SameDay } from './ui'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import dayjs from 'dayjs'
 import { Button, Cell, Dialog, Loading, Overlay } from '@antmjs/vantui'
-import { acceptAttend, getShareInfo } from '@/api/component'
+import { acceptAttend, getShareInfo } from '@/calendar/api/modules/component'
 import { IDavComponent } from 'types/calendar'
-import { cacheGetSync } from '@/cache'
+import { cacheGetSync } from '@/calendar/cache/cache'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { componentRefreshTimeStore, userInfoStore } from '@/store'
+import { componentRefreshTimeStore, userInfoStore } from '@/calendar/store/store'
 
 import Router from 'tarojs-router-next'
 import { useToast } from 'taro-hooks'

@@ -2,25 +2,26 @@
  * @Author: Derek Xu
  * @Date: 2022-11-14 14:02:34
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 15:19:55
+ * @LastEditTime: 2023-06-13 11:28:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentsearch\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Container from '@/components/container'
-import { useNav } from '@/utils'
+
 import Unite from '@antmjs/unite'
-import { PowerScrollView, Search } from '@antmjs/vantui'
+import { Search } from '@antmjs/vantui'
 import { useRef } from 'react'
-import { search } from '@/api/component'
-import { DayBody } from './ui'
-import { ICalendarComponent, ICalendarPageComponent, IDavComponent } from 'types/calendar'
 import { useToast } from 'taro-hooks'
 import { View } from '@tarojs/components'
 import './index.less'
 import dayjs from 'dayjs'
-import Router from 'tarojs-router-next'
+import * as Router from 'tarojs-router-next'
+import Container from '@/components/container'
+import { search } from '@/calendar/api/modules/component'
+import { useNav } from '@/calendar/utils'
+import { ICalendarComponent, ICalendarPageComponent, IDavComponent } from 'types/calendar'
+import { DayBody } from './ui'
 
 export default Unite(
   {
@@ -52,11 +53,11 @@ export default Unite(
     },
 
     async query() {
-      const that = this
+      const self = this
       search(this.state.searchValue, this.hooks['pageRef'].current, 20).then((res) => {
         const searchData: ICalendarPageComponent = res as any as ICalendarPageComponent
         const { finished, components } = searchData
-        that._fillComponentList(finished, components)
+        self._fillComponentList(finished, components)
       })
     },
 

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-25 18:28:24
+ * @LastEditTime: 2023-10-09 17:46:15
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindusername\index.tsx
  * @Description:
  *
@@ -13,15 +13,15 @@ import { useEffect } from 'react'
 import { useToast } from 'taro-hooks'
 import { Button, Cell, CellGroup, Form, FormItem } from '@antmjs/vantui'
 import { Input, View } from '@tarojs/components'
-import { userAuthInfoStore } from '@/store'
+import { userAuthInfoStore } from '@/calendar/store/store'
 import Container from '@/components/container'
 import { useRecoilState } from 'recoil'
-import { bindUserName, auths } from '@/api/user'
+import { bindUserName, auths } from '@/calendar/api/modules/user'
 import { IUserAuth } from '~/../types/user'
 
 import './index.less'
 import { useBack } from '@/utils/taro'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 
 export default Unite(
   {

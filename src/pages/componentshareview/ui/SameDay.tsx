@@ -17,7 +17,7 @@
  */
 import React from 'react'
 import { View } from '@tarojs/components'
-import { formateSameDayDuration, formatRepeatTime, formatSameDayTime } from '@/utils'
+import { formateSameDayDuration, formatRepeatTime, formatSameDayTime } from '@/calendar/utils'
 
 interface IPageOption {
   dtstart: Date

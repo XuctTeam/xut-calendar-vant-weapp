@@ -9,7 +9,7 @@
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Container from '@/components/container'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import Unite from '@antmjs/unite'
 import { Icon } from '@antmjs/vantui'
 import { View } from '@tarojs/components'

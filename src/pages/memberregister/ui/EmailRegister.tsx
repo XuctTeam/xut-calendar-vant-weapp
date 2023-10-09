@@ -14,8 +14,8 @@ import { Button, CellGroup, Col, Form, FormItem, Row } from '@antmjs/vantui'
 import { Input } from '@tarojs/components'
 
 import { useToast } from 'taro-hooks'
-import { checkEmail } from '@/utils'
-import { sendRegisterEmail } from '@/api/user'
+import { checkEmail } from '@/calendar/utils'
+import { sendRegisterEmail } from '@/calendar/api/modules/user'
 import { create } from '@/utils/countdown'
 
 interface IPageOption {

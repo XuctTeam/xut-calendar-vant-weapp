@@ -2,20 +2,20 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 16:46:34
+ * @LastEditTime: 2023-06-13 16:18:44
  * @FilePath: \xut-calendar-vant-weapp\src\pages\aboutus\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Unite from '@antmjs/unite'
-import Router from 'tarojs-router-next'
-import { useWebEnv } from '@/hooks'
+import { Unite } from '@antmjs/unite'
+import { Router } from 'tarojs-router-next'
 import { Image } from '@antmjs/vantui'
 import { View, Navigator } from '@tarojs/components'
+import { useWebEnv } from '@/calendar/hooks/hooks'
 import Container from '@/components/container'
-import Images from '@/constants/images'
-import { useNav } from '@/utils'
+import Images from '@/calendar/constants/images'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 export default Unite(

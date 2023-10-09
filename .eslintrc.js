@@ -1,9 +1,28 @@
+/*
+ * @Author: Derek Xu
+ * @Date: 2023-02-10 11:30:40
+ * @LastEditors: Derek Xu
+ * @LastEditTime: 2023-06-13 11:31:08
+ * @FilePath: \xut-calendar-vant-weapp\.eslintrc.js
+ * @Description:
+ *
+ * Copyright (c) 2023 by 楚恬商行, All Rights Reserved.
+ */
 module.exports = {
   extends: './node_modules/@antmjs/eslint/index.js',
   parserOptions: {
     project: 'tsconfig.json',
     sourceType: 'module',
     ecmaVersion: 2021
+  },
+  rules: {
+    '@typescript-eslint/no-this-alias': [
+      'error',
+      {
+        allowDestructuring: false, // Disallow `const { props, state } = this`; true by default
+        allowedNames: ['self'] // Allow `const self = this`; `[]` by default
+      }
+    ]
   },
   settings: {
     'import/resolver': {

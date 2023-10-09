@@ -6,7 +6,7 @@
  * @LastEditors: Derek Xu
  */
 import { registerMiddleware, RouteContext, Router } from 'tarojs-router-next'
-import { cacheGetSync } from '@/cache'
+import { cacheGetSync } from '@/calendar/cache/cache'
 
 registerMiddleware(
   async (_, next) => {

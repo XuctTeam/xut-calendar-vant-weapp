@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-02-09 14:24:12
+ * @LastEditTime: 2023-10-09 17:46:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -12,24 +12,21 @@ import Taro from '@tarojs/taro'
 import Unite from '@antmjs/unite'
 import React, { useEffect, useRef } from 'react'
 import { Button } from '@antmjs/vantui'
-import Container from '@/components/container'
 import { View } from '@tarojs/components'
-import { useWebEnv } from '@/hooks'
 import Router from 'tarojs-router-next'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import dayjs from 'dayjs'
-import { useNav, getToday } from '@/utils'
-import { ICurrentDay } from '~/../types/date'
-import { calendarStore, componentRefreshTimeStore, lunarStore, mondayStore, compViewStore, userInfoStore, userAuthInfoStore } from '@/store'
-import { cacheGetSync } from '@/cache'
-import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
+import Images from '@/calendar/constants/images'
 import CalendarTypes from '@/components/calendar/types/calendar'
+import { cacheGetSync } from '@/calendar/cache/cache'
+import { calendarStore, componentRefreshTimeStore, lunarStore, mondayStore, compViewStore, userInfoStore, userAuthInfoStore } from '@/calendar/store/store'
+import { useNav, getToday } from '@/calendar/utils'
+import { useWebEnv } from '@/calendar/hooks/hooks'
+import Container from '@/components/container'
+import { count } from '@/calendar/api/modules/message'
+import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
+import { ICurrentDay } from '~/../types/date'
 import { Calendar, UserInfo, EventList, Header } from './ui'
-import { componentsDaysById } from '@/api/component'
-import Images from '@/constants/images'
-import { useDidShow } from '@tarojs/taro'
-import Expanse from '@/components/expanse/index'
-import { count } from '@/api/message'
 
 import './index.less'
 
@@ -185,7 +182,7 @@ export default Unite(
         marks: []
       })
 
-      let pList: Array<Promise<any>> = []
+      const pList: Array<Promise<any>> = []
       calList.forEach((calendar) => {
         pList.push(
           new Promise(function (resolve, reject) {
@@ -342,7 +339,7 @@ export default Unite(
               selectMonthChage={selectMonthChage}
               selectDayLongClick={selectDayLongClick}
               selectDayClick={selectDayClickHadnle}
-            ></Calendar> 
+            ></Calendar>
           </Expanse> */}
 
           <Calendartest currentDay={dayjs(selectedDay).toDate()}></Calendartest>

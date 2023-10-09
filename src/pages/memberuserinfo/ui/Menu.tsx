@@ -2,16 +2,16 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 17:04:12
- * @LastEditTime: 2022-09-01 13:39:57
+ * @LastEditTime: 2023-06-13 13:18:13
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useCallback } from 'react'
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { Cell } from '@antmjs/vantui'
-import { useThrottle, useWebEnv } from '@/hooks'
 import { useRequestSubscribeMessage, useToast } from 'taro-hooks'
-import Router from 'tarojs-router-next'
+import * as Router from 'tarojs-router-next'
+import { useThrottle, useWebEnv } from '@/calendar/hooks/hooks'
 
 interface IPageOption {
   accessToken: string
@@ -42,11 +42,11 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
     } else if (params === 5) {
       Router.toMemberaccount()
     } else if (params === 6) {
-      _submessageClickHandle()
+      _submissiveClickHandle()
     }
   }, 400)
 
-  const _submessageClickHandle = useCallback(async () => {
+  const _submissiveClickHandle = useCallback(async () => {
     console.log(env)
     if (!(props.accessToken && !env)) {
       toast({
@@ -100,5 +100,4 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
     </View>
   )
 }
-
 export default Setting

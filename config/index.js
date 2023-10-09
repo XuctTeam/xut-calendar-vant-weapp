@@ -4,13 +4,19 @@ const pkg = require('../package.json')
 const miniChain = require('./webpack/miniChain')
 const h5Chain = require('./webpack/h5Chain')
 
+process.env.TARO_ENV = process.env.TARO_ENV ?? 'weapp'
+process.env.NODE_ENV = process.env.NODE_ENV ?? 'production'
+process.env.API_ENV = process.env.API_ENV ?? 'real'
+
 function getVersion() {
   function fillZero(value) {
     return value < 10 ? `0${value}` : `${value}`
   }
   const date = new Date()
 
-  return `${date.getFullYear() - 2010}.${date.getMonth()}${fillZero(date.getDay())}.${date.getHours()}${fillZero(date.getMinutes())}`
+  return `${date.getFullYear()}${fillZero(date.getMonth() + 1)}${fillZero(date.getDate())}${fillZero(date.getHours())}${fillZero(date.getMinutes())}${fillZero(
+    date.getSeconds()
+  )}`
 }
 
 function getWxTemplate() {
@@ -20,6 +26,12 @@ const template = getWxTemplate()
 const version = getVersion()
 const app_client = 'YXBwOmFwcA=='
 const wx_client = 'd3g6d3g='
+
+const version = process.env.VERSION || getVersion()
+console.log('TaroEnv: ', process.env.TARO_ENV)
+console.log('NodeEnv: ', process.env.NODE_ENV)
+console.log('ApiEnv: ', process.env.API_ENV)
+console.log('Version: ', version)
 
 const config = {
   projectName: pkg.name,
@@ -31,8 +43,9 @@ const config = {
     828: 1.81 / 2
   },
   sourceRoot: 'src',
-  outputRoot: process.env.TARO_ENV === 'h5' ? 'build' : 'dist/' + process.env.NODE_ENV + '/' + process.env.TARO_ENV,
+  outputRoot: process.env.TARO_ENV === 'h5' ? 'build' : process.env.TARO_ENV,
   env: {
+    TARO_ENV: JSON.stringify(process.env.TARO_ENV),
     API_ENV: JSON.stringify(process.env.API_ENV),
     WATCHING: JSON.stringify(process.env.WATCHING || 'false'),
     DEPLOY_VERSION: JSON.stringify(version),
@@ -44,17 +57,21 @@ const config = {
     '@': npath.resolve(process.cwd(), 'src')
   },
   defineConstants: {
-    /* 腾讯地图使用 */
-    LOCATION_APIKEY: JSON.stringify('5Y6BZ-LHMWU-HM2VX-45SUU-RDESJ-4VBGR'),
-
-    /* 图片服务器 */
-    SERVICES_IMAGES: JSON.stringify('https://images.xuct.net.cn/')
+    API_ENV: JSON.stringify(process.env.API_ENV),
+    WATCHING: JSON.stringify(process.env.WATCHING || 'false'),
+    DEPLOY_VERSION: JSON.stringify(version),
+    TEMPLATE_ID: JSON.stringify(template),
+    APP_CLIENT: JSON.stringify(app_client),
+    WX_CLIENT: JSON.stringify(wx_client)
   },
   copy: {
     patterns: [],
     options: {}
   },
   compiler: 'webpack5',
+  prebundle: {
+    enable: true
+  },
   framework: 'react',
   cache: {
     enable: false // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
@@ -135,13 +152,12 @@ const config = {
     },
     devServer: {
       port: 10086,
-      hot: true,
+      hot: false,
       host: '0.0.0.0',
       historyApiFallback: true,
       headers: {
         'Access-Control-Allow-Origin': '*' // 表示允许跨域
-      },
-      static: './static'
+      }
     },
     postcss: {
       autoprefixer: {
@@ -172,8 +188,9 @@ const config = {
     ['@tarojs/plugin-framework-react', { reactMode: 'concurrent' }],
     [npath.join(process.cwd(), 'config/webpack/configPlugin')],
     '@tarojs/plugin-platform-alipay-dd',
-    ['@tarojs/plugin-platform-kwai'],
-    ['tarojs-router-next-plugin']
+    ['tarojs-router-next-plugin'],
+    ['@taro-hooks/plugin-react'],
+    ['@tarojs/plugin-platform-kwai']
   ]
 }
 

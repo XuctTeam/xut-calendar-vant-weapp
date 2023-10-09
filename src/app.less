@@ -1,6 +1,6 @@
 /* stylelint-disable selector-type-no-unknown, selector-max-type */
-@import '@antmjs/vantui/lib/index.less';
-@import './iconfont.less';
+@import url('@antmjs/vantui/lib/index.less');
+@import url('./iconfont.less');
 
 page {
   height: 100%;
@@ -27,7 +27,7 @@ div {
 body,
 html {
   // NOTE: taro h5 ios上拉遮挡底部fixed元素
-  overflow: hidden !important;
+  //overflow: hidden !important;
 }
 
 .van-sms-cell {
@@ -59,7 +59,7 @@ html {
   right: 0;
   bottom: 0;
   height: calc(100vh - 200px);
-  background: #fff;
+  background: #ffffff;
 
   .taro_choose_location_bar {
     display: flex;
@@ -80,7 +80,7 @@ html {
     width: 90%;
     margin: 10px;
     height: 60px;
-    color: #fff;
+    color: #ffffff;
     font-weight: bold;
     background: orange;
     border-radius: 10px;
@@ -100,18 +100,18 @@ html {
 
 .van-nav-bar__text,
 .van-nav-bar__title {
-  color: #fff;
+  color: #ffffff;
 }
 
 .van-nav-bar__arrow {
-  color: #fff !important;
+  color: #ffffff !important;
 }
 
 /* 覆盖form表单样式 */
 .vant-form {
   .vant-form-formItem-wrapper,
   .vant-form-formItem {
-    background-color: #fff !important;
+    background-color: #ffffff !important;
   }
 
   .vant-form-formItem {
@@ -121,7 +121,7 @@ html {
 
   .vant-form-formItem-wrapper:last-child {
     .vant-form-formItem {
-      border-bottom: 0px !important;
+      border-bottom: 0 !important;
     }
   }
 
@@ -134,12 +134,13 @@ html {
     margin-top: 20px !important;
   }
 }
+
 .van-form-cell-group {
   margin-top: 20px !important;
 }
 
 .van-steps {
-  margin: 30px 30px 10px 30px;
+  margin: 30px 30px 10px;
   border-radius: var(--cell-group-inset-border-radius, 0.4rem);
 }
 

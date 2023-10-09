@@ -2,28 +2,28 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 21:55:39
+ * @LastEditTime: 2023-10-09 17:45:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Unite from '@antmjs/unite'
+import { Unite } from '@antmjs/unite'
 import { View } from '@tarojs/components'
-import { Cell, Checkbox, CheckboxGroup, CellGroup, Button, Empty, Search, Dialog } from '@antmjs/vantui'
-import Container from '@/components/container'
-import { userInfoStore } from '@/store'
-import { IUserInfo } from 'types/user'
-import { useRecoilValue } from 'recoil'
-import { useBack } from '@/utils/taro'
-import Router from 'tarojs-router-next'
-import { MySelf, MemberBody } from './ui'
-import { useToast } from 'taro-hooks'
-import { queryByIds } from '@/api/groupmember'
-import { IGroupMember } from 'types/group'
-import './index.less'
 import { useRef } from 'react'
-import { useNav } from '@/utils'
+import { Cell, Checkbox, CheckboxGroup, CellGroup, Button, Empty, Search, Dialog } from '@antmjs/vantui'
+import { useRecoilValue } from 'recoil'
+import { Router } from 'tarojs-router-next'
+import { useToast } from 'taro-hooks'
+import { queryByIds } from '@/calendar/api/modules/groupMember'
+import './index.less'
+import { useBack } from '@/utils/taro'
+import { userInfoStore } from '@/calendar/store/store'
+import Container from '@/components/container'
+import { useNav } from '@/calendar/utils'
+import { IGroupMember } from 'types/group'
+import { IUserInfo } from 'types/user'
+import { MySelf, MemberBody } from './ui'
 
 export default Unite(
   {

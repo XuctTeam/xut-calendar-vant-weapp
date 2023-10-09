@@ -7,7 +7,7 @@
  * @LastEditTime: 2022-07-28 16:55:59
  */
 import { FunctionComponent } from 'react'
-import { alarmTimeTypes, alarmTypes } from '@/constants/index'
+import { alarmTimeTypes, alarmTypes } from '@/calendar/constants/index'
 import { Radio, RadioGroup } from '@antmjs/vantui'
 import { ITouchEvent } from '@tarojs/components'
 

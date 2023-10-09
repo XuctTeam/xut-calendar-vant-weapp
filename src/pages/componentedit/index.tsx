@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 14:17:39
+ * @LastEditTime: 2023-10-09 17:46:12
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -14,11 +14,11 @@ import { Button, Cell, Col, Icon, Loading, Overlay, Row, Switch } from '@antmjs/
 import Container from '@/components/container'
 import Router, { NavigateType } from 'tarojs-router-next'
 import dayjs, { Dayjs } from 'dayjs'
-import { calendarStore, userInfoStore, componentRefreshTimeStore } from '@/store'
-import { add, getById, queryComponentMemberIds } from '@/api/component'
+import { calendarStore, userInfoStore, componentRefreshTimeStore } from '@/calendar/store/store'
+import { add, getById, queryComponentMemberIds } from '@/calendar/api/modules/component'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { IUserInfo } from 'types/user'
-import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode, useNav } from '@/utils'
+import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode, useNav } from '@/calendar/utils'
 import { IDavCalendar, IDavComponent } from 'types/calendar'
 import { Picker, Time, CalendarAction, SelectCalendar, GridAction, RepeatPicker } from './ui'
 import { useToast, useRequestSubscribeMessage } from 'taro-hooks'

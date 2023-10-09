@@ -14,10 +14,10 @@ import { Swiper, SwiperItem, View } from '@tarojs/components'
 import Container from '@/components/container'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
-import { register } from '@/api/user'
+import { register } from '@/calendar/api/modules/user'
 import { UserNameRegister, PhoneRegister, EmailRegister } from './ui'
 import dayjs from 'dayjs'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 interface IUserNameForm {

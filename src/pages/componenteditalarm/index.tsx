@@ -13,7 +13,7 @@ import { View } from '@tarojs/components'
 import { Button, Cell, CellGroup, Checkbox, RadioGroup, Radio, CheckboxGroup } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { useBack } from '@/utils/taro'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 const alrams = [

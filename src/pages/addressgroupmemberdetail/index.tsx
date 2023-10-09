@@ -2,24 +2,24 @@
  * @Author: Derek Xu
  * @Date: 2022-11-09 21:56:09
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-10 10:23:05
+ * @LastEditTime: 2023-10-09 17:45:09
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupmemberdetail\index.tsx
  * @Description:
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { View } from '@tarojs/components'
-import Container from '@/components/container'
 import Unite from '@antmjs/unite'
 import { Button, Cell, Dialog, Loading, Overlay, Tag } from '@antmjs/vantui'
-import { useNav } from '@/utils'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { groupRefreshTimeStore, userInfoStore } from '@/store'
+import Container from '@/components/container'
+import { useNav } from '@/calendar/utils'
+import { groupRefreshTimeStore, userInfoStore } from '@/calendar/store/store'
 import Avatar from '@/components/avatar'
 import './index.less'
 import dayjs from 'dayjs'
-import { getGroupMember, groupMemberLeave } from '@/api/groupmember'
-import { IGroupMember } from 'types/group'
+import { getGroupMember, groupMemberLeave } from '@/calendar/api/modules/groupMember'
 import { useBack } from '@/utils/taro'
+import { IGroupMember } from 'types/group'
 
 export default Unite(
   {

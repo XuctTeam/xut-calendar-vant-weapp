@@ -12,11 +12,11 @@ import Unite from '@antmjs/unite'
 import { Steps } from '@antmjs/vantui'
 import Container from '@/components/container'
 import { Auth, Password } from './ui'
-import { forgetPasswordCheck, forgetModify } from '@/api/forget'
+import { forgetPasswordCheck, forgetModify } from '@/calendar/api/modules/forget'
 import { useRef } from 'react'
 import { useToast } from 'taro-hooks'
 import { useBack } from '@/utils/taro'
-import { useNav } from '@/utils'
+import { useNav } from '@/calendar/utils'
 import './index.less'
 
 export default Unite(

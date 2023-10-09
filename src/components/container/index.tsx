@@ -5,17 +5,16 @@ import { UniteContext } from '@antmjs/unite'
 import { EMlf } from '@antmjs/trace'
 import { useRecoilState } from 'recoil'
 import { monitor } from '@/trace'
-import { LOGIN_CODE } from '@/constants'
-import { IMenuButton, menuButtonStore } from '@/store'
-import { setMenuButtonAsync } from '@/utils'
+import { LOGIN_CODE } from '@/calendar/constants'
+import { menuButtonStore } from '@/calendar/store/store'
+import { setMenuButtonAsync } from '@/calendar/utils'
 import Error from '../fullScreen/error'
 import Login from '../fullScreen/login'
 import Loading from '../fullScreen/loading'
 import Navigation from './navigation'
 import LeftBtns from './leftBtns'
-import PullDownRefresh from './pullDownRefresh'
 import './index.less'
-import classNames from 'classnames'
+import PullDownRefresh from './pullDownRefresh'
 
 const hackSyncWechatTitle = () => {
   const iframe = document.createElement('iframe')
@@ -74,9 +73,8 @@ type IProps = {
   renderPageTopHeader?: (navHeight: number, statusBarHeight: number, safeRight: number) => void
 }
 
-function Render(props: IProps & { ctx: any; menuButton: IMenuButton }): any {
+function Render(props: IProps & { ctx: any }): any {
   const { ctx, loading, ignoreError, className } = props
-  const { useNav, menuButton } = props
 
   // 组件把Login、JSError、BoundaryError报错抛到页面，由页面来处理
   useEffect(() => {
@@ -144,24 +142,7 @@ function Render(props: IProps & { ctx: any; menuButton: IMenuButton }): any {
   }
 
   if (loading) return <Loading />
-  if (useNav && process.env.TARO_ENV === 'h5') {
-    if (menuButton) {
-      return (
-        <View
-          className={classNames(className, 'van-box')}
-          style={{ paddingTop: menuButton!.top + menuButton!.height + (menuButton!.top - menuButton!.statusBarHeight) + 'px' }}
-        >
-          {props.children}
-        </View>
-      )
-    }
-    return <View className={className}>{props.children}</View>
-  }
-  return (
-    <View className={className} style={{ height: '100%' }}>
-      {props.children}
-    </View>
-  )
+  return <View className={className}>{props.children}</View>
 }
 
 export default function Index(props: IProps) {
@@ -213,10 +194,10 @@ export default function Index(props: IProps) {
         {useMenuBtns && ctx.error?.code !== LOGIN_CODE && <LeftBtns homeUrl='pages/index/index' />}
         {ctx.uniteConfig.page && enablePagePullDownRefresh ? (
           <PullDownRefresh onRefresh={ctx.onRefresh} statusBarHeight={statusBarHeight}>
-            <Render ctx={ctx} menuButton={menuButton} {...props} />
+            <Render ctx={ctx} {...props} />
           </PullDownRefresh>
         ) : (
-          <Render ctx={ctx} menuButton={menuButton} {...props} />
+          <Render ctx={ctx} {...props} />
         )}
       </>
     </ErrorBoundary>

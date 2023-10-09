@@ -13,7 +13,7 @@ import { Button, Cell, CellGroup, Icon, Radio, RadioGroup } from '@antmjs/vantui
 import Container from '@/components/container'
 import dayjs from 'dayjs'
 import Router, { NavigateType } from 'tarojs-router-next'
-import { formatRepeatTime, useNav } from '@/utils'
+import { formatRepeatTime, useNav } from '@/calendar/utils'
 import { View } from '@tarojs/components'
 import { useBack } from '@/utils/taro'
 import './index.less'

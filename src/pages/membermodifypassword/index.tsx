@@ -14,10 +14,10 @@ import { View } from '@tarojs/components'
 import { useBack } from '@/utils/taro'
 import Container from '@/components/container'
 import { useToast } from 'taro-hooks'
-import { password as updatePassword } from '@/api/user'
+import { password as updatePassword } from '@/calendar/api/modules/user'
 
 import './index.less'
-import { checkPassowrd, useNav } from '@/utils'
+import { checkPassowrd, useNav } from '@/calendar/utils'
 
 export default Unite(
   {

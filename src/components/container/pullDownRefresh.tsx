@@ -4,7 +4,7 @@ import { ReactNode, useRef, useState } from 'react'
 import { showToast, usePageScroll } from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { animated, useSpring } from '@react-spring/web'
-import { sleep, rubberbandIfOutOfBounds } from '@/utils'
+import { sleep, rubberbandIfOutOfBounds } from '@/calendar/utils'
 import './pullDownRefresh.less'
 
 export type PullStatus = 'pulling' | 'canRelease' | 'refreshing' | 'complete'
@@ -162,7 +162,6 @@ export default function Index(props: PullToRefreshProps) {
     if (pullDownRefreshStatus === 'refreshing') return <View className='navigation_minibar_loading' />
     if (pullDownRefreshStatus === 'complete') return '刷新成功'
   }
-  console.log(props.statusBarHeight)
   const NView = animated(View)
   return (
     <>

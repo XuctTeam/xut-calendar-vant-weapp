@@ -4,16 +4,15 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-01 21:55:42
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-25 12:54:05
+ * @LastEditTime: 2023-10-10 09:11:49
  */
 import { FunctionComponent, useCallback, useEffect, useState } from 'react'
 import { useToast, useFile } from 'taro-hooks'
 import { Button, Popup, Uploader } from '@antmjs/vantui'
-import { cacheGetSync } from '@/calendar/cache/cache'
-import { upload as uploadPath } from '@/calendar/api/modules/common'
-import { IUploadInfo } from '~/../types/common'
-
 import { View } from '@tarojs/components'
+import { cacheGetSync } from '@/calendar/cache/cache'
+import calendar from '@/calendar'
+import { IUploadInfo } from '~/../types/common'
 
 interface IPageOption {
   open: boolean
@@ -32,7 +31,7 @@ interface IFile {
 
 const UploadHeader: FunctionComponent<IPageOption> = (props) => {
   const [files, setFiles] = useState<IFile[]>([])
-  const [toast] = useToast({
+  const { show } = useToast({
     icon: 'error'
   })
   const { upload } = useFile()
@@ -51,11 +50,11 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
       const { file } = event.detail
       // 可在此处新增云上传图片操作
       if (file[0].state === 'uploading') {
-        toast({ title: '正在上传' })
+        show({ title: '正在上传' })
         return
       }
       if (!(file && file[0])) {
-        toast({ title: '获取上传文件失败' })
+        show({ title: '获取上传文件失败' })
         return
       }
       let _file: IFile = {
@@ -65,7 +64,7 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
       setFiles([_file])
       const assessToken = cacheGetSync('accessToken')
       const uploadResult = await upload({
-        url: uploadPath(),
+        url: calendar.$api.common.upload(),
         filePath: file[0].url,
         name: 'file',
         header: { Authorization: assessToken }
@@ -86,7 +85,7 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
       }
       setFiles([_file])
     },
-    [toast]
+    [show]
   )
 
   const deleteAction = (event: any) => {
@@ -97,7 +96,7 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
   }
 
   const _uploadFail = () => {
-    toast({ title: '上传失败' })
+    show({ title: '上传失败' })
     const _file: IFile = {
       url: files[0]?.url || '',
       status: 'failed'
@@ -107,18 +106,18 @@ const UploadHeader: FunctionComponent<IPageOption> = (props) => {
 
   const updateAvatarHandle = () => {
     if (!(files && files.length !== 0)) {
-      toast({ title: '上传文件为空' })
+      show({ title: '上传文件为空' })
       return
     }
     if (files[0]?.status === 'uploading') {
-      toast({ title: '正在上传' })
+      show({ title: '正在上传' })
       return
     }
     if (files[0] && files[0].url && files[0].url !== props.avatar) {
       props.updateAvatar(files[0].url)
       return
     }
-    toast({ title: '上传数据重复' })
+    show({ title: '上传数据重复' })
   }
 
   return (

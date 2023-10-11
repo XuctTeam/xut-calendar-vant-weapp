@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 15:24:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:46:18
+ * @LastEditTime: 2023-10-10 10:40:44
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareposter\index.tsx
  * @Description:
  *
@@ -12,18 +12,17 @@
 import Taro, { FileSystemManager } from '@tarojs/taro'
 import { useRef } from 'react'
 import Unite from '@antmjs/unite'
-import Container from '@/components/container'
 import { Canvas, View } from '@tarojs/components'
 import QR from 'qrcode-base64'
 import { Button } from '@antmjs/vantui'
-import { getShortUrl, getById } from '@/calendar/api/modules/component'
-import Images from '@/calendar/constants/images'
 import dayjs from 'dayjs'
 import { useToast } from 'taro-hooks'
 import { useRecoilValue } from 'recoil'
-import { userInfoStore } from '@/calendar/store/store'
+import Images from '@/calendar/constants/images'
+import Container from '@/components/container'
+import calendar from '@/calendar'
+import { formatDifferentDayTime, formateSameDayDuration, formatSameDayTime } from '@/calendar/utils'
 import { IDavComponent } from 'types/calendar'
-import { formatDifferentDayTime, formateSameDayDuration, formatSameDayTime, useNav } from '@/calendar/utils'
 import './index.less'
 
 interface IImageOption {
@@ -60,7 +59,7 @@ export default Unite(
     },
 
     async init(id: string) {
-      const result = await Promise.all([getById(id), getShortUrl(id)])
+      const result = await Promise.all([calendar.$api.component.getById(id), calendar.$api.component.getShortUrl(id)])
       if (!(result && result.length === 2)) return
       const component = result[0] as any as IDavComponent
       this._setQrCode(result[1] as any as string, component.summary, { ...component })
@@ -177,7 +176,7 @@ export default Unite(
           that._packageTime(ctx, _scrWidth, _scrHeight - 60, packageTime)
 
           // 将要绘制的图片放在一个数组中
-          let imgList: IImageOption[] = []
+          const imgList: IImageOption[] = []
           imgList.push(
             {
               src: this.hooks['userInfo'].avatar || Images.DEFAULT_AVATAR
@@ -253,7 +252,7 @@ export default Unite(
     _drawTxt({ context, text = 'test text', fillStyle = '#000', broken = true, ...rest }) {
       if (!context) throw Error('请传入绘制上下文环境context')
       // 默认设置
-      let origin = { x: 0, y: 0, lineHeight: 30, maxWidth: 630, font: 28, maxLine: 2 }
+      const origin = { x: 0, y: 0, lineHeight: 30, maxWidth: 630, font: 28, maxLine: 2 }
 
       // 获取最后的数据
       let { x, y, font, lineHeight, maxWidth, maxLine } = { ...origin, ...rest }
@@ -268,16 +267,16 @@ export default Unite(
       // broken: false  考虑英文单词的完整性 仅适用于纯英文
       //【TODO: 中英混排且考虑单词截断...】
 
-      let splitChar = broken ? '' : ' '
+      const splitChar = broken ? '' : ' '
 
-      let arrText = text.split(splitChar)
+      const arrText = text.split(splitChar)
       let line = ''
       let linesCount = 0
 
       y = y + lineHeight / 2 // 配合context.textBaseline将文字至于中间部分
-      for (var n = 0; n < arrText.length; n++) {
-        let testLine = line + arrText[n] + splitChar
-        let testWidth = context.measureText(testLine).width
+      for (let n = 0; n < arrText.length; n++) {
+        const testLine = line + arrText[n] + splitChar
+        const testWidth = context.measureText(testLine).width
         if (testWidth > maxWidth && n > 0) {
           if (linesCount < maxLine) {
             // 判断行数在限制行数内绘制文字
@@ -488,7 +487,7 @@ export default Unite(
     const systemInfo = Taro.getSystemInfoSync()
     const canvasRef = useRef<any>()
     const userInfo = useRecoilValue(userInfoStore)
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
 
@@ -496,7 +495,7 @@ export default Unite(
       systemInfo: systemInfo,
       canvasRef: canvasRef,
       userInfo: userInfo,
-      toast: toast
+      toast: show
     })
     const usedNav = useNav()
 

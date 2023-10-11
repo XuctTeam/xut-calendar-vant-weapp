@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-05-03 20:25:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-07 16:45:23
+ * @LastEditTime: 2023-10-10 08:52:12
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberregister\ui\EmailRegister.tsx
  * @Description:
  *
@@ -15,8 +15,8 @@ import { Input } from '@tarojs/components'
 
 import { useToast } from 'taro-hooks'
 import { checkEmail } from '@/calendar/utils'
-import { sendRegisterEmail } from '@/calendar/api/modules/user'
 import { create } from '@/utils/countdown'
+import calendar from '@/calendar'
 
 interface IPageOption {
   form: any
@@ -27,7 +27,7 @@ const EmailRegister: FunctionComponent<IPageOption> = (props) => {
   const [emailDisable, setEmailDisable] = useState<boolean>(false)
   const countDownRef = useRef<any>()
 
-  const [toast] = useToast({
+  const { show } = useToast({
     icon: 'error'
   })
 
@@ -51,12 +51,13 @@ const EmailRegister: FunctionComponent<IPageOption> = (props) => {
   const sendEmailSmsCode = () => {
     const mail: string = props.form.getFieldValue('email')
     if (!mail || !checkEmail(mail)) {
-      toast({
+      show({
         title: '邮箱格式错误'
       })
       return
     }
-    sendRegisterEmail(mail)
+    calendar.$api.user
+      .sendRegisterEmail(mail)
       .then(() => {
         setEmailDisable(true)
         countDownRef.current.start(0, 2, 0)

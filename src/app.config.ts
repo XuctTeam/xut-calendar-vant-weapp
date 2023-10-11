@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-08 14:35:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 16:44:16
+ * @LastEditTime: 2023-10-10 16:28:01
  * @FilePath: \xut-calendar-vant-weapp\src\app.config.ts
  * @Description:
  *
@@ -56,11 +56,11 @@ export default defineAppConfig({
   ],
   window: {
     // @ts-ignore
-    titleBarColor: '#ededed',
-    backgroundColor: '#ededed',
-    backgroundColorTop: '#ededed',
-    backgroundColorBottom: '#ededed',
-    backgroundImageColor: '#ededed',
+    titleBarColor: '#0088FF',
+    backgroundColor: '#0088FF',
+    backgroundColorTop: '#0088FF',
+    backgroundColorBottom: '#0088FF',
+    backgroundImageColor: '#0088FF',
     // 微信全局设置自定义导航栏
     navigationStyle: 'custom',
     // 支付宝全局设置自定义导航栏
@@ -68,30 +68,32 @@ export default defineAppConfig({
     titlePenetrate: 'YES'
   },
   tabBar: {
+    color: '#C7CED7',
+    selectedColor: '#0088FF',
     list: [
       {
         pagePath: 'pages/index/index',
         text: '日程',
-        iconPath: 'assets/icon/index.png',
-        selectedIconPath: 'assets/icon/index_focus.png'
+        iconPath: 'assets/icon/home_icon.png',
+        selectedIconPath: 'assets/icon/home_a_icon.png'
       },
       {
         pagePath: 'pages/addressgroupesmanager/index',
         text: '通讯录',
-        iconPath: 'assets/icon/group.png',
-        selectedIconPath: 'assets/icon/group_focus.png'
+        iconPath: 'assets/icon/group_icon.png',
+        selectedIconPath: 'assets/icon/group_a_icon.png'
       },
       {
         pagePath: 'pages/interactionmanager/index',
-        text: '参与',
-        iconPath: 'assets/icon/interaction.png',
-        selectedIconPath: 'assets/icon/interaction_focus.png'
+        text: '消息',
+        iconPath: 'assets/icon/compass_icon.png',
+        selectedIconPath: 'assets/icon/compass_a_icon.png'
       },
       {
         pagePath: 'pages/memberuserinfo/index',
         text: '我的',
-        iconPath: 'assets/icon/mine.png',
-        selectedIconPath: 'assets/icon/mine_focus.png'
+        iconPath: 'assets/icon/user_icon.png',
+        selectedIconPath: 'assets/icon/user_a_icon.png'
       }
     ]
   },

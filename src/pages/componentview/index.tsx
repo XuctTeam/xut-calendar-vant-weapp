@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:55
+ * @LastEditTime: 2023-10-10 09:04:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -10,24 +10,21 @@
  */
 import Taro from '@tarojs/taro'
 import Unite from '@antmjs/unite'
-import Container from '@/components/container'
 import { View } from '@tarojs/components'
 import { ActionSheet, Cell, Dialog, Icon } from '@antmjs/vantui'
 import dayjs from 'dayjs'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import ButtonGroup from '@/components/buttongroup'
 import Router from 'tarojs-router-next'
-import { DifferentDay, SameDay } from './ui'
-import { userInfoStore, componentRefreshTimeStore } from '@/calendar/store/store'
-import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText, alarmCodeToType, useNav } from '@/calendar/utils'
-import { getById, deleteById, queryComponentMembers, getAttendStatus, updateAttendStatus, getShortUrl } from '@/calendar/api/modules/component'
-import { getName } from '@/calendar/api/modules/user'
-import { IDavComponent } from 'types/calendar'
 import { useShareAppMessage } from '@tarojs/taro'
+import { useToast } from 'taro-hooks'
+import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText } from '@/calendar/utils'
 import Images from '@/calendar/constants/images'
 
-import { useToast } from 'taro-hooks'
-import { useBack } from '@/utils/taro'
+import ButtonGroup from '@/components/buttongroup'
+import Container from '@/components/container'
+import calendar from '@/calendar'
+import { IDavComponent } from 'types/calendar'
+import { DifferentDay, SameDay } from './ui'
 
 import './index.less'
 
@@ -96,7 +93,7 @@ export default Unite(
       })
       let result
       try {
-        result = await Promise.all([getById(id), queryComponentMembers('', id)])
+        result = await Promise.all([calendar.$api.component.getById(id), calendar.$api.component.queryComponentMembers('', id)])
       } catch (err) {
         this.setState({
           loading: false
@@ -139,7 +136,8 @@ export default Unite(
         attendStatus
       })
 
-      updateAttendStatus(this.state.id, attendStatus)
+      calendar.$api.component
+        .updateAttendStatus(this.state.id, attendStatus)
         .then(() => {})
         .catch((err) => {
           console.log(err)
@@ -168,12 +166,12 @@ export default Unite(
         try {
           /**加载组织者 */
           if (memberIds.length !== 0) {
-            const nameResult = await getName(component.creatorMemberId)
+            const nameResult = await calendar.$api.user.getName(component.creatorMemberId)
             this.setState({
               createMemberName: nameResult
             })
           }
-          const attendStatusResult = await getAttendStatus(component.id)
+          const attendStatusResult = await calendar.$api.component.getAttendStatus(component.id)
           this.setState({
             attendStatus: attendStatusResult as any as number
           })
@@ -217,7 +215,8 @@ export default Unite(
         this.setState({
           loading: true
         })
-        deleteById(this.state.id)
+        calendar.$api.component
+          .deleteById(this.state.id)
           .then(() => {
             this._success()
           })
@@ -272,7 +271,8 @@ export default Unite(
         }
       ]
       return new Promise((resolve, reject) => {
-        getShortUrl(this.state.id)
+        calendar.$api.component
+          .getShortUrl(this.state.id)
           .then((res) => {
             array.push({
               title: '点击加入',
@@ -341,17 +341,16 @@ export default Unite(
     } = state
 
     const { setAction, setActionChoose, setAttendStatus } = events
-    const setComponentRefreshTime = useSetRecoilState(componentRefreshTimeStore)
-    const userInfo = useRecoilValue(userInfoStore)
-    const usedNav = useNav()
-    const [toast] = useToast({
+    const setComponentRefreshTime = useSetRecoilState(calendar.$store.componentRefreshTimeStore)
+    const userInfo = useRecoilValue(calendar.$store.userInfoStore)
+    const back = calendar.$hooks.useBack({ to: from === '2' ? 2 : 1 })
+    const usedNav = calendar.$hooks.useNav()
+    const { show } = useToast({
       icon: 'success'
     })
-    const [back] = useBack({
-      to: from === '2' ? 2 : 1
-    })
+
     events.setHooks({
-      toast: toast,
+      toast: show,
       back: back,
       userInfo: userInfo,
       setComponentRefreshTime: setComponentRefreshTime

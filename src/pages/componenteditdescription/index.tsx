@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:22
+ * @LastEditTime: 2023-10-10 09:18:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditdescription\index.tsx
  * @Description:
  *
@@ -12,8 +12,7 @@ import Unite from '@antmjs/unite'
 import { Button } from '@antmjs/vantui'
 import { Textarea, View } from '@tarojs/components'
 import Container from '@/components/container'
-import { useBack } from '@/utils/taro'
-import { useNav } from '@/calendar/utils'
+import calendar from '@/calendar'
 import './index.less'
 
 export default Unite(
@@ -39,14 +38,12 @@ export default Unite(
   function ({ state, events }) {
     const { description } = state
     const { setDescription, saveDescription } = events
-    const [back] = useBack({
-      to: 1
-    })
+    const back = calendar.$hooks.useBack({ to: 1 })
+    const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({
       back: back
     })
-    const usedNav = useNav()
 
     return (
       <Container navTitle='描述信息' enablePagePullDownRefresh={false} className='pages-component-edit-desc-index' useNav={usedNav} useMenuBtns={usedNav}>

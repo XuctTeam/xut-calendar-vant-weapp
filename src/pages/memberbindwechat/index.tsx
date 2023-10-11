@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:59
+ * @LastEditTime: 2023-10-10 08:43:16
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindwechat\index.tsx
  * @Description:
  *
@@ -13,18 +13,15 @@ import { Button, Cell, CellGroup, Empty } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { useEnv, useLogin, useToast, useUserInfo } from 'taro-hooks'
 import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useEffect } from 'react'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/calendar/store/store'
 import Container from '@/components/container'
 import Avatar from '@/components/avatar'
-import { IUserInfo } from 'taro-hooks/dist/useUserInfo'
-import { useEffect } from 'react'
-import { useBack } from '@/utils/taro'
+import calendar from '@/calendar'
 import { IUserInfo as IMemberUserInfo, IUserAuth } from '~/../types/user'
 import { IDavCalendar } from '~/../types/calendar'
-import { bindWx, auths, updateWxInfo } from '@/calendar/api/modules/user'
 
 import './index.less'
-import { useNav } from '@/calendar/utils'
 
 export default Unite(
   {
@@ -34,7 +31,8 @@ export default Unite(
     },
 
     modifyMemberNameAndAvatar() {
-      updateWxInfo()
+      calendar.$api.user
+        .updateWxInfo()
         .then((res) => {
           this._success(res as any as IMemberUserInfo)
         })
@@ -45,7 +43,7 @@ export default Unite(
 
     getUserInfo() {
       this.hooks['getUserProfile']({ lang: 'zh_CN', desc: '用于完善会员资料' })
-        .then((res: IUserInfo) => {
+        .then((res: any) => {
           const { iv, encryptedData } = res
           if (!iv || !encryptedData) {
             this.hooks['toast']({ title: '微信登陆失败' })
@@ -75,8 +73,9 @@ export default Unite(
             })
             .catch((er: any) => {
               console.log(er)
-              this.hooks['toast']({
-                title: '获取微信Code失败'
+              this.hooks['show']({
+                title: '获取微信Code失败',
+                icon: 'error'
               })
             })
         })
@@ -84,7 +83,8 @@ export default Unite(
 
     _bindWx(encryptedData: string, iv: string) {
       if (!this.state.code) return
-      bindWx(this.state.code, encryptedData, iv)
+      calendar.$api.user
+        .bindWx(this.state.code, encryptedData, iv)
         .then(() => {
           this._back()
         })
@@ -94,7 +94,7 @@ export default Unite(
     },
 
     _success(member: IMemberUserInfo) {
-      this.hooks['toast']({
+      this.hooks['show']({
         title: '修改成功',
         icon: 'success'
       })
@@ -119,7 +119,7 @@ export default Unite(
         title: '操作成功',
         icon: 'success'
       })
-      const res: IUserAuth[] = await auths()
+      const res: IUserAuth[] = await calendar.$api.user.auths()
       this.hooks['setUserAuthsState'](res)
       window.setTimeout(() => {
         this.hooks['back']()
@@ -133,19 +133,17 @@ export default Unite(
     const { loading } = state
     const { modifyMemberNameAndAvatar, getUserInfo, _login } = events
     const env = useEnv()
-    const [login] = useLogin()
+    const { login } = useLogin()
     const [, { getUserProfile }] = useUserInfo()
-    const usedNav = useNav()
-    const [toast] = useToast({
-      icon: 'error'
-    })
-    const [back] = useBack({
-      to: 4
-    })
+    const back = calendar.$hooks.useBack({ to: 6 })
+    const usedNav = calendar.$hooks.useNav()
+    const { show, hide } = useToast({})
+
     const wxAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'open_id') : undefined
 
     events.setHooks({
-      toast: toast,
+      show: show,
+      hide: hide,
       back: back,
       login: login,
       wxAuth: wxAuth,

@@ -1,8 +1,9 @@
+/* eslint-disable import/no-named-as-default-member */
 /*
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 18:04:41
+ * @LastEditTime: 2023-10-11 15:07:25
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -17,16 +18,15 @@ import Router from 'tarojs-router-next'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import dayjs from 'dayjs'
 import Images from '@/calendar/constants/images'
-import CalendarTypes from '@/components/calendar/types/calendar'
 import { getToday } from '@/calendar/utils'
 import Container from '@/components/container'
-import { count } from '@/calendar/api/modules/message'
 import calendar from '@/calendar'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import { ICurrentDay } from '~/../types/date'
 import { Calendar, UserInfo, EventList, Header } from './ui'
 
 import './index.less'
+import { CALENDAR } from '@/components/calendar/types'
 
 const day: ICurrentDay = getToday()
 
@@ -34,7 +34,6 @@ export default Unite(
   {
     state: {
       popOpen: false,
-      animationShowHeight: 0,
       selectedDay: day.current,
       componentLoading: false,
       calendarComponents: [],
@@ -64,13 +63,13 @@ export default Unite(
      *
      * @param value
      */
-    selectMonthChage(value: string) {
-      console.log(this.hooks)
-      this._queryComponent(
-        this.hooks['calendars'],
-        dayjs(value).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
-        dayjs(value).endOf('month').format('YYYY-MM-DD HH:mm:ss')
-      )
+    selectMonthChange(month: CALENDAR.SelectedMonth) {
+      console.log(month)
+      // this._queryComponent(
+      //   this.hooks['calendars'],
+      //   dayjs(value).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+      //   dayjs(value).endOf('month').format('YYYY-MM-DD HH:mm:ss')
+      // )
     },
 
     /**
@@ -246,7 +245,8 @@ export default Unite(
     // },
 
     setMessageCount() {
-      count()
+      calendar.$api.message
+        .count()
         .then((res) => {
           this.setState({
             messageCount: res as any as number
@@ -262,24 +262,14 @@ export default Unite(
         marks: [],
         messageCount: 0
       })
-      this.hooks['localRefrestTimeRef'].current = 0
+      this.hooks['localRefreshTimeRef'].current = 0
     }
   },
 
   function ({ state, events }) {
-    const { popOpen, animationShowHeight, selectedDay, marks, calendarComponents, messageCount } = state
-    const {
-      componentRefresh,
-      selectMonthChage,
-      selectDayLongClick,
-      selectDayClickHadnle,
-      currentClickHandle,
-      calendarPopOpen,
-      calendarPopClose,
-      calendarSelected,
-      viewComponent,
-      setMessageCount
-    } = events
+    const { popOpen, selectedDay, marks, calendarComponents, messageCount } = state
+    const { componentRefresh, selectMonthChange, currentClickHandle, calendarPopOpen, calendarPopClose, calendarSelected, viewComponent, setMessageCount } =
+      events
     const env = calendar.$hooks.useWebEnv()
     const [calendars, setCalendars] = useRecoilState(calendar.$store.calendarStore)
     const userInfoState = useRecoilValue(calendar.$store.userInfoStore)
@@ -339,7 +329,7 @@ export default Unite(
             ></Calendar>
           </Expanse> */}
 
-          {/* <Calendartest currentDay={dayjs(selectedDay).toDate()}></Calendartest> */}
+          <Calendar></Calendar>
 
           <EventList
             loading={false}

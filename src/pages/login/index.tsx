@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:51
+ * @LastEditTime: 2023-10-10 08:57:11
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -16,21 +16,17 @@ import { Button, Checkbox, Icon, Image, CellGroup, Field } from '@antmjs/vantui'
 import dayjs from 'dayjs'
 import { useSetRecoilState } from 'recoil'
 import { useLogin, useUserInfo, useToast } from 'taro-hooks'
-import { back } from '@/utils/taro'
+import classnames from 'classnames'
 import { cacheSetSync, cacheRemoveSync } from '@/calendar/cache/cache'
 import Container from '@/components/container'
-import { IUserAuth, IUserInfo } from '~/../types/user'
-import { IDavCalendar } from '~/../types/calendar'
-import { sendLoginSmsCode } from '@/calendar/api/modules/common'
-import { wechatLogin, phoneLogin, usernameLogin } from '@/calendar/api/modules/login'
 import { userInfoStore, userAuthInfoStore, calendarStore } from '@/calendar/store/store'
-import { baseUserInfo, auths } from '@/calendar/api/modules/user'
-import { list as listQueryCalendar } from '@/calendar/api/modules/calendar'
-import { checkMobile, encryption, useNav } from '@/calendar/utils'
+import { checkMobile, encryption } from '@/calendar/utils'
 import Images from '@/calendar/constants/images'
 import { create } from '@/utils/countdown'
-import classnames from 'classnames'
 import { ENCRYPTION_CODE } from '@/calendar/constants'
+import calendar from '@/calendar'
+import { IDavCalendar } from '~/../types/calendar'
+import { IUserAuth, IUserInfo } from '~/../types/user'
 import './index.less'
 
 export default Unite(
@@ -152,7 +148,8 @@ export default Unite(
     },
 
     _phoneLogin() {
-      return phoneLogin(this.state.phone, this.state.smsCode)
+      return calendar.$api.login
+        .phoneLogin(this.state.phone, this.state.smsCode)
         .then((res) => {
           this._saveTokenToCache(res.access_token, res.refresh_token)
         })
@@ -168,7 +165,8 @@ export default Unite(
         key: ENCRYPTION_CODE,
         param: ['password']
       })
-      return usernameLogin(user.username, user.password)
+      return calendar.$api.login
+        .usernameLogin(user.username, user.password)
         .then((res) => {
           this._saveTokenToCache(res.access_token, res.refresh_token)
         })
@@ -201,7 +199,8 @@ export default Unite(
             this._error('微信登陆失败')
             return
           }
-          wechatLogin(code, iv, encryptedData)
+          calendar.$api.login
+            .wxLogin(code, iv, encryptedData)
             .then((rs) => {
               this._saveTokenToCache(rs.access_token, rs.refresh_token)
             })
@@ -220,7 +219,8 @@ export default Unite(
         this._error('手机号错误')
         return
       }
-      sendLoginSmsCode(this.state.phone)
+      calendar.$api.common
+        .sendLoginSmsCode(this.state.phone)
         .then((res) => {
           console.log(res)
           this._setTextTime()
@@ -240,8 +240,8 @@ export default Unite(
     async _saveTokenToCache(accessToken: string, refreshToken: string) {
       cacheSetSync('accessToken', 'Bearer ' + accessToken)
       cacheSetSync('refreshToken', 'Bearer ' + refreshToken)
-      const result = await Promise.all([baseUserInfo(), auths(), listQueryCalendar()])
-      if (!(result[0] && result[1]) && result[2]) {
+      const result = await Promise.all([calendar.$api.user.baseUserInfo(), calendar.$api.user.auths()])
+      if (!(result[0] && result[1])) {
         this._error('获取用户信息失败')
         cacheRemoveSync('accessToken')
         cacheRemoveSync('refreshToken')
@@ -249,7 +249,6 @@ export default Unite(
       }
       this.hooks['setUserInfoState'](result[0] as IUserInfo)
       this.hooks['setUserAuthState'](result[1] as IUserAuth[])
-      this.hooks['setCalendarState'](result[2] as any as IDavCalendar[])
       this.hooks['show']({
         icon: 'success',
         title: '登录成功',
@@ -257,7 +256,7 @@ export default Unite(
       })
       setTimeout(() => {
         this.setLoginLoading(false)
-        back({
+        calendar.$hooks.back({
           to: 4
         })
       }, 2000)
@@ -310,9 +309,9 @@ export default Unite(
       setSmsText,
       setSmsTextEnd
     } = events
-    const [login] = useLogin()
+    const { login } = useLogin()
     const [, { getUserProfile }] = useUserInfo()
-    const [show] = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
     const setUserInfoState = useSetRecoilState(userInfoStore)
@@ -350,8 +349,8 @@ export default Unite(
     return (
       <Container navTitle='登录' useNav={false} useMenuBtns={false} className='pages-login-form-index' enablePagePullDownRefresh={false}>
         <View className='section'>
-          {useNav() && (
-            <View className='navigation_minibar_left_back back-btn' onClick={() => back({ to: 4, data: { isLogin: true } })}>
+          {calendar.$hooks.useNav() && (
+            <View className='navigation_minibar_left_back back-btn' onClick={() => calendar.$hooks.back({ to: 4, data: { isLogin: true } })}>
               <Icon name='arrow-left' />
             </View>
           )}

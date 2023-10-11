@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-01 09:57:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:46:09
+ * @LastEditTime: 2023-10-10 10:08:16
  * @FilePath: \xut-calendar-vant-weapp\src\pages\systemsetting\index.tsx
  * @Description:
  *
@@ -13,10 +13,9 @@ import Taro from '@tarojs/taro'
 import { useRecoilState } from 'recoil'
 import { ActionSheet, Cell, CellGroup, Switch } from '@antmjs/vantui'
 import Container from '@/components/container'
-import { lunarStore, mondayStore, compViewStore } from '@/calendar/store/store'
+import calendar from '@/calendar'
 
 import './index.less'
-import { useNav } from '@/calendar/utils'
 
 export default Unite(
   {
@@ -53,10 +52,10 @@ export default Unite(
   function ({ state, events }) {
     const { viewPicker, mondayPicker } = state
     const { setViewPicker, setMondayPicker, permissionClick, getVersion } = events
-    const [lunar, setLunar] = useRecoilState(lunarStore)
-    const [monday, setMonday] = useRecoilState(mondayStore)
-    const [compView, setCompView] = useRecoilState(compViewStore)
-    const usedNav = useNav()
+    const [lunar, setLunar] = useRecoilState(calendar.$store.lunarStore)
+    const [monday, setMonday] = useRecoilState(calendar.$store.mondayStore)
+    const [compView, setCompView] = useRecoilState(calendar.$store.compViewStore)
+    const usedNav = calendar.$hooks.useNav()
 
     console.log(getVersion())
     return (

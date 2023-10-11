@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:12
+ * @LastEditTime: 2023-10-10 08:33:51
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifyname\index.tsx
  * @Description:
  *
@@ -12,14 +12,11 @@ import Unite from '@antmjs/unite'
 import { Button, CellGroup, Field } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { useRecoilState } from 'recoil'
+import { useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import { userInfoStore } from '@/calendar/store/store'
-import { updateName } from '@/calendar/api/modules/user'
-import { useToast } from 'taro-hooks'
-
+import calendar from '@/calendar'
 import './index.less'
-import { useBack } from '@/utils/taro'
-import { useNav } from '@/calendar/utils'
 
 export default Unite(
   {
@@ -53,7 +50,8 @@ export default Unite(
       this.setState({
         loading: true
       })
-      updateName(this.state.name)
+      calendar.$api.user
+        .updateName(this.state.name)
         .then(() => {
           this.hooks['setUserInfoState']({ ...this.hooks['userInfoState'], name: this.state.name })
           this.setState({
@@ -76,10 +74,8 @@ export default Unite(
     const [toast] = useToast({
       icon: 'error'
     })
-    const [back] = useBack({
-      to: 4
-    })
-    const usedNav = useNav()
+    const back = calendar.$hooks.useBack({ to: 4 })
+    const usedNav = calendar.$hooks.useNav()
 
     const { setName, updateNames } = events
     const { name, loading } = state

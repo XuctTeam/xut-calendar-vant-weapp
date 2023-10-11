@@ -1,304 +1,444 @@
-import classnames from 'classnames'
-import dayjs, { Dayjs } from 'dayjs'
-import React from 'react'
-import { View } from '@tarojs/components'
-import { BaseEventOrig } from '@tarojs/components/types/common'
-import { AtCalendarDefaultProps, AtCalendarProps, AtCalendarPropsWithDefaults, AtCalendarState, Calendar } from './types/calendar'
-import AtCalendarBody from './body/index'
-import AtCalendarController from './controller/index'
-import './style/calendar.scss'
+import { Picker, View, Swiper, SwiperItem } from '@tarojs/components'
+import { Component, CSSProperties } from 'react'
+import './index.less'
+import { formatDate, fillWithZero } from './utils'
+import Days, { CalendarDateInfo, CustomStyles, StyleGeneratorParams } from './days/index'
 
-const defaultProps: AtCalendarDefaultProps = {
-  validDates: [],
-  marks: [],
-  isSwiper: true,
-  isLunar: false,
-  isMonfirst: false,
-  hideArrow: false,
-  isVertical: false,
-  selectedDates: [],
-  isMultiSelect: false,
-  format: 'YYYY-MM-DD',
-  currentDate: Date.now(),
-  monthFormat: 'YYYY年MM月'
+export type CalendarMark = {
+  /** 要标记的日期 YYYY-MM-DD*/
+  value: string
+  /** 标记颜色 */
+  color?: string
+  /** 标记的大小，css中的width、length */
+  markSize?: string
 }
 
-export default class AtCalendar extends React.Component<AtCalendarProps, Readonly<AtCalendarState>> {
-  static defaultProps: AtCalendarDefaultProps = defaultProps
+export type ExtraInfo = {
+  /** 要标记的日期 YYYY-MM-DD*/
+  value: string
+  /** 额外信息文本 */
+  text: string
+  /** 颜色 */
+  color?: string
+  /** 文字大小 */
+  fontSize?: string
+}
 
-  public constructor(props: AtCalendarProps) {
-    super(props)
+export type IProps = {
+  /** 额外信息 */
+  extraInfo?: ExtraInfo[]
+  /** 要标记的日期列表 YYYY-MM-DD */
+  marks?: CalendarMark[]
+  /** 点击回调 */
+  onDayClick?: (item: { value: string }) => any
+  /** 长按回调（触发长按事件时不会触发点击事件） */
+  onDayLongPress?: (item: { value: string }) => any
+  /** 当前选中的时间 YYYY-MM-DD*/
+  selectedDate?: string
+  /** 当前显示的月份/周 所包含的一个日期 YYYY-MM-DD */
+  currentView?: string
+  /** 隐藏箭头 */
+  hideArrow?: boolean
+  /** 隐藏控制器 */
+  hideController?: boolean
+  /** 是否可以滑动 */
+  isSwiper?: boolean
+  /** 滑动方向 水平/竖直*/
+  isVertical?: boolean
+  /** 最小的可选时间 */
+  minDate?: string
+  /** 最大的可选时间 */
+  maxDate?: string
+  /** 选中日期的背景色 */
+  selectedDateColor?: string
+  /** 是否显示农历 */
+  mode?: 'normal' | 'lunar'
+  /** 是否显示分割线 */
+  showDivider?: boolean
+  /** 是否范围选择模式 */
+  isMultiSelect?: boolean
+  /** 月份/周改变回调 */
+  onCurrentViewChange?: (value: string) => any
+  /** 点击左箭头 */
+  onClickPre?: () => any
+  /** 点击右箭头 */
+  onClickNext?: () => any
+  /** 范围选择完成时的回调 */
+  onSelectDate?: (value: { start: string; end: string }) => any
+  /** 自定义样式生成器 */
+  customStyleGenerator?: (dateInfo: StyleGeneratorParams) => CustomStyles
+  /** 头部整体样式 */
+  headStyle?: CSSProperties
+  /** 头部单元格样式 */
+  headCellStyle?: CSSProperties
+  /** body整体样式 */
+  bodyStyle?: CSSProperties
+  /** 左箭头样式 */
+  leftArrowStyle?: CSSProperties
+  /** 右箭头样式 */
+  rightArrowStyle?: CSSProperties
+  /** 日期选择器样式 */
+  datePickerStyle?: CSSProperties
+  /** 日期选择器&左右箭头 所在容器样式 */
+  pickerRowStyle?: CSSProperties
+  /** 视图 月/周 */
+  view?: 'month' | 'week'
+  /** 日期选择器文本生成器 */
+  pickerTextGenerator?: (currentView: Date) => string
+  /** 父组件通过ref可以调用内部方法 */
+  bindRef?: (ref: Calendar) => any
+  /** 指定周几为一行的起点，0为周日*/
+  startDay?: number
+}
 
-    const { currentDate, isMultiSelect } = props as AtCalendarPropsWithDefaults
+type IState = {
+  /** 当前年月YYYY-MM */
+  current: string
+  /** 当前选中日期 YYYY-MM-DD*/
+  selectedDate: string
+  /** 当前显示的轮播图index */
+  currentCarouselIndex: number
+  /** 范围选择 */
+  selectedRange: { start: string; end: string }
+}
 
-    this.state = this.getInitializeState(currentDate, isMultiSelect)
+const getWeekDayList = (startDay: number) => {
+  const weekDays = ['日', '一', '二', '三', '四', '五', '六']
+  const result: string[] = []
+  for (let i = startDay; i < 7; i++) {
+    result.push(weekDays[i])
+  }
+  for (let i = 0; i < startDay; i++) {
+    result.push(weekDays[i])
+  }
+  return result
+}
+
+export default class Calendar extends Component<IProps, IState> {
+  state: IState = {
+    current: formatDate(new Date(this.props.currentView as string)),
+    selectedDate: this.props.selectedDate as string,
+    currentCarouselIndex: 1,
+    selectedRange: { start: '', end: '' }
   }
 
-  public UNSAFE_componentWillReceiveProps(nextProps: AtCalendarProps): void {
-    const { currentDate, isMultiSelect } = nextProps
-    if (!currentDate || currentDate === this.props.currentDate) return
-
-    if (isMultiSelect && this.props.isMultiSelect) {
-      const { start, end } = currentDate as Calendar.SelectedDate
-      const { start: preStart, end: preEnd } = this.props.currentDate as Calendar.SelectedDate
-
-      if (start === preStart && preEnd === end) {
-        return
-      }
-    }
-
-    const stateValue: AtCalendarState = this.getInitializeState(currentDate, isMultiSelect)
-
-    this.setState(stateValue)
+  /** 指定默认的props */
+  public static defaultProps: Partial<IProps> = {
+    isVertical: false,
+    marks: [],
+    selectedDate: formatDate(new Date(), 'day'),
+    selectedDateColor: '#90b1ef',
+    hideArrow: false,
+    isSwiper: true,
+    minDate: '1970-01-01',
+    mode: 'normal',
+    maxDate: '2100-12-31',
+    showDivider: false,
+    isMultiSelect: false,
+    view: 'month',
+    currentView: formatDate(new Date()),
+    startDay: 0,
+    extraInfo: []
   }
-
-  /** 重置 */
-  public reset = (currentDate: string) => {
-    //const stateValue: AtCalendarState = this.getInitializeState(currentDate, false)
-    //this.setState(stateValue)
-    let stateValue: Partial<AtCalendarState> = {}
-
-    stateValue = this.getSingleSelectdState(dayjs(currentDate))
-
-    this.setState(stateValue as AtCalendarState, () => {
-      this.handleSelectedDate()
-    })
-  }
-
-  private getSingleSelectdState = (value: Dayjs): Partial<AtCalendarState> => {
-    const { generateDate } = this.state
-
-    const stateValue: Partial<AtCalendarState> = {
-      selectedDate: this.getSelectedDate(value.valueOf())
-    }
-
-    const dayjsGenerateDate: Dayjs = value.startOf('month')
-    const generateDateValue: number = dayjsGenerateDate.valueOf()
-
-    if (generateDateValue !== generateDate) {
-      this.triggerChangeDate(dayjsGenerateDate)
-      stateValue.generateDate = generateDateValue
-    }
-
-    return stateValue
-  }
-
-  private getMultiSelectedState = (value: Dayjs): Pick<AtCalendarState, 'selectedDate'> => {
-    const { selectedDate } = this.state
-    const { end, start } = selectedDate
-
-    const valueUnix: number = value.valueOf()
-    const state: Pick<AtCalendarState, 'selectedDate'> = {
-      selectedDate
-    }
-
-    if (end) {
-      state.selectedDate = this.getSelectedDate(valueUnix, 0)
-    } else {
-      state.selectedDate.end = Math.max(valueUnix, +start)
-      state.selectedDate.start = Math.min(valueUnix, +start)
-    }
-
-    return state
-  }
-
-  private getSelectedDate = (start: number, end?: number): Calendar.SelectedDate => {
-    const stateValue: Calendar.SelectedDate = {
-      start,
-      end: start
-    }
-
-    if (typeof end !== 'undefined') {
-      stateValue.end = end
-    }
-
-    return stateValue
-  }
-
-  private getInitializeState(currentDate: Calendar.DateArg | Calendar.SelectedDate, isMultiSelect?: boolean): AtCalendarState {
-    let end: number
-    let start: number
-    let generateDateValue: number
-
-    if (!currentDate) {
-      const dayjsStart = dayjs()
-      start = dayjsStart.startOf('day').valueOf()
-      generateDateValue = dayjsStart.startOf('month').valueOf()
-      return {
-        generateDate: generateDateValue,
-        selectedDate: {
-          start: ''
-        }
-      }
-    }
-
-    if (isMultiSelect) {
-      const { start: cStart, end: cEnd } = currentDate as Calendar.SelectedDate
-
-      const dayjsStart = dayjs(cStart)
-
-      start = dayjsStart.startOf('day').valueOf()
-      generateDateValue = dayjsStart.startOf('month').valueOf()
-
-      end = cEnd ? dayjs(cEnd).startOf('day').valueOf() : start
-    } else {
-      const dayjsStart = dayjs(currentDate as Calendar.DateArg)
-
-      start = dayjsStart.startOf('day').valueOf()
-      generateDateValue = dayjsStart.startOf('month').valueOf()
-
-      end = start
-    }
-
-    return {
-      generateDate: generateDateValue,
-      selectedDate: this.getSelectedDate(start, end)
+  UNSAFE_componentWillMount() {
+    if (this.props.bindRef) {
+      this.props.bindRef(this)
     }
   }
-
-  private triggerChangeDate = (value: Dayjs): void => {
-    const { format } = this.props
-
-    if (typeof this.props.onMonthChange !== 'function') return
-
-    this.props.onMonthChange(value.format(format))
-  }
-
-  private setMonth = (vectorCount: number): void => {
-    const { format } = this.props
-    const { generateDate } = this.state
-
-    const _generateDate: Dayjs = dayjs(generateDate).add(vectorCount, 'month')
-    this.setState({
-      generateDate: _generateDate.valueOf()
-    })
-
-    if (vectorCount && typeof this.props.onMonthChange === 'function') {
-      this.props.onMonthChange(_generateDate.format(format))
-    }
-  }
-
-  private handleClickPreMonth = (isMinMonth?: boolean): void => {
-    if (isMinMonth === true) {
-      return
-    }
-
-    this.setMonth(-1)
-
-    if (typeof this.props.onClickPreMonth === 'function') {
-      this.props.onClickPreMonth()
-    }
-  }
-
-  private handleClickNextMonth = (isMaxMonth?: boolean): void => {
-    if (isMaxMonth === true) {
-      return
-    }
-
-    this.setMonth(1)
-
-    if (typeof this.props.onClickNextMonth === 'function') {
-      this.props.onClickNextMonth()
-    }
-  }
-
-  // picker 选择时间改变时触发
-  private handleSelectDate = (e: BaseEventOrig<{ value: string }>): void => {
-    const { value } = e.detail
-
-    const _generateDate: Dayjs = dayjs(value)
-    const _generateDateValue: number = _generateDate.valueOf()
-
-    if (this.state.generateDate === _generateDateValue) return
-
-    this.triggerChangeDate(_generateDate)
-    this.setState({
-      generateDate: _generateDateValue
-    })
-  }
-
-  private handleDayClick = (item: Calendar.Item): void => {
-    const { isMultiSelect } = this.props
-    const { isDisabled, value } = item
-
-    if (isDisabled) return
-
-    const dayjsDate: Dayjs = dayjs(value)
-
-    let stateValue: Partial<AtCalendarState> = {}
-
-    if (isMultiSelect) {
-      stateValue = this.getMultiSelectedState(dayjsDate)
-    } else {
-      stateValue = this.getSingleSelectdState(dayjsDate)
-    }
-
-    this.setState(stateValue as AtCalendarState, () => {
-      this.handleSelectedDate()
-    })
-
-    if (typeof this.props.onDayClick === 'function') {
-      this.props.onDayClick({ value: item.value })
-    }
-  }
-
-  private handleSelectedDate = (): void => {
-    const selectDate = this.state.selectedDate
-    if (typeof this.props.onSelectDate === 'function') {
-      const info: Calendar.SelectedDate = {
-        start: dayjs(selectDate.start).format(this.props.format)
-      }
-
-      if (selectDate.end) {
-        info.end = dayjs(selectDate.end).format(this.props.format)
-      }
-
-      this.props.onSelectDate({
-        value: info
+  UNSAFE_componentWillReceiveProps(nextProps: Readonly<IProps>): void {
+    if (nextProps.selectedDate && nextProps.selectedDate !== this.props.selectedDate) {
+      this.setState({
+        selectedDate: nextProps.selectedDate,
+        current: nextProps.selectedDate
       })
     }
-  }
-
-  private handleDayLongClick = (item: Calendar.Item): void => {
-    if (typeof this.props.onDayLongClick === 'function') {
-      this.props.onDayLongClick({ value: item.value })
+    if (nextProps.currentView && nextProps.currentView !== this.props.currentView) {
+      this.setState({ current: nextProps.currentView })
     }
   }
 
-  public render(): JSX.Element {
-    const { generateDate, selectedDate } = this.state
-    const { validDates, marks, format, minDate, maxDate, isSwiper, isLunar, isMonfirst, className, hideArrow, isVertical, monthFormat, selectedDates } = this
-      .props as AtCalendarPropsWithDefaults
+  getPickerText = () => {
+    // eslint-disable-next-line prefer-const
+    let { view, startDay } = this.props
+    startDay = startDay as number
+    const { current } = this.state
+    const currentDateObj = new Date(current)
+    const monthStr = formatDate(currentDateObj, 'month')
+
+    if (view === 'week') {
+      currentDateObj.setDate(
+        currentDateObj.getDate() - (currentDateObj.getDay() >= startDay ? currentDateObj.getDay() - startDay : 6 - startDay + currentDateObj.getDay())
+      )
+      const weekStart = currentDateObj.getDate()
+      const weekStartMonth = currentDateObj.getMonth() + 1
+      const weekStartYear = currentDateObj.getFullYear()
+      currentDateObj.setDate(currentDateObj.getDate() + 6)
+      const weekEnd = currentDateObj.getDate()
+      const weekEndMonth = currentDateObj.getMonth() + 1
+      const weekEndYear = currentDateObj.getFullYear()
+      let weekEndStr = `${fillWithZero(weekEnd, 2)}`
+      if (weekEndMonth !== weekStartMonth) {
+        weekEndStr = `${fillWithZero(weekEndMonth, 2)}-${weekEndStr}`
+      }
+      if (weekEndYear !== weekStartYear) {
+        weekEndStr = `${weekEndYear}-${weekEndStr}`
+      }
+      return `${monthStr}-${fillWithZero(weekStart, 2)}~${weekEndStr}`
+    }
+    if (view === 'month') {
+      return monthStr
+    }
+  }
+  onClickDate = (value: CalendarDateInfo) => {
+    const { onDayClick, onSelectDate } = this.props
+    let { current, currentCarouselIndex, selectedRange } = this.state
+    if (!selectedRange.start || selectedRange.end) {
+      selectedRange = { start: value.fullDateStr, end: '' }
+    } else {
+      if (new Date(selectedRange.start) > new Date(value.fullDateStr)) {
+        selectedRange = {
+          start: value.fullDateStr,
+          end: selectedRange.start
+        }
+      } else {
+        selectedRange.end = value.fullDateStr
+      }
+    }
+
+    if (!value.currentMonth) {
+      // 点到非本月的日期就跳转到相应月份
+      const { onCurrentViewChange, onClickNext, onClickPre } = this.props
+      const dateObj = new Date(value.fullDateStr)
+      if (dateObj.getMonth() > new Date(current).getMonth()) {
+        currentCarouselIndex = (currentCarouselIndex + 1) % 3
+        if (onClickNext) onClickNext()
+      } else {
+        currentCarouselIndex = (currentCarouselIndex + 2) % 3
+        if (onClickPre) onClickPre()
+      }
+      if (onCurrentViewChange) onCurrentViewChange(value.fullDateStr)
+
+      current = formatDate(dateObj)
+    }
+    this.setState({
+      selectedDate: value.fullDateStr,
+      selectedRange,
+      currentCarouselIndex,
+      current
+    })
+    if (onDayClick) {
+      onDayClick({ value: value.fullDateStr })
+    }
+    if (onSelectDate) {
+      onSelectDate(selectedRange)
+    }
+  }
+
+  goNext = () => {
+    const { view } = this.props
+    const { currentCarouselIndex } = this.state
+    const dateObj = new Date(this.state.current)
+    const { onClickNext, onCurrentViewChange } = this.props
+    let current = ''
+    if (view === 'month') {
+      dateObj.setMonth(dateObj.getMonth() + 1)
+      const nextMonth = formatDate(dateObj)
+      current = nextMonth
+    }
+    if (view === 'week') {
+      dateObj.setDate(dateObj.getDate() + 7)
+      const nextWeek = formatDate(dateObj, 'day')
+      current = nextWeek
+    }
+    this.setState({
+      currentCarouselIndex: (currentCarouselIndex + 1) % 3,
+      current
+    })
+    if (onClickNext) onClickNext()
+    if (onCurrentViewChange) onCurrentViewChange(current)
+  }
+
+  goPre = () => {
+    const { view } = this.props
+    const { currentCarouselIndex } = this.state
+    const dateObj = new Date(this.state.current)
+    let current = ''
+    if (view === 'month') {
+      dateObj.setMonth(dateObj.getMonth() - 1)
+      const preMonth = formatDate(dateObj)
+      current = preMonth
+    }
+    if (view === 'week') {
+      dateObj.setDate(dateObj.getDate() - 7)
+      const preWeek = formatDate(dateObj, 'day')
+      current = preWeek
+    }
+    const { onClickPre, onCurrentViewChange } = this.props
+    if (onClickPre) onClickPre()
+    if (onCurrentViewChange) onCurrentViewChange(current)
+    this.setState({
+      currentCarouselIndex: (currentCarouselIndex + 2) % 3,
+      current
+    })
+  }
+
+  render() {
+    const { current, selectedDate, currentCarouselIndex, selectedRange } = this.state
+    const {
+      marks,
+      isVertical,
+      selectedDateColor,
+      hideArrow,
+      isSwiper,
+      minDate,
+      maxDate,
+      onDayLongPress,
+      mode,
+      showDivider,
+      isMultiSelect,
+      customStyleGenerator,
+      headStyle,
+      headCellStyle,
+      bodyStyle,
+      leftArrowStyle,
+      rightArrowStyle,
+      datePickerStyle,
+      pickerRowStyle,
+      view,
+      pickerTextGenerator,
+      hideController,
+      onCurrentViewChange,
+      startDay,
+      extraInfo
+    } = this.props
+    // 配合Swiper组件实现无限滚动
+    // 原理：永远保持当前屏幕显示月份的左边是前一个月，右边是后一个月
+    // current即当前月份，currentCarouselIndex即当前显示页面的index。一共3个页面，index分别为0 1 2 。
+    // Swiper的无限循环就是类似0 1 2 0 1 2 这样。如果currentCarouselIndex是2 那么我只要保证 1显示的是前面一个月，0显示的是后面一个月 就完成了循环。
+    const currentDate = new Date(current)
+
+    const preDate = new Date(current)
+    const nextDate = new Date(current)
+
+    if (view === 'month') {
+      preDate.setMonth(currentDate.getMonth() - 1)
+      nextDate.setMonth(currentDate.getMonth() + 1)
+    }
+    if (view === 'week') {
+      preDate.setDate(currentDate.getDate() - 7)
+      nextDate.setDate(currentDate.getDate() + 7)
+    }
+    const preIndex = (currentCarouselIndex + 2) % 3
+    const nextIndex = (currentCarouselIndex + 1) % 3
+    const monthObj: Date[] = []
+    monthObj[currentCarouselIndex] = currentDate
+    monthObj[preIndex] = preDate
+    monthObj[nextIndex] = nextDate
+
+    // 所有Days组件的公共Props
+    const publicDaysProp = {
+      marks: marks ? marks : [],
+      onClick: this.onClickDate,
+      selectedDate,
+      minDate: minDate as string,
+      maxDate,
+      selectedDateColor,
+      onDayLongPress,
+      mode: mode as 'normal' | 'lunar',
+      showDivider: showDivider as boolean,
+      isMultiSelect: isMultiSelect as boolean,
+      selectedRange: selectedRange,
+      customStyleGenerator,
+      view: view as 'month' | 'week',
+      startDay: startDay as number,
+      extraInfo: extraInfo ? extraInfo : []
+    }
 
     return (
-      <View className={classnames('at-calendar', className)}>
-        <AtCalendarController
-          minDate={minDate}
-          maxDate={maxDate}
-          hideArrow={hideArrow}
-          monthFormat={monthFormat}
-          generateDate={generateDate}
-          onPreMonth={this.handleClickPreMonth}
-          onNextMonth={this.handleClickNextMonth}
-          onSelectDate={this.handleSelectDate}
-        />
-        <AtCalendarBody
-          validDates={validDates}
-          marks={marks}
-          format={format}
-          minDate={minDate}
-          maxDate={maxDate}
-          isSwiper={isSwiper}
-          isLunar={isLunar}
-          isMonfirst={isMonfirst}
-          isVertical={isVertical}
-          selectedDate={selectedDate}
-          selectedDates={selectedDates}
-          generateDate={generateDate}
-          onDayClick={this.handleDayClick}
-          onSwipeMonth={this.setMonth}
-          onLongClick={this.handleDayLongClick}
-        />
+      <View>
+        <View className='calendar-picker' style={{ ...pickerRowStyle, display: hideController ? 'none' : 'block' }}>
+          {hideArrow ? '' : <View style={leftArrowStyle} className='calendar-arrow-left' onClick={() => this.goPre()} />}
+          <Picker
+            style={{
+              display: 'inline-block',
+              lineHeight: '25px',
+              ...datePickerStyle
+            }}
+            mode='date'
+            onChange={(e) => {
+              const currentDate = formatDate(new Date(e.detail.value))
+              this.setState({ current: currentDate })
+              if (onCurrentViewChange) {
+                onCurrentViewChange(currentDate)
+              }
+            }}
+            value={current}
+            fields='month'
+            start={minDate}
+            end={maxDate}
+          >
+            {pickerTextGenerator ? pickerTextGenerator(new Date(current)) : this.getPickerText()}
+          </Picker>
+          {hideArrow ? (
+            ''
+          ) : (
+            <View
+              style={rightArrowStyle}
+              className='calendar-arrow-right'
+              onClick={() => {
+                this.setState({
+                  currentCarouselIndex: (currentCarouselIndex + 1) % 3
+                })
+                this.goNext()
+              }}
+            />
+          )}
+        </View>
+
+        <View className='calendar-head' style={headStyle}>
+          {getWeekDayList(startDay as number).map((value) => (
+            <View style={headCellStyle} key={value}>
+              {value}
+            </View>
+          ))}
+        </View>
+        {isSwiper ? (
+          <Swiper
+            style={{
+              height: view === 'month' ? '19rem' : '3rem',
+              ...bodyStyle
+            }}
+            vertical={isVertical}
+            circular
+            current={currentCarouselIndex}
+            onChange={(e) => {
+              if (e.detail.source === 'touch') {
+                const currentIndex = e.detail.current
+                if ((currentCarouselIndex + 1) % 3 === currentIndex) {
+                  // 当前月份+1
+                  this.goNext()
+                } else {
+                  // 当前月份-1
+                  this.goPre()
+                }
+                this.setState({ currentCarouselIndex: e.detail.current })
+              }
+            }}
+            className={'calendar-swiper'}
+          >
+            <SwiperItem>
+              <Days date={monthObj[0]} {...publicDaysProp} />
+            </SwiperItem>
+            <SwiperItem>
+              <Days date={monthObj[1]} {...publicDaysProp} />
+            </SwiperItem>
+            <SwiperItem>
+              <Days date={monthObj[2]} {...publicDaysProp} />
+            </SwiperItem>
+          </Swiper>
+        ) : (
+          <Days bodyStyle={bodyStyle} date={currentDate} {...publicDaysProp} />
+        )}
       </View>
     )
   }

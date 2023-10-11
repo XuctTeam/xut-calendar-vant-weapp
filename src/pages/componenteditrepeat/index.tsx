@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-12-07 13:22:47
+ * @LastEditTime: 2023-10-10 09:07:02
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditrepeat\index.tsx
  * @Description:
  *
@@ -10,12 +10,12 @@
  */
 import Unite from '@antmjs/unite'
 import { Button, Cell, CellGroup, Icon, Radio, RadioGroup } from '@antmjs/vantui'
-import Container from '@/components/container'
 import dayjs from 'dayjs'
 import Router, { NavigateType } from 'tarojs-router-next'
-import { formatRepeatTime, useNav } from '@/calendar/utils'
 import { View } from '@tarojs/components'
-import { useBack } from '@/utils/taro'
+import { formatRepeatTime } from '@/calendar/utils'
+import Container from '@/components/container'
+import calendar from '@/calendar'
 import './index.less'
 
 export default Unite(
@@ -38,10 +38,7 @@ export default Unite(
     },
 
     setRepeatChoose(value: string) {
-      let repeatType: string = '',
-        repeatByday: string = '',
-        repeatBymonth: string = '',
-        repeatBymonthday: string = ''
+      let repeatType, repeatByday, repeatBymonth, repeatBymonthday
       if (value === '1') {
         repeatType = 'DAILY'
       } else if (value === '2') {
@@ -163,9 +160,9 @@ export default Unite(
         ) {
           updateData.repeatStatus = '3'
         } else if (selectedWeek.length === 5) {
-          let weekDay = new Set(['1', '2', '3', '4', '5'])
-          let selectedWeekDay = new Set(selectedWeek)
-          let diff = new Set([...Array.from(weekDay)].filter((x) => !selectedWeekDay.has(x)))
+          const weekDay = new Set(['1', '2', '3', '4', '5'])
+          const selectedWeekDay = new Set(selectedWeek)
+          const diff = new Set([...Array.from(weekDay)].filter((x) => !selectedWeekDay.has(x)))
           if (diff.size === 0) {
             updateData.repeatStatus = '2'
           }
@@ -224,14 +221,12 @@ export default Unite(
   function ({ state, events }) {
     const { selectedDate, repeatStatus, repeatInterval, repeatType, repeatByday, repeatBymonth, repeatBymonthday } = state
     const { setRepeatChoose, setCustomRepeatChoose, saveRepeat } = events
-    const [back] = useBack({
-      to: 1
-    })
+    const back = calendar.$hooks.useBack({ to: 1 })
+    const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({
       back: back
     })
-    const usedNav = useNav()
 
     return (
       <Container navTitle='循环选择' enablePagePullDownRefresh={false} className='pages-component-edit-repeat-index' useNav={usedNav} useMenuBtns={usedNav}>

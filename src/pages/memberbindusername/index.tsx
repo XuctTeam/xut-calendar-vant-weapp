@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:46:15
+ * @LastEditTime: 2023-10-10 08:44:09
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindusername\index.tsx
  * @Description:
  *
@@ -13,15 +13,13 @@ import { useEffect } from 'react'
 import { useToast } from 'taro-hooks'
 import { Button, Cell, CellGroup, Form, FormItem } from '@antmjs/vantui'
 import { Input, View } from '@tarojs/components'
+import { useRecoilState } from 'recoil'
 import { userAuthInfoStore } from '@/calendar/store/store'
 import Container from '@/components/container'
-import { useRecoilState } from 'recoil'
-import { bindUserName, auths } from '@/calendar/api/modules/user'
+import calendar from '@/calendar'
 import { IUserAuth } from '~/../types/user'
 
 import './index.less'
-import { useBack } from '@/utils/taro'
-import { useNav } from '@/calendar/utils'
 
 export default Unite(
   {
@@ -37,7 +35,8 @@ export default Unite(
         this.setState({
           loading: true
         })
-        bindUserName(fieldValues)
+        calendar.$api.user
+          .bindUserName(fieldValues)
           .then(() => {
             this._success()
           })
@@ -55,7 +54,7 @@ export default Unite(
       this.setState({
         loading: false
       })
-      auths().then((res) => {
+      calendar.$api.user.auths().then((res) => {
         this.hooks['setUserAuthsState'](res as IUserAuth[])
         window.setTimeout(() => {
           this.hooks['back']()
@@ -69,18 +68,14 @@ export default Unite(
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const userNameAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'user_name') : undefined
     const form = Form.useForm()
-    const usedNav = useNav()
-    const [toast] = useToast({
-      icon: 'success',
-      title: '绑定成功'
-    })
-    const [back] = useBack({
-      to: 4
-    })
+    const { show, hide } = useToast({ title: '绑定成功' })
+    const back = calendar.$hooks.useBack({ to: 4 })
+    const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({
       form: form,
-      toast: toast,
+      show: show,
+      hide: hide,
       back: back,
       setUserAuthsState: setUserAuthsState
     })

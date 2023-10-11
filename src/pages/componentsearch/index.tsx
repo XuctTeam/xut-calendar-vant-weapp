@@ -18,8 +18,7 @@ import './index.less'
 import dayjs from 'dayjs'
 import * as Router from 'tarojs-router-next'
 import Container from '@/components/container'
-import { search } from '@/calendar/api/modules/component'
-import { useNav } from '@/calendar/utils'
+import calendar from '@/calendar'
 import { ICalendarComponent, ICalendarPageComponent, IDavComponent } from 'types/calendar'
 import { DayBody } from './ui'
 
@@ -54,7 +53,7 @@ export default Unite(
 
     async query() {
       const self = this
-      search(this.state.searchValue, this.hooks['pageRef'].current, 20).then((res) => {
+      calendar.$api.component.search(this.state.searchValue, this.hooks['pageRef'].current, 20).then((res) => {
         const searchData: ICalendarPageComponent = res as any as ICalendarPageComponent
         const { finished, components } = searchData
         self._fillComponentList(finished, components)
@@ -110,14 +109,14 @@ export default Unite(
   function ({ state, events }) {
     const { components, finished } = state
     const { setSearchValue, searched, viewComponent, query } = events
-    const usedNav = useNav()
+    const usedNav = calendar.$hooks.useNav()
     const pageRef = useRef<number>(0)
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
     events.setHooks({
       pageRef: pageRef,
-      toast: toast
+      show: show
     })
 
     return (

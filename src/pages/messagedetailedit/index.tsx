@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-14 10:21:30
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 18:22:06
+ * @LastEditTime: 2023-10-10 10:36:00
  * @FilePath: \xut-calendar-vant-weapp\src\pages\messagedetailedit\index.tsx
  * @Description:
  *
@@ -12,7 +12,6 @@ import Unite from '@antmjs/unite'
 import { Button, Dialog, Loading, Overlay } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
-import { get, remove } from '@/calendar/api/modules/message'
 import calendar from '@/calendar'
 import { IMessage } from 'types/message'
 import { EventBody, GroupBody, SystemBody } from './ui'
@@ -32,7 +31,8 @@ export default Unite(
     async onLoad() {
       const { id } = this.location.params
       if (id == null) return
-      get(id)
+      calendar.$api.message
+        .get(id)
         .then((res) => {
           this.setState({
             ...(res as any as IMessage)
@@ -71,7 +71,7 @@ export default Unite(
       this.setState({
         saving: true
       })
-      remove(this.state.id).then(() => {
+      calendar.$api.message.remove(this.state.id).then(() => {
         this.setState({
           saving: false
         })

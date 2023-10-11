@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:26
+ * @LastEditTime: 2023-10-10 11:22:59
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesmanager\index.tsx
  * @Description:
  *
@@ -17,13 +17,13 @@ import { useToast } from 'taro-hooks'
 import dayjs from 'dayjs'
 import Taro from '@tarojs/taro'
 
-import { groupList, deleteGroup } from '@/calendar/api/modules/group'
 import { cacheGetSync } from '@/calendar/cache/cache'
 import { groupRefreshTimeStore, IMenuButton, userInfoStore, menuButtonStore } from '@/calendar/store/store'
-import { useNav } from '@/calendar/utils'
 import Container from '@/components/container'
+import calendar from '@/calendar'
 import { IUserInfo } from 'types/user'
 import { IGroup } from 'types/group'
+
 import { GroupBody, GroupHeader } from './ui'
 import './index.less'
 
@@ -54,7 +54,7 @@ export default Unite(
       })
       let res
       try {
-        res = await groupList()
+        res = await calendar.$api.group.groupList()
       } catch (err) {
         console.log(err)
         this.setState({
@@ -136,7 +136,8 @@ export default Unite(
       this.setState({
         loading: true
       })
-      deleteGroup(id)
+      calendar.$api.group
+        .deleteGroup(id)
         .then(() => {
           this._showDeleteToast()
         })
@@ -166,12 +167,12 @@ export default Unite(
     const menuButton: IMenuButton | undefined = useRecoilValue(menuButtonStore)
     const [groupRefreshState, setGroupRefreshTimeStore] = useRecoilState(groupRefreshTimeStore)
     const accessToken = cacheGetSync('accessToken')
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
 
     events.setHooks({
-      toast: toast,
+      toast: show,
       accessToken: accessToken,
       menuButton: menuButton,
       groupRefreshState: groupRefreshState,

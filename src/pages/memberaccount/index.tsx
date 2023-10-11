@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:46:02
+ * @LastEditTime: 2023-10-10 09:00:50
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -12,19 +12,16 @@ import Unite from '@antmjs/unite'
 import { Button, Cell, Dialog } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
-import Container from '@/components/container'
 import { useRecoilState, useSetRecoilState } from 'recoil'
+import Taro from '@tarojs/taro'
+import Container from '@/components/container'
 import Avatar from '@/components/avatar'
 import { userInfoStore, userAuthInfoStore, calendarStore, groupRefreshTimeStore, componentRefreshTimeStore } from '@/calendar/store/store'
 import Images from '@/calendar/constants/images'
-import { cacheRemoveSync } from '@/calendar/cache/cache'
-import { useBack } from '@/utils/taro'
+import calendar from '@/calendar'
 import { UploadHeader } from './ui'
-import { logout, updateAvatar } from '@/calendar/api/modules/user'
 
 import './index.less'
-import { useNav } from '@/calendar/utils'
-import Taro from '@tarojs/taro'
 
 export default Unite(
   {
@@ -41,7 +38,8 @@ export default Unite(
     },
 
     modiftAvatar(url: string) {
-      updateAvatar(url)
+      calendar.$api.user
+        .updateAvatar(url)
         .then(() => {
           this.hooks['setUserInfoState']({ ...this.hooks['userInfo'], avatar: url })
         })
@@ -68,11 +66,12 @@ export default Unite(
       this.setState({
         loading: true
       })
-      logout()
+      calendar.$api.user
+        .logout()
         .then(() => {
-          cacheRemoveSync('accessToken')
-          cacheRemoveSync('refreshToken')
-          cacheRemoveSync('userId')
+          calendar.$cache.cacheRemoveSync('accessToken')
+          calendar.$cache.cacheRemoveSync('refreshToken')
+          calendar.$cache.cacheRemoveSync('userId')
           this.hooks['setUserInfoState'](undefined)
           this.hooks['setUserAuthsState']([])
           this.hooks['setCalendarState']([])
@@ -117,15 +116,13 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const [back] = useBack({
-      to: 4
-    })
+    const back = calendar.$hooks.useBack({ to: 4 })
+    const usedNav = calendar.$hooks.useNav()
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const [userInfoState, setUserInfoState] = useRecoilState(userInfoStore)
     const setCalendarState = useSetRecoilState(calendarStore)
     const setGroupRefreshTimeStore = useSetRecoilState(groupRefreshTimeStore)
     const setComponentRefreshTimeStore = useSetRecoilState(componentRefreshTimeStore)
-    const usedNav = useNav()
 
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
     const { headerOpen, loading } = state

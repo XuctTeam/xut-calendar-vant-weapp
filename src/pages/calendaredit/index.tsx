@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:29
+ * @LastEditTime: 2023-10-10 09:23:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendaredit\index.tsx
  * @Description:
  *
@@ -13,15 +13,13 @@ import Router from 'tarojs-router-next'
 import { Button, Cell, CellGroup, Dialog, Field, Loading, Overlay, Switch } from '@antmjs/vantui'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { Textarea, View } from '@tarojs/components'
-import Container from '@/components/container'
-import { list, get, update, create, remove } from '@/calendar/api/modules/calendar'
 import { useToast } from 'taro-hooks'
-import { IUserInfo } from '~/../types/user'
+import Container from '@/components/container'
 import { calendarStore, userInfoStore } from '@/calendar/store/store'
+import calendar from '@/calendar'
+import { IUserInfo } from '~/../types/user'
 import { IDavCalendar } from '~/../types/calendar'
-import { back } from '@/utils/taro'
 import { ColorRadio, AlarmRadio } from './ui'
-import { useNav } from '@/calendar/utils'
 import './index.less'
 
 export default Unite(
@@ -52,7 +50,8 @@ export default Unite(
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const { calendarId } = Router.getParams()
       if (!calendarId) return
-      get(calendarId)
+      calendar.$api.calendar
+        .get(calendarId)
         .then((res) => {
           this._initData(res)
         })
@@ -130,14 +129,15 @@ export default Unite(
         disable: true
       })
       if (!this.state.id) {
-        create(
-          Object.assign({}, this.state, {
-            id: '000',
-            createMemberName: this.hooks['userInfo'].name,
-            checked: true,
-            alarmType: this.state.alarmType.toString()
-          })
-        )
+        calendar.$api.calendar
+          .create(
+            Object.assign({}, this.state, {
+              id: '000',
+              createMemberName: this.hooks['userInfo'].name,
+              checked: true,
+              alarmType: this.state.alarmType.toString()
+            })
+          )
           .then(() => {
             this._success('新增成功')
           })
@@ -146,13 +146,14 @@ export default Unite(
           })
         return
       }
-      update(
-        Object.assign({}, this.state, {
-          createMemberName: this.hooks['userInfo'].name,
-          checked: true,
-          alarmType: this.state.alarmType.toString()
-        })
-      )
+      calendar.$api.calendar
+        .update(
+          Object.assign({}, this.state, {
+            createMemberName: this.hooks['userInfo'].name,
+            checked: true,
+            alarmType: this.state.alarmType.toString()
+          })
+        )
         .then(() => {
           this._success('修改成功')
         })
@@ -171,7 +172,8 @@ export default Unite(
         this.setState({
           disable: true
         })
-        remove(this.state.calendarId)
+        calendar.$api.calendar
+          .remove(this.state.calendarId)
           .then(() => {
             this._success('删除成功')
           })
@@ -197,7 +199,8 @@ export default Unite(
     },
 
     _success(msg: string) {
-      list()
+      calendar.$api.calendar
+        .list()
         .then((res) => {
           this.hooks['setCalendarStore'](res as any as IDavCalendar[])
           this.hooks['toast']({
@@ -209,7 +212,7 @@ export default Unite(
             })
           })
           window.setTimeout(() => {
-            back({
+            calendar.$hooks.back({
               to: 4,
               data: {
                 data: '1'
@@ -236,15 +239,15 @@ export default Unite(
     const setCalendarStore = useSetRecoilState(calendarStore)
     const { id, color, name, major, alarmType, createMemberId, alarmTime, display, isShare, description, disable } = state
     const { setName, setColor, setDescription, setAlarmType, setAlarmTime, setDisplay, setIsShare, commit, removeCalendar } = events
-    const [toast] = useToast({
+    const usedNav = calendar.$hooks.useNav()
+    const { show } = useToast({
       icon: 'error'
     })
     events.setHooks({
-      toast: toast,
+      toast: show,
       userInfo: userInfo,
       setCalendarStore: setCalendarStore
     })
-    const usedNav = useNav()
 
     return (
       <Container navTitle='日历编辑' enablePagePullDownRefresh={false} className='pages-calendar-edit-index' useNav={usedNav} useMenuBtns={usedNav}>

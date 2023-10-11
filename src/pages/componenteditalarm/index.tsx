@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-11 22:12:02
+ * @LastEditTime: 2023-10-10 09:20:21
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditalarm\index.tsx
  * @Description:
  *
@@ -12,8 +12,7 @@ import Unite from '@antmjs/unite'
 import { View } from '@tarojs/components'
 import { Button, Cell, CellGroup, Checkbox, RadioGroup, Radio, CheckboxGroup } from '@antmjs/vantui'
 import Container from '@/components/container'
-import { useBack } from '@/utils/taro'
-import { useNav } from '@/calendar/utils'
+import calendar from '@/calendar'
 import './index.less'
 
 const alrams = [
@@ -101,13 +100,12 @@ export default Unite(
   function ({ state, events }) {
     const { openAlarm, alarmTime, alarmType } = state
     const { setOpenAlarm, setAlarmTime, setAlarmType, saveAlarm } = events
-    const [back] = useBack({
-      to: 1
-    })
+    const back = calendar.$hooks.useBack({ to: 1 })
+    const usedNav = calendar.$hooks.useNav()
+
     events.setHooks({
       back: back
     })
-    const usedNav = useNav()
 
     return (
       <Container navTitle='提醒选择' enablePagePullDownRefresh={false} className='pages-component-edit-alarm-index' useNav={usedNav} useMenuBtns={usedNav}>

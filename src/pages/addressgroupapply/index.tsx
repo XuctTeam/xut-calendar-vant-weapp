@@ -15,9 +15,7 @@ import { Router } from 'tarojs-router-next'
 import { useSetRecoilState } from 'recoil'
 import dayjs from 'dayjs'
 import Container from '@/components/container'
-import { applyMineList, mineApplyList, applyAgreeJoinGroup, applyRefuseJoinGroup } from '@/calendar/api/modules/groupMember'
-import { useNav } from '@/calendar/utils'
-import { groupRefreshTimeStore } from '@/calendar/store/store'
+import calendar from '@/calendar'
 import { IGroupMember } from 'types/group'
 import { MemberList } from './ui'
 import './index.less'
@@ -68,7 +66,8 @@ export default Unite(
     },
 
     _applyMine() {
-      applyMineList()
+      calendar.$api.groupMember
+        .applyMineList()
         .then((res) => {
           this.setState({
             list: res as any as Array<IGroupMember>,
@@ -84,7 +83,8 @@ export default Unite(
     },
 
     _mineApply() {
-      mineApplyList()
+      calendar.$api.groupMember
+        .mineApplyList()
         .then((res) => {
           this.setState({
             list: res as any as Array<IGroupMember>,
@@ -111,7 +111,8 @@ export default Unite(
         selector: 'vanDialogGroupApply'
       }).then((value) => {
         if (value === 'cancel') return
-        applyAgreeJoinGroup(gmid, 1)
+        calendar.$api.groupMember
+          .applyAgreeJoinGroup(gmid, 1)
           .then(() => {
             if (this.state.active === 0) {
               this.hooks['setGroupRefreshTimeStore'](dayjs().valueOf())
@@ -137,7 +138,8 @@ export default Unite(
         selector: 'vanDialogGroupApply'
       }).then((value) => {
         if (value === 'cancel') return
-        applyRefuseJoinGroup(gmid, 2)
+        calendar.$api.groupMember
+          .applyRefuseJoinGroup(gmid, 2)
           .then(() => {
             if (this.state.active === 0) {
               this._applyMine()
@@ -161,7 +163,8 @@ export default Unite(
         selector: 'vanDialogGroupApply'
       }).then((value) => {
         if (value === 'cancel') return
-        applyRefuseJoinGroup(gmid, 3)
+        calendar.$api.groupMember
+          .applyRefuseJoinGroup(gmid, 3)
           .then(() => {
             if (this.state.active === 1) {
               this._mineApply()
@@ -177,14 +180,14 @@ export default Unite(
   function ({ state, events }) {
     const { active, loading, list } = state
     const { setActive, onSearchFouce, agreeJoin, refuseJoin, deleteApply } = events
-    const _useNav = useNav()
-    const setGroupRefreshTimeStore = useSetRecoilState(groupRefreshTimeStore)
+    const usedNav = calendar.$hooks.useNav()
+    const setGroupRefreshTimeStore = useSetRecoilState(calendar.$store.groupRefreshTimeStore)
     events.setHooks({
       setGroupRefreshTimeStore: setGroupRefreshTimeStore
     })
 
     return (
-      <Container navTitle='群组申请' enablePagePullDownRefresh={false} className='address-group-apply-index' useNav={_useNav} useMenuBtns={_useNav}>
+      <Container navTitle='群组申请' enablePagePullDownRefresh={false} className='address-group-apply-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='search'>
           <Search placeholder='搜索加入群组' shape='round' disabled onClickInput={onSearchFouce} />
         </View>

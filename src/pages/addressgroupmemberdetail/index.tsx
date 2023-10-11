@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-09 21:56:09
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:09
+ * @LastEditTime: 2023-10-10 09:30:11
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupmemberdetail\index.tsx
  * @Description:
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -12,13 +12,11 @@ import Unite from '@antmjs/unite'
 import { Button, Cell, Dialog, Loading, Overlay, Tag } from '@antmjs/vantui'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import Container from '@/components/container'
-import { useNav } from '@/calendar/utils'
 import { groupRefreshTimeStore, userInfoStore } from '@/calendar/store/store'
 import Avatar from '@/components/avatar'
 import './index.less'
 import dayjs from 'dayjs'
-import { getGroupMember, groupMemberLeave } from '@/calendar/api/modules/groupMember'
-import { useBack } from '@/utils/taro'
+import calendar from '@/calendar'
 import { IGroupMember } from 'types/group'
 
 export default Unite(
@@ -48,7 +46,8 @@ export default Unite(
     },
 
     _init(groupId: string, memberId: string) {
-      getGroupMember(groupId, memberId)
+      calendar.$api.group
+        .getGroupMember(groupId, memberId)
         .then((res) => {
           this.setState({ ...(res as any as IGroupMember), loading: false })
         })

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-14 16:55:08
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-06-13 10:37:47
+ * @LastEditTime: 2023-10-10 10:09:02
  * @FilePath: \xut-calendar-vant-weapp\src\pages\signinmanager\index.tsx
  * @Description:
  *
@@ -11,7 +11,7 @@
 import Unite from '@antmjs/unite'
 import { Tab, Tabs } from '@antmjs/vantui'
 import Container from '@/components/container'
-import { useNav } from '@/calendar/utils'
+import calendar from '@/calendar'
 import { Join, Mine } from './ui'
 import './index.less'
 
@@ -22,9 +22,9 @@ export default Unite(
       minSingList: []
     }
   },
-  function ({ state, events }) {
+  function ({ state }) {
     const { minFinished, minSingList } = state
-    const usedNav = useNav()
+    const usedNav = calendar.$hooks.useNav()
 
     return (
       <Container navTitle='签到' enablePagePullDownRefresh={false} className='pages-signin-mamager-index' useNav={usedNav} useMenuBtns={usedNav}>

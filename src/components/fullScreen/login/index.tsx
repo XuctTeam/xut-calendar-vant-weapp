@@ -2,8 +2,7 @@ import { View } from '@tarojs/components'
 import Taro, { hideLoading, showLoading, showToast } from '@tarojs/taro'
 import { MiniPhoneButton } from '@antmjs/vantui'
 import { useEffect, useState } from 'react'
-import { cacheSetSync } from '@/calendar/cache/cache'
-import { loginCommon } from '@/actions/simple/common'
+import calendar from '@/calendar'
 import './index.less'
 interface IProps {
   onRefresh: () => void
@@ -54,7 +53,7 @@ export default function Index(props: IProps) {
     })
     const res = await loginCommon(_params)
     hideLoading()
-    cacheSetSync('token', res.token)
+    calendar.$cache.cacheSetSync('token', res.token)
     setError(undefined)
     onRefresh()
   }

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:22
+ * @LastEditTime: 2023-10-10 08:48:18
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
@@ -17,12 +17,10 @@ import { Input, View, Button as TaroButton, ButtonProps } from '@tarojs/componen
 import { useLogin, useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import { userAuthInfoStore } from '@/calendar/store/store'
-import { checkMobile, useNav } from '@/calendar/utils'
-import { sendSmsCode } from '@/calendar/api/modules/common'
-import { IUserAuth } from '~/../types/user'
-import { useBack } from '@/utils/taro'
-import { getPhoneNumber, bindPhone, unbindPhone, auths } from '@/calendar/api/modules/user'
+import { checkMobile } from '@/calendar/utils'
 import { create } from '@/utils/countdown'
+import calendar from '@/calendar'
+import { IUserAuth } from '~/../types/user'
 
 import './index.less'
 
@@ -43,7 +41,8 @@ export default Unite(
         return
       }
       this._setSmsTextTime()
-      sendSmsCode(!!this.hooks['phoneAuth'], phone)
+      calendar.$api.common
+        .sendSmsCode(!!this.hooks['phoneAuth'], phone)
         .then((res) => {
           console.log(res)
         })
@@ -86,7 +85,8 @@ export default Unite(
         const edit = !!this.hooks['phoneAuth']
         if (edit) {
           /**绑定 */
-          unbindPhone(phone, code)
+          calendar.$api.user
+            .unbindPhone(phone, code)
             .then(() => {
               this._optPhoneSuccess('解绑成功')
             })
@@ -98,7 +98,8 @@ export default Unite(
             })
           return
         }
-        bindPhone(phone, code)
+        calendar.$api.user
+          .bindPhone(phone, code)
           .then((res) => {
             const { exist, merge } = res
             if (exist && merge) {
@@ -142,7 +143,8 @@ export default Unite(
 
     _getUserPhone(code: string) {
       if (!code) return
-      getPhoneNumber(code)
+      calendar.$api.user
+        .getPhoneNumber(code)
         .then((res) => {
           this.hooks['form'].setFieldsValue('phone', res as string)
         })
@@ -156,7 +158,8 @@ export default Unite(
         icon: 'success',
         title
       })
-      auths()
+      calendar.$api.user
+        .auths()
         .then((res) => {
           this.hooks['setUserAuthsState'](res as IUserAuth[])
           this.setState({
@@ -182,22 +185,23 @@ export default Unite(
     const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
     const phoneAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'phone') : undefined
     const countDownRef = useRef<any>()
-    const [toast] = useToast({
+    const { check } = useLogin()
+    const { show, hide } = useToast({
       icon: 'error'
     })
-    const [back] = useBack({
-      to: 4
-    })
-    const [checkSession] = useLogin()
+
+    const back = calendar.$hooks.useBack({ to: 4 })
+    const usedNav = calendar.$hooks.useNav()
+
     const isWechat = process.env.TARO_ENV === 'weapp' && !!phoneAuth
-    const usedNav = useNav()
 
     events.setHooks({
-      toast: toast,
+      show: show,
+      hide: hide,
       back: back,
       form: form,
       countDownRef: countDownRef,
-      checkSession: checkSession,
+      checkSession: check,
       phoneAuth: phoneAuth,
       setUserAuthsState: setUserAuthsState
     })

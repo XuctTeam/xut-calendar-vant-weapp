@@ -13,8 +13,8 @@ import { useToast } from 'taro-hooks'
 import { Form, FormItem, CellGroup, Button, Row, Col } from '@antmjs/vantui'
 import { Input } from '@tarojs/components'
 import { checkMobile } from '@/calendar/utils'
-import { sendRegisterSms } from '@/calendar/api/modules/user'
 import { create } from '@/utils/countdown'
+import calendar from '@/calendar'
 
 interface IPageOption {
   form: any
@@ -26,7 +26,7 @@ const PhoneRegister: FunctionComponent<IPageOption> = (props) => {
 
   const countDownRef = useRef<any>()
 
-  const [toast] = useToast({
+  const { show } = useToast({
     icon: 'error'
   })
 
@@ -50,12 +50,13 @@ const PhoneRegister: FunctionComponent<IPageOption> = (props) => {
   const sendPhoneSmsCode = () => {
     const phone: string = props.form.getFieldValue('phone')
     if (!phone || !checkMobile(phone)) {
-      toast({
+      show({
         title: '手机号格式错误'
       })
       return
     }
-    sendRegisterSms(phone)
+    calendar.$api.user
+      .sendRegisterSms(phone)
       .then(() => {
         countDownRef.current.start(0, 2, 0)
         setPhoneDisable(true)

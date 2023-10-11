@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:46:25
+ * @LastEditTime: 2023-10-10 08:50:48
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindemail\index.tsx
  * @Description:
  *
@@ -16,12 +16,10 @@ import { Input, View } from '@tarojs/components'
 import { useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import { userAuthInfoStore } from '@/calendar/store/store'
-import { checkEmail, useNav } from '@/calendar/utils'
-import { bindEmail, unbindEmail, auths } from '@/calendar/api/modules/user'
-import { sendEmailCode } from '@/calendar/api/modules/common'
-import { IUserAuth } from '~/../types/user'
-import { useBack } from '@/utils/taro'
+import { checkEmail } from '@/calendar/utils'
 import { create } from '@/utils/countdown'
+import calendar from '@/calendar'
+import { IUserAuth } from '~/../types/user'
 
 import './index.less'
 
@@ -41,7 +39,8 @@ export default Unite(
         })
         return
       }
-      sendEmailCode(email, this.hooks['emailAuth'] ? 2 : 1)
+      calendar.$api.common
+        .sendEmailCode(email, this.hooks['emailAuth'] ? 2 : 1)
         .then(() => {})
         .catch((err: any) => {
           console.log(err)
@@ -79,7 +78,8 @@ export default Unite(
         })
         const { email, code } = fieldValues
         if (this.hooks['emailAuth']) {
-          unbindEmail(email, code)
+          calendar.$api.user
+            .unbindEmail(email, code)
             .then(() => {
               this.hooks['toast']({
                 icon: 'success',
@@ -95,7 +95,8 @@ export default Unite(
             })
           return
         }
-        bindEmail(email, code)
+        calendar.$api.user
+          .bindEmail(email, code)
           .then(async () => {
             this.hooks['toast']({
               icon: 'success',
@@ -113,7 +114,8 @@ export default Unite(
     },
 
     _reload() {
-      auths()
+      calendar.$api.user
+        .auths()
         .then((res) => {
           this.hooks['setUserAuthsState'](res as IUserAuth[])
           this.setState({
@@ -133,12 +135,10 @@ export default Unite(
     const { smsText, disable, loading } = state
     const { sendSmsCode, bindEmail, setSmsText, setSmsTextEnd } = events
     const form = Form.useForm()
-    const usedNav = useNav()
-    const [toast] = useToast({
+    const back = calendar.$hooks.useBack({ to: 4 })
+    const usedNav = calendar.$hooks.useNav()
+    const { show, hide } = useToast({
       icon: 'error'
-    })
-    const [back] = useBack({
-      to: 4
     })
     const countDownRef = useRef<any>()
 
@@ -146,7 +146,8 @@ export default Unite(
     const emailAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'email') : undefined
 
     events.setHooks({
-      toast: toast,
+      show: show,
+      hide: hide,
       back: back,
       form: form,
       countDownRef: countDownRef,

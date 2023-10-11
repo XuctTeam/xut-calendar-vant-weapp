@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-10 19:52:50
- * @LastEditTime: 2023-10-09 16:41:49
+ * @LastEditTime: 2023-10-10 08:49:17
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/calendar/api/config'
@@ -103,7 +103,7 @@ export default {
    * @param {string} code
    * @return {*}
    */
-  bindPhone(phone: string, code: string) {
+  bindPhone(phone: string, code: string): Promise<any> {
     return httpRequest.post('/ums/api/app/v1/member/phone/bind', { phone, code })
   },
 

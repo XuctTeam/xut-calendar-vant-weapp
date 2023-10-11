@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:19
+ * @LastEditTime: 2023-10-10 10:40:59
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
@@ -15,12 +15,10 @@ import { Cell, Checkbox, CheckboxGroup, CellGroup, Button, Empty, Search, Dialog
 import { useRecoilValue } from 'recoil'
 import { Router } from 'tarojs-router-next'
 import { useToast } from 'taro-hooks'
-import { queryByIds } from '@/calendar/api/modules/groupMember'
 import './index.less'
-import { useBack } from '@/utils/taro'
 import { userInfoStore } from '@/calendar/store/store'
 import Container from '@/components/container'
-import { useNav } from '@/calendar/utils'
+import calendar from '@/calendar'
 import { IGroupMember } from 'types/group'
 import { IUserInfo } from 'types/user'
 import { MySelf, MemberBody } from './ui'
@@ -46,7 +44,8 @@ export default Unite(
       this.setState({
         loading: true
       })
-      queryByIds(members)
+      calendar.$api.groupMember
+        .queryByIds(members)
         .then((res) => {
           const _list = res as any as IGroupMember[]
           this.hooks['listRef'].current = _list
@@ -174,19 +173,18 @@ export default Unite(
     const { setAllCheckClick, setMemmberCheck, saveMembers, removeMember, onSearch, onChooseMember } = events
     const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
     const listRef = useRef<IGroupMember[]>([])
-    const [back] = useBack({
-      to: 1
-    })
-    const [toast] = useToast({
+    const back = calendar.$hooks.useBack({ to: 1 })
+    const usedNav = calendar.$hooks.useNav()
+
+    const { show } = useToast({
       icon: 'error'
     })
 
     events.setHooks({
       back: back,
-      toast: toast,
+      toast: show,
       listRef: listRef
     })
-    const usedNav = useNav()
 
     return (
       <Container

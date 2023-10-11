@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:36
+ * @LastEditTime: 2023-10-10 10:41:24
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmemberchoose\index.tsx
  * @Description:
  *
@@ -12,10 +12,7 @@ import Unite from '@antmjs/unite'
 import { Cell, CellGroup, CheckboxGroup, Checkbox, Empty, Loading, Button } from '@antmjs/vantui'
 import { ScrollView, View } from '@tarojs/components'
 import Container from '@/components/container'
-import { groupList } from '@/calendar/api/modules/group'
-import { groupMemberList } from '@/calendar/api/modules/groupMember'
-import { useNav } from '@/calendar/utils'
-import { useBack } from '@/utils/taro'
+import calendar from '@/calendar'
 import { IGroup, IGroupMember } from 'types/group'
 import { GroupSelect } from './ui'
 
@@ -32,7 +29,8 @@ export default Unite(
     },
 
     async onLoad() {
-      groupList()
+      calendar.$api.group
+        .groupList()
         .then((res) => {
           this.setState({
             groups: (res as any as IGroup[]).filter((item) => item.count !== 1)
@@ -62,7 +60,8 @@ export default Unite(
       this.setState({
         loading: true
       })
-      groupMemberList(id)
+      calendar.$api.groupMember
+        .groupMemberList(id)
         .then((res) => {
           this.setState({
             loading: false,
@@ -99,14 +98,12 @@ export default Unite(
   function ({ state, events }) {
     const { groups, allCheck, checkedIds, loading, members } = state
     const { setAllCheckClick, setGroupClick, setCheckSelected, saveSelectMember } = events
-    const [back] = useBack({
-      to: 1
-    })
+    const back = calendar.$hooks.useBack({ to: 1 })
+    const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({
       back: back
     })
-    const usedNav = useNav()
 
     return (
       <Container

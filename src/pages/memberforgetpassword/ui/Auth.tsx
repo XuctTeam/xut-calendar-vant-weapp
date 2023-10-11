@@ -2,16 +2,16 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-27 03:47:42
- * @LastEditTime: 2022-10-27 09:11:39
+ * @LastEditTime: 2023-10-10 10:12:10
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
 import { View } from '@tarojs/components'
 import { useToast } from 'taro-hooks'
-import { checkMobile, checkEmail } from '@/calendar/utils'
 import { Button, CellGroup, Field } from '@antmjs/vantui'
-import { sendForgetSmsCode, sendForgetEmailCode } from '@/calendar/api/modules/forget'
+import { checkMobile, checkEmail } from '@/calendar/utils'
 import { create } from '@/utils/countdown'
+import calendar from '@/calendar'
 
 interface IPageOption {
   disabled: boolean
@@ -32,7 +32,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
 
   const countDownRef = useRef<any>()
 
-  const [toast] = useToast({
+  const { show } = useToast({
     icon: 'error'
   })
 
@@ -67,12 +67,13 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
 
   const sendPhoneSmsCode = () => {
     if (!phone || !checkMobile(phone)) {
-      toast({
+      show({
         title: '手机号格式错误'
       })
       return
     }
-    sendForgetSmsCode(phone)
+    calendar.$api.forget
+      .sendForgetSmsCode(phone)
       .then(() => {
         setPhoneDisable(true)
         setEmailDisable(true)
@@ -85,12 +86,13 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
 
   const sendEmailSmsCode = () => {
     if (!mail || !checkEmail(mail)) {
-      toast({
+      show({
         title: '邮箱格式错误'
       })
       return
     }
-    sendForgetEmailCode(mail)
+    calendar.$api.forget
+      .sendForgetEmailCode(mail)
       .then(() => {
         setPhoneDisable(true)
         setEmailDisable(true)
@@ -104,13 +106,13 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
   const validateFormHandler = () => {
     if (phoneForm) {
       if (!phone || !checkMobile(phone)) {
-        toast({
+        show({
           title: '手机号格式错误'
         })
         return
       }
       if (!phoneSmsCode) {
-        toast({
+        show({
           title: '验证码错误'
         })
         return
@@ -118,13 +120,13 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
     }
     if (!phoneForm) {
       if (!mail || !checkEmail(mail)) {
-        toast({
+        show({
           title: '邮箱格式错误'
         })
         return
       }
       if (!emailSmsCode) {
-        toast({
+        show({
           title: '验证码错误'
         })
         return

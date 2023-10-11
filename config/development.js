@@ -13,6 +13,7 @@ module.exports = {
     NODE_ENV: '"development"'
   },
   defineConstants: {
+    SERVICES_IMAGES: JSON.stringify('https://xuct.com.cn'),
     /** 后台服务地址 */
     SERVICES_API: JSON.stringify('https://s1.nsloop.com:22990')
   },

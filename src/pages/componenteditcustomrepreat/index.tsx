@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-19 15:38:19
+ * @LastEditTime: 2023-10-10 09:19:31
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditcustomrepreat\index.tsx
  * @Description:
  *
@@ -11,12 +11,11 @@
 import Unite from '@antmjs/unite'
 import { ActionSheet, Button, Cell } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
-import Container from '@/components/container'
 import dayjs from 'dayjs'
-import { IntervalPicker, Monthly, Weekly } from './ui'
-import { useBack } from '@/utils/taro'
 import Router from 'tarojs-router-next'
-import { useNav } from '@/calendar/utils'
+import Container from '@/components/container'
+import calendar from '@/calendar'
+import { IntervalPicker, Monthly, Weekly } from './ui'
 import './index.less'
 
 export default Unite(
@@ -32,7 +31,7 @@ export default Unite(
     },
 
     async onLoad() {
-      let data = Router.getData()
+      const data = Router.getData()
       if (!data) {
         return
       }
@@ -125,15 +124,12 @@ export default Unite(
     const { repeatTypeOpen, intervalOpen, repeatType, repeatInterval, selectedWeek, selectedDate, selectedMonthDay } = state
     const { setRepeatTypeOpen, setIntervalOpen, formatType, setIntervalSelected, setRepeatSelected, setWeekSelected, setMonthDaySelected, saveCustRepeat } =
       events
-
-    const [back] = useBack({
-      to: 1
-    })
+    const back = calendar.$hooks.useBack({ to: 1 })
+    const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({
       back: back
     })
-    const usedNav = useNav()
 
     return (
       <Container

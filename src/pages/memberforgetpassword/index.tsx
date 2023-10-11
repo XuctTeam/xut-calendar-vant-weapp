@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-27 09:12:52
+ * @LastEditTime: 2023-10-10 08:38:40
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberforgetpassword\index.tsx
  * @Description:
  *
@@ -10,13 +10,11 @@
  */
 import Unite from '@antmjs/unite'
 import { Steps } from '@antmjs/vantui'
-import Container from '@/components/container'
-import { Auth, Password } from './ui'
-import { forgetPasswordCheck, forgetModify } from '@/calendar/api/modules/forget'
 import { useRef } from 'react'
 import { useToast } from 'taro-hooks'
-import { useBack } from '@/utils/taro'
-import { useNav } from '@/calendar/utils'
+import Container from '@/components/container'
+import calendar from '@/calendar'
+import { Auth, Password } from './ui'
 import './index.less'
 
 export default Unite(
@@ -31,7 +29,8 @@ export default Unite(
       this.setState({
         disabled: true
       })
-      forgetPasswordCheck(phone, email, code, type)
+      calendar.$api.forget
+        .forgetPasswordCheck(phone, email, code, type)
         .then((res) => {
           this.hooks['memberIdRef'].current = res as any as string
           this.hooks['codeRef'].current = code
@@ -49,7 +48,8 @@ export default Unite(
     },
 
     modifyPassword(password: string) {
-      forgetModify(this.hooks['memberIdRef'].current, password, this.hooks['codeRef'].current)
+      calendar.$api.forget
+        .forgetModify(this.hooks['memberIdRef'].current, password, this.hooks['codeRef'].current)
         .then(() => {
           this.hooks['toast']({
             title: '修改成功'
@@ -70,12 +70,10 @@ export default Unite(
       icon: 'success',
       title: '修改成功'
     })
-    const [back] = useBack({
-      to: 6
-    })
+    const back = calendar.$hooks.useBack({ to: 6 })
+    const usedNav = calendar.$hooks.useNav()
     const memberIdRef = useRef<string>('')
     const codeRef = useRef<number>(-1)
-    const usedNav = useNav()
     events.setHooks({
       toast: toast,
       back: back,

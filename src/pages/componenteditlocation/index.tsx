@@ -2,20 +2,19 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 10:59:12
+ * @LastEditTime: 2023-10-10 09:14:17
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditlocation\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import { Button, Col, Row, Dialog } from '@antmjs/vantui'
+import { Button, Dialog } from '@antmjs/vantui'
 import { Textarea, View } from '@tarojs/components'
-import Container from '@/components/container'
 import Taro from '@tarojs/taro'
 import { useToast } from 'taro-hooks'
-import { useBack } from '@/utils/taro'
-import { useNav } from '@/calendar/utils'
+import Container from '@/components/container'
+import calendar from '@/calendar'
 import './index.less'
 
 export default Unite(
@@ -61,7 +60,7 @@ export default Unite(
       const that = this
       Taro.getSetting({
         success: function (res) {
-          var statu = res.authSetting
+          const statu = res.authSetting
           if (!statu['scope.userLocation']) {
             Dialog.confirm({
               title: '提示',
@@ -104,18 +103,16 @@ export default Unite(
   function ({ state, events }) {
     const { place } = state
     const { setPlace, chooseLocation, saveLoaction } = events
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
-    const [back] = useBack({
-      to: 1
-    })
+    const back = calendar.$hooks.useBack({ to: 1 })
+    const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({
-      toast: toast,
+      toast: show,
       back: back
     })
-    const usedNav = useNav()
 
     return (
       <Container navTitle='地点选择' enablePagePullDownRefresh={false} className='pages-component-edit-location-index' useNav={usedNav} useMenuBtns={usedNav}>

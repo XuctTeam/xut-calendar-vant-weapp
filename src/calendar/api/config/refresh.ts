@@ -2,14 +2,14 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-12 12:49:07
- * @LastEditTime: 2023-10-09 17:04:30
+ * @LastEditTime: 2023-10-10 08:32:34
  * @LastEditors: Derek Xu
  */
 import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
 import { cacheSetSync, cacheGetSync, cacheRemoveSync } from '@/calendar/cache/cache'
 import loginApi from '../modules/login'
-import { toIndex } from '../../../utils/taro'
+import { toIndex } from '../../hooks/useBack'
 import httpRequest from './index'
 
 interface ITask<T> {

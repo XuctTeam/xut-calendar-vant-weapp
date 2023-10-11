@@ -28,7 +28,7 @@ const Expanse: FunctionComponent<IPageOption> = (props) => {
   const ref = useRef<any>()
 
   useEffect(() => {
-    var _animation = Taro.createAnimation({
+    const _animation = Taro.createAnimation({
       transformOrigin: '50% 50%',
       duration: 1000,
       timingFunction: 'ease',

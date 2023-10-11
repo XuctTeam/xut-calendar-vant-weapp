@@ -14,11 +14,7 @@ import { Input, ITouchEvent, View } from '@tarojs/components'
 import { IFormInstanceAPI } from '@antmjs/vantui/types/form'
 import { useFile, useToast } from 'taro-hooks'
 import Container from '@/components/container'
-import { addGroup, getGroupInfo } from '@/calendar/api/modules/group'
-import { cacheGetSync } from '@/calendar/cache/cache'
-import { upload as uploadPath } from '@/calendar/api/modules/common'
-import { useBack } from '@/utils/taro'
-import { useNav } from '@/calendar/utils'
+import calendar from '@/calendar'
 import { IUploadInfo } from 'types/common'
 import { IGroup } from 'types/group'
 
@@ -40,7 +36,7 @@ export default Unite(
     async _init(id: string) {
       let res
       try {
-        res = await getGroupInfo(id)
+        res = await calendar.$api.group.getGroupInfo(id)
       } catch (err) {
         console.log(err)
       }
@@ -84,7 +80,7 @@ export default Unite(
     },
 
     async _save(fieldValues: any) {
-      const url = uploadPath()
+      const url = calendar.$api.common.upload()
       this.setState({
         loading: true
       })
@@ -107,7 +103,7 @@ export default Unite(
         url,
         filePath: file[0].url,
         name: 'file',
-        header: { Authorization: cacheGetSync('accessToken') }
+        header: { Authorization: calendar.$cache.cacheGetSync('accessToken') }
       })
       if (uploadResult?.statusCode !== 200) {
         this._uploadFail()
@@ -126,7 +122,7 @@ export default Unite(
       const { id } = this.location.params
       const { name, num, password, power, url } = fieldValues
 
-      addGroup(id || '', name, url, password, power ? 'PUBLIC' : 'PRIVATE', num).then(() => {
+      calendar.$api.group.addGroup(id || '', name, url, password, power ? 'PUBLIC' : 'PRIVATE', num).then(() => {
         this.setState({
           loading: false
         })
@@ -152,17 +148,15 @@ export default Unite(
     const form = Form.useForm()
     const { loading } = state
     const { valueFormatUpload, deleteFile, saveOrUpdate } = events
+    const back = calendar.$hooks.useBack({ to: 4 })
     const { upload } = useFile()
-    const usedNav = useNav()
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
-    const [back] = useBack({
-      to: 2
-    })
+
     events.setHooks({
       form: form,
-      toast: toast,
+      toast: show,
       back: back,
       upload: upload
     })

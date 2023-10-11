@@ -2,27 +2,26 @@
  * @Author: Derek Xu
  * @Date: 2022-11-08 13:08:13
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:46:22
+ * @LastEditTime: 2023-10-10 10:39:26
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareview\index.tsx
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import Unite from '@antmjs/unite'
-import Container from '@/components/container'
 import { View } from '@tarojs/components'
-import { DifferentDay, SameDay } from './ui'
-import { useNav } from '@/calendar/utils'
 import dayjs from 'dayjs'
 import { Button, Cell, Dialog, Loading, Overlay } from '@antmjs/vantui'
-import { acceptAttend, getShareInfo } from '@/calendar/api/modules/component'
-import { IDavComponent } from 'types/calendar'
-import { cacheGetSync } from '@/calendar/cache/cache'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { componentRefreshTimeStore, userInfoStore } from '@/calendar/store/store'
 
 import Router from 'tarojs-router-next'
 import { useToast } from 'taro-hooks'
+import { componentRefreshTimeStore, userInfoStore } from '@/calendar/store/store'
+import { cacheGetSync } from '@/calendar/cache/cache'
+import Container from '@/components/container'
+import calendar from '@/calendar'
+import { IDavComponent } from 'types/calendar'
+import { DifferentDay, SameDay } from './ui'
 import './index.less'
 
 interface IShareComponent extends IDavComponent {
@@ -59,7 +58,8 @@ export default Unite(
     async onLoad() {
       const { id } = this.location.params
       if (!id) return
-      getShareInfo(id)
+      calendar.$api.component
+        .getShareInfo(id)
         .then((res) => {
           this.setState({ ...(res as any as IShareComponent), id: id, loading: false })
         })
@@ -87,7 +87,8 @@ export default Unite(
 
     _acceppt() {
       const that = this
-      acceptAttend(this.state.id)
+      calendar.$api.component
+        .acceptAttend(this.state.id)
         .then(() => {
           that.setState({
             attend: true,
@@ -127,17 +128,17 @@ export default Unite(
       saving
     } = state
     const { attendComponent } = events
-    const usedNav = useNav()
+    const usedNav = calendar.$hooks.useNav()
     const accessToken = cacheGetSync('accessToken')
     const userInfo = useRecoilValue(userInfoStore)
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
 
     const setComponentRefreshTime = useSetRecoilState(componentRefreshTimeStore)
 
     events.setHooks({
-      toast: toast,
+      toast: show,
       setComponentRefreshTime: setComponentRefreshTime
     })
 

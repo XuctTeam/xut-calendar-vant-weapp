@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 16:45:08
+ * @LastEditTime: 2023-10-10 08:53:13
  * @FilePath: \xut-calendar-vant-weapp\src\pages\privacyrule\index.tsx
  * @Description:
  *
@@ -11,7 +11,6 @@
 import Unite from '@antmjs/unite'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
-import { useNav } from '@/calendar/utils'
 import './index.less'
 
 export default Unite(

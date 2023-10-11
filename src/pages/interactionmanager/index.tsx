@@ -8,12 +8,12 @@
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Container from '@/components/container'
-import { useNav } from '@/calendar/utils'
 import Unite from '@antmjs/unite'
 import { Icon } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
+import Container from '@/components/container'
+import calendar from '@/calendar'
 import './index.less'
 
 export default Unite(
@@ -31,7 +31,13 @@ export default Unite(
   function ({ events }) {
     const { views } = events
     return (
-      <Container navTitle='日程参与' enablePagePullDownRefresh={false} useNav={useNav()} useMenuBtns={false} className='pages-interactionmanager-index'>
+      <Container
+        navTitle='日程参与'
+        enablePagePullDownRefresh={false}
+        useNav={calendar.$hooks.useNav()}
+        useMenuBtns={false}
+        className='pages-interactionmanager-index'
+      >
         <>
           <View className='li' onClick={() => views(1)}>
             <View className='circle sign'>

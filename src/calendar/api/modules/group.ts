@@ -8,57 +8,59 @@
  */
 import httpRequest from '@/calendar/api/config'
 
-/**
- * @description: 查询会员所在群组（包括人数）
- * @param phone
- * @param {*} Promise
- * @return {*}
- * @author: Derek Xu
- */
-export const groupList = (): Promise<any> => {
-  return httpRequest.get('/ums/api/app/v1/group')
-}
+export default {
+  /**
+   * @description: 查询会员所在群组（包括人数）
+   * @param phone
+   * @param {*} Promise
+   * @return {*}
+   * @author: Derek Xu
+   */
+  groupList() {
+    return httpRequest.get('/ums/api/app/v1/group')
+  },
 
-/**
- * @description: 通过群组id查询群组信息（包括人数）
- * @param {string} id
- * @return {*}
- * @author: Derek Xu
- */
-export const getGroupInfo = (id: string): Promise<any> => {
-  return httpRequest.get('/ums/api/app/v1/group/get', { id })
-}
+  /**
+   * @description: 通过群组id查询群组信息（包括人数）
+   * @param {string} id
+   * @return {*}
+   * @author: Derek Xu
+   */
+  getGroupInfo(id: string) {
+    return httpRequest.get('/ums/api/app/v1/group/get', { id })
+  },
 
-/**
- * @description: 添加群组
- * @param {string} id
- * @param {string} name
- * @param {string} imageUrl
- * @param {string} power
- * @param {number} num
- * @return {*}
- * @author: Derek Xu
- */
-export const addGroup = (id: string, name: string, imageUrl: string, password: string, power: string, num: number) => {
-  return httpRequest.post('/ums/api/app/v1/group', { id, name, imageUrl, power, password, num })
-}
+  /**
+   * @description: 添加群组
+   * @param {string} id
+   * @param {string} name
+   * @param {string} imageUrl
+   * @param {string} power
+   * @param {number} num
+   * @return {*}
+   * @author: Derek Xu
+   */
+  addGroup(id: string, name: string, imageUrl: string, password: string, power: string, num: number) {
+    return httpRequest.post('/ums/api/app/v1/group', { id, name, imageUrl, power, password, num })
+  },
 
-/**
- * @description: 删除群组
- * @param {string} id
- * @return {*}
- * @author: Derek Xu
- */
-export const deleteGroup = (id: string) => {
-  return httpRequest.post('/ums/api/app/v1/group/delete', { id })
-}
+  /**
+   * @description: 删除群组
+   * @param {string} id
+   * @return {*}
+   * @author: Derek Xu
+   */
+  deleteGroup(id: string) {
+    return httpRequest.post('/ums/api/app/v1/group/delete', { id })
+  },
 
-/**
- * @description: 搜索
- * @param {string} word
- * @return {*}
- * @author: Derek Xu
- */
-export const search = (word: string, page: number, limit: number, hasPass: string, dateScope: string, numCount: string) => {
-  return httpRequest.get('/ums/api/app/v1/group/search', { word, page, limit, hasPass, dateScope, numCount })
+  /**
+   * @description: 搜索
+   * @param {string} word
+   * @return {*}
+   * @author: Derek Xu
+   */
+  search(word: string, page: number, limit: number, hasPass: string, dateScope: string, numCount: string) {
+    return httpRequest.get('/ums/api/app/v1/group/search', { word, page, limit, hasPass, dateScope, numCount })
+  }
 }

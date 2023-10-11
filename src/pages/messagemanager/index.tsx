@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-10 18:25:26
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-06-13 11:26:56
+ * @LastEditTime: 2023-10-10 10:20:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\messagemanager\index.tsx
  * @Description:
  *
@@ -14,12 +14,11 @@ import { View } from '@tarojs/components'
 import { Dialog, Icon, InfiniteScroll } from '@antmjs/vantui'
 import { useRef } from 'react'
 import Router from 'tarojs-router-next'
-import { useNav } from '@/calendar/utils'
-import { list, clear, read, count } from '@/calendar/api/modules/message'
 import { cacheGetSync } from '@/calendar/cache/cache'
 import Container from '@/components/container'
+import calendar from '@/calendar'
 import { IMessage, IMessagePageComponent } from 'types/message'
-import { MessageBody, NoticeMsg } from './ui'
+import { NoticeMsg } from './ui'
 import './index.less'
 
 export default Unite(
@@ -38,7 +37,8 @@ export default Unite(
     },
 
     async query() {
-      list(this.hooks['pageRef'].current, 20, '')
+      calendar.$api.message
+        .list(this.hooks['pageRef'].current, 20, '')
         .then((res) => {
           const { finished, messages } = res as any as IMessagePageComponent
           this.setState({
@@ -128,7 +128,7 @@ export default Unite(
   function ({ state, events }) {
     const { messages, finished, countNum } = state
     const { query, readAll, viewDetail } = events
-    const usedNav = useNav()
+    const usedNav = calendar.$hooks.useNav()
     const pageRef = useRef<number>(0)
 
     const accessToken = cacheGetSync('accessToken')

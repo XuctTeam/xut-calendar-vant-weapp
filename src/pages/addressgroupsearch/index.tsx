@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-08 21:55:27
+ * @LastEditTime: 2023-10-10 11:21:50
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupsearch\index.tsx
  * @Description:
  *
@@ -16,14 +16,11 @@ import { useReachBottom } from '@tarojs/taro'
 import { useToast } from 'taro-hooks'
 import Pagination from '@/components/pagination'
 import Container from '@/components/container'
-import { search } from '@/calendar/api/modules/group'
-import { apply } from '@/calendar/api/modules/groupMember'
+import calendar from '@/calendar'
 import { IGroup } from 'types/group'
 import { ConditionSearch, GroupBody } from './ui'
 
 import './index.less'
-import { useBack } from '@/utils/taro'
-import { useNav } from '@/calendar/utils'
 
 const PAGE_SIZE = 50
 
@@ -31,7 +28,7 @@ export default Unite(
   {
     state: {
       value: '',
-      show: false,
+      visible: false,
       list: [],
       complete: false,
       loading: false,
@@ -49,7 +46,7 @@ export default Unite(
 
     setShow(show: boolean) {
       this.setState({
-        show
+        visible: show
       })
     },
 
@@ -90,7 +87,7 @@ export default Unite(
       this.setState({
         loading: true
       })
-      const result: any = await search(
+      const result: any = await calendar.$api.group.search(
         this.state.value,
         this.hooks['pageRef'].current,
         PAGE_SIZE,
@@ -115,7 +112,7 @@ export default Unite(
 
     onConditionSearch() {
       this.setState({
-        show: false
+        visible: false
       })
       this.hooks['pageRef'].current = 0
       this.loadList(true)
@@ -144,7 +141,8 @@ export default Unite(
     },
 
     _join(id: string) {
-      apply(id, this.state.password)
+      calendar.$api.groupMember
+        .apply(id, this.state.password)
         .then(() => {
           this.setState({
             password: ''
@@ -167,21 +165,19 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const { value, show, list, complete, loading, hasPass, dateScope, numCount } = state
+    const { value, visible, list, complete, loading, hasPass, dateScope, numCount } = state
     const { setValue, setShow, onSearch, loadList, onJoin, onClear, onConditionSearch, setHasPass, setDateScope, setNumCount, reset } = events
     const pageRef = useRef<number>(0)
-    const usedNav = useNav()
+    const back = calendar.$hooks.useBack({ to: 2 })
+    const usedNav = calendar.$hooks.useNav()
 
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'success'
-    })
-    const [back] = useBack({
-      to: 2
     })
 
     events.setHooks({
       pageRef: pageRef,
-      toast: toast,
+      toast: show,
       back: back
     })
 
@@ -224,7 +220,7 @@ export default Unite(
         </View>
 
         <ConditionSearch
-          show={show}
+          show={visible}
           value={value}
           onClose={() => setShow(false)}
           onSearch={onConditionSearch}

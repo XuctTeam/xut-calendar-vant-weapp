@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:46:12
+ * @LastEditTime: 2023-10-10 09:22:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -11,18 +11,16 @@
 import Unite from '@antmjs/unite'
 import { Textarea, View } from '@tarojs/components'
 import { Button, Cell, Col, Icon, Loading, Overlay, Row, Switch } from '@antmjs/vantui'
-import Container from '@/components/container'
 import Router, { NavigateType } from 'tarojs-router-next'
 import dayjs, { Dayjs } from 'dayjs'
-import { calendarStore, userInfoStore, componentRefreshTimeStore } from '@/calendar/store/store'
-import { add, getById, queryComponentMemberIds } from '@/calendar/api/modules/component'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useToast, useRequestSubscribeMessage } from 'taro-hooks'
+import Container from '@/components/container'
+import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode } from '@/calendar/utils'
+import calendar from '@/calendar'
 import { IUserInfo } from 'types/user'
-import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode, useNav } from '@/calendar/utils'
 import { IDavCalendar, IDavComponent } from 'types/calendar'
 import { Picker, Time, CalendarAction, SelectCalendar, GridAction, RepeatPicker } from './ui'
-import { useToast, useRequestSubscribeMessage } from 'taro-hooks'
-import { useBack } from '@/utils/taro'
 import './index.less'
 
 const today = dayjs().toDate()
@@ -75,7 +73,7 @@ export default Unite(
       })
       let result
       try {
-        result = await Promise.all([getById(id), queryComponentMemberIds(id)])
+        result = await Promise.all([calendar.$api.component.getById(id), calendar.$api.component.queryComponentMemberIds(id)])
       } catch (err) {
         console.log(err)
       }
@@ -350,7 +348,8 @@ export default Unite(
         memberIds: this.state.memberIds
       }
 
-      add(addOrUpdateComponent)
+      calendar.$api.component
+        .add(addOrUpdateComponent)
         .then((res) => {
           addOrUpdateComponent.id = res as any as string
           //要刷新首页列表
@@ -475,27 +474,25 @@ export default Unite(
       setMembersChoose,
       saveOrUpdateComponent
     } = events
-    const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
-    const calendars = useRecoilValue(calendarStore)
-    const setComponentRefreshTime = useSetRecoilState(componentRefreshTimeStore)
-    const [toast] = useToast({
+    const userInfoState: IUserInfo | undefined = useRecoilValue(calendar.$store.userInfoStore)
+    const calendars = useRecoilValue(calendar.$store.calendarStore)
+    const setComponentRefreshTime = useSetRecoilState(calendar.$store.componentRefreshTimeStore)
+    const { show } = useToast({
       icon: 'error'
     })
 
-    const [back] = useBack({
-      to: 1
-    })
+    const back = calendar.$hooks.useBack({ to: 1 })
+    const usedNav = calendar.$hooks.useNav()
 
-    const [requestSubscribeMessage] = useRequestSubscribeMessage()
-    const usedNav = useNav()
+    const { subscribe } = useRequestSubscribeMessage()
 
     events.setHooks({
-      toast: toast,
+      toast: show,
       back: back,
       userInfo: userInfoState,
       calendars: calendars,
       setComponentRefreshTime: setComponentRefreshTime,
-      requestSubscribeMessage: requestSubscribeMessage
+      requestSubscribeMessage: subscribe
     })
 
     return (

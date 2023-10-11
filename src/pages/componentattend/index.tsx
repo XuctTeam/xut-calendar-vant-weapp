@@ -7,14 +7,13 @@
  * @Description:
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-import Container from '@/components/container'
 import Unite from '@antmjs/unite'
 import { Col, Empty, Loading, Row } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
-import { queryComponentMembers, attendStatistics } from '@/calendar/api/modules/component'
+import Container from '@/components/container'
+import calendar from '@/calendar'
 import { TMember } from 'types/group'
 import { MemberBody } from './ui'
-import { useNav } from '@/calendar/utils'
 import './index.less'
 
 interface IAttendStatistics {
@@ -41,7 +40,7 @@ export default Unite(
         loading: true
       })
 
-      const result = await Promise.all([queryComponentMembers('', id), attendStatistics(id)])
+      const result = await Promise.all([calendar.$api.component.queryComponentMembers('', id), calendar.$api.component.attendStatistics(id)])
       if (!(result && result.length === 2)) return
       const statistics = result[1] as any as IAttendStatistics
       this.setState({
@@ -56,7 +55,7 @@ export default Unite(
   },
   function ({ state }) {
     const { loading, nums, accepted, no_accepted, no_operation, list } = state
-    const usedNav = useNav()
+    const usedNav = calendar.$hooks.useNav()
 
     return (
       <Container navTitle='日程邀请人' enablePagePullDownRefresh={false} className='pages-component-attend-index' useNav={usedNav} useMenuBtns={usedNav}>

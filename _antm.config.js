@@ -12,12 +12,12 @@ module.exports = {
       './eslint.config.js',
       './lint-staged.config.js',
       './stylelint.config.js',
-      './tsconig.json',
+      './tsconig.json'
     ],
     webhooks: {
       // url: 'https://oapi.dingtalk.com/robot/send?access_token=xxx',
-      url: '',
-    },
+      url: ''
+    }
   },
   rapper: defineConfig({
     rapper: {
@@ -29,7 +29,7 @@ module.exports = {
       // rap项目id，自己输入
       repositoryId: 88888,
       // xxx自己登陆 http://rap2api.taobao.org 里面找cookie
-      tokenCookie: 'koa.sid=xxx; koa.sid.sig=xxx',
+      tokenCookie: 'koa.sid=xxx; koa.sid.sig=xxx'
     },
     download: {
       //请求 function 模板
@@ -40,9 +40,7 @@ module.exports = {
             if (/^\d+\.\d+$/.test(fnName[1])) {
               return fnName[2]
             }
-            return (
-              fnName[1] + fnName[2].charAt(0).toUpperCase() + fnName[2].slice(1)
-            )
+            return fnName[1] + fnName[2].charAt(0).toUpperCase() + fnName[2].slice(1)
           }
           return null
         }
@@ -50,9 +48,7 @@ module.exports = {
         if (!fnName) {
           throw new TypeError('接口路径不对,请修改合规')
         }
-        const camelCaseName = `${fnName.charAt(0).toUpperCase()}${fnName.slice(
-          1,
-        )}`
+        const camelCaseName = `${fnName.charAt(0).toUpperCase()}${fnName.slice(1)}`
         const reqTypeName = `IReq${camelCaseName}`
         const resTypeName = `IRes${camelCaseName}`
         return {
@@ -64,7 +60,7 @@ module.exports = {
                * Rap 地址: ${params.rapUrl}?id=${params.repositoryId}&mod=${params.moduleId}&itf=${params.interfaceId}
                */
               export const ${fnName} = createFetch<${reqTypeName}, ${resTypeName}>('${params.requestUrl}', '${params.requestMethod}')
-              `,
+              `
         }
       },
       //请求 函数共工头（用于引入函数
@@ -75,9 +71,9 @@ module.exports = {
 // @ts-nocheck
 
 import { createFetch } from '@/utils/request'
-`,
+`
         }
-      },
+      }
     },
     upload: {
       mode: 'type',
@@ -90,29 +86,25 @@ import { createFetch } from '@/utils/request'
         // export const goodsQbf = createFetch<IGoodsQbf['request'], IGoodsQbf['response']>("/c/api/1.0/approve/goods/qbf", "GET");
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [_, reqTypeName, resTypeName, reqUrl, reqMethod] =
-          params.body.match(
-            /createFetch<([\w\[\]'"]+),\s+([\w\[\]'"]+)>\(['"]([\s\S]+)['"], ['"]([a-zA-Z]+)['"]\)/,
-          ) || []
+          params.body.match(/createFetch<([\w\[\]'"]+),\s+([\w\[\]'"]+)>\(['"]([\s\S]+)['"], ['"]([a-zA-Z]+)['"]\)/) || []
         if (!reqTypeName || !resTypeName) {
           return null
         }
-        const matchInterfaceId = params.comment.match(
-          /http:\/\/rap2\.tao[\s\S]+&itf=(\d+)/,
-        )
+        const matchInterfaceId = params.comment.match(/http:\/\/rap2\.tao[\s\S]+&itf=(\d+)/)
         return {
           resTypeName,
           reqTypeName,
           // 如果返回 null '' undefined 0 等 就会被认为是新的接口，会触发上rap操作
           interfaceId: matchInterfaceId ? Number(matchInterfaceId[1]) : null,
           reqUrl: reqUrl,
-          reqMethod: reqMethod,
+          reqMethod: reqMethod
         }
       },
       // webpack 别名 alias 绝对路径
       alias: {
-        '@': './src',
-      },
+        '@': './src'
+      }
     },
-    isUpload: true,
-  }),
+    isUpload: true
+  })
 }

@@ -3,7 +3,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-09 19:10:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-12 09:16:09
+ * @LastEditTime: 2023-10-12 15:57:55
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\ui\Calendar.tsx
  * @Description:
  *
@@ -51,6 +51,7 @@ const Index: FunctionComponent<IProps> = ({ isLunar, isMonday }) => {
         bindRef={(ref) => {
           setCalendarObj(ref)
         }}
+        selectedDateColor={'#0088FF'}
         currentView={currentView}
         onCurrentViewChange={setCurrentView}
         startDay={isMonday ? 1 : 0}

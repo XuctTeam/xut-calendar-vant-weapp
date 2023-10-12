@@ -2,10 +2,10 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-14 17:31:01
- * @LastEditTime: 2022-09-26 16:39:58
+ * @LastEditTime: 2023-10-12 15:49:32
  * @LastEditors: Derek Xu
  */
-import { Fragment, FunctionComponent, useEffect, useState } from 'react'
+import { Fragment, FunctionComponent } from 'react'
 import { View } from '@tarojs/components'
 import { Button } from '@antmjs/vantui'
 import './index.less'
@@ -16,7 +16,7 @@ export type ButtonOption = {
 }
 
 interface IButtonGroupOption {
-  actived: number
+  active: number
   buttons: ButtonOption[]
   onClick: (opt: number) => void
 }
@@ -33,7 +33,7 @@ const ButtonGroup: FunctionComponent<IButtonGroupOption> = (props) => {
       {props.buttons.map((item, index) => {
         return (
           <Fragment key={index}>
-            {index === props.actived ? (
+            {index === props.active ? (
               <Button type='warning' plain hairline onClick={() => click(index)}>
                 {item.name}
               </Button>

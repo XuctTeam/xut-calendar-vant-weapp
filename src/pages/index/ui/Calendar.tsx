@@ -3,27 +3,29 @@
  * @Author: Derek Xu
  * @Date: 2022-08-09 19:10:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-11 15:10:28
+ * @LastEditTime: 2023-10-12 09:16:09
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\ui\Calendar.tsx
  * @Description:
  *
  * Copyright (c) 2023 by 楚恬商行, All Rights Reserved.
  */
-import { FunctionComponent, forwardRef, useState } from 'react'
-import PropTypes from 'prop-types'
-import { View, Button, Text, Switch, Label } from '@tarojs/components'
+import { FunctionComponent, useState, CSSProperties } from 'react'
 import Calendar from '@/components/calendar'
+import styles from '../index.module.less'
 
-const Index: FunctionComponent = () => {
+interface IProps {
+  isLunar: boolean
+  isMonday: boolean
+}
+
+const Index: FunctionComponent<IProps> = ({ isLunar, isMonday }) => {
   const [calendarObj, setCalendarObj] = useState<Calendar>()
   const [currentView, setCurrentView] = useState('2023-10-11')
   const [selected, setSelected] = useState('2023-10-11')
   const [isWeekView, setIsWeekView] = useState(false)
-  const [hideController, setHideController] = useState(false)
-  const [isLunar, setIsLunar] = useState(true)
 
   return (
-    <View>
+    <>
       <Calendar
         marks={[
           { value: '2023-10-11', color: 'gray', markSize: '9px' },
@@ -49,68 +51,13 @@ const Index: FunctionComponent = () => {
         bindRef={(ref) => {
           setCalendarObj(ref)
         }}
-        hideController={hideController}
         currentView={currentView}
         onCurrentViewChange={setCurrentView}
-        hideArrow={true}
+        startDay={isMonday ? 1 : 0}
         selectedDate={selected}
         onDayClick={(item) => setSelected(item.value)}
       />
-      <Text style={{ display: 'block', width: '100vw', textAlign: 'center' }}>{currentView.slice(0, 7)}</Text>
-      <Button
-        onClick={() => {
-          calendarObj ? calendarObj.goPre() : ''
-        }}
-        style={{ width: '50%', display: 'inline-block' }}
-      >
-        上一页
-      </Button>
-      <Button
-        onClick={() => {
-          calendarObj ? calendarObj.goNext() : ''
-        }}
-        style={{ width: '50%', display: 'inline-block' }}
-      >
-        下一页
-      </Button>
-      <Button onClick={() => setCurrentView('2019-08')}>设置view为2019-08</Button>
-      <Button onClick={() => setSelected('2019-08-08')}>选中2019-08-08</Button>
-
-      <View>
-        <Switch
-          id='weekViewSwitch'
-          checked={isWeekView}
-          onChange={(e) => {
-            // @ts-ignore
-            setIsWeekView(e.target.value)
-          }}
-        ></Switch>
-        <Label for='weekViewSwitch'>周视图</Label>
-      </View>
-
-      <View>
-        <Switch
-          id='hideSwitch'
-          checked={hideController}
-          onChange={(e) => {
-            // @ts-ignore
-            setHideController(e.target.value)
-          }}
-        ></Switch>
-        <Label for='hideSwitch'>隐藏控制器</Label>
-      </View>
-      <View>
-        <Switch
-          id='lunarSwitch'
-          checked={isLunar}
-          onChange={(e) => {
-            // @ts-ignore
-            setIsLunar(e.target.value)
-          }}
-        ></Switch>
-        <Label for='lunarSwitch'>农历</Label>
-      </View>
-    </View>
+    </>
   )
 }
 

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-09 19:10:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-06-13 09:49:43
+ * @LastEditTime: 2023-10-12 09:00:46
  * @FilePath: \xut-calendar-vant-weapp\babel.config.js
  * @Description:
  *
@@ -21,7 +21,8 @@ module.exports = {
         useBuiltIns: false,
         hot: false
       }
-    ]
+    ],
+    '@linaria'
   ],
   plugins: [
     ['lodash'],

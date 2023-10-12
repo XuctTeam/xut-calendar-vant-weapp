@@ -1,6 +1,6 @@
 import { Picker, View, Swiper, SwiperItem } from '@tarojs/components'
 import { Component, CSSProperties } from 'react'
-import './index.less'
+import './index.module.less'
 import { formatDate, fillWithZero } from './utils'
 import Days, { CalendarDateInfo, CustomStyles, StyleGeneratorParams } from './days/index'
 
@@ -106,10 +106,10 @@ const getWeekDayList = (startDay: number) => {
   const weekDays = ['日', '一', '二', '三', '四', '五', '六']
   const result: string[] = []
   for (let i = startDay; i < 7; i++) {
-    result.push(weekDays[i])
+    result.push(weekDays[i] as string)
   }
   for (let i = 0; i < startDay; i++) {
-    result.push(weekDays[i])
+    result.push(weekDays[i] as string)
   }
   return result
 }
@@ -355,7 +355,7 @@ export default class Calendar extends Component<IProps, IState> {
     }
 
     return (
-      <View>
+      <View className='calendar'>
         <View className='calendar-picker' style={{ ...pickerRowStyle, display: hideController ? 'none' : 'block' }}>
           {hideArrow ? '' : <View style={leftArrowStyle} className='calendar-arrow-left' onClick={() => this.goPre()} />}
           <Picker
@@ -405,7 +405,7 @@ export default class Calendar extends Component<IProps, IState> {
         {isSwiper ? (
           <Swiper
             style={{
-              height: view === 'month' ? '19rem' : '3rem',
+              height: view === 'month' ? '15rem' : '3rem',
               ...bodyStyle
             }}
             vertical={isVertical}

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-20 09:46:12
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-15 18:30:13
+ * @LastEditTime: 2023-10-12 08:39:03
  * @FilePath: \xut-calendar-vant-weapp\src\components\avatar\index.tsx
  * @Description:
  *
@@ -13,8 +13,8 @@ import { CSSProperties, ReactNode } from 'react'
 import { Image } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import classNames from 'classnames'
+import { prefixClassName } from '@/styles/prefix'
 import { AvatarShape, AvatarSize } from './avatar.shared'
-import { prefixClassname } from '@/styles/prefix'
 import './index.less'
 
 interface IPageOption {
@@ -43,14 +43,14 @@ function Index(props: IPageOption): JSX.Element {
       className={classNames(
         'van-avatar',
         {
-          [prefixClassname('avatar--circle')]: shape === 'circle',
-          [prefixClassname('avatar--square')]: shape === 'square'
+          [prefixClassName('avatar--circle')]: shape === 'circle',
+          [prefixClassName('avatar--square')]: shape === 'square'
         },
         {
-          [prefixClassname('avatar--mini')]: size === 'mini',
-          [prefixClassname('avatar--small')]: size === 'small',
-          [prefixClassname('avatar--medium')]: size === 'medium',
-          [prefixClassname('avatar--large')]: size === 'large'
+          [prefixClassName('avatar--mini')]: size === 'mini',
+          [prefixClassName('avatar--small')]: size === 'small',
+          [prefixClassName('avatar--medium')]: size === 'medium',
+          [prefixClassName('avatar--large')]: size === 'large'
         },
         className
       )}

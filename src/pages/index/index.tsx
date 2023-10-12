@@ -3,7 +3,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-11 15:07:25
+ * @LastEditTime: 2023-10-12 09:05:37
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -24,9 +24,6 @@ import calendar from '@/calendar'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import { ICurrentDay } from '~/../types/date'
 import { Calendar, UserInfo, EventList, Header } from './ui'
-
-import './index.less'
-import { CALENDAR } from '@/components/calendar/types'
 
 const day: ICurrentDay = getToday()
 
@@ -329,7 +326,7 @@ export default Unite(
             ></Calendar>
           </Expanse> */}
 
-          <Calendar></Calendar>
+          <Calendar isLunar={!!lunar} isMonday={!!monday}></Calendar>
 
           <EventList
             loading={false}

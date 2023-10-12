@@ -10,6 +10,6 @@
  */
 const COMPONENT_PREFIX = 'van-'
 
-export function prefixClassname(component: string) {
+export function prefixClassName(component: string) {
   return `${COMPONENT_PREFIX}${component}`
 }

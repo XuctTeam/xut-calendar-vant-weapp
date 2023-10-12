@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2023-06-13 09:52:06
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 15:29:50
+ * @LastEditTime: 2023-10-12 09:11:06
  * @FilePath: \xut-calendar-vant-weapp\config\webpack\commonChain.js
  * @Description:
  *

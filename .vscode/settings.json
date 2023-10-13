@@ -22,5 +22,20 @@
   "stylelint.enable": true,
   "stylelint.validate": ["css", "less", "postcss", "scss"],
   "stylelint.configFile": "stylelint.config.js",
-  "cSpell.words": ["antmjs", "auths", "Btns", "kwai", "linaria", "micromessenger", "npath", "swiper", "tarojs", "vantui", "weapp", "wechat"]
+  "cSpell.words": [
+    "antmjs",
+    "auths",
+    "Btns",
+    "Cust",
+    "kwai",
+    "linaria",
+    "micromessenger",
+    "npath",
+    "stylelint",
+    "swiper",
+    "tarojs",
+    "vantui",
+    "weapp",
+    "wechat"
+  ]
 }

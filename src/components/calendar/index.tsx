@@ -1,445 +1,228 @@
-import { Picker, View, Swiper, SwiperItem } from '@tarojs/components'
-import { Component, CSSProperties } from 'react'
-import './index.module.less'
-import { formatDate, fillWithZero } from './utils'
-import Days, { CalendarDateInfo, CustomStyles, StyleGeneratorParams } from './days/index'
+import { Picker, Swiper, SwiperItem, View } from '@tarojs/components'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import dayjs from 'dayjs'
+import { CustCalendarInstance, CustCalendarProps, DayType } from './type'
+import { getCurrentDayDetail, getMonthDays, getCurMonthViewDetail, getCurWeekViewDetail, getWeekDayList, getWeekDays, textFormat, string2Date } from './utils'
+import Days from './Days'
+import './index.less'
 
-export type CalendarMark = {
-  /** 要标记的日期 YYYY-MM-DD*/
-  value: string
-  /** 标记颜色 */
-  color?: string
-  /** 标记的大小，css中的width、length */
-  markSize?: string
-}
+const CustCalendar = forwardRef<CustCalendarInstance, CustCalendarProps>((props, ref) => {
+  /** 绑在实例上的方法，外界可直接使用 */
+  useImperativeHandle(ref, (): CustCalendarInstance => {
+    return {
+      goNext,
+      goPre
+    }
+  })
+  const {
+    view = 'month',
+    isVertical = false,
+    startWeekDay = 1,
+    hideController = false,
+    hideArrow = false,
+    pickerTextGenerator,
+    monthWrapHeigh = '16rem',
+    weekWrapHeight = '3rem',
+    selectedDateColor,
+    marks = [],
+    mode = 'normal',
+    selectedDate,
+    currentView,
+    format = 'YYYY-MM-DD',
+    minDate = '1970-01-01',
+    maxDate = '2100-12-31',
+    isSwiper = true,
+    onDayClick,
+    extraInfo = [],
+    custDayRender,
+    className,
+    custWeekRender,
+    onCurrentViewChange
+  } = props
+  /** 当前锁定的 SwiperItem */
+  const [currentCarouselIndex, setCurrentCarouselIndex] = useState(1)
+  /** 当天的数据 */
+  const currentDayDetail = getCurrentDayDetail()
+  console.log(currentDayDetail, 'currentDayDetail')
+  const [selectedDay, setSelectedDay] = useState(dayjs(selectedDate).format('YYYY-MM-DD'))
 
-export type ExtraInfo = {
-  /** 要标记的日期 YYYY-MM-DD*/
-  value: string
-  /** 额外信息文本 */
-  text: string
-  /** 颜色 */
-  color?: string
-  /** 文字大小 */
-  fontSize?: string
-}
-
-export type IProps = {
-  /** 额外信息 */
-  extraInfo?: ExtraInfo[]
-  /** 要标记的日期列表 YYYY-MM-DD */
-  marks?: CalendarMark[]
-  /** 点击回调 */
-  onDayClick?: (item: { value: string }) => any
-  /** 长按回调（触发长按事件时不会触发点击事件） */
-  onDayLongPress?: (item: { value: string }) => any
-  /** 当前选中的时间 YYYY-MM-DD*/
-  selectedDate?: string
   /** 当前显示的月份/周 所包含的一个日期 YYYY-MM-DD */
-  currentView?: string
-  /** 隐藏箭头 */
-  hideArrow?: boolean
-  /** 隐藏控制器 */
-  hideController?: boolean
-  /** 是否可以滑动 */
-  isSwiper?: boolean
-  /** 滑动方向 水平/竖直*/
-  isVertical?: boolean
-  /** 最小的可选时间 */
-  minDate?: string
-  /** 最大的可选时间 */
-  maxDate?: string
-  /** 选中日期的背景色 */
-  selectedDateColor?: string
-  /** 是否显示农历 */
-  mode?: 'normal' | 'lunar'
-  /** 是否显示分割线 */
-  showDivider?: boolean
-  /** 是否范围选择模式 */
-  isMultiSelect?: boolean
-  /** 月份/周改变回调 */
-  onCurrentViewChange?: (value: string) => any
-  /** 点击左箭头 */
-  onClickPre?: () => any
-  /** 点击右箭头 */
-  onClickNext?: () => any
-  /** 范围选择完成时的回调 */
-  onSelectDate?: (value: { start: string; end: string }) => any
-  /** 自定义样式生成器 */
-  customStyleGenerator?: (dateInfo: StyleGeneratorParams) => CustomStyles
-  /** 头部整体样式 */
-  headStyle?: CSSProperties
-  /** 头部单元格样式 */
-  headCellStyle?: CSSProperties
-  /** body整体样式 */
-  bodyStyle?: CSSProperties
-  /** 左箭头样式 */
-  leftArrowStyle?: CSSProperties
-  /** 右箭头样式 */
-  rightArrowStyle?: CSSProperties
-  /** 日期选择器样式 */
-  datePickerStyle?: CSSProperties
-  /** 日期选择器&左右箭头 所在容器样式 */
-  pickerRowStyle?: CSSProperties
-  /** 视图 月/周 */
-  view?: 'month' | 'week'
-  /** 日期选择器文本生成器 */
-  pickerTextGenerator?: (currentView: Date) => string
-  /** 父组件通过ref可以调用内部方法 */
-  bindRef?: (ref: Calendar) => any
-  /** 指定周几为一行的起点，0为周日*/
-  startDay?: number
-}
+  const [dayViewDetail, setDayViewDetail] = useState(currentView ? string2Date(currentView) : currentDayDetail)
 
-type IState = {
-  /** 当前年月YYYY-MM */
-  current: string
-  /** 当前选中日期 YYYY-MM-DD*/
-  selectedDate: string
-  /** 当前显示的轮播图index */
-  currentCarouselIndex: number
-  /** 范围选择 */
-  selectedRange: { start: string; end: string }
-}
+  const [today] = useState(currentDayDetail)
 
-const getWeekDayList = (startDay: number) => {
-  const weekDays = ['日', '一', '二', '三', '四', '五', '六']
-  const result: string[] = []
-  for (let i = startDay; i < 7; i++) {
-    result.push(weekDays[i] as string)
-  }
-  for (let i = 0; i < startDay; i++) {
-    result.push(weekDays[i] as string)
-  }
-  return result
-}
+  const goNext = () => {
+    const nextViewDetail =
+      view === 'month'
+        ? getCurMonthViewDetail(dayViewDetail.year, dayViewDetail.month + 1)
+        : getCurWeekViewDetail(dayViewDetail.year, dayViewDetail.month, dayViewDetail.day + 7)
 
-export default class Calendar extends Component<IProps, IState> {
-  state: IState = {
-    current: formatDate(new Date(this.props.currentView as string)),
-    selectedDate: this.props.selectedDate as string,
-    currentCarouselIndex: 1,
-    selectedRange: { start: '', end: '' }
+    const dayView = { ...dayViewDetail, ...nextViewDetail }
+    setDayViewDetail(dayView)
+    setCurrentCarouselIndex((currentCarouselIndex + 1) % 3)
+    // 回调当前日期
+    !!onCurrentViewChange && onCurrentViewChange(dayjs(`${dayView.year}-${dayView.month}`).format(format.substring(0, 7)))
   }
-
-  /** 指定默认的props */
-  public static defaultProps: Partial<IProps> = {
-    isVertical: false,
-    marks: [],
-    selectedDate: formatDate(new Date(), 'day'),
-    selectedDateColor: '#90b1ef',
-    hideArrow: false,
-    isSwiper: true,
-    minDate: '1970-01-01',
-    mode: 'normal',
-    maxDate: '2100-12-31',
-    showDivider: false,
-    isMultiSelect: false,
-    view: 'month',
-    currentView: formatDate(new Date()),
-    startDay: 0,
-    extraInfo: []
+  const goPre = () => {
+    const preViewDetail =
+      view === 'month'
+        ? getCurMonthViewDetail(dayViewDetail.year, dayViewDetail.month - 1)
+        : getCurWeekViewDetail(dayViewDetail.year, dayViewDetail.month, dayViewDetail.day - 7)
+    const dayView = { ...dayViewDetail, ...preViewDetail }
+    setDayViewDetail(dayView)
+    setCurrentCarouselIndex((currentCarouselIndex + 2) % 3)
+    // 回调当前日期
+    !!onCurrentViewChange && onCurrentViewChange(dayjs(`${dayView.year}-${dayView.month}`).format(format.substring(0, 7)))
   }
-  UNSAFE_componentWillMount() {
-    if (this.props.bindRef) {
-      this.props.bindRef(this)
-    }
-  }
-  UNSAFE_componentWillReceiveProps(nextProps: Readonly<IProps>): void {
-    if (nextProps.selectedDate && nextProps.selectedDate !== this.props.selectedDate) {
-      this.setState({
-        selectedDate: nextProps.selectedDate,
-        current: nextProps.selectedDate
-      })
-    }
-    if (nextProps.currentView && nextProps.currentView !== this.props.currentView) {
-      this.setState({ current: nextProps.currentView })
+  const onSwiperChange = (e: any) => {
+    if (e.detail.source === 'touch') {
+      const currentIndex = e.detail.current
+      ;(currentCarouselIndex + 1) % 3 === currentIndex ? goNext() : goPre()
     }
   }
 
-  getPickerText = () => {
-    // eslint-disable-next-line prefer-const
-    let { view, startDay } = this.props
-    startDay = startDay as number
-    const { current } = this.state
-    const currentDateObj = new Date(current)
-    const monthStr = formatDate(currentDateObj, 'month')
+  /** 日历滑块中的数据 */
+  const daysArr: DayType[][] = useMemo(() => {
+    const curMonthDays: DayType[] =
+      view === 'month'
+        ? getMonthDays(dayViewDetail.year, dayViewDetail.month, startWeekDay)
+        : getWeekDays(dayViewDetail.year, dayViewDetail.month, dayViewDetail.day, startWeekDay)
+    return [curMonthDays, curMonthDays, curMonthDays]
+  }, [dayViewDetail.year, dayViewDetail.month, dayViewDetail.day, startWeekDay, view])
 
-    if (view === 'week') {
-      currentDateObj.setDate(
-        currentDateObj.getDate() - (currentDateObj.getDay() >= startDay ? currentDateObj.getDay() - startDay : 6 - startDay + currentDateObj.getDay())
-      )
-      const weekStart = currentDateObj.getDate()
-      const weekStartMonth = currentDateObj.getMonth() + 1
-      const weekStartYear = currentDateObj.getFullYear()
-      currentDateObj.setDate(currentDateObj.getDate() + 6)
-      const weekEnd = currentDateObj.getDate()
-      const weekEndMonth = currentDateObj.getMonth() + 1
-      const weekEndYear = currentDateObj.getFullYear()
-      let weekEndStr = `${fillWithZero(weekEnd, 2)}`
-      if (weekEndMonth !== weekStartMonth) {
-        weekEndStr = `${fillWithZero(weekEndMonth, 2)}-${weekEndStr}`
-      }
-      if (weekEndYear !== weekStartYear) {
-        weekEndStr = `${weekEndYear}-${weekEndStr}`
-      }
-      return `${monthStr}-${fillWithZero(weekStart, 2)}~${weekEndStr}`
-    }
-    if (view === 'month') {
-      return monthStr
-    }
+  console.log(daysArr, 'render -------------------------------->')
+
+  const weekList = useMemo(() => getWeekDayList(startWeekDay), [startWeekDay])
+  /** picker 切换 更新当前日历 */
+  const onPickerChange = (e: any) => {
+    setDayViewDetail(string2Date(dayjs(e.detail.value).format(format)))
   }
-  onClickDate = (value: CalendarDateInfo) => {
-    const { onDayClick, onSelectDate } = this.props
-    let { current, currentCarouselIndex, selectedRange } = this.state
-    if (!selectedRange.start || selectedRange.end) {
-      selectedRange = { start: value.fullDateStr, end: '' }
-    } else {
-      if (new Date(selectedRange.start) > new Date(value.fullDateStr)) {
-        selectedRange = {
-          start: value.fullDateStr,
-          end: selectedRange.start
-        }
-      } else {
-        selectedRange.end = value.fullDateStr
-      }
-    }
-
-    if (!value.currentMonth) {
-      // 点到非本月的日期就跳转到相应月份
-      const { onCurrentViewChange, onClickNext, onClickPre } = this.props
-      const dateObj = new Date(value.fullDateStr)
-      if (dateObj.getMonth() > new Date(current).getMonth()) {
-        currentCarouselIndex = (currentCarouselIndex + 1) % 3
-        if (onClickNext) onClickNext()
-      } else {
-        currentCarouselIndex = (currentCarouselIndex + 2) % 3
-        if (onClickPre) onClickPre()
-      }
-      if (onCurrentViewChange) onCurrentViewChange(value.fullDateStr)
-
-      current = formatDate(dateObj)
-    }
-    this.setState({
-      selectedDate: value.fullDateStr,
-      selectedRange,
-      currentCarouselIndex,
-      current
-    })
-    if (onDayClick) {
-      onDayClick({ value: value.fullDateStr })
-    }
-    if (onSelectDate) {
-      onSelectDate(selectedRange)
-    }
+  const getCurrentMonth = () => {
+    return dayjs(`${dayViewDetail.year}-${dayViewDetail.month}`).format(format.substring(0, 7))
   }
 
-  goNext = () => {
-    const { view } = this.props
-    const { currentCarouselIndex } = this.state
-    const dateObj = new Date(this.state.current)
-    const { onClickNext, onCurrentViewChange } = this.props
-    let current = ''
-    if (view === 'month') {
-      dateObj.setMonth(dateObj.getMonth() + 1)
-      const nextMonth = formatDate(dateObj)
-      current = nextMonth
-    }
-    if (view === 'week') {
-      dateObj.setDate(dateObj.getDate() + 7)
-      const nextWeek = formatDate(dateObj, 'day')
-      current = nextWeek
-    }
-    this.setState({
-      currentCarouselIndex: (currentCarouselIndex + 1) % 3,
-      current
-    })
-    if (onClickNext) onClickNext()
-    if (onCurrentViewChange) onCurrentViewChange(current)
+  const current = useMemo(() => {
+    const current = dayjs(selectedDate).toDate()
+    return { year: current.getFullYear(), month: current.getMonth(), day: current.getDay(), weekDay: 1 }
+  }, [selectedDate])
+
+  const getPickerText = () => {
+    if (view === 'month') return getCurrentMonth()
+    const startDay = (daysArr[0] && daysArr[0][0]) ?? current
+    const endDay = (daysArr[0] && daysArr[0][daysArr[0].length - 1]) ?? current
+    return textFormat(startDay, format) + '~' + textFormat(endDay, format)
   }
 
-  goPre = () => {
-    const { view } = this.props
-    const { currentCarouselIndex } = this.state
-    const dateObj = new Date(this.state.current)
-    let current = ''
-    if (view === 'month') {
-      dateObj.setMonth(dateObj.getMonth() - 1)
-      const preMonth = formatDate(dateObj)
-      current = preMonth
+  useEffect(() => {
+    if (dayjs(selectedDate).isSame(dayjs(selectedDay))) {
+      return
     }
-    if (view === 'week') {
-      dateObj.setDate(dateObj.getDate() - 7)
-      const preWeek = formatDate(dateObj, 'day')
-      current = preWeek
+    const diff = diffMonth(dayjs(selectedDate).toDate(), dayjs(selectedDay).toDate())
+    if (diff === -1) {
+      goPre()
     }
-    const { onClickPre, onCurrentViewChange } = this.props
-    if (onClickPre) onClickPre()
-    if (onCurrentViewChange) onCurrentViewChange(current)
-    this.setState({
-      currentCarouselIndex: (currentCarouselIndex + 2) % 3,
-      current
-    })
+    if (diff === 1) {
+      goNext()
+    }
+    setSelectedDay(dayjs(selectedDate).format('YYYY-MM-DD'))
+  }, [selectedDate, selectedDay])
+
+  const diffMonth = (firstDay: Date, secondDay: Date) => {
+    const firstYear = firstDay.getFullYear()
+    const firstMonth = firstDay.getMonth() + 1
+    const secondYear = secondDay.getFullYear()
+    const secondMonth = secondDay.getMonth() + 1
+    if ((firstYear === dayViewDetail.year && firstMonth === dayViewDetail.month) || (firstYear === secondYear && firstMonth === secondMonth)) {
+      return 0
+    }
+    if (firstYear < secondYear) {
+      return -1
+    }
+    if (firstYear === secondYear && firstMonth < secondMonth) {
+      return -1
+    }
+    return 1
   }
 
-  render() {
-    const { current, selectedDate, currentCarouselIndex, selectedRange } = this.state
-    const {
-      marks,
-      isVertical,
-      selectedDateColor,
-      hideArrow,
-      isSwiper,
-      minDate,
-      maxDate,
-      onDayLongPress,
-      mode,
-      showDivider,
-      isMultiSelect,
-      customStyleGenerator,
-      headStyle,
-      headCellStyle,
-      bodyStyle,
-      leftArrowStyle,
-      rightArrowStyle,
-      datePickerStyle,
-      pickerRowStyle,
-      view,
-      pickerTextGenerator,
-      hideController,
-      onCurrentViewChange,
-      startDay,
-      extraInfo
-    } = this.props
-    // 配合Swiper组件实现无限滚动
-    // 原理：永远保持当前屏幕显示月份的左边是前一个月，右边是后一个月
-    // current即当前月份，currentCarouselIndex即当前显示页面的index。一共3个页面，index分别为0 1 2 。
-    // Swiper的无限循环就是类似0 1 2 0 1 2 这样。如果currentCarouselIndex是2 那么我只要保证 1显示的是前面一个月，0显示的是后面一个月 就完成了循环。
-    const currentDate = new Date(current)
+  const onCalendarClickDay = (info: DayType, dateFormate: string) => {
+    onDayClick && onDayClick(info, dateFormate)
+  }
 
-    const preDate = new Date(current)
-    const nextDate = new Date(current)
+  const bodyProps = {
+    view,
+    dayViewDetail,
+    onDayClick: onCalendarClickDay,
+    selectedDateColor,
+    today,
+    marks,
+    selectedDate: selectedDay,
+    minDate,
+    maxDate,
+    format,
+    extraInfo,
+    mode,
+    custDayRender
+  }
 
-    if (view === 'month') {
-      preDate.setMonth(currentDate.getMonth() - 1)
-      nextDate.setMonth(currentDate.getMonth() + 1)
-    }
-    if (view === 'week') {
-      preDate.setDate(currentDate.getDate() - 7)
-      nextDate.setDate(currentDate.getDate() + 7)
-    }
-    const preIndex = (currentCarouselIndex + 2) % 3
-    const nextIndex = (currentCarouselIndex + 1) % 3
-    const monthObj: Date[] = []
-    monthObj[currentCarouselIndex] = currentDate
-    monthObj[preIndex] = preDate
-    monthObj[nextIndex] = nextDate
-
-    // 所有Days组件的公共Props
-    const publicDaysProp = {
-      marks: marks ? marks : [],
-      onClick: this.onClickDate,
-      selectedDate,
-      minDate: minDate as string,
-      maxDate,
-      selectedDateColor,
-      onDayLongPress,
-      mode: mode as 'normal' | 'lunar',
-      showDivider: showDivider as boolean,
-      isMultiSelect: isMultiSelect as boolean,
-      selectedRange: selectedRange,
-      customStyleGenerator,
-      view: view as 'month' | 'week',
-      startDay: startDay as number,
-      extraInfo: extraInfo ? extraInfo : []
-    }
-
-    return (
-      <View className='calendar'>
-        <View className='calendar-picker' style={{ ...pickerRowStyle, display: hideController ? 'none' : 'block' }}>
-          {hideArrow ? '' : <View style={leftArrowStyle} className='calendar-arrow-left' onClick={() => this.goPre()} />}
+  return (
+    <View className={`cust-calendar ${className}`}>
+      {!hideController && (
+        <View className='calendar-picker'>
+          {!hideArrow && (
+            <View className='calendar-arrow-wrap'>
+              <View className='calendar-arrow calendar-arrow-left' onClick={goPre} />
+            </View>
+          )}
           <Picker
-            style={{
-              display: 'inline-block',
-              lineHeight: '25px',
-              ...datePickerStyle
-            }}
             mode='date'
-            onChange={(e) => {
-              const currentDate = formatDate(new Date(e.detail.value))
-              this.setState({ current: currentDate })
-              if (onCurrentViewChange) {
-                onCurrentViewChange(currentDate)
-              }
-            }}
-            value={current}
-            fields='month'
+            onChange={onPickerChange}
+            value={view === 'month' ? getCurrentMonth() : textFormat((daysArr[0] && daysArr[0][0]) ?? current, format)}
+            fields={view === 'month' ? 'month' : 'day'}
             start={minDate}
             end={maxDate}
           >
-            {pickerTextGenerator ? pickerTextGenerator(new Date(current)) : this.getPickerText()}
+            {pickerTextGenerator ? pickerTextGenerator(getPickerText()) : getPickerText()}
           </Picker>
-          {hideArrow ? (
-            ''
-          ) : (
-            <View
-              style={rightArrowStyle}
-              className='calendar-arrow-right'
-              onClick={() => {
-                this.setState({
-                  currentCarouselIndex: (currentCarouselIndex + 1) % 3
-                })
-                this.goNext()
-              }}
-            />
+          {!hideArrow && (
+            <View className='calendar-arrow-wrap'>
+              <View className='calendar-arrow calendar-arrow-right' onClick={goNext} />
+            </View>
           )}
         </View>
-
-        <View className='calendar-head' style={headStyle}>
-          {getWeekDayList(startDay as number).map((value) => (
-            <View style={headCellStyle} key={value}>
-              {value}
+      )}
+      <View className='week-desc'>
+        {weekList.map((item) => {
+          return (
+            <View key={item} className='week-desc-item'>
+              {custWeekRender ? custWeekRender(item) : item}
             </View>
-          ))}
-        </View>
-        {isSwiper ? (
-          <Swiper
-            style={{
-              height: view === 'month' ? '13rem' : '3rem',
-              ...bodyStyle
-            }}
-            vertical={isVertical}
-            circular
-            current={currentCarouselIndex}
-            onChange={(e) => {
-              if (e.detail.source === 'touch') {
-                const currentIndex = e.detail.current
-                if ((currentCarouselIndex + 1) % 3 === currentIndex) {
-                  // 当前月份+1
-                  this.goNext()
-                } else {
-                  // 当前月份-1
-                  this.goPre()
-                }
-                this.setState({ currentCarouselIndex: e.detail.current })
-              }
-            }}
-            className={'calendar-swiper'}
-          >
-            <SwiperItem>
-              <Days date={monthObj[0]} {...publicDaysProp} />
-            </SwiperItem>
-            <SwiperItem>
-              <Days date={monthObj[1]} {...publicDaysProp} />
-            </SwiperItem>
-            <SwiperItem>
-              <Days date={monthObj[2]} {...publicDaysProp} />
-            </SwiperItem>
-          </Swiper>
-        ) : (
-          <Days bodyStyle={bodyStyle} date={currentDate} {...publicDaysProp} />
-        )}
+          )
+        })}
       </View>
-    )
-  }
-}
+      {isSwiper ? (
+        <Swiper
+          vertical={isVertical}
+          circular
+          current={currentCarouselIndex}
+          onChange={onSwiperChange}
+          style={{
+            height: view === 'month' ? monthWrapHeigh : weekWrapHeight
+          }}
+        >
+          {daysArr.map((item, index) => {
+            return (
+              <SwiperItem key={view + index}>
+                <View>{currentCarouselIndex === index && <Days days={item} {...bodyProps} />}</View>
+              </SwiperItem>
+            )
+          })}
+        </Swiper>
+      ) : (
+        <Days days={daysArr[1]} {...bodyProps} />
+      )}
+    </View>
+  )
+})
+
+CustCalendar.displayName = 'CustCalendar'
+export default CustCalendar

@@ -3,7 +3,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-12 09:05:37
+ * @LastEditTime: 2023-10-13 17:53:43
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -21,9 +21,12 @@ import Images from '@/calendar/constants/images'
 import { getToday } from '@/calendar/utils'
 import Container from '@/components/container'
 import calendar from '@/calendar'
+import CustCalendar from '@/components/calendar'
+import { DayType } from '@/components/calendar/type'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import { ICurrentDay } from '~/../types/date'
-import { Calendar, UserInfo, EventList, Header } from './ui'
+import { UserInfo, EventList, Header } from './ui'
+import './index.module.less'
 
 const day: ICurrentDay = getToday()
 
@@ -60,7 +63,7 @@ export default Unite(
      *
      * @param value
      */
-    selectMonthChange(month: CALENDAR.SelectedMonth) {
+    selectMonthChange(month: any) {
       console.log(month)
       // this._queryComponent(
       //   this.hooks['calendars'],
@@ -78,9 +81,13 @@ export default Unite(
       console.log(item.value)
     },
 
-    selectDayClickHadnle(item: { value: CalendarTypes.SelectedDate }) {
+    selectDayClickHandler(info: DayType, dateFormate: string) {
+      if (dayjs(this.state.selectedDay).isSame(dayjs(dateFormate))) {
+        return
+      }
+      console.log(info)
       this.setState({
-        selectedDay: item.value.start.toString()
+        selectedDay: dateFormate
       })
     },
 
@@ -265,8 +272,17 @@ export default Unite(
 
   function ({ state, events }) {
     const { popOpen, selectedDay, marks, calendarComponents, messageCount } = state
-    const { componentRefresh, selectMonthChange, currentClickHandle, calendarPopOpen, calendarPopClose, calendarSelected, viewComponent, setMessageCount } =
-      events
+    const {
+      componentRefresh,
+      selectMonthChange,
+      currentClickHandle,
+      calendarPopOpen,
+      calendarPopClose,
+      calendarSelected,
+      viewComponent,
+      setMessageCount,
+      selectDayClickHandler
+    } = events
     const env = calendar.$hooks.useWebEnv()
     const [calendars, setCalendars] = useRecoilState(calendar.$store.calendarStore)
     const userInfoState = useRecoilValue(calendar.$store.userInfoStore)
@@ -313,21 +329,22 @@ export default Unite(
       <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
         <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen} messageCount={messageCount}></Header>
         <View className='box'>
-          {/* <Expanse animationShowHeight={animationShowHeight}>
-             <Calendar
-              ref={calRef}
-              currentDay={dayjs(selectedDay).format('YYYY/MM/DD')}
-              marks={marks}
-              isLunar={!!lunar}
-              isMonfirst={!!monday}
-              selectMonthChage={selectMonthChage}
-              selectDayLongClick={selectDayLongClick}
-              selectDayClick={selectDayClickHadnle}
-            ></Calendar>
-          </Expanse> */}
-
-          <Calendar isLunar={!!lunar} isMonday={!!monday}></Calendar>
-
+          <CustCalendar
+            mode={'lunar'}
+            selectedDateColor='#0085E3'
+            marks={[
+              { value: '2023-09-21', color: 'red' },
+              { value: '2023-09-22', color: 'pink' },
+              { value: '2023-09-23', color: 'gray' },
+              { value: '2023-09-24', color: 'yellow' },
+              { value: '2023-09-25', color: 'darkblue' },
+              { value: '2023-09-26', color: 'pink' },
+              { value: '2023-09-27', color: 'green' }
+            ]}
+            startWeekDay={monday ? 1 : 0}
+            selectedDate={selectedDay}
+            onDayClick={selectDayClickHandler}
+          />
           <EventList
             loading={false}
             accessToken={accessToken || ''}

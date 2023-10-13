@@ -1,0 +1,45 @@
+.cust-calendar {
+  margin: 10px;
+  border-radius: 24px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 5px 36px rgba(7, 29, 61, 0.06);
+
+  .week-desc {
+    display: flex;
+    margin-bottom: 16px;
+
+    .week-desc-item {
+      width: calc(100% / 7);
+      text-align: center;
+    }
+  }
+
+  .calendar-picker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 36px;
+
+    .calendar-arrow-wrap {
+      width: 48px;
+    }
+
+    .calendar-arrow {
+      display: inline-block;
+      border-top: 4px solid;
+      border-right: 4px solid;
+      width: 14px;
+      height: 14px;
+      border-color: #666666;
+    }
+
+    .calendar-arrow-left {
+      transform: rotate(-135deg);
+    }
+
+    .calendar-arrow-right {
+      transform: rotate(45deg);
+    }
+  }
+}

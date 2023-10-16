@@ -88,6 +88,7 @@ const CustCalendar = forwardRef<CustCalendarInstance, CustCalendarProps>((props,
         ? getMonthDays(dayViewDetail.year, dayViewDetail.month, startWeekDay)
         : getWeekDays(dayViewDetail.year, dayViewDetail.month, dayViewDetail.day, startWeekDay)
     return [curMonthDays, curMonthDays, curMonthDays]
+    setCurrentCarouselIndex(1)
   }, [dayViewDetail.year, dayViewDetail.month, dayViewDetail.day, startWeekDay, view])
 
   console.log(daysArr, 'render -------------------------------->')
@@ -218,7 +219,7 @@ const CustCalendar = forwardRef<CustCalendarInstance, CustCalendarProps>((props,
           })}
         </Swiper>
       ) : (
-        <Days days={daysArr[1]} {...bodyProps} />
+        <Days days={daysArr[1] ?? []} {...bodyProps} />
       )}
     </View>
   )

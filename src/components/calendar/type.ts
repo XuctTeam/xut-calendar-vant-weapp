@@ -59,9 +59,6 @@ export type DayProps = DayType &
     isToday: boolean
     /** 格式化后的日期 */
     dateFormate: string
-
-    /** 是否显示阴历 */
-    mode: 'lunar' | 'normal'
     /** 是否范围选择模式并且endDateStr不为空 **/
     // isMultiSelectAndFinish: boolean;
     /** 是否显示分割线 */
@@ -85,7 +82,7 @@ export interface DaysProps
     CustCalendarProps,
     'currentView' | 'hideArrow' | 'hideController' | 'isSwiper' | 'isVertical' | 'pickerTextGenerator' | 'isMultiSelect' | 'className' | 'custWeekRender'
   > {
-  days: DayType[] | undefined
+  days: DayType[]
   dayViewDetail: DateDetail
   today: DayType
 }
@@ -103,6 +100,10 @@ export interface CustCalendarProps {
   hideArrow?: boolean
   /** 隐藏控制器 */
   hideController?: boolean
+
+  /** 显示农历 */
+  mode: 'normal' | 'lunar'
+
   /** 是否可以滑动
    * @default true
    */
@@ -127,10 +128,6 @@ export interface CustCalendarProps {
    * @default month
    */
   view?: 'month' | 'week'
-
-  /** 是否显示阴历 */
-  mode: 'lunar' | 'normal'
-
   /** 自定义日期选择器文本生成器 */
   pickerTextGenerator?: (currentView: string) => string
   /** 指定周几为一行的起点，0为周日

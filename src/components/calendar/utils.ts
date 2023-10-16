@@ -104,53 +104,28 @@ export const getMonthDays = (year: number, month: number, startWeekDay = 1): Day
  *  */
 export const getWeekDays = (year: number, month: number, day: number, startWeekDay = 1): DayType[] => {
   const days: DayType[] = []
-  const firstWeekDay = getWeekDay(year, month, day)
-  let _day = day
-  let _firstWeekDay = firstWeekDay || 7
-  // 第一次循环 将当天及其之前直到 startWeekDay 的所有天数填充
-  while (_firstWeekDay > 0) {
-    // 当 _day 为 0 时，说明该天为上个月的最后一天
-    if (_day === 0) {
-      const preDateInfo = getCountDays(year, month - 1)
-      const preYear = preDateInfo.year
-      const preMonth = preDateInfo.month
-      _day = preDateInfo.days
-      fillDays(days, preYear, preMonth, _day, 'unshift')
-    } else {
-      fillDays(days, year, month, _day, 'unshift')
-    }
-    _day--
-    _firstWeekDay--
+  const currentDate = dayjs(new Date(year, month - 1, day)).toDate() // 获取当前日期
+  currentDate.setDate(currentDate.getDate() - ((currentDate.getDay() - startWeekDay + 7) % 7))
+  /** 一周的最后一天 */
+  const weekEndDay = calcWeekDay(startWeekDay, 6)
+  while (currentDate.getDay() !== weekEndDay) {
+    console.log(currentDate)
+    fillDays(days, currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate(), 'push')
+    currentDate.setDate(currentDate.getDate() + 1)
   }
-  if (days.length < 7) {
-    _day = day
-    _firstWeekDay = firstWeekDay
-    const curDateInfo = getCountDays(year, month)
-    // 第二次循环 将当天以后剩余的周天数填充
-    while (true) {
-      _day++
-      _firstWeekDay++
-      if (_firstWeekDay > startWeekDay + 6) {
-        break
-      }
-      // 当 _day 比当前月总天数还多时，说明该天已经进入下个月
-      if (_day > curDateInfo.days) {
-        const nextDateInfo = getCountDays(year, month + 1)
-        const nextYear = nextDateInfo.year
-        const nextMonth = nextDateInfo.month
-        _day = 1
-        fillDays(days, nextYear, nextMonth, _day)
-      } else {
-        const lastDay = days[days.length - 1]
-        if (lastDay.month > month) {
-          month = lastDay.month
-        }
-        fillDays(days, year, month, _day)
-      }
-    }
-  }
+  fillDays(days, currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate(), 'push')
   return days
 }
+
+/**
+ * 计算current增加add天后是周几
+ * @param current 当前是第几天
+ * @param add 要加多少天
+ */
+const calcWeekDay = (current: number, add: number) => {
+  return (current + add) % 7
+}
+
 const weekDays: Array<string> = ['日', '一', '二', '三', '四', '五', '六']
 /**
  * @description
@@ -160,10 +135,10 @@ const weekDays: Array<string> = ['日', '一', '二', '三', '四', '五', '六'
 export const getWeekDayList = (startDay: WeekDayType = 0) => {
   const result: Array<string> = []
   for (let i = startDay; i < 7; i++) {
-    result.push(weekDays[i])
+    result.push(weekDays[i] ?? '')
   }
   for (let i = 0; i < startDay; i++) {
-    result.push(weekDays[i])
+    result.push(weekDays[i] ?? '')
   }
   return result
 }

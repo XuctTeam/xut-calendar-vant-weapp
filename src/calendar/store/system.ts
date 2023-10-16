@@ -5,8 +5,8 @@ import { cacheGetSync, cacheSetSync } from '@/calendar/cache/cache'
  * @Author: Derek Xu
  * @Date: 2022-08-01 11:45:21
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-08-06 21:36:50
- * @FilePath: \xut-calendar-vant-weapp\src\store\system.ts
+ * @LastEditTime: 2023-10-16 16:44:49
+ * @FilePath: \xut-calendar-vant-weapp\src\calendar\store\system.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
@@ -47,7 +47,7 @@ export const mondayStore = selector({
 
 const compViewState = atom({
   key: 'compViewState',
-  default: cacheGetSync('compView') || 'day'
+  default: cacheGetSync('compView') || 'month'
 })
 
 export const compViewStore = selector({
@@ -57,6 +57,6 @@ export const compViewStore = selector({
   },
   set: ({ set }, newValue) => {
     set(compViewState, newValue)
-    cacheSetSync('compView', newValue === 'list' ? 'list' : 'day')
+    cacheSetSync('compView', newValue === 'month' ? 'month' : 'week')
   }
 })

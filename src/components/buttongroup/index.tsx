@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-14 17:31:01
- * @LastEditTime: 2023-10-12 15:49:32
+ * @LastEditTime: 2023-10-16 16:36:15
  * @LastEditors: Derek Xu
  */
 import { Fragment, FunctionComponent } from 'react'
@@ -18,27 +18,29 @@ export type ButtonOption = {
 interface IButtonGroupOption {
   active: number
   buttons: ButtonOption[]
+  size?: 'small' | 'normal' | 'large' | 'mini'
+  type?: 'default' | 'primary' | 'info' | 'warning' | 'danger'
   onClick: (opt: number) => void
 }
 
-const ButtonGroup: FunctionComponent<IButtonGroupOption> = (props) => {
+const ButtonGroup: FunctionComponent<IButtonGroupOption> = ({ active, buttons, size = 'normal', type = 'warning', onClick }) => {
   const click = (index: number) => {
-    const _index = props.buttons[index]
+    const _index = buttons[index]
     if (!_index) return
-    props.onClick(_index.value)
+    onClick && onClick(_index.value)
   }
 
   return (
     <View className='van-group-button'>
-      {props.buttons.map((item, index) => {
+      {buttons.map((item, index) => {
         return (
           <Fragment key={index}>
-            {index === props.active ? (
-              <Button type='warning' plain hairline onClick={() => click(index)}>
+            {item.value !== active ? (
+              <Button type={type} size={size} plain hairline onClick={() => click(index)}>
                 {item.name}
               </Button>
             ) : (
-              <Button type='warning' hairline onClick={() => click(index)}>
+              <Button type={type} size={size} hairline onClick={() => click(index)}>
                 {item.name}
               </Button>
             )}

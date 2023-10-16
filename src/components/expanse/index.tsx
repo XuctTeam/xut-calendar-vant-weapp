@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-11 16:03:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-11-14 16:50:11
+ * @LastEditTime: 2023-10-16 17:28:50
  * @FilePath: \xut-calendar-vant-weapp\src\components\expanse\index.tsx
  * @Description:
  *
@@ -17,14 +17,14 @@ import './index.less'
 
 interface IPageOption {
   animationShowHeight: number
+  show: boolean
+  changeShow?: (val: boolean) => void
   children?: ReactNode
 }
 
-const Expanse: FunctionComponent<IPageOption> = (props) => {
-  const { animationShowHeight } = props
+const Expanse: FunctionComponent<IPageOption> = ({ animationShowHeight, show, changeShow, children }) => {
   const [animationData, setAnimationData] = useState<any>({})
 
-  const [show, setShow] = useState<boolean>(false)
   const ref = useRef<any>()
 
   useEffect(() => {
@@ -49,19 +49,19 @@ const Expanse: FunctionComponent<IPageOption> = (props) => {
   const _down = () => {
     ref.current.height(animationShowHeight).step()
     setAnimationData(ref.current.export())
-    setShow(true)
+    changeShow && changeShow(true)
   }
   // 上去
   const _up = () => {
     ref.current.height(70).step()
     setAnimationData(ref.current.export())
-    setShow(false)
+    changeShow && changeShow(false)
   }
 
   return (
     <>
       <View style={{ overflow: 'hidden', height: '70px' }} animation={animationData}>
-        {props.children}
+        {children}
       </View>
       <Divider
         contentPosition='center'

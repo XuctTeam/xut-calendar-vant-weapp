@@ -3,7 +3,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-13 17:53:43
+ * @LastEditTime: 2023-10-16 18:01:50
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -11,7 +11,7 @@
  */
 import Taro, { useDidShow } from '@tarojs/taro'
 import Unite from '@antmjs/unite'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Button } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import Router from 'tarojs-router-next'
@@ -21,10 +21,9 @@ import Images from '@/calendar/constants/images'
 import { getToday } from '@/calendar/utils'
 import Container from '@/components/container'
 import calendar from '@/calendar'
-import CustCalendar from '@/components/calendar'
-import { DayType } from '@/components/calendar/type'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import { ICurrentDay } from '~/../types/date'
+import CustCalendar from './component/Calendar'
 import { UserInfo, EventList, Header } from './ui'
 import './index.module.less'
 
@@ -329,8 +328,9 @@ export default Unite(
       <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
         <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen} messageCount={messageCount}></Header>
         <View className='box'>
-          <CustCalendar
-            mode={'lunar'}
+          <CustCalendar></CustCalendar>
+          {/* <CustCalendar
+            mode={lunar ? 'lunar' : 'normal'}
             selectedDateColor='#0085E3'
             marks={[
               { value: '2023-09-21', color: 'red' },
@@ -344,7 +344,8 @@ export default Unite(
             startWeekDay={monday ? 1 : 0}
             selectedDate={selectedDay}
             onDayClick={selectDayClickHandler}
-          />
+            view={view === 'week' ? 'week' : 'month'}
+          /> */}
           <EventList
             loading={false}
             accessToken={accessToken || ''}

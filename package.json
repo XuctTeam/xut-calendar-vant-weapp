@@ -166,6 +166,7 @@
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.5",
     "lodash": "^4.17.21",
+    "lunisolar": "^2.2.3",
     "qrcode-base64": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

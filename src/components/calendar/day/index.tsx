@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2023-10-13 14:35:47
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-13 18:05:23
+ * @LastEditTime: 2023-10-16 09:07:36
  * @FilePath: \xut-calendar-vant-weapp\src\components\calendar\day\index.tsx
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 import { View } from '@tarojs/components'
 import React, { FC } from 'react'
-import solarLunar from 'solarlunar-es'
+import lunisolar from 'lunisolar'
 import { DayProps } from '../type'
 import './index.less'
 
@@ -62,11 +62,10 @@ const Day: FC<DayProps> = (props) => {
   }
   console.log(custDayRender, 'custDayRendercustDayRender')
 
-  const lunarDayInfo: any = mode === 'lunar' ? solarLunar.lunar2solar(year, month, day, true) : null
-  debugger
+  const lunarDayInfo: any = mode === 'lunar' ? lunisolar(dateFormate) : null
   const lunarClassName = ['lunar-day']
   if (lunarDayInfo) {
-    if (lunarDayInfo.dayCn === '初一') {
+    if (lunarDayInfo.lunar.getDayName() === '初一') {
       lunarClassName.push('lunar-month')
     }
   }
@@ -95,10 +94,10 @@ const Day: FC<DayProps> = (props) => {
                   return
                 }
                 let dateStr: string
-                if (lunarDayInfo.dayCn === '初一') {
-                  dateStr = lunarDayInfo.dayCn
+                if (lunarDayInfo.lunar.getDayName() === '初一') {
+                  dateStr = lunarDayInfo.lunar.getDayName()
                 } else {
-                  dateStr = lunarDayInfo.isTerm ? lunarDayInfo.term : lunarDayInfo.dayCn
+                  dateStr = lunarDayInfo.solarTerm ? lunarDayInfo.solarTerm.toString() : lunarDayInfo.lunar.getDayName()
                 }
                 return dateStr
               })()}

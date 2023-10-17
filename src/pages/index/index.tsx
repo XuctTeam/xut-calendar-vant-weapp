@@ -3,7 +3,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-16 18:01:50
+ * @LastEditTime: 2023-10-17 09:36:07
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -23,9 +23,9 @@ import Container from '@/components/container'
 import calendar from '@/calendar'
 import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
 import { ICurrentDay } from '~/../types/date'
-import CustCalendar from './component/Calendar'
-import { UserInfo, EventList, Header } from './ui'
+import { UserInfo, EventList, Header, Calendar } from './ui'
 import './index.module.less'
+import { DayType } from '@/components/calendar/type'
 
 const day: ICurrentDay = getToday()
 
@@ -81,9 +81,6 @@ export default Unite(
     },
 
     selectDayClickHandler(info: DayType, dateFormate: string) {
-      if (dayjs(this.state.selectedDay).isSame(dayjs(dateFormate))) {
-        return
-      }
       console.log(info)
       this.setState({
         selectedDay: dateFormate
@@ -286,9 +283,7 @@ export default Unite(
     const [calendars, setCalendars] = useRecoilState(calendar.$store.calendarStore)
     const userInfoState = useRecoilValue(calendar.$store.userInfoStore)
     const userAuths = useRecoilValue(calendar.$store.userAuthInfoStore)
-    const lunar = useRecoilValue(calendar.$store.lunarStore)
-    const monday = useRecoilValue(calendar.$store.mondayStore)
-    const view = useRecoilValue(calendar.$store.compViewStore)
+
     const accessToken = calendar.$cache.cacheGetSync('accessToken')
     const calRef = React.createRef()
     const localRefreshTimeRef = useRef<number>(0)
@@ -326,32 +321,15 @@ export default Unite(
 
     return (
       <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
-        <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen} messageCount={messageCount}></Header>
+        <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen}></Header>
         <View className='box'>
-          <CustCalendar></CustCalendar>
-          {/* <CustCalendar
-            mode={lunar ? 'lunar' : 'normal'}
-            selectedDateColor='#0085E3'
-            marks={[
-              { value: '2023-09-21', color: 'red' },
-              { value: '2023-09-22', color: 'pink' },
-              { value: '2023-09-23', color: 'gray' },
-              { value: '2023-09-24', color: 'yellow' },
-              { value: '2023-09-25', color: 'darkblue' },
-              { value: '2023-09-26', color: 'pink' },
-              { value: '2023-09-27', color: 'green' }
-            ]}
-            startWeekDay={monday ? 1 : 0}
-            selectedDate={selectedDay}
-            onDayClick={selectDayClickHandler}
-            view={view === 'week' ? 'week' : 'month'}
-          /> */}
+          <Calendar selectedDay={selectedDay} onDayClick={selectDayClickHandler}></Calendar>
           <EventList
             loading={false}
             accessToken={accessToken || ''}
             wxBrower={false}
             today={day.current}
-            view={view && view === 'list' ? 1 : 0}
+            view={'list'}
             selectedDay={selectedDay}
             calendars={calendars || []}
             calendarComponents={calendarComponents}

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-15 18:42:37
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-13 17:17:54
+ * @LastEditTime: 2023-10-17 09:32:08
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\ui\index.ts
  * @Description:
  *
@@ -14,3 +14,5 @@ export { default as UserInfo } from './UserInfo'
 export { default as EventList } from './EventList'
 
 export { default as Header } from './Header'
+
+export { default as Calendar } from './Calendar'

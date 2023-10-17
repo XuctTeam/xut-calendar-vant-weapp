@@ -88,7 +88,6 @@ const CustCalendar = forwardRef<CustCalendarInstance, CustCalendarProps>((props,
         ? getMonthDays(dayViewDetail.year, dayViewDetail.month, startWeekDay)
         : getWeekDays(dayViewDetail.year, dayViewDetail.month, dayViewDetail.day, startWeekDay)
     return [curMonthDays, curMonthDays, curMonthDays]
-    setCurrentCarouselIndex(1)
   }, [dayViewDetail.year, dayViewDetail.month, dayViewDetail.day, startWeekDay, view])
 
   console.log(daysArr, 'render -------------------------------->')
@@ -102,16 +101,11 @@ const CustCalendar = forwardRef<CustCalendarInstance, CustCalendarProps>((props,
     return dayjs(`${dayViewDetail.year}-${dayViewDetail.month}`).format(format.substring(0, 7))
   }
 
-  const current = useMemo(() => {
-    const current = dayjs(selectedDate).toDate()
-    return { year: current.getFullYear(), month: current.getMonth(), day: current.getDay(), weekDay: 1 }
-  }, [selectedDate])
-
   const getPickerText = () => {
     if (view === 'month') return getCurrentMonth()
-    const startDay = (daysArr[0] && daysArr[0][0]) ?? current
-    const endDay = (daysArr[0] && daysArr[0][daysArr[0].length - 1]) ?? current
-    return textFormat(startDay, format) + '~' + textFormat(endDay, format)
+    const startDay = (daysArr[0] && daysArr[0][0]) ?? ''
+    const endDay = (daysArr[0] && daysArr[0][daysArr[0].length - 1]) ?? ''
+    return startDay && endDay && textFormat(startDay, format) + '~' + textFormat(endDay, format)
   }
 
   useEffect(() => {
@@ -126,6 +120,8 @@ const CustCalendar = forwardRef<CustCalendarInstance, CustCalendarProps>((props,
       goNext()
     }
     setSelectedDay(dayjs(selectedDate).format('YYYY-MM-DD'))
+    setDayViewDetail(string2Date(selectedDate ?? ''))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, selectedDay])
 
   const diffMonth = (firstDay: Date, secondDay: Date) => {
@@ -177,7 +173,7 @@ const CustCalendar = forwardRef<CustCalendarInstance, CustCalendarProps>((props,
           <Picker
             mode='date'
             onChange={onPickerChange}
-            value={view === 'month' ? getCurrentMonth() : textFormat((daysArr[0] && daysArr[0][0]) ?? current, format)}
+            value={view === 'month' ? getCurrentMonth() : (daysArr[0] && daysArr[0][0] && textFormat(daysArr[0][0], format)) ?? ''}
             fields={view === 'month' ? 'month' : 'day'}
             start={minDate}
             end={maxDate}
@@ -210,13 +206,15 @@ const CustCalendar = forwardRef<CustCalendarInstance, CustCalendarProps>((props,
             height: view === 'month' ? monthWrapHeigh : weekWrapHeight
           }}
         >
-          {daysArr.map((item, index) => {
-            return (
-              <SwiperItem key={view + index}>
-                <View>{currentCarouselIndex === index && <Days days={item} {...bodyProps} />}</View>
-              </SwiperItem>
-            )
-          })}
+          <SwiperItem>
+            <Days days={daysArr[0] ?? []} {...bodyProps} />
+          </SwiperItem>
+          <SwiperItem>
+            <Days days={daysArr[1] ?? []} {...bodyProps} />
+          </SwiperItem>
+          <SwiperItem>
+            <Days days={daysArr[2] ?? []} {...bodyProps} />
+          </SwiperItem>
         </Swiper>
       ) : (
         <Days days={daysArr[1] ?? []} {...bodyProps} />

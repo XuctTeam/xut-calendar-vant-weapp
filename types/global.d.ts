@@ -8,8 +8,6 @@
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
-/// <reference types="@taro-hooks/plugin-react" />
-/// <reference types="@tarojs/taro" />
 
 declare module '*.png'
 declare module '*.gif'
@@ -38,14 +36,5 @@ declare namespace NodeJS {
     APP_CLIENT: string
     WX_CLIENT: string
     TEMPLATE_ID: any
-  }
-}
-
-declare namespace JSX {
-  type Element = ReactElement
-  type ElementClass = ReactElementClass
-  interface ReactElement extends React.ReactElement<any, any> {}
-  interface ReactElementClass extends React.Component<any> {
-    render(): React.ReactNode
   }
 }

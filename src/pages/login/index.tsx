@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 08:57:11
+ * @LastEditTime: 2023-10-18 20:21:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -25,7 +25,6 @@ import Images from '@/calendar/constants/images'
 import { create } from '@/utils/countdown'
 import { ENCRYPTION_CODE } from '@/calendar/constants'
 import calendar from '@/calendar'
-import { IDavCalendar } from '~/../types/calendar'
 import { IUserAuth, IUserInfo } from '~/../types/user'
 import './index.less'
 
@@ -151,7 +150,7 @@ export default Unite(
       return calendar.$api.login
         .phoneLogin(this.state.phone, this.state.smsCode)
         .then((res) => {
-          this._saveTokenToCache(res.access_token, res.refresh_token)
+          this._saveTokenToCache(res.data.access_token, res.data.refresh_token)
         })
         .catch((error) => {
           console.log(error)
@@ -168,9 +167,11 @@ export default Unite(
       return calendar.$api.login
         .usernameLogin(user.username, user.password)
         .then((res) => {
-          this._saveTokenToCache(res.access_token, res.refresh_token)
+          debugger
+          this._saveTokenToCache(res.data.access_token, res.data.refresh_token)
         })
         .catch((error) => {
+          debugger
           console.log(error)
           this.setLoginLoading(false)
         })
@@ -202,7 +203,7 @@ export default Unite(
           calendar.$api.login
             .wxLogin(code, iv, encryptedData)
             .then((rs) => {
-              this._saveTokenToCache(rs.access_token, rs.refresh_token)
+              this._saveTokenToCache(rs.data.access_token, rs.data.refresh_token)
             })
             .catch((err) => {
               console.log(err)
@@ -247,8 +248,8 @@ export default Unite(
         cacheRemoveSync('refreshToken')
         return
       }
-      this.hooks['setUserInfoState'](result[0] as IUserInfo)
-      this.hooks['setUserAuthState'](result[1] as IUserAuth[])
+      this.hooks['setUserInfoState'](result[0].data as IUserInfo)
+      this.hooks['setUserAuthState'](result[1].data as IUserAuth[])
       this.hooks['show']({
         icon: 'success',
         title: '登录成功',
@@ -428,7 +429,7 @@ export default Unite(
                     </View>
                   </View>
 
-                  <Button type='danger' block onClick={loginByPhoneOrUsername} disabled={loginLoading}>
+                  <Button type='info' block onClick={loginByPhoneOrUsername} disabled={loginLoading}>
                     登录
                   </Button>
                 </>
@@ -436,7 +437,7 @@ export default Unite(
             </View>
           </View>
           <View className='self'>
-            <Checkbox value={self} checkedColor='red' onChange={(e: any) => setSelf(e.detail)}>
+            <Checkbox value={self} checkedColor='#1989fa' onChange={(e: any) => setSelf(e.detail)}>
               登录代表您已同意
               {process.env.TARO_ENV === 'weapp' ? (
                 <Navigator url='/pages/privacyrule/index'>《隐私政策》</Navigator>

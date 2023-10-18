@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2023-02-10 11:30:40
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-06-13 11:31:08
+ * @LastEditTime: 2023-10-18 17:53:48
  * @FilePath: \xut-calendar-vant-weapp\.eslintrc.js
  * @Description:
  *
@@ -22,7 +22,8 @@ module.exports = {
         allowDestructuring: false, // Disallow `const { props, state } = this`; true by default
         allowedNames: ['self'] // Allow `const self = this`; `[]` by default
       }
-    ]
+    ],
+    '@typescript-eslint/no-namespace': 'off'
   },
   settings: {
     'import/resolver': {

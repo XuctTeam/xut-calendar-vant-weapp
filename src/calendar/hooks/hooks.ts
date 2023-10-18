@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-09 19:10:39
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:58:29
+ * @LastEditTime: 2023-10-18 13:24:07
  * @FilePath: \xut-calendar-vant-weapp\src\calendar\hooks\hooks.ts
  * @Description:
  *
@@ -66,6 +66,6 @@ export function useWxBrowser() {
 
 export function useNav() {
   const wx = useWxBrowser()
-  const h5 = !useWebEnv()
-  return wx && h5
+  const h5 = useWebEnv()
+  return !wx && h5
 }

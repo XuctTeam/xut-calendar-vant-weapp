@@ -86,17 +86,17 @@ export default Unite(
     const { setPassword, setComfirmPassword, modifyPassword } = events
     const usedNav = calendar.$hooks.useNav()
     const back = calendar.$hooks.back({ to: 4 })
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
 
     events.setHooks({
-      toast: toast,
+      toast: show,
       back: back
     })
 
     return (
-      <Container navTitle='修改密码' enablePagePullDownRefresh={true} className='pages-member-modify-password-index' useNav={usedNav} useMenuBtns={usedNav}>
+      <Container navTitle='修改密码' enablePagePullDownRefresh={false} className='pages-member-modify-password-index' useNav={usedNav} useMenuBtns={usedNav}>
         <View className='box'>
           <CellGroup inset className='van-form-cell-group'>
             <Field

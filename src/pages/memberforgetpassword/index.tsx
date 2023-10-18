@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 08:38:40
+ * @LastEditTime: 2023-10-18 10:00:11
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberforgetpassword\index.tsx
  * @Description:
  *
@@ -66,7 +66,7 @@ export default Unite(
   function ({ state, events }) {
     const { disabled, step } = state
     const { checkMemberCode, modifyPassword } = events
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'success',
       title: '修改成功'
     })
@@ -75,7 +75,7 @@ export default Unite(
     const memberIdRef = useRef<string>('')
     const codeRef = useRef<number>(-1)
     events.setHooks({
-      toast: toast,
+      toast: show,
       back: back,
       memberIdRef: memberIdRef,
       codeRef: codeRef

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 08:53:13
+ * @LastEditTime: 2023-10-18 13:23:20
  * @FilePath: \xut-calendar-vant-weapp\src\pages\privacyrule\index.tsx
  * @Description:
  *
@@ -11,6 +11,8 @@
 import Unite from '@antmjs/unite'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
+import calendar from '@/calendar'
+
 import './index.less'
 
 export default Unite(
@@ -19,8 +21,7 @@ export default Unite(
     async onLoad() {}
   },
   function ({}) {
-    const usedNav = useNav()
-
+    const usedNav = calendar.$hooks.useNav()
     return (
       <Container navTitle='隐私保护协议' enablePagePullDownRefresh={false} useNav={usedNav} useMenuBtns={usedNav} className='pages-privacy-rule-index'>
         <View className='header'>

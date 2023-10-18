@@ -18,7 +18,7 @@ interface IPageOption {
   checkMemberCode: (phone: string, mail: string, code: string, form: number) => void
 }
 
-const Auth: FunctionComponent<IPageOption> = (props) => {
+const Auth: FunctionComponent<IPageOption> = ({ disabled, checkMemberCode }) => {
   const [phoneSmsText, setPhoneSmsText] = useState<string>('发送验证码')
   const [phoneDisable, setPhoneDisable] = useState<boolean>(false)
   const [phoneForm, setPhoneForm] = useState<boolean>(true)
@@ -28,7 +28,6 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
   const [emailSmsCode, setEmailSmsCode] = useState<string>('')
   const [emailSmsText, setEmailSmsText] = useState('发送验证码')
   const [emailDisable, setEmailDisable] = useState<boolean>(false)
-  const { disabled } = props
 
   const countDownRef = useRef<any>()
 
@@ -132,7 +131,7 @@ const Auth: FunctionComponent<IPageOption> = (props) => {
         return
       }
     }
-    props.checkMemberCode(phone, mail, phoneForm ? phoneSmsCode : emailSmsCode, phoneForm ? 1 : 2)
+    checkMemberCode(phone, mail, phoneForm ? phoneSmsCode : emailSmsCode, phoneForm ? 1 : 2)
   }
 
   return (

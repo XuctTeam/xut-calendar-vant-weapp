@@ -2,14 +2,12 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 13:27:57
- * @LastEditTime: 2022-11-11 21:49:16
+ * @LastEditTime: 2023-10-18 08:52:20
  * @LastEditors: Derek Xu
  */
-import { FunctionComponent } from 'react'
+import { FC } from 'react'
 import { View } from '@tarojs/components'
-import Router from 'tarojs-router-next'
 import Avatar from '@/components/avatar'
-import { Icon } from '@antmjs/vantui'
 
 interface IPageOption {
   hasLogin: boolean
@@ -18,8 +16,7 @@ interface IPageOption {
   to: () => void
 }
 
-const User: FunctionComponent<IPageOption> = (props) => {
-  const { hasLogin, nickname, avatar, to } = props
+const User: FC<IPageOption> = ({ hasLogin, nickname, avatar, to }) => {
   return (
     <View className='info'>
       <View className='info-box'>

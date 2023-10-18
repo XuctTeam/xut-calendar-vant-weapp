@@ -2,7 +2,7 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-05 17:04:12
- * @LastEditTime: 2023-06-13 13:18:13
+ * @LastEditTime: 2023-10-18 09:53:44
  * @LastEditors: Derek Xu
  */
 import { FunctionComponent, useCallback } from 'react'
@@ -10,7 +10,7 @@ import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { Cell } from '@antmjs/vantui'
 import { useRequestSubscribeMessage, useToast } from 'taro-hooks'
-import * as Router from 'tarojs-router-next'
+import Router from 'tarojs-router-next'
 import { useThrottle, useWebEnv } from '@/calendar/hooks/hooks'
 
 interface IPageOption {
@@ -18,9 +18,9 @@ interface IPageOption {
 }
 
 const Setting: FunctionComponent<IPageOption> = (props) => {
-  const [requestSubscribeMessage] = useRequestSubscribeMessage()
+  const { subscribe } = useRequestSubscribeMessage()
   const env = useWebEnv()
-  const [toast] = useToast({
+  const { show } = useToast({
     mask: true,
     duration: 1000,
     title: 'initial title',
@@ -49,7 +49,7 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
   const _submissiveClickHandle = useCallback(async () => {
     console.log(env)
     if (!(props.accessToken && !env)) {
-      toast({
+      show({
         title: '请先登陆',
         icon: 'error'
       })
@@ -59,7 +59,7 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
     let flag = false
     const subscribeIds = process.env.TEMPLATE_ID?.IDS
     try {
-      const { [subscribeIds]: result } = await requestSubscribeMessage(subscribeIds)
+      const { [subscribeIds]: result } = await subscribe(subscribeIds)
       if (result === 'accept') {
         content = '订阅成功！'
         flag = true
@@ -68,12 +68,12 @@ const Setting: FunctionComponent<IPageOption> = (props) => {
       console.log(e)
       content = '订阅失败！'
     }
-    toast({
+    show({
       title: content,
       icon: flag ? 'success' : 'error'
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [requestSubscribeMessage, toast])
+  }, [subscribe, show])
 
   const _copy = () => {
     Taro.setClipboardData({

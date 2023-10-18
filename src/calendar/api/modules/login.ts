@@ -2,11 +2,14 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-03 09:31:21
- * @LastEditTime: 2023-10-09 16:30:29
+ * @LastEditTime: 2023-10-18 20:17:21
  * @LastEditors: Derek Xu
  */
+import Taro, { RequestTask } from '@tarojs/taro'
 import qs from 'qs'
-import http from '@/calendar/api/config'
+import http from '../request'
+import { Login } from '../interface'
+import port from '../request/port'
 
 export default {
   /**
@@ -19,7 +22,7 @@ export default {
    */
   wxLogin(code: string, iv: string, encryptedData: string) {
     return http.post(
-      `/uaa/oauth2/token?grant_type=wx&scope=server&code=${encodeURIComponent(code)}&iv=${iv}&encryptedData=${encodeURIComponent(encryptedData)}`,
+      port.UAA + `/oauth2/token?grant_type=wx&scope=server&code=${encodeURIComponent(code)}&iv=${iv}&encryptedData=${encodeURIComponent(encryptedData)}`,
       {}
     )
   },
@@ -32,7 +35,7 @@ export default {
    * @author: Derek Xu
    */
   phoneLogin(phone: string, code: string) {
-    return http.post(`/uaa/oauth2/token?grant_type=app&scope=server&phone=${phone}&code=${code}&login_type=phone`, {})
+    return http.post<Login.LoginResult>(port.UAA + `/oauth2/token?grant_type=phone&scope=server&phone=${phone}&code=${code}&login_type=phone`, {})
   },
 
   /**
@@ -45,16 +48,10 @@ export default {
   usernameLogin(username: string, password: string) {
     // eslint-disable-next-line import/no-named-as-default-member
     const dataObj = qs.stringify({ username: username, password: password })
-    return http.post(`/uaa/oauth2/token?grant_type=app&scope=server&login_type=password`, dataObj, 'application/x-www-form-urlencoded')
-  },
-
-  /**
-   * @description: 刷新token
-   * @param {string} refresh_token
-   * @return {*}
-   * @author: Derek Xu
-   */
-  tokenRefresh(refresh_token: string) {
-    return http.post(`/uaa/oauth2/token?grant_type=refresh_token&refresh_token=${refresh_token}`, {})
+    return http.post(port.UAA + `/oauth2/token?grant_type=password&scope=server&login_type=password`, dataObj, {
+      header: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
   }
 }

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-08-01 09:57:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 08:51:55
+ * @LastEditTime: 2023-10-18 09:56:18
  * @FilePath: \xut-calendar-vant-weapp\src\pages\onlineservices\index.tsx
  * @Description:
  *
@@ -22,9 +22,8 @@ export default Unite(
     async onLoad() {}
   },
   function ({}) {
-    const _useNav = useNav()
     return (
-      <Container navTitle='在线客服' useNav={_useNav} useMenuBtns={_useNav} enablePagePullDownRefresh={false} className='pages-online-services-index'>
+      <Container navTitle='在线客服' enablePagePullDownRefresh={false} className='pages-online-services-index'>
         <View className='van-page-box'>
           <View className='image'>
             <Image round src={Images.DEFAULT_QR_IMAGE} />

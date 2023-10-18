@@ -2,26 +2,16 @@
  * @Author: Derek Xu
  * @Date: 2022-11-14 09:17:58
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:43
+ * @LastEditTime: 2023-10-18 09:22:37
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberuserinfo\index.tsx
  * @Description:
  *
  * Copyright (c) 2023 by 楚恬商行, All Rights Reserved.
  */
-/*
- * @Author: Derek Xu
- * @Date: 2022-07-20 09:26:33
- * @LastEditors: Derek Xu
- * @LastEditTime: 2023-06-13 13:42:49
- * @FilePath: \xut-calendar-vant-weapp\src\pages\memberuserinfo\index.tsx
- * @Description:
- *
- * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
- */
 import Unite from '@antmjs/unite'
 import { useReachBottom } from '@tarojs/taro'
 import { useRecoilValue } from 'recoil'
-import * as Router from 'tarojs-router-next'
+import Router from 'tarojs-router-next'
 import { View } from '@tarojs/components'
 import Container from '@/components/container'
 import { cacheGetSync } from '@/calendar/cache/cache'

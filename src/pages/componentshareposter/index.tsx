@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-30 15:24:02
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 10:40:44
+ * @LastEditTime: 2023-10-19 13:59:18
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareposter\index.tsx
  * @Description:
  *
@@ -22,7 +22,6 @@ import Images from '@/calendar/constants/images'
 import Container from '@/components/container'
 import calendar from '@/calendar'
 import { formatDifferentDayTime, formateSameDayDuration, formatSameDayTime } from '@/calendar/utils'
-import { IDavComponent } from 'types/calendar'
 import './index.less'
 
 interface IImageOption {
@@ -97,13 +96,13 @@ export default Unite(
     },
 
     _draw(qrCode: string, summary: string, packageTime: IPackageTimeOption) {
-      const that = this
+      const self = this
       Taro.createSelectorQuery()
         .select('#myCanvas')
         .node((res) => {
           if (!res || !res.node) {
             setTimeout(() => {
-              that._draw(qrCode, summary, packageTime)
+              self._draw(qrCode, summary, packageTime)
             }, 200)
             return
           }
@@ -125,15 +124,15 @@ export default Unite(
           //ctx.fillRect(0, 0, systemInfo.screenWidth, _scrHeight)
 
           /* 背景图*/
-          that._drawRoundedRect(ctx, 'white', '#ffcb4b', 10, 10, _scrWidth, _scrHeight - 20, 5)
+          self._drawRoundedRect(ctx, 'white', '#ffcb4b', 10, 10, _scrWidth, _scrHeight - 20, 5)
 
           /* 日程详情 */
-          that._drawRoundedRect(ctx, 'white', '#fff', 30, 30, _scrWidth - 40, _scrHeight - 160, 5)
+          self._drawRoundedRect(ctx, 'white', '#fff', 30, 30, _scrWidth - 40, _scrHeight - 160, 5)
 
           /**  */
-          that._drawScreen(ctx, 40, 100, _scrWidth - 24)
+          self._drawScreen(ctx, 40, 100, _scrWidth - 24)
 
-          that._drawTxt({
+          self._drawTxt({
             context: ctx,
             text: this.hooks['userInfo'].name || '名称',
             fillStyle: '#000000',
@@ -146,7 +145,7 @@ export default Unite(
             maxLine: 2
           })
 
-          that._drawTxt({
+          self._drawTxt({
             context: ctx,
             text: '给你推荐了日程',
             fillStyle: '#666666',
@@ -159,7 +158,7 @@ export default Unite(
             maxLine: 2
           })
 
-          that._drawTxt({
+          self._drawTxt({
             context: ctx,
             text: summary,
             fillStyle: '#fff',
@@ -173,7 +172,7 @@ export default Unite(
           })
 
           /** 日程时间 */
-          that._packageTime(ctx, _scrWidth, _scrHeight - 60, packageTime)
+          self._packageTime(ctx, _scrWidth, _scrHeight - 60, packageTime)
 
           // 将要绘制的图片放在一个数组中
           const imgList: IImageOption[] = []
@@ -182,7 +181,7 @@ export default Unite(
               src: this.hooks['userInfo'].avatar || Images.DEFAULT_AVATAR
             },
             {
-              src: Images.DEFAULT_ATTEND_BACKGROUD
+              src: Images.DEFAULT_ATTEND_BACKGROUND
             },
             {
               src: qrCode
@@ -190,23 +189,23 @@ export default Unite(
           )
           // 对Promise.all数组进行图片绘制操作
           imgList.forEach((item, index) => {
-            const imgtag = that._getImage(cavs)
-            imgtag.src = item.src
-            imgtag.crossOrigin = 'Anonymous'
+            const imgTag = self._getImage(cavs)
+            imgTag.src = item.src
+            imgTag.crossOrigin = 'Anonymous'
 
             if (index == 0) {
-              imgtag.src += `?timestamp= ${Date.now()}`
-              imgtag.onload = () => {
-                console.log(imgtag.src)
-                this._drawCircleImage(ctx, imgtag, 50, 40, 44)
+              imgTag.src += `?timestamp= ${Date.now()}`
+              imgTag.onload = () => {
+                console.log(imgTag.src)
+                this._drawCircleImage(ctx, imgTag, 50, 40, 44)
               }
             } else if (index == 1) {
-              imgtag.onload = () => {
+              imgTag.onload = () => {
                 //ctx.drawImage(imgtag, (_scrWidth - 220) / 2, 70, 220, 220)
               }
             } else if (index == 2) {
-              imgtag.onload = () => {
-                ctx.drawImage(imgtag, (_scrWidth - 180) / 2, 120, 200, 200)
+              imgTag.onload = () => {
+                ctx.drawImage(imgTag, (_scrWidth - 180) / 2, 120, 200, 200)
               }
             }
           })
@@ -435,19 +434,19 @@ export default Unite(
     },
 
     async _downWeappQrCode() {
-      const that = this
+      const self = this
       Taro.getSetting({
         success: function (res) {
           if (!res.authSetting['scope.writePhotosAlbum']) {
             Taro.authorize({
               scope: 'scope.writePhotosAlbum',
               success: function () {
-                that._weappWritePhotosAlbum()
+                self._weappWritePhotosAlbum()
               }
             })
             return
           }
-          that._weappWritePhotosAlbum()
+          self._weappWritePhotosAlbum()
         }
       })
     },
@@ -486,7 +485,7 @@ export default Unite(
     const { saveQrCode } = events
     const systemInfo = Taro.getSystemInfoSync()
     const canvasRef = useRef<any>()
-    const userInfo = useRecoilValue(userInfoStore)
+    const userInfo = useRecoilValue(calendar.$store.userInfoStore)
     const { show } = useToast({
       icon: 'error'
     })
@@ -497,7 +496,7 @@ export default Unite(
       userInfo: userInfo,
       toast: show
     })
-    const usedNav = useNav()
+    const usedNav = calendar.$hooks.useNav()
 
     return (
       <Container

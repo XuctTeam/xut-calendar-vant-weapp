@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 08:44:09
+ * @LastEditTime: 2023-10-19 13:09:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindusername\index.tsx
  * @Description:
  *
@@ -17,7 +17,6 @@ import { useRecoilState } from 'recoil'
 import { userAuthInfoStore } from '@/calendar/store/store'
 import Container from '@/components/container'
 import calendar from '@/calendar'
-import { IUserAuth } from '~/../types/user'
 
 import './index.less'
 
@@ -55,7 +54,7 @@ export default Unite(
         loading: false
       })
       calendar.$api.user.auths().then((res) => {
-        this.hooks['setUserAuthsState'](res as IUserAuth[])
+        this.hooks['setUserAuthsState'](res.data)
         window.setTimeout(() => {
           this.hooks['back']()
         }, 1500)
@@ -69,7 +68,7 @@ export default Unite(
     const userNameAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'user_name') : undefined
     const form = Form.useForm()
     const { show, hide } = useToast({ title: '绑定成功' })
-    const back = calendar.$hooks.useBack({ to: 4 })
+    const [back] = calendar.$hooks.useBack({ to: 4 })
     const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({

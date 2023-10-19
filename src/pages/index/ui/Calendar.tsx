@@ -2,13 +2,13 @@
  * @Author: Derek Xu
  * @Date: 2023-10-16 17:59:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-17 11:07:41
+ * @LastEditTime: 2023-10-19 09:42:48
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\ui\Calendar.tsx
  * @Description:
  *
  * Copyright (c) 2023 by 楚恬商行, All Rights Reserved.
  */
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import CustomCalendar from '@/components/calendar'
 import calendar from '@/calendar'
@@ -26,7 +26,7 @@ const Index: FC<IProps> = ({ selectedDay, onDayClick }) => {
 
   return (
     <CustomCalendar
-      mode={lunar ? 'lunar' : 'normal'}
+      mode={lunar}
       view={view === 'week' ? 'week' : 'month'}
       selectedDate={selectedDay}
       startWeekDay={monday ? 1 : 0}

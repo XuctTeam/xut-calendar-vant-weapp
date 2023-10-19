@@ -4,13 +4,13 @@
  * @Autor: Derek Xu
  * @Date: 2022-03-27 15:04:22
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-10-27 09:12:22
+ * @LastEditTime: 2023-10-19 13:22:12
  */
 import { FunctionComponent, useState } from 'react'
 import { View } from '@tarojs/components'
 import { useToast } from 'taro-hooks'
-import { checkPassowrd } from '@/calendar/utils'
 import { Button, Cell, CellGroup, Field } from '@antmjs/vantui'
+import { checkPassword } from '@/calendar/utils'
 
 interface IPageOption {
   disabled: boolean
@@ -20,25 +20,25 @@ interface IPageOption {
 const Password: FunctionComponent<IPageOption> = (props) => {
   const [password, setPassword] = useState<string>('')
   const [confirmPassword, setConfirmPassword] = useState<string>('')
-  const [toast] = useToast({
+  const { show } = useToast({
     icon: 'error'
   })
 
   const modifyPassword = () => {
-    if (!password || !checkPassowrd(password)) {
-      toast({
+    if (!password || !checkPassword(password)) {
+      show({
         title: '密码格式错误'
       })
       return
     }
     if (!confirmPassword) {
-      toast({
+      show({
         title: '确认密码不能为空'
       })
       return
     }
     if (password !== confirmPassword) {
-      toast({
+      show({
         title: '两次密码不一致'
       })
       return

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-09-23 13:46:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 09:04:38
+ * @LastEditTime: 2023-10-19 13:57:28
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentview\index.tsx
  * @Description:
  *
@@ -19,16 +19,15 @@ import { useShareAppMessage } from '@tarojs/taro'
 import { useToast } from 'taro-hooks'
 import { formatSameDayTime, formateSameDayDuration, formatDifferentDayTime, alarmTypeToCode, formatAlarmText } from '@/calendar/utils'
 import Images from '@/calendar/constants/images'
-
 import ButtonGroup from '@/components/buttongroup'
 import Container from '@/components/container'
 import calendar from '@/calendar'
-import { IDavComponent } from 'types/calendar'
 import { DifferentDay, SameDay } from './ui'
 
 import './index.less'
+import { Calendar } from '@/calendar/api/interface'
 
-const DEFAULT_ATTEND_BACKGROUD = Images.DEFAULT_ATTEND_BACKGROUD
+const DEFAULT_ATTEND_BACKGROUND = Images.DEFAULT_ATTEND_BACKGROUND
 
 export default Unite(
   {
@@ -102,7 +101,7 @@ export default Unite(
         return
       }
       if (!result || result.length !== 2) return
-      this._setComponent(result[0] as any as IDavComponent, result[1] as any as string[])
+      this._setComponent(result[0].data, result[1].data)
     },
 
     setAction(action: boolean) {
@@ -144,7 +143,7 @@ export default Unite(
         })
     },
 
-    async _setComponent(component: IDavComponent, memberIds: string[]) {
+    async _setComponent(component: Calendar.IDavComponent, memberIds: string[]) {
       this.setState({ ...Object.assign({ ...component, alarmTimes: [] }), memberIds })
       if (component.alarmType) {
         this.setState({
@@ -168,7 +167,7 @@ export default Unite(
           if (memberIds.length !== 0) {
             const nameResult = await calendar.$api.user.getName(component.creatorMemberId)
             this.setState({
-              createMemberName: nameResult
+              createMemberName: nameResult.data
             })
           }
           const attendStatusResult = await calendar.$api.component.getAttendStatus(component.id)
@@ -234,13 +233,13 @@ export default Unite(
     },
 
     _copyLink() {
-      const that = this
+      const self = this
       this._shareTitle()
         .then((res) => {
           Taro.setClipboardData({
             data: res as any as string,
             success: function () {
-              that.hooks['toast']({
+              self.hooks['toast']({
                 title: '复制成功！'
               })
             }
@@ -364,7 +363,7 @@ export default Unite(
       return {
         title: summary,
         path: '/pages/componentshareview/index?componentId=' + id,
-        imageUrl: DEFAULT_ATTEND_BACKGROUD
+        imageUrl: DEFAULT_ATTEND_BACKGROUND
       }
     })
 
@@ -449,7 +448,8 @@ export default Unite(
         {creatorMemberId !== userInfo?.id && !loading && (
           <View className='van-page-button'>
             <ButtonGroup
-              actived={attendStatus}
+              type='warning'
+              active={attendStatus}
               onClick={(e) => setAttendStatus(e)}
               buttons={[
                 { name: '待定', value: 0 },

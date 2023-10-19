@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 10:41:59
+ * @LastEditTime: 2023-10-19 13:26:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -16,7 +16,7 @@ import { useRecoilState } from 'recoil'
 import Container from '@/components/container'
 import { calendarStore } from '@/calendar/store/store'
 import calendar from '@/calendar'
-import { IDavCalendar } from 'types/calendar'
+import { Calendar } from '@/calendar/api/interface'
 import { CalendarListBody } from './ui'
 
 import './index.less'
@@ -37,7 +37,7 @@ export default Unite(
           this.setState({
             loading: false
           })
-          this.hooks['setCalendarState'](res as any as IDavCalendar[])
+          this.hooks['setCalendarState'](res.data)
         })
         .catch((err) => {
           console.log(err)
@@ -51,7 +51,7 @@ export default Unite(
       if (!(this.hooks['calendars'] && this.hooks['calendars'].length > 0)) {
         return
       }
-      const calendar: IDavCalendar | undefined = this.hooks['calendars'].find((item: IDavCalendar) => item.id === id)
+      const calendar: Calendar.IDavCalendar | undefined = this.hooks['calendars'].find((item: Calendar.IDavCalendar) => item.id === id)
       if (!calendar) return
       Router.toCalendaredit({
         data: calendar,
@@ -68,11 +68,10 @@ export default Unite(
     }
   },
 
-  function ({ state, events }) {
-    const { loading } = state
-    const { editCalendar, onReload, loadMore } = events
+  function ({ events }) {
+    const { editCalendar, loadMore } = events
     const [calendars, setCalendarState] = useRecoilState(calendarStore)
-    const usedNav = useNav()
+    const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({
       calendars: calendars,
@@ -86,7 +85,7 @@ export default Unite(
         ) : (
           <View className='list'>
             <InfiniteScroll className='scroll' loadMore={loadMore} style={{ height: '100%' }}>
-              {calendars?.map((item: IDavCalendar, index: number) => {
+              {calendars?.map((item: Calendar.IDavCalendar, index: number) => {
                 return (
                   <View className='li' key={index}>
                     <CalendarListBody item={item} editCalendar={editCalendar}></CalendarListBody>

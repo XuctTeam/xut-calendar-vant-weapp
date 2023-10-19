@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-16 11:06:17
+ * @LastEditTime: 2023-10-19 11:16:50
  * @FilePath: \xut-calendar-vant-weapp\src\app.tsx
  * @Description:
  *

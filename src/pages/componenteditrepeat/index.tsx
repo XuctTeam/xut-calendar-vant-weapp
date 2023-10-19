@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 09:07:02
+ * @LastEditTime: 2023-10-19 13:48:43
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditrepeat\index.tsx
  * @Description:
  *
@@ -221,7 +221,7 @@ export default Unite(
   function ({ state, events }) {
     const { selectedDate, repeatStatus, repeatInterval, repeatType, repeatByday, repeatBymonth, repeatBymonthday } = state
     const { setRepeatChoose, setCustomRepeatChoose, saveRepeat } = events
-    const back = calendar.$hooks.useBack({ to: 1 })
+    const [back] = calendar.$hooks.useBack({ to: 1 })
     const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({

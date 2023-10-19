@@ -5,9 +5,10 @@
  * @Autor: Derek Xu
  * @Date: 2022-02-28 21:26:26
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:52:10
+ * @LastEditTime: 2023-10-19 13:07:00
  */
 import { useCallback, useEffect, useRef } from 'react'
+// eslint-disable-next-line import/no-named-as-default
 import Router, { NavigateType } from 'tarojs-router-next'
 
 export interface ToastOption {

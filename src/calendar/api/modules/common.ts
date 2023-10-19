@@ -2,15 +2,16 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-03-02 08:59:45
- * @LastEditTime: 2023-10-09 17:27:55
+ * @LastEditTime: 2023-10-19 13:17:26
  * @LastEditors: Derek Xu
  */
-import request from '../config'
+import request from '../request'
+import PORT from '../request/port'
 
 export default {
   upload() {
     //@ts-ignore
-    return SERVICES_API + '/ums/api/app/v1/file/upload'
+    return SERVICES_API + PORT.UMS + '/v1/file/upload'
   },
   /**
    * 发送短信
@@ -18,7 +19,7 @@ export default {
    * @returns
    */
   sendLoginSmsCode(phone: string) {
-    return request.post('/ums/api/app/v1/sms/anno/login', { phone, type: 0 })
+    return request.post(PORT.UMS + '/v1/sms/anno/login', { phone, type: 0 })
   },
 
   /**
@@ -29,7 +30,7 @@ export default {
    * @author: Derek Xu
    */
   sendSmsCode(edit: boolean, phone: string) {
-    return request.post('/ums/api/app/v1/sms', { type: edit ? 4 : 3, phone })
+    return request.post(PORT.UMS + '/v1/sms', { type: edit ? 4 : 3, phone })
   },
 
   /**
@@ -40,6 +41,6 @@ export default {
    * @author: Derek Xu
    */
   sendEmailCode(email: string, type: number) {
-    return request.post('/ums/api/app/v1/email', { email, type })
+    return request.post(PORT.UMS + '/v1/email', { email, type })
   }
 }

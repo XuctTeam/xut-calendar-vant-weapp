@@ -2,11 +2,12 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-12-02 17:45:23
- * @LastEditTime: 2023-10-09 17:31:02
+ * @LastEditTime: 2023-10-19 10:18:52
  * @LastEditors: Derek Xu
  */
-import { IDavCalendar } from 'types/calendar'
-import httpRequest from '../config'
+import { Calendar } from '../interface'
+import request from '../request'
+import PORT from '../request/port'
 
 export default {
   /**
@@ -16,7 +17,7 @@ export default {
    * @author: Derek Xu
    */
   list() {
-    return httpRequest.get('/cms/api/app/v1/calendar/list')
+    return request.get<Calendar.IDavCalendar[]>(PORT.CMS + '/v1/calendar/list')
   },
 
   /**
@@ -26,7 +27,7 @@ export default {
    * @author: Derek Xu
    */
   colorsList() {
-    return httpRequest.get('/cms/api/app/v1/calendar/color')
+    return request.get('/cms/api/app/v1/calendar/color')
   },
   /**
    * @description: 获取日历详情
@@ -35,7 +36,7 @@ export default {
    * @author: Derek Xu
    */
   get(id: string) {
-    return httpRequest.get('/cms/api/app/v1/calendar', { id })
+    return request.get('/cms/api/app/v1/calendar', { id })
   },
 
   /**
@@ -44,8 +45,8 @@ export default {
    * @return {*}
    * @author: Derek Xu
    */
-  update(data: IDavCalendar) {
-    return httpRequest.put('/cms/api/app/v1/calendar', data)
+  update(data: Calendar.IDavCalendar) {
+    return request.put('/cms/api/app/v1/calendar', data)
   },
 
   /**
@@ -54,8 +55,8 @@ export default {
    * @return {*}
    * @author: Derek Xu
    */
-  create(data: IDavCalendar) {
-    return httpRequest.post('/cms/api/app/v1/calendar', data)
+  create(data: Calendar.IDavCalendar) {
+    return request.post('/cms/api/app/v1/calendar', data)
   },
 
   /**
@@ -65,6 +66,6 @@ export default {
    * @author: Derek Xu
    */
   remove(calendarId: string) {
-    return httpRequest.delete('/cms/api/app/v1/calendar?calendarId=' + calendarId)
+    return request.delete('/cms/api/app/v1/calendar?calendarId=' + calendarId)
   }
 }

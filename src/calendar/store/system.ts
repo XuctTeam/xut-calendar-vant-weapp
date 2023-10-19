@@ -1,11 +1,11 @@
 import { atom, selector } from 'recoil'
-import { cacheGetSync, cacheSetSync } from '@/calendar/cache/cache'
+import { cacheGetSync, cacheSetSync } from '../cache/cache'
 
 /*
  * @Author: Derek Xu
  * @Date: 2022-08-01 11:45:21
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-16 16:44:49
+ * @LastEditTime: 2023-10-19 09:28:37
  * @FilePath: \xut-calendar-vant-weapp\src\calendar\store\system.ts
  * @Description:
  *

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 09:18:28
+ * @LastEditTime: 2023-10-19 13:42:04
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditdescription\index.tsx
  * @Description:
  *
@@ -38,7 +38,7 @@ export default Unite(
   function ({ state, events }) {
     const { description } = state
     const { setDescription, saveDescription } = events
-    const back = calendar.$hooks.useBack({ to: 1 })
+    const [back] = calendar.$hooks.useBack({ to: 1 })
     const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({

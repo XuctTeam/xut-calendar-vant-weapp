@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 18:25:33
+ * @LastEditTime: 2023-10-19 13:21:24
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifypassword\index.tsx
  * @Description:
  *
@@ -15,13 +15,13 @@ import { useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import calendar from '@/calendar'
 import './index.less'
-import { checkPassowrd } from '@/calendar/utils'
+import { checkPassword as checkPassword } from '@/calendar/utils'
 
 export default Unite(
   {
     state: {
       password: '',
-      comfirmPassword: '',
+      confirmPassword: '',
       loading: false
     },
     async onLoad() {},
@@ -31,9 +31,9 @@ export default Unite(
       })
     },
 
-    setComfirmPassword(comfirmPassword: string) {
+    setConfirmPassword(confirmPassword: string) {
       this.setState({
-        comfirmPassword
+        confirmPassword: confirmPassword
       })
     },
 
@@ -42,20 +42,20 @@ export default Unite(
         this.hooks['toast']({ title: '密码不能为空' })
         return
       }
-      if (!checkPassowrd(this.state.password)) {
+      if (!checkPassword(this.state.password)) {
         this.hooks['toast']({ title: '密码格式错误' })
         return
       }
 
-      if (!this.state.comfirmPassword) {
+      if (!this.state.confirmPassword) {
         this.hooks['toast']({ title: '确认密码不能为空' })
         return
       }
-      if (!checkPassowrd(this.state.comfirmPassword)) {
+      if (!checkPassword(this.state.confirmPassword)) {
         this.hooks['toast']({ title: '确认密码格式错误' })
         return
       }
-      if (this.state.password !== this.state.comfirmPassword) {
+      if (this.state.password !== this.state.confirmPassword) {
         this.hooks['toast']({ title: '密码不一致' })
         return
       }
@@ -82,10 +82,10 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const { password, comfirmPassword, loading } = state
-    const { setPassword, setComfirmPassword, modifyPassword } = events
+    const { password, confirmPassword: confirmPassword, loading } = state
+    const { setPassword, setConfirmPassword: setConfirmPassword, modifyPassword } = events
     const usedNav = calendar.$hooks.useNav()
-    const back = calendar.$hooks.back({ to: 4 })
+    const [back] = calendar.$hooks.useBack({ to: 4 })
     const { show } = useToast({
       icon: 'error'
     })
@@ -117,9 +117,9 @@ export default Unite(
               maxlength={16}
               clearable
               type='password'
-              value={comfirmPassword}
-              onChange={(e) => setComfirmPassword(e.detail.value)}
-              onClear={() => setComfirmPassword('')}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.detail.value)}
+              onClear={() => setConfirmPassword('')}
             ></Field>
           </CellGroup>
         </View>

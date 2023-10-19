@@ -75,6 +75,8 @@ export type DayProps = DayType &
      * 范围终点
      */
     // rangeEnd: boolean;
+    /** 是否显示农历 */
+    mode: boolean
   }
 
 export interface DaysProps
@@ -102,7 +104,7 @@ export interface CustCalendarProps {
   hideController?: boolean
 
   /** 显示农历 */
-  mode: 'normal' | 'lunar'
+  mode: boolean
 
   /** 是否可以滑动
    * @default true

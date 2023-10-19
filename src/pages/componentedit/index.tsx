@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 09:22:33
+ * @LastEditTime: 2023-10-19 13:53:11
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentedit\index.tsx
  * @Description:
  *
@@ -17,10 +17,10 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useToast, useRequestSubscribeMessage } from 'taro-hooks'
 import Container from '@/components/container'
 import { formatRepeatTime, fiveMinutes, formatAlarmText, alarmTypeToCode } from '@/calendar/utils'
+import { Calendar, User } from '@/calendar/api/interface'
 import calendar from '@/calendar'
-import { IUserInfo } from 'types/user'
-import { IDavCalendar, IDavComponent } from 'types/calendar'
 import { Picker, Time, CalendarAction, SelectCalendar, GridAction, RepeatPicker } from './ui'
+
 import './index.less'
 
 const today = dayjs().toDate()
@@ -78,8 +78,8 @@ export default Unite(
         console.log(err)
       }
       if (!(result && result.length === 2)) return
-      const _component = result[0] as any as IDavComponent
-      const _megreComponent = Object.assign(
+      const _component = result[0].data
+      const _mergeComponent = Object.assign(
         {},
         { ..._component },
         {
@@ -90,11 +90,11 @@ export default Unite(
           alarmTimes: _component.alarmTimes ? _component.alarmTimes.split(',') : [],
           repeatStatus: _component.repeatStatus + '',
           repeatUntil: _component.repeatUntil ? dayjs(_component.repeatUntil).toDate() : null,
-          memberIds: result[1] as any as string[]
+          memberIds: result[1].data
         }
       )
-      this.setState({ ..._megreComponent, loading: false })
-      this._initCalendar(_megreComponent.calendarId)
+      this.setState({ ..._mergeComponent, loading: false })
+      this._initCalendar(_mergeComponent.calendarId)
     },
 
     setSummary(summary: string) {
@@ -150,7 +150,7 @@ export default Unite(
       })
     },
 
-    setSelectedCalendar(selectedCalendar: IDavCalendar) {
+    setSelectedCalendar(selectedCalendar: Calendar.IDavCalendar) {
       this.setState({
         selectedCalendar
       })
@@ -180,6 +180,12 @@ export default Unite(
       } catch (err) {
         console.log(err)
       }
+    },
+
+    setDescription(val: string) {
+      this.setState({
+        description: val
+      })
     },
 
     setPlace(place: string) {
@@ -325,7 +331,6 @@ export default Unite(
       this.setState({
         saving: true
       })
-      const that = this
       const addOrUpdateComponent = {
         id: this.state.id,
         summary: this.state.summary,
@@ -353,7 +358,7 @@ export default Unite(
         .then((res) => {
           addOrUpdateComponent.id = res as any as string
           //要刷新首页列表
-          that.hooks['setComponentRefreshTime'](dayjs().valueOf())
+          this.hooks['setComponentRefreshTime'](dayjs().valueOf())
           if (process.env.TARO_ENV !== 'weapp') {
             this.setState({
               saving: false
@@ -364,7 +369,7 @@ export default Unite(
           this.setState({
             saving: false
           })
-          that._subscribeMessage(addOrUpdateComponent.id)
+          this._subscribeMessage(addOrUpdateComponent.id)
         })
         .catch((err) => {
           console.log(err)
@@ -375,7 +380,7 @@ export default Unite(
       const { calendars } = this.hooks
       if (!(calendars && calendars.length > 0)) return
       if (!calendarId) {
-        const _majorCalendar = calendars.find((i: IDavCalendar) => i.major === 1)
+        const _majorCalendar = calendars.find((i: Calendar.IDavCalendar) => i.major === 1)
         if (!_majorCalendar) return
         this.setState({
           selectedCalendar: _majorCalendar
@@ -465,6 +470,7 @@ export default Unite(
       setPlaceChoose,
       setPlace,
       setDescriptionChoose,
+      setDescription,
       setCalendarChoose,
       setAlarmChoose,
       setRepeatChoose,
@@ -474,14 +480,14 @@ export default Unite(
       setMembersChoose,
       saveOrUpdateComponent
     } = events
-    const userInfoState: IUserInfo | undefined = useRecoilValue(calendar.$store.userInfoStore)
+    const userInfoState: User.IUserInfo | undefined = useRecoilValue(calendar.$store.userInfoStore)
     const calendars = useRecoilValue(calendar.$store.calendarStore)
     const setComponentRefreshTime = useSetRecoilState(calendar.$store.componentRefreshTimeStore)
     const { show } = useToast({
       icon: 'error'
     })
 
-    const back = calendar.$hooks.useBack({ to: 1 })
+    const [back] = calendar.$hooks.useBack({ to: 1 })
     const usedNav = calendar.$hooks.useNav()
 
     const { subscribe } = useRequestSubscribeMessage()
@@ -573,7 +579,7 @@ export default Unite(
             {formatAlarmText(alarmType, alarmTimes)}
           </Cell>
           {description && (
-            <Cell icon='description' renderRightIcon={<Icon name='cross' />} clickable>
+            <Cell icon='description' renderRightIcon={<Icon name='cross' onClick={() => setDescription('')} />} clickable>
               {description}
             </Cell>
           )}

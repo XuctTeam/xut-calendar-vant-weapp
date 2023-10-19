@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-11-08 13:08:13
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 10:39:26
+ * @LastEditTime: 2023-10-19 13:59:45
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componentshareview\index.tsx
  * @Description:
  *
@@ -20,11 +20,12 @@ import { componentRefreshTimeStore, userInfoStore } from '@/calendar/store/store
 import { cacheGetSync } from '@/calendar/cache/cache'
 import Container from '@/components/container'
 import calendar from '@/calendar'
-import { IDavComponent } from 'types/calendar'
+import { Calendar } from '@/calendar/api/interface'
 import { DifferentDay, SameDay } from './ui'
+
 import './index.less'
 
-interface IShareComponent extends IDavComponent {
+interface IShareComponent extends Calendar.IDavComponent {
   attend: boolean
   createMemberName: string
 }
@@ -86,15 +87,15 @@ export default Unite(
     },
 
     _acceppt() {
-      const that = this
+      const self = this
       calendar.$api.component
         .acceptAttend(this.state.id)
         .then(() => {
-          that.setState({
+          self.setState({
             attend: true,
             saving: false
           })
-          that.hooks['setComponentRefreshTime'](dayjs().valueOf())
+          self.hooks['setComponentRefreshTime'](dayjs().valueOf())
         })
         .catch((err) => {
           console.log(err)

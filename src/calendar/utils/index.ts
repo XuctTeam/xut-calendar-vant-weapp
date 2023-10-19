@@ -557,7 +557,7 @@ export const checkEmail = (email: string): boolean => {
  * @param password
  * @returns
  */
-export const checkPassowrd = (password: string): boolean => {
+export const checkPassword = (password: string): boolean => {
   return /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,30}$/.test(password)
 }
 

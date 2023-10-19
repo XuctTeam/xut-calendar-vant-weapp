@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 08:48:18
+ * @LastEditTime: 2023-10-19 13:14:04
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberbindphone\index.tsx
  * @Description:
  *
@@ -20,7 +20,6 @@ import { userAuthInfoStore } from '@/calendar/store/store'
 import { checkMobile } from '@/calendar/utils'
 import { create } from '@/utils/countdown'
 import calendar from '@/calendar'
-import { IUserAuth } from '~/../types/user'
 
 import './index.less'
 
@@ -81,7 +80,6 @@ export default Unite(
           loading: true
         })
         const { phone, code } = fieldValues
-        const that = this
         const edit = !!this.hooks['phoneAuth']
         if (edit) {
           /**绑定 */
@@ -103,7 +101,7 @@ export default Unite(
           .then((res) => {
             const { exist, merge } = res
             if (exist && merge) {
-              that.setState({
+              this.setState({
                 loading: false,
                 disable: false,
                 smsText: '发送验证码'
@@ -146,7 +144,7 @@ export default Unite(
       calendar.$api.user
         .getPhoneNumber(code)
         .then((res) => {
-          this.hooks['form'].setFieldsValue('phone', res as string)
+          this.hooks['form'].setFieldsValue('phone', res.data)
         })
         .catch((err) => {
           console.log(err)
@@ -161,7 +159,7 @@ export default Unite(
       calendar.$api.user
         .auths()
         .then((res) => {
-          this.hooks['setUserAuthsState'](res as IUserAuth[])
+          this.hooks['setUserAuthsState'](res.data)
           this.setState({
             disable: false,
             loading: false
@@ -186,18 +184,17 @@ export default Unite(
     const phoneAuth = userAuths && userAuths.length > 0 ? userAuths.find((i) => i.identityType === 'phone') : undefined
     const countDownRef = useRef<any>()
     const { check } = useLogin()
-    const { show, hide } = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
 
-    const back = calendar.$hooks.useBack({ to: 4 })
+    const [back] = calendar.$hooks.useBack({ to: 4 })
     const usedNav = calendar.$hooks.useNav()
 
     const isWechat = process.env.TARO_ENV === 'weapp' && !!phoneAuth
 
     events.setHooks({
-      show: show,
-      hide: hide,
+      toast: show,
       back: back,
       form: form,
       countDownRef: countDownRef,

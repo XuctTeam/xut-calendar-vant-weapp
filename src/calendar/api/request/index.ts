@@ -5,6 +5,7 @@ import { cacheGetSync } from '../../cache/cache'
 import codeMessage from './codeMessage'
 import { showFullScreenLoading, tryHideFullScreenLoading } from './serviceLoading'
 import port from './port'
+import { logout } from './utils'
 
 interface RequestTaskQuery {
   resolve: any
@@ -59,7 +60,7 @@ const checkTokenHandler = (afresh: any) => {
         executeQueue(null)
       })
       .catch((err) => {
-        //store.logout()
+        logout()
         reject(err)
         executeQueue(err)
       })
@@ -96,67 +97,44 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     tryHideFullScreenLoading()
-    if (response.config.url?.includes(OAUTH_TOKEN_URL) && response.statusCode === 200) {
-      return { data: response.data }
+    const { statusCode, data } = response
+    if (response.config.url?.includes(OAUTH_TOKEN_URL) && statusCode === 200) {
+      return { data }
     }
-    const { code, message } = response.data
+    const { code, message } = data
     if (code !== 200) {
-      Taro.showToast(message || '请求异常')
+      Taro.showToast({
+        title: message || '请求异常',
+        icon: 'error'
+      })
       return Promise.reject({
         error: code,
         message
       })
     }
-    return response.data
+    return data
   },
   (error) => {
     tryHideFullScreenLoading()
     const url = error.config.url
     const { statusCode, statusText, data } = error
-
-    // 假设接口返回的 code === 401 时则需要刷新 Token
-    if (statusCode === 401) {
-      const params = getParams(url)
-      if (params && params.length > 0) {
-        //刷新接口异常,接着退出
-        const refreshToken = params.find((item) => item.key === 'refresh_token')
-        if (refreshToken) {
-          return Promise.reject('')
-        }
-      }
-      if (url.includes(OAUTH_TOKEN_URL)) {
-        const { code, message } = data
-        const msg = message ?? codeKeys[code ?? statusCode] ?? statusText
-        Taro.showToast({
-          icon: 'error',
-          title: msg
-        })
-        return Promise.reject(msg)
-      }
+    if (statusCode !== 401 && statusCode !== 424) {
+      Taro.showToast({
+        icon: 'error',
+        title: codeKeys[statusCode] || '请求异常'
+      })
+      return Promise.reject(error)
+    }
+    if (!url.includes(OAUTH_TOKEN_URL)) {
       return checkTokenHandler(() => instance(error.config))
     }
+    const { code, message } = data
+    const msg = message ?? codeKeys[code ?? statusCode] ?? statusText
     Taro.showToast({
       icon: 'error',
-      title: codeKeys[statusCode] || '请求异常'
+      title: msg
     })
-    return Promise.reject(error)
+    return Promise.reject(msg)
   }
 )
-
-function getParams(url: string) {
-  if (url.indexOf('?') === -1) {
-    return []
-  }
-  const index = url.indexOf('?')
-  const str = url.substring(index + 1, url.length)
-  const data = str.split('&')
-  return data.map((item) => {
-    const param = item.split('=')
-    return {
-      key: param[0],
-      value: param[1]
-    }
-  })
-}
-
 export default instance

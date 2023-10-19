@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-18 20:21:33
+ * @LastEditTime: 2023-10-19 09:03:20
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -25,8 +25,8 @@ import Images from '@/calendar/constants/images'
 import { create } from '@/utils/countdown'
 import { ENCRYPTION_CODE } from '@/calendar/constants'
 import calendar from '@/calendar'
-import { IUserAuth, IUserInfo } from '~/../types/user'
 import './index.less'
+import { User } from '@/calendar/api/interface'
 
 export default Unite(
   {
@@ -167,12 +167,12 @@ export default Unite(
       return calendar.$api.login
         .usernameLogin(user.username, user.password)
         .then((res) => {
-          debugger
           this._saveTokenToCache(res.data.access_token, res.data.refresh_token)
         })
         .catch((error) => {
-          debugger
           console.log(error)
+        })
+        .finally(() => {
           this.setLoginLoading(false)
         })
     },
@@ -248,15 +248,15 @@ export default Unite(
         cacheRemoveSync('refreshToken')
         return
       }
-      this.hooks['setUserInfoState'](result[0].data as IUserInfo)
-      this.hooks['setUserAuthState'](result[1].data as IUserAuth[])
+      debugger
+      this.hooks['setUserInfoState'](result[0].data)
+      this.hooks['setUserAuthState'](result[1].data)
       this.hooks['show']({
         icon: 'success',
         title: '登录成功',
         duration: 1500
       })
       setTimeout(() => {
-        this.setLoginLoading(false)
         calendar.$hooks.back({
           to: 4
         })

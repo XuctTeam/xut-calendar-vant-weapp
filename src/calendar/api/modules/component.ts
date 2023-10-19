@@ -6,6 +6,7 @@
  * @LastEditors: Derek Xu
  */
 import httpRequest from '@/calendar/api/config'
+import { Calendar } from '../interface'
 
 export default {
   /**
@@ -59,7 +60,7 @@ export default {
    * @author: Derek Xu
    */
   search(word: string, page: number, limit: number) {
-    return httpRequest.get('/cms/api/app/v1/component/list/search', { word, page, limit })
+    return httpRequest.get<Calendar.IDavComponent>('/cms/api/app/v1/component/list/search', { word, page, limit })
   },
 
   /**
@@ -79,7 +80,7 @@ export default {
    * @author: Derek Xu
    */
   queryComponentMemberIds(componentId: string) {
-    return httpRequest.get('/cms/api/app/v1/component/attend/member/ids', { componentId })
+    return httpRequest.get<string[]>('/cms/api/app/v1/component/attend/member/ids', { componentId })
   },
 
   /**
@@ -90,7 +91,7 @@ export default {
    * @author: Derek Xu
    */
   queryComponentMembers(createMemberId: string, componentId: string) {
-    return httpRequest.get('/cms/api/app/v1/component/attend/member', { createMemberId, componentId })
+    return httpRequest.get<string[]>('/cms/api/app/v1/component/attend/member', { createMemberId, componentId })
   },
 
   /**

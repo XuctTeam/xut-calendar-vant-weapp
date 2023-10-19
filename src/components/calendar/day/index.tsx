@@ -2,8 +2,8 @@
  * @Author: Derek Xu
  * @Date: 2023-10-13 14:35:47
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-16 09:07:36
- * @FilePath: \xut-calendar-vant-weapp\src\components\calendar\day\index.tsx
+ * @LastEditTime: 2023-10-19 09:50:59
+ * @FilePath: \xut-calendar-vant-weapp\src\components\calendar\Day\index.tsx
  * @Description:
  *
  * Copyright (c) 2023 by 楚恬商行, All Rights Reserved.
@@ -60,9 +60,8 @@ const Day: FC<DayProps> = (props) => {
       onDayClick?.({ year, month, day, weekDay }, dateFormate)
     }
   }
-  console.log(custDayRender, 'custDayRendercustDayRender')
-
-  const lunarDayInfo: any = mode === 'lunar' ? lunisolar(dateFormate) : null
+  console.log(custDayRender, 'custDayRenderCustDayRender')
+  const lunarDayInfo: any = mode ? lunisolar(dateFormate) : null
   const lunarClassName = ['lunar-day']
   if (lunarDayInfo) {
     if (lunarDayInfo.lunar.getDayName() === '初一') {
@@ -84,7 +83,7 @@ const Day: FC<DayProps> = (props) => {
           {/* <View className='day-extrainfo' style={extraInfo?.color ? `color: ${extraInfo.color}` : ``}>
             {extraInfo?.text}
           </View> */}
-          {mode === 'normal' ? (
+          {!mode ? (
             ''
           ) : (
             <View className={lunarClassName.join(' ')}>
@@ -117,11 +116,13 @@ const areEquals = (preProps: DayProps, nextProps: DayProps) => {
     preProps.disabled === nextProps.disabled &&
     preProps.selected === nextProps.selected &&
     preProps.hasMarker === nextProps.hasMarker &&
-    preProps.notCurMonth === nextProps.notCurMonth
+    preProps.notCurMonth === nextProps.notCurMonth &&
+    preProps.mode === nextProps.mode
   ) {
     return true
   }
   return false
 }
 
+// eslint-disable-next-line import/no-named-as-default-member
 export default React.memo(Day, areEquals)

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 10:40:59
+ * @LastEditTime: 2023-10-19 13:34:19
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditmembers\index.tsx
  * @Description:
  *
@@ -16,11 +16,11 @@ import { useRecoilValue } from 'recoil'
 import { Router } from 'tarojs-router-next'
 import { useToast } from 'taro-hooks'
 import './index.less'
+import { IGroupMember } from 'types/group'
 import { userInfoStore } from '@/calendar/store/store'
 import Container from '@/components/container'
 import calendar from '@/calendar'
-import { IGroupMember } from 'types/group'
-import { IUserInfo } from 'types/user'
+import { User } from '@/calendar/api/interface'
 import { MySelf, MemberBody } from './ui'
 
 export default Unite(
@@ -47,7 +47,7 @@ export default Unite(
       calendar.$api.groupMember
         .queryByIds(members)
         .then((res) => {
-          const _list = res as any as IGroupMember[]
+          const _list = res.data
           this.hooks['listRef'].current = _list
           this.setState({
             loading: false,
@@ -78,7 +78,7 @@ export default Unite(
       })
     },
 
-    setMemmberCheck(values: string[]) {
+    setMemberCheck(values: string[]) {
       if (values.length === 0) {
         this.setState({
           allCheck: [],
@@ -170,10 +170,10 @@ export default Unite(
   },
   function ({ state, events }) {
     const { loading, allCheck, checkedIds, list } = state
-    const { setAllCheckClick, setMemmberCheck, saveMembers, removeMember, onSearch, onChooseMember } = events
-    const userInfoState: IUserInfo | undefined = useRecoilValue(userInfoStore)
+    const { setAllCheckClick, setMemberCheck: setMemberCheck, saveMembers, removeMember, onSearch, onChooseMember } = events
+    const userInfoState: User.IUserInfo | undefined = useRecoilValue(userInfoStore)
     const listRef = useRef<IGroupMember[]>([])
-    const back = calendar.$hooks.useBack({ to: 1 })
+    const [back] = calendar.$hooks.useBack({ to: 1 })
     const usedNav = calendar.$hooks.useNav()
 
     const { show } = useToast({
@@ -229,7 +229,7 @@ export default Unite(
             <Empty description='~空空如也~'></Empty>
           ) : (
             <View className='list'>
-              <CheckboxGroup value={checkedIds} onChange={(e) => setMemmberCheck(e.detail)}>
+              <CheckboxGroup value={checkedIds} onChange={(e) => setMemberCheck(e.detail)}>
                 <CellGroup>
                   {list.map((item, index) => {
                     return <MemberBody name={item.name} avatar={item.avatar} memberId={item.memberId} key={index}></MemberBody>

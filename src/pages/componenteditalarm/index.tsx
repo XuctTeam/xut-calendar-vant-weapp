@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 09:20:21
+ * @LastEditTime: 2023-10-19 13:35:57
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditalarm\index.tsx
  * @Description:
  *
@@ -100,7 +100,7 @@ export default Unite(
   function ({ state, events }) {
     const { openAlarm, alarmTime, alarmType } = state
     const { setOpenAlarm, setAlarmTime, setAlarmType, saveAlarm } = events
-    const back = calendar.$hooks.useBack({ to: 1 })
+    const [back] = calendar.$hooks.useBack({ to: 1 })
     const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 08:33:51
+ * @LastEditTime: 2023-10-19 13:07:20
  * @FilePath: \xut-calendar-vant-weapp\src\pages\membermodifyname\index.tsx
  * @Description:
  *
@@ -71,17 +71,17 @@ export default Unite(
   },
   function ({ state, events }) {
     const [userInfoState, setUserInfoState] = useRecoilState(userInfoStore)
-    const [toast] = useToast({
+    const { show } = useToast({
       icon: 'error'
     })
-    const back = calendar.$hooks.useBack({ to: 4 })
+    const [back] = calendar.$hooks.useBack({ to: 4 })
     const usedNav = calendar.$hooks.useNav()
 
     const { setName, updateNames } = events
     const { name, loading } = state
 
     events.setHooks({
-      toast: toast,
+      toast: show,
       back: back,
       userInfoState: userInfoState,
       setUserInfoState: setUserInfoState

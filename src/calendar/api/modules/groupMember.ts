@@ -6,7 +6,8 @@
  * @LastEditors: Derek Xu
  * @LastEditTime: 2023-10-10 10:16:20
  */
-import httpRequest from '@/calendar/api/config'
+import httpRequest from '../request'
+import { Group } from '../interface'
 
 export default {
   /**
@@ -99,7 +100,7 @@ export default {
    * @return {*}
    */
   queryByIds(ids: string[]) {
-    return httpRequest.post('/ums/api/app/v1/mbr/group/ids', { ids })
+    return httpRequest.post<Group.IGroupMember[]>('/ums/api/app/v1/mbr/group/ids', { ids })
   },
 
   /**

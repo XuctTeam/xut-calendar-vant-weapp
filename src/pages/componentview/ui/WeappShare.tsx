@@ -4,14 +4,14 @@
  * @Autor: Derek Xu
  * @Date: 2022-02-04 15:50:51
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-23 14:02:01
+ * @LastEditTime: 2023-10-19 13:57:54
  */
 import { FunctionComponent } from 'react'
 import { Button, View } from '@tarojs/components'
 import { useShareAppMessage } from '@tarojs/taro'
 import Images from '@/calendar/constants/images'
 
-const DEFAULT_ATTEND_BACKGROUD = Images.DEFAULT_ATTEND_BACKGROUD
+const DEFAULT_ATTEND_BACKGROUD = Images.DEFAULT_ATTEND_BACKGROUND
 
 interface IPageOption {
   open: boolean

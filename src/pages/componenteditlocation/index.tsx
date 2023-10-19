@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 09:14:17
+ * @LastEditTime: 2023-10-19 13:41:22
  * @FilePath: \xut-calendar-vant-weapp\src\pages\componenteditlocation\index.tsx
  * @Description:
  *
@@ -30,25 +30,26 @@ export default Unite(
     },
 
     chooseLocation() {
-      const that = this
+      const self = this
       Taro.chooseLocation({
         success(res) {
-          that.setState({
+          self.setState({
             place: res.address
           })
         },
         fail: function (res) {
           console.log(res)
           if (process.env.TARO_ENV === 'weapp') {
-            that._openSetting()
+            self._openSetting()
           }
         }
       }).catch((err) => {
+        debugger
         console.log(err)
       })
     },
 
-    saveLoaction() {
+    saveLocation() {
       this.hooks['back']({
         data: {
           place: this.state.place
@@ -57,18 +58,18 @@ export default Unite(
     },
 
     _openSetting() {
-      const that = this
+      const self = this
       Taro.getSetting({
         success: function (res) {
-          const statu = res.authSetting
-          if (!statu['scope.userLocation']) {
+          const state = res.authSetting
+          if (!state['scope.userLocation']) {
             Dialog.confirm({
               title: '提示',
               message: '需要获取您的地理位置',
               selector: 'locationDialog'
             }).then((value) => {
               if (value === 'cancel') return
-              that._openSettingChoose()
+              self._openSettingChoose()
             })
           }
         }
@@ -76,7 +77,7 @@ export default Unite(
     },
 
     _openSettingChoose() {
-      const that = this
+      const self = this
       Taro.openSetting({
         success: function (data) {
           if (data.authSetting['scope.userLocation'] === true) {
@@ -88,13 +89,13 @@ export default Unite(
             //授权成功之后，再调用chooseLocation选择地方
             Taro.chooseLocation({
               success: function (rs) {
-                that.setState({
+                self.setState({
                   place: rs.address
                 })
               }
             })
           } else {
-            that.hooks['toast']('授权失败')
+            self.hooks['toast']('授权失败')
           }
         }
       })
@@ -102,11 +103,11 @@ export default Unite(
   },
   function ({ state, events }) {
     const { place } = state
-    const { setPlace, chooseLocation, saveLoaction } = events
+    const { setPlace, chooseLocation, saveLocation } = events
     const { show } = useToast({
       icon: 'error'
     })
-    const back = calendar.$hooks.useBack({ to: 1 })
+    const [back] = calendar.$hooks.useBack({ to: 1 })
     const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({
@@ -129,7 +130,7 @@ export default Unite(
           <Button type='warning' block onClick={chooseLocation}>
             获取地址
           </Button>
-          <Button type='info' block onClick={saveLoaction}>
+          <Button type='info' block onClick={saveLocation}>
             保存
           </Button>
         </View>

@@ -2,10 +2,12 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2021-11-10 19:52:50
- * @LastEditTime: 2023-10-10 08:49:17
+ * @LastEditTime: 2023-10-19 13:56:47
  * @LastEditors: Derek Xu
  */
-import httpRequest from '@/calendar/api/config'
+import { User } from '../interface'
+import httpRequest from '../request'
+import PORT from '../request/port'
 
 export default {
   /**
@@ -30,7 +32,7 @@ export default {
    * @return {*}
    */
   baseUserInfo() {
-    return httpRequest.get('/ums/api/app/v1/member/info/base')
+    return httpRequest.get<User.IUserInfo>(PORT.UMS + '/v1/member/info/base')
   },
 
   /**
@@ -39,7 +41,7 @@ export default {
    * @return {*}
    */
   auths() {
-    return httpRequest.get('/ums/api/app/v1/member/auths')
+    return httpRequest.get<User.IUserAuth[]>(PORT.UMS + '/v1/member/auths')
   },
 
   /**
@@ -75,7 +77,7 @@ export default {
    * @return {*}
    */
   getName(memberId: string) {
-    return httpRequest.get('/ums/api/app/v1/member/name', { memberId })
+    return httpRequest.get<string>('/ums/api/app/v1/member/name', { memberId })
   },
 
   /**
@@ -94,7 +96,7 @@ export default {
    * @return {*}
    */
   getPhoneNumber(code: string) {
-    return httpRequest.post('/ums/api/app/v1/member/phone/get', { code })
+    return httpRequest.post<string>('/ums/api/app/v1/member/phone/get', { code })
   },
 
   /**

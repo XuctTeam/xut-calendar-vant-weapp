@@ -3,7 +3,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-17 09:36:07
+ * @LastEditTime: 2023-10-19 18:31:14
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -21,11 +21,11 @@ import Images from '@/calendar/constants/images'
 import { getToday } from '@/calendar/utils'
 import Container from '@/components/container'
 import calendar from '@/calendar'
-import { IDavCalendar, ICalendarComponent, IDavComponent } from '~/../types/calendar'
-import { ICurrentDay } from '~/../types/date'
-import { UserInfo, EventList, Header, Calendar } from './ui'
-import './index.module.less'
 import { DayType } from '@/components/calendar/type'
+import { Calendar } from '@/calendar/api/interface'
+import { ICurrentDay } from '~/../types/date'
+import { UserInfo, EventList, Header, TimeLine } from './ui'
+import './index.module.less'
 
 const day: ICurrentDay = getToday()
 
@@ -41,15 +41,6 @@ export default Unite(
     },
 
     async onLoad() {
-      // Taro.createSelectorQuery()
-      //   .select('.at-calendar')
-      //   .boundingClientRect(function (rect) {
-      //     that.setState({
-      //       animationShowHeight: rect.height + 4
-      //     })
-      //   })
-      //   .exec()
-
       Taro.eventCenter.on('logout', () => {
         this.clear()
       })
@@ -103,8 +94,6 @@ export default Unite(
      */
     currentClickHandle() {
       const today: string = day.current
-      //@ts-ignore
-      this.hooks['calRef'].current.reset(today)
       this.setState({
         selectedDay: today
       })
@@ -128,7 +117,7 @@ export default Unite(
     },
 
     calendarSelected(value: string[]) {
-      const _calendars = this.hooks['calendars'].map((t: IDavCalendar) => {
+      const _calendars = this.hooks['calendars'].map((t: Calendar.IDavCalendar) => {
         const { id, name, color, major, display, memberId, calendarId, createMemberId, createMemberName, description, isShare, alarmTime, alarmType } = t
         const checked = value.includes(calendarId) ? true : false
         return {
@@ -154,7 +143,7 @@ export default Unite(
     /**
      * @description 日程查看
      */
-    async viewComponent(component: IDavComponent) {
+    async viewComponent(component: Calendar.IDavComponent) {
       console.log(component.id)
       Router.toComponentview({
         params: {
@@ -171,7 +160,7 @@ export default Unite(
      * @param start
      * @param end
      */
-    _queryComponent(calList: Array<IDavCalendar>, start: string, end: string) {
+    _queryComponent(calList: Calendar.IDavCalendar[], start: string, end: string) {
       this.setState({
         componentLoading: true,
         calendarComponents: [],
@@ -193,7 +182,7 @@ export default Unite(
           })
         )
       })
-      let calendarComponents: Array<ICalendarComponent> = []
+      let calendarComponents: Calendar.ICalendarComponent[] = []
       Promise.all(
         pList.map((p) => {
           return p.catch((error) => error)
@@ -224,25 +213,19 @@ export default Unite(
      * @param components
      * @returns
      */
-    _fillMarkDay(components: Array<ICalendarComponent>) {
+    _fillMarkDay(components: Array<Calendar.ICalendarComponent>) {
       if (components.length === 0) return
       const daySet: Set<string> = new Set<string>([])
       components.forEach((comp) => {
         daySet.add(dayjs(comp.day).format('YYYY/MM/DD'))
       })
-      const marks: Array<CalendarTypes.Mark> = Array.from(daySet).map((i) => {
+      const marks: Array<Calendar.CalendarTypes.Mark> = Array.from(daySet).map((i) => {
         return { value: i }
       })
       this.setState({
         marks: marks
       })
     },
-
-    // setAnimationShowHeight(height: number) {
-    //   this.setState({
-    //     animationShowHeight: height
-    //   })
-    // },
 
     setMessageCount() {
       calendar.$api.message
@@ -323,7 +306,7 @@ export default Unite(
       <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
         <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen}></Header>
         <View className='box'>
-          <Calendar selectedDay={selectedDay} onDayClick={selectDayClickHandler}></Calendar>
+          <TimeLine selectedDay={selectedDay} onDayClick={selectDayClickHandler}></TimeLine>
           <EventList
             loading={false}
             accessToken={accessToken || ''}
@@ -349,13 +332,13 @@ export default Unite(
         ></UserInfo>
 
         {selectedDay !== day.current && (
-          <View className='pages-index_today-icon' style={{ bottom: env ? '80px' : '10px' }} onClick={currentClickHandle}>
+          <View className='pages-index_today-icon' style={{ bottom: env ? '85px' : '20px' }} onClick={currentClickHandle}>
             今
           </View>
         )}
 
         <View className='pages-index_home-fab' style={{ bottom: env ? '80px' : '20px' }} onClick={() => Router.toComponentedit()}>
-          {!!accessToken && <Button icon='plus' round type='warning' />}
+          {!!accessToken && <Button icon='plus' round type='info' />}
         </View>
       </Container>
     )

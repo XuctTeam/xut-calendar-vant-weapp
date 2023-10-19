@@ -4,18 +4,18 @@
  * @Autor: Derek Xu
  * @Date: 2021-12-02 22:46:09
  * @LastEditors: Derek Xu
- * @LastEditTime: 2022-09-22 15:53:34
+ * @LastEditTime: 2023-10-19 14:28:27
  */
 import Router from 'tarojs-router-next'
 import { ITouchEvent, View } from '@tarojs/components'
-import { IDavCalendar } from '~/../types/calendar'
 import { useEffect, useState } from 'react'
 import { Cell, Checkbox, CheckboxGroup, Empty, Icon, Popup, Image } from '@antmjs/vantui'
+import PropTypes from 'prop-types'
 import Avatar from '@/components/avatar'
-import Logo from '@/assets/logo.png'
+import { Calendar } from '@/calendar/api/interface'
 
 interface IPageOption {
-  calendars: Array<IDavCalendar>
+  calendars: Calendar.IDavCalendar[]
   open: boolean
   hasLogin: boolean
   avatar: string | undefined
@@ -25,38 +25,37 @@ interface IPageOption {
   selected: (value: string[]) => void
 }
 
-const CalendarPop: React.FC<IPageOption> = (props) => {
-  const [showCalendars, setShowCalendars] = useState<IDavCalendar[]>([])
+const CalendarPop: React.FC<IPageOption> = ({ calendars = [], open = false, avatar, name, hasLogin, phone, closePopup, selected }) => {
+  const [showCalendars, setShowCalendars] = useState<Calendar.IDavCalendar[]>([])
   const [checkValues, setCheckValues] = useState<string[]>([])
-  const { avatar, name, hasLogin, phone } = props
 
   useEffect(() => {
-    const _showCalendars = props.calendars.filter((i) => i.display === 1)
+    const _showCalendars = calendars.filter((i) => i.display === 1)
     setShowCalendars(_showCalendars)
-    setCheckValues(props.calendars.filter((i) => i.checked).map((i) => i.calendarId))
+    setCheckValues(calendars.filter((i) => i.checked).map((i) => i.calendarId))
     console.log(checkValues)
-  }, [props.calendars])
+  }, [calendars])
 
   const checkGroupChange = (value: string[]) => {
-    props.selected(value)
+    selected(value)
   }
 
   return (
     <Popup
       className='pages-index-calendar_popup'
-      show={props.open}
+      show={open}
       position='left'
       safeAreaInsetTop
       style={{ height: '100%', width: '80%' }}
       zIndex={999}
-      onClose={props.closePopup}
+      onClose={closePopup}
       overlay
     >
       {!hasLogin ? (
         <Empty description='暂未登录' />
       ) : (
         <View className='pop-box'>
-          <View class='user-info'>
+          <View className='user-info'>
             <Avatar src={avatar} style={{ width: '50px', height: '50px' }}></Avatar>
             <View className='name'>
               <View>{name}</View>
@@ -64,7 +63,7 @@ const CalendarPop: React.FC<IPageOption> = (props) => {
             </View>
           </View>
           <View className='li logo'>
-            <Image round width='40px' height='40px' src={Logo} />
+            <Image round width='40px' height='40px' src={'@/assets/logo.png'} />
             <View className='notice'>
               <View>关注公主号</View>
               <View>才能获得消息提醒哦~</View>
@@ -98,4 +97,15 @@ const CalendarPop: React.FC<IPageOption> = (props) => {
     </Popup>
   )
 }
+// CalendarPop.propTypes = {
+//   calendars: PropTypes.array
+//   open: PropTypes.bool
+//   hasLogin: PropTypes.bool
+//   avatar: PropTypes.string
+//   name: PropTypes.string
+//   phone: PropTypes.string
+//   closePopup: PropTypes.func
+//   selected: PropTypes.func
+// }
+
 export default CalendarPop

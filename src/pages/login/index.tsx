@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-19 09:03:20
+ * @LastEditTime: 2023-10-25 17:28:14
  * @FilePath: \xut-calendar-vant-weapp\src\pages\login\index.tsx
  * @Description:
  *
@@ -248,7 +248,6 @@ export default Unite(
         cacheRemoveSync('refreshToken')
         return
       }
-      debugger
       this.hooks['setUserInfoState'](result[0].data)
       this.hooks['setUserAuthState'](result[1].data)
       this.hooks['show']({

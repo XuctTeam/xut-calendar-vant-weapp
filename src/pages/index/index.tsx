@@ -3,7 +3,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-19 18:31:14
+ * @LastEditTime: 2023-10-25 09:14:27
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -24,7 +24,7 @@ import calendar from '@/calendar'
 import { DayType } from '@/components/calendar/type'
 import { Calendar } from '@/calendar/api/interface'
 import { ICurrentDay } from '~/../types/date'
-import { UserInfo, EventList, Header, TimeLine } from './ui'
+import { UserInfo, EventList, Header, Calendar as CalendarUi } from './ui'
 import './index.module.less'
 
 const day: ICurrentDay = getToday()
@@ -71,10 +71,10 @@ export default Unite(
       console.log(item.value)
     },
 
-    selectDayClickHandler(info: DayType, dateFormate: string) {
-      console.log(info)
+    selectDayClickHandler(item: any) {
+      const { start } = item.value
       this.setState({
-        selectedDay: dateFormate
+        selectedDay: start
       })
     },
 
@@ -306,7 +306,7 @@ export default Unite(
       <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
         <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen}></Header>
         <View className='box'>
-          <TimeLine selectedDay={selectedDay} onDayClick={selectDayClickHandler}></TimeLine>
+          <CalendarUi selectedDay={selectedDay} onSelectDate={selectDayClickHandler}></CalendarUi>
           <EventList
             loading={false}
             accessToken={accessToken || ''}

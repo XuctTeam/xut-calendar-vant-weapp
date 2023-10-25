@@ -2,16 +2,16 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-01-06 13:28:00
- * @LastEditTime: 2023-10-16 09:00:09
+ * @LastEditTime: 2023-10-25 09:29:08
  * @LastEditors: Derek Xu
  */
-import lunisolar from 'lunisolar'
+import { Lunar } from 'lunar-typescript'
 
 /**
  *
  * @param date 获取阴历日期
  * @returns
  */
-export const lunarDay = (date: Date | string): any => {
-  return lunisolar(date)
+export const lunarDay = (date: Date): any => {
+  return Lunar.fromDate(date)
 }

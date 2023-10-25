@@ -1,227 +1,296 @@
-import { Picker, Swiper, SwiperItem, View } from '@tarojs/components'
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
-import dayjs from 'dayjs'
-import { CustCalendarInstance, CustCalendarProps, DayType } from './type'
-import { getCurrentDayDetail, getMonthDays, getCurMonthViewDetail, getCurWeekViewDetail, getWeekDayList, getWeekDays, textFormat, string2Date } from './utils'
-import Days from './Days'
-import './index.less'
+import classnames from 'classnames'
+import dayjs, { Dayjs } from 'dayjs'
+import React from 'react'
+import { View } from '@tarojs/components'
+import { BaseEventOrig } from '@tarojs/components/types/common'
+import { AtCalendarDefaultProps, AtCalendarProps, AtCalendarPropsWithDefaults, AtCalendarState, Calendar } from './calendar'
+import AtCalendarBody from './body/index'
+import AtCalendarController from './controller/index'
+import './style/calendar.scss'
 
-const CustCalendar = forwardRef<CustCalendarInstance, CustCalendarProps>((props, ref) => {
-  /** 绑在实例上的方法，外界可直接使用 */
-  useImperativeHandle(ref, (): CustCalendarInstance => {
+const defaultProps: AtCalendarDefaultProps = {
+  view: 'month',
+  validDates: [],
+  marks: [],
+  isSwiper: true,
+  hideArrow: false,
+  isVertical: false,
+  selectedDates: [],
+  isMultiSelect: false,
+  format: 'YYYY-MM-DD',
+  currentDate: Date.now(),
+  monday: false,
+  lunar: false,
+  monthFormat: 'YYYY年MM月'
+}
+
+export default class AtCalendar extends React.Component<AtCalendarProps, Readonly<AtCalendarState>> {
+  static defaultProps: AtCalendarDefaultProps = defaultProps
+
+  public constructor(props: AtCalendarProps) {
+    super(props)
+
+    const { currentDate, isMultiSelect, view } = props as AtCalendarPropsWithDefaults
+
+    this.state = this.getInitializeState(currentDate, isMultiSelect, view)
+  }
+
+  public UNSAFE_componentWillReceiveProps(nextProps: AtCalendarProps): void {
+    const { currentDate, isMultiSelect, view } = nextProps
+    if (!currentDate || currentDate === this.props.currentDate) return
+
+    if (isMultiSelect && this.props.isMultiSelect) {
+      const { start, end } = currentDate as Calendar.SelectedDate
+      const { start: preStart, end: preEnd } = this.props.currentDate as Calendar.SelectedDate
+
+      if (start === preStart && preEnd === end) {
+        return
+      }
+    }
+
+    const stateValue: AtCalendarState = this.getInitializeState(currentDate, isMultiSelect, view)
+
+    this.setState(stateValue)
+  }
+
+  private getSingleSelectState = (value: Dayjs): Partial<AtCalendarState> => {
+    const { generateDate } = this.state
+
+    const stateValue: Partial<AtCalendarState> = {
+      selectedDate: this.getSelectedDate(value.valueOf())
+    }
+
+    const dayjsGenerateDate: Dayjs = value.startOf(this.props.view ?? 'month')
+    const generateDateValue: number = dayjsGenerateDate.valueOf()
+
+    if (generateDateValue !== generateDate) {
+      this.triggerChangeDate(dayjsGenerateDate)
+      stateValue.generateDate = generateDateValue
+    }
+
+    return stateValue
+  }
+
+  private getMultiSelectedState = (value: Dayjs): Pick<AtCalendarState, 'selectedDate'> => {
+    const { selectedDate } = this.state
+    const { end, start } = selectedDate
+
+    const valueUnix: number = value.valueOf()
+    const state: Pick<AtCalendarState, 'selectedDate'> = {
+      selectedDate
+    }
+
+    if (end) {
+      state.selectedDate = this.getSelectedDate(valueUnix, 0)
+    } else {
+      state.selectedDate.end = Math.max(valueUnix, +start)
+      state.selectedDate.start = Math.min(valueUnix, +start)
+    }
+
+    return state
+  }
+
+  private getSelectedDate = (start: number, end?: number): Calendar.SelectedDate => {
+    const stateValue: Calendar.SelectedDate = {
+      start,
+      end: start
+    }
+
+    if (typeof end !== 'undefined') {
+      stateValue.end = end
+    }
+
+    return stateValue
+  }
+
+  private getInitializeState(currentDate: Calendar.DateArg | Calendar.SelectedDate, isMultiSelect?: boolean, view?: 'month' | 'week'): AtCalendarState {
+    let end: number
+    let start: number
+    let generateDateValue: number
+
+    if (!currentDate) {
+      const dayjsStart = dayjs()
+      start = dayjsStart.startOf('day').valueOf()
+      generateDateValue = dayjsStart.startOf(view ?? 'month').valueOf()
+      return {
+        generateDate: generateDateValue,
+        selectedDate: {
+          start: ''
+        }
+      }
+    }
+
+    if (isMultiSelect) {
+      const { start: cStart, end: cEnd } = currentDate as Calendar.SelectedDate
+
+      const dayjsStart = dayjs(cStart)
+
+      start = dayjsStart.startOf('day').valueOf()
+      generateDateValue = dayjsStart.startOf(view ?? 'month').valueOf()
+
+      end = cEnd ? dayjs(cEnd).startOf('day').valueOf() : start
+    } else {
+      const dayjsStart = dayjs(currentDate as Calendar.DateArg)
+
+      start = dayjsStart.startOf('day').valueOf()
+      generateDateValue = dayjsStart.startOf(view ?? 'month').valueOf()
+
+      end = start
+    }
+
     return {
-      goNext,
-      goPre
-    }
-  })
-  const {
-    view = 'month',
-    isVertical = false,
-    startWeekDay = 1,
-    hideController = false,
-    hideArrow = false,
-    pickerTextGenerator,
-    monthWrapHeigh = '16rem',
-    weekWrapHeight = '3rem',
-    selectedDateColor,
-    marks = [],
-    mode = false,
-    selectedDate,
-    currentView,
-    format = 'YYYY-MM-DD',
-    minDate = '1970-01-01',
-    maxDate = '2100-12-31',
-    isSwiper = true,
-    onDayClick,
-    extraInfo = [],
-    custDayRender,
-    className,
-    custWeekRender,
-    onCurrentViewChange
-  } = props
-  /** 当前锁定的 SwiperItem */
-  const [currentCarouselIndex, setCurrentCarouselIndex] = useState(1)
-  /** 当天的数据 */
-  const currentDayDetail = getCurrentDayDetail()
-  console.log(currentDayDetail, 'currentDayDetail')
-  const [selectedDay, setSelectedDay] = useState(dayjs(selectedDate).format('YYYY-MM-DD'))
-
-  /** 当前显示的月份/周 所包含的一个日期 YYYY-MM-DD */
-  const [dayViewDetail, setDayViewDetail] = useState(currentView ? string2Date(currentView) : currentDayDetail)
-
-  const [today] = useState(currentDayDetail)
-
-  const goNext = () => {
-    const nextViewDetail =
-      view === 'month'
-        ? getCurMonthViewDetail(dayViewDetail.year, dayViewDetail.month + 1)
-        : getCurWeekViewDetail(dayViewDetail.year, dayViewDetail.month, dayViewDetail.day + 7)
-
-    const dayView = { ...dayViewDetail, ...nextViewDetail }
-    setDayViewDetail(dayView)
-    setCurrentCarouselIndex((currentCarouselIndex + 1) % 3)
-    // 回调当前日期
-    !!onCurrentViewChange && onCurrentViewChange(dayjs(`${dayView.year}-${dayView.month}`).format(format.substring(0, 7)))
-  }
-  const goPre = () => {
-    const preViewDetail =
-      view === 'month'
-        ? getCurMonthViewDetail(dayViewDetail.year, dayViewDetail.month - 1)
-        : getCurWeekViewDetail(dayViewDetail.year, dayViewDetail.month, dayViewDetail.day - 7)
-    const dayView = { ...dayViewDetail, ...preViewDetail }
-    setDayViewDetail(dayView)
-    setCurrentCarouselIndex((currentCarouselIndex + 2) % 3)
-    // 回调当前日期
-    !!onCurrentViewChange && onCurrentViewChange(dayjs(`${dayView.year}-${dayView.month}`).format(format.substring(0, 7)))
-  }
-  const onSwiperChange = (e: any) => {
-    if (e.detail.source === 'touch') {
-      const currentIndex = e.detail.current
-      ;(currentCarouselIndex + 1) % 3 === currentIndex ? goNext() : goPre()
+      generateDate: generateDateValue,
+      selectedDate: this.getSelectedDate(start, end)
     }
   }
 
-  /** 日历滑块中的数据 */
-  const daysArr: DayType[][] = useMemo(() => {
-    const curMonthDays: DayType[] =
-      view === 'month'
-        ? getMonthDays(dayViewDetail.year, dayViewDetail.month, startWeekDay)
-        : getWeekDays(dayViewDetail.year, dayViewDetail.month, dayViewDetail.day, startWeekDay)
-    return [curMonthDays, curMonthDays, curMonthDays]
-  }, [dayViewDetail.year, dayViewDetail.month, dayViewDetail.day, startWeekDay, view])
+  private triggerChangeDate = (value: Dayjs): void => {
+    const { format } = this.props
 
-  console.log(daysArr, 'render -------------------------------->')
+    if (typeof this.props.onMonthChange !== 'function') return
 
-  const weekList = useMemo(() => getWeekDayList(startWeekDay), [startWeekDay])
-  /** picker 切换 更新当前日历 */
-  const onPickerChange = (e: any) => {
-    setDayViewDetail(string2Date(dayjs(e.detail.value).format(format)))
-  }
-  const getCurrentMonth = () => {
-    return dayjs(`${dayViewDetail.year}-${dayViewDetail.month}`).format(format.substring(0, 7))
+    this.props.onMonthChange(value.format(format))
   }
 
-  const getPickerText = () => {
-    if (view === 'month') return getCurrentMonth()
-    const startDay = (daysArr[0] && daysArr[0][0]) ?? ''
-    const endDay = (daysArr[0] && daysArr[0][daysArr[0].length - 1]) ?? ''
-    return startDay && endDay && textFormat(startDay, format) + '~' + textFormat(endDay, format)
+  private setMonth = (vectorCount: number): void => {
+    const { format, view } = this.props
+    const { generateDate } = this.state
+
+    const _generateDate: Dayjs = dayjs(generateDate).add(vectorCount, view)
+    this.setState({
+      generateDate: _generateDate.valueOf()
+    })
+
+    if (vectorCount && typeof this.props.onMonthChange === 'function') {
+      this.props.onMonthChange(_generateDate.format(format))
+    }
   }
 
-  useEffect(() => {
-    if (dayjs(selectedDate).isSame(dayjs(selectedDay))) {
+  private handleClickPreMonth = (isMinMonth?: boolean): void => {
+    if (isMinMonth === true) {
       return
     }
-    const diff = diffMonth(dayjs(selectedDate).toDate(), dayjs(selectedDay).toDate())
-    if (diff === -1) {
-      goPre()
-    }
-    if (diff === 1) {
-      goNext()
-    }
-    setSelectedDay(dayjs(selectedDate).format('YYYY-MM-DD'))
-    setDayViewDetail(string2Date(selectedDate ?? ''))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, selectedDay])
 
-  const diffMonth = (firstDay: Date, secondDay: Date) => {
-    const firstYear = firstDay.getFullYear()
-    const firstMonth = firstDay.getMonth() + 1
-    const secondYear = secondDay.getFullYear()
-    const secondMonth = secondDay.getMonth() + 1
-    if ((firstYear === dayViewDetail.year && firstMonth === dayViewDetail.month) || (firstYear === secondYear && firstMonth === secondMonth)) {
-      return 0
+    this.setMonth(-1)
+
+    if (typeof this.props.onClickPreMonth === 'function') {
+      this.props.onClickPreMonth()
     }
-    if (firstYear < secondYear) {
-      return -1
-    }
-    if (firstYear === secondYear && firstMonth < secondMonth) {
-      return -1
-    }
-    return 1
   }
 
-  const onCalendarClickDay = (info: DayType, dateFormate: string) => {
-    onDayClick && onDayClick(info, dateFormate)
+  private handleClickNextMonth = (isMaxMonth?: boolean): void => {
+    if (isMaxMonth === true) {
+      return
+    }
+
+    this.setMonth(1)
+
+    if (typeof this.props.onClickNextMonth === 'function') {
+      this.props.onClickNextMonth()
+    }
   }
 
-  const bodyProps = {
-    view,
-    dayViewDetail,
-    onDayClick: onCalendarClickDay,
-    selectedDateColor,
-    today,
-    marks,
-    selectedDate: selectedDay,
-    minDate,
-    maxDate,
-    format,
-    extraInfo,
-    mode,
-    custDayRender
+  // picker 选择时间改变时触发
+  private handleSelectDate = (e: BaseEventOrig<{ value: string }>): void => {
+    const { value } = e.detail
+
+    const _generateDate: Dayjs = dayjs(value)
+    const _generateDateValue: number = _generateDate.valueOf()
+
+    if (this.state.generateDate === _generateDateValue) return
+
+    this.triggerChangeDate(_generateDate)
+    this.setState({
+      generateDate: _generateDateValue
+    })
   }
 
-  return (
-    <View className={`cust-calendar ${className}`}>
-      {!hideController && (
-        <View className='calendar-picker'>
-          {!hideArrow && (
-            <View className='calendar-arrow-wrap'>
-              <View className='calendar-arrow calendar-arrow-left' onClick={goPre} />
-            </View>
-          )}
-          <Picker
-            mode='date'
-            onChange={onPickerChange}
-            value={view === 'month' ? getCurrentMonth() : (daysArr[0] && daysArr[0][0] && textFormat(daysArr[0][0], format)) ?? ''}
-            fields={view === 'month' ? 'month' : 'day'}
-            start={minDate}
-            end={maxDate}
-          >
-            {pickerTextGenerator ? pickerTextGenerator(getPickerText()) : getPickerText()}
-          </Picker>
-          {!hideArrow && (
-            <View className='calendar-arrow-wrap'>
-              <View className='calendar-arrow calendar-arrow-right' onClick={goNext} />
-            </View>
-          )}
-        </View>
-      )}
-      <View className='week-desc'>
-        {weekList.map((item) => {
-          return (
-            <View key={item} className='week-desc-item'>
-              {custWeekRender ? custWeekRender(item) : item}
-            </View>
-          )
-        })}
+  private handleDayClick = (item: Calendar.Item): void => {
+    const { isMultiSelect } = this.props
+    const { isDisabled, value } = item
+
+    if (isDisabled) return
+
+    const dayjsDate: Dayjs = dayjs(value)
+
+    let stateValue: Partial<AtCalendarState> = {}
+
+    if (isMultiSelect) {
+      stateValue = this.getMultiSelectedState(dayjsDate)
+    } else {
+      stateValue = this.getSingleSelectState(dayjsDate)
+    }
+
+    debugger
+
+    this.setState(stateValue as AtCalendarState, () => {
+      this.handleSelectedDate()
+    })
+
+    if (typeof this.props.onDayClick === 'function') {
+      this.props.onDayClick({ value: item.value })
+    }
+  }
+
+  private handleSelectedDate = (): void => {
+    const selectDate = this.state.selectedDate
+    if (typeof this.props.onSelectDate === 'function') {
+      const info: Calendar.SelectedDate = {
+        start: dayjs(selectDate.start).format(this.props.format)
+      }
+
+      if (selectDate.end) {
+        info.end = dayjs(selectDate.end).format(this.props.format)
+      }
+
+      this.props.onSelectDate({
+        value: info
+      })
+    }
+  }
+
+  private handleDayLongClick = (item: Calendar.Item): void => {
+    if (typeof this.props.onDayLongClick === 'function') {
+      this.props.onDayLongClick({ value: item.value })
+    }
+  }
+
+  public render(): JSX.Element {
+    const { generateDate, selectedDate } = this.state
+    const { validDates, marks, format, minDate, maxDate, isSwiper, className, hideArrow, isVertical, monthFormat, selectedDates, monday, lunar, view } = this
+      .props as AtCalendarPropsWithDefaults
+
+    return (
+      <View className={classnames('at-calendar', className)}>
+        <AtCalendarController
+          minDate={minDate}
+          maxDate={maxDate}
+          hideArrow={hideArrow}
+          monthFormat={monthFormat}
+          generateDate={generateDate}
+          onPreMonth={this.handleClickPreMonth}
+          onNextMonth={this.handleClickNextMonth}
+          onSelectDate={this.handleSelectDate}
+        />
+        <AtCalendarBody
+          view={view}
+          validDates={validDates}
+          marks={marks}
+          format={format}
+          minDate={minDate}
+          maxDate={maxDate}
+          isSwiper={isSwiper}
+          isVertical={isVertical}
+          selectedDate={selectedDate}
+          selectedDates={selectedDates}
+          generateDate={generateDate}
+          monday={monday}
+          lunar={lunar}
+          onDayClick={this.handleDayClick}
+          onSwipeMonth={this.setMonth}
+          onLongClick={this.handleDayLongClick}
+        />
       </View>
-      {isSwiper ? (
-        <Swiper
-          vertical={isVertical}
-          circular
-          current={currentCarouselIndex}
-          onChange={onSwiperChange}
-          style={{
-            height: view === 'month' ? monthWrapHeigh : weekWrapHeight
-          }}
-        >
-          <SwiperItem>
-            <Days days={daysArr[0] ?? []} {...bodyProps} />
-          </SwiperItem>
-          <SwiperItem>
-            <Days days={daysArr[1] ?? []} {...bodyProps} />
-          </SwiperItem>
-          <SwiperItem>
-            <Days days={daysArr[2] ?? []} {...bodyProps} />
-          </SwiperItem>
-        </Swiper>
-      ) : (
-        <Days days={daysArr[1] ?? []} {...bodyProps} />
-      )}
-    </View>
-  )
-})
-
-CustCalendar.displayName = 'CustCalendar'
-export default CustCalendar
+    )
+  }
+}

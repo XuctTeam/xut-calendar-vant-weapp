@@ -1,12 +1,9 @@
-import { getRecoilPromise, setRecoil } from 'recoil-nexus'
 import cache from '../../cache'
-import store from '../../store'
 
-export const logout = () => {
+export default function logout() {
   cache.cacheRemoveSync('accessToken')
   cache.cacheRemoveSync('refreshToken')
   cache.cacheRemoveSync('userId')
-  debugger
 
   //const userInfoState = getRecoilPromise(store.userInfoStore)
 

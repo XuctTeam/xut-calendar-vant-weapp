@@ -2,10 +2,10 @@
  * @Description:
  * @Author: Derek Xu
  * @Date: 2022-01-04 10:39:35
- * @LastEditTime: 2023-10-09 17:37:32
+ * @LastEditTime: 2023-10-27 09:11:11
  * @LastEditors: Derek Xu
  */
-import httpRequest from '@/calendar/api/config'
+import httpRequest from '../request'
 import { Calendar } from '../interface'
 
 export default {
@@ -18,7 +18,7 @@ export default {
    * @author: Derek Xu
    */
   componentsDaysById(calendarId: string, start: string, end: string) {
-    return httpRequest.get('/cms/api/app/v1/component/list/calendar/days', { calendarId, start, end })
+    return httpRequest.get<Calendar.ICalendarComponent[]>('/cms/api/app/v1/component/list/calendar/days', { calendarId, start, end })
   },
 
   /**

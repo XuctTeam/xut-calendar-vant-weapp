@@ -3,7 +3,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-25 09:14:27
+ * @LastEditTime: 2023-10-27 09:14:08
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\index.tsx
  * @Description:
  *
@@ -21,7 +21,6 @@ import Images from '@/calendar/constants/images'
 import { getToday } from '@/calendar/utils'
 import Container from '@/components/container'
 import calendar from '@/calendar'
-import { DayType } from '@/components/calendar/type'
 import { Calendar } from '@/calendar/api/interface'
 import { ICurrentDay } from '~/../types/date'
 import { UserInfo, EventList, Header, Calendar as CalendarUi } from './ui'
@@ -55,11 +54,11 @@ export default Unite(
      */
     selectMonthChange(month: any) {
       console.log(month)
-      // this._queryComponent(
-      //   this.hooks['calendars'],
-      //   dayjs(value).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
-      //   dayjs(value).endOf('month').format('YYYY-MM-DD HH:mm:ss')
-      // )
+      this._queryComponent(
+        this.hooks['calendars'],
+        dayjs(value).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+        dayjs(value).endOf('month').format('YYYY-MM-DD HH:mm:ss')
+      )
     },
 
     /**
@@ -166,15 +165,14 @@ export default Unite(
         calendarComponents: [],
         marks: []
       })
-
       const pList: Array<Promise<any>> = []
       calList.forEach((item) => {
         pList.push(
           new Promise(function (resolve, reject) {
             calendar.$api.component
               .componentsDaysById(item.calendarId, start, end)
-              .then((res: any) => {
-                resolve(res)
+              .then((res) => {
+                resolve(res.data)
               })
               .catch((err: any) => {
                 reject(err)
@@ -219,7 +217,7 @@ export default Unite(
       components.forEach((comp) => {
         daySet.add(dayjs(comp.day).format('YYYY/MM/DD'))
       })
-      const marks: Array<Calendar.CalendarTypes.Mark> = Array.from(daySet).map((i) => {
+      const marks: Array<Calendar.Mark> = Array.from(daySet).map((i) => {
         return { value: i }
       })
       this.setState({
@@ -306,7 +304,7 @@ export default Unite(
       <Container navTitle='日程管理' useNav={_useNav} className='pages-index-index' useMenuBtns={false} enablePagePullDownRefresh={false}>
         <Header selectedDay={selectedDay} calendarPopOpen={calendarPopOpen}></Header>
         <View className='box'>
-          <CalendarUi selectedDay={selectedDay} onSelectDate={selectDayClickHandler}></CalendarUi>
+          <CalendarUi marks={marks} selectedDay={selectedDay} onSelectDate={selectDayClickHandler}></CalendarUi>
           <EventList
             loading={false}
             accessToken={accessToken || ''}

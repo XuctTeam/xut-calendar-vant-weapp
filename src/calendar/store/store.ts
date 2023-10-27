@@ -2,18 +2,18 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-09 17:45:02
+ * @LastEditTime: 2023-10-26 17:35:50
  * @FilePath: \xut-calendar-vant-weapp\src\calendar\store\store.ts
  * @Description:
  *
  * Copyright (c) 2022 by 楚恬商行, All Rights Reserved.
  */
 import { atom, RecoilState } from 'recoil'
-import { calendarStore } from '@/calendar/store/calendar'
-import { componentRefreshTimeStore } from '@/calendar/store/component'
-import { groupRefreshTimeStore } from '@/calendar/store/group'
-import { userInfoStore, userAuthInfoStore } from '@/calendar/store/user'
-import { lunarStore, mondayStore, compViewStore } from '@/calendar/store/system'
+import { calendarStore } from './calendar'
+import { componentRefreshTimeStore } from './component'
+import { groupRefreshTimeStore } from './group'
+import { userInfoStore, userAuthInfoStore } from './user'
+import { lunarStore, mondayStore, compViewStore } from './system'
 
 export interface IMenuButton {
   // 用来判断是否同时通过systemInfo+menuButton得出来的数据

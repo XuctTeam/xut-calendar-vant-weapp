@@ -189,7 +189,7 @@ export default function Index(props: IProps) {
 
   return (
     <ErrorBoundary setError={ctx.setError}>
-      <>
+      <View className='page-warper'>
         {useNav && ctx.error?.code !== LOGIN_CODE && <Navigation navTitle={navTitle} navClassName={navClassName} renderHeader={renderPageTopHeader} />}
         {useMenuBtns && ctx.error?.code !== LOGIN_CODE && <LeftBtns homeUrl='pages/index/index' />}
         {ctx.uniteConfig.page && enablePagePullDownRefresh ? (
@@ -199,7 +199,7 @@ export default function Index(props: IProps) {
         ) : (
           <Render ctx={ctx} {...props} />
         )}
-      </>
+      </View>
     </ErrorBoundary>
   )
 }

@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2023-10-24 18:08:44
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-25 17:24:41
+ * @LastEditTime: 2023-10-27 09:20:43
  * @FilePath: \xut-calendar-vant-weapp\src\components\calendar\ui\date-list\index.tsx
  * @Description:
  *
@@ -88,7 +88,7 @@ export default class AtCalendarList extends React.Component<Props> {
                 <View className='extra-marks'>
                   {item.marks.map((mark: any, key) => (
                     <Text key={key} className='mark'>
-                      {mark}
+                      {mark.value}
                     </Text>
                   ))}
                 </View>

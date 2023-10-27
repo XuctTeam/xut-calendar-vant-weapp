@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 09:23:33
+ * @LastEditTime: 2023-10-27 08:53:52
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendaredit\index.tsx
  * @Description:
  *
@@ -17,10 +17,9 @@ import { useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import { calendarStore, userInfoStore } from '@/calendar/store/store'
 import calendar from '@/calendar'
-import { IUserInfo } from '~/../types/user'
-import { IDavCalendar } from '~/../types/calendar'
 import { ColorRadio, AlarmRadio } from './ui'
 import './index.less'
+import { User } from '@/calendar/api/interface'
 
 export default Unite(
   {
@@ -43,11 +42,9 @@ export default Unite(
     async onLoad() {
       const data = Router.getData()
       if (data) {
-        // eslint-disable-next-line @typescript-eslint/no-shadow
         this._initData(data)
         return
       }
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       const { calendarId } = Router.getParams()
       if (!calendarId) return
       calendar.$api.calendar
@@ -61,7 +58,6 @@ export default Unite(
     },
 
     _initData(data: any) {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       const { id, name, createMemberId, color, calendarId, description, major, display, alarmType, alarmTime, isShare, memberId } = data
       this.setState({
         id,
@@ -202,7 +198,7 @@ export default Unite(
       calendar.$api.calendar
         .list()
         .then((res) => {
-          this.hooks['setCalendarStore'](res as any as IDavCalendar[])
+          this.hooks['setCalendarStore'](res.data)
           this.hooks['toast']({
             title: msg,
             icon: 'success'
@@ -235,7 +231,7 @@ export default Unite(
   },
 
   function ({ state, events }) {
-    const userInfo: IUserInfo | undefined = useRecoilValue(userInfoStore)
+    const userInfo: User.IUserInfo | undefined = useRecoilValue(userInfoStore)
     const setCalendarStore = useSetRecoilState(calendarStore)
     const { id, color, name, major, alarmType, createMemberId, alarmTime, display, isShare, description, disable } = state
     const { setName, setColor, setDescription, setAlarmType, setAlarmTime, setDisplay, setIsShare, commit, removeCalendar } = events

@@ -1,117 +1,130 @@
-.at-calendar__list.flex{
-    .flex__item--today{
-        .flex__item-container {
-         background-color: #7c86a2;
-         border-radius: 20%;
-         display: block;
-
-         .container-text{
-            color: #ffffff;
-        }
-
-        .container-lunarText{
-            color: #ffffff;
-
-            .red{
-                color: #ffffff !important;
-            }
-
-            .green{
-                color: #ffffff !important;
-            }
-        }
-        }
-    }
-
+.at-calendar__list.flex {
+  .flex__item--today {
     .flex__item-container {
-        border-radius: 20%;
-        display: block;
+      background-color: #7c86a2;
+      border-radius: 20%;
+      display: block;
 
-        .week{
-            color: #dd524b
+      .container-text {
+        color: #ffffff;
+      }
+
+      .container-lunarText {
+        color: #ffffff;
+
+        .red {
+          color: #ffffff !important;
         }
 
-        .container-text{
-            position: relative;
-            top:5px;
-
-            .work{
-                position: absolute;
-                top: -1px;
-                font-size: 12px;
-                right: 6px;
-                color: #dd524b;
-            }
-
-            .rest{
-                position: absolute;
-                top: -1px;
-                font-size: 12px;
-                right: 6px;
-                color: #4ca342;
-            }
+        .green {
+          color: #ffffff !important;
         }
+      }
+    }
+  }
 
-        .container-lunarText{
-            font-size: 18px;
+  .flex__item-container {
+    border-radius: 20%;
+    //display: block;
+    display: flex;
+    flex-direction: column;
 
-            .red{
-                color: #dd524b;
-            }
-
-            .green{
-                color: #4ca342;
-            }
-        }
+    .week {
+      color: #dd524b;
     }
 
-    .flex__item--selected-head.flex__item--selected-tail {
-        .red{
-            color: #ffffff;
-        }
+    .container-text {
+      display: flex;
+      justify-content: center;
+      position: relative;
 
-        .green{
-            color: #ffffff;
-        }
+      .work {
+        position: absolute;
+        top: -10px;
+        left: -24px;
+        font-size: 12px;
+        color: #ffffff;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 20px;
+        background-color: #dd524b;
+      }
 
-        .week{
-            color: #ffffff;
-        }
+      .rest {
+        position: absolute;
+        top: -10px;
+        left: -24px;
+        font-size: 12px;
+        color: #ffffff;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 20px;
+        background-color: #4ca342;
+      }
     }
 
-    .flex__item--blur {
-        .week{
-            color: #f1d8d7;
-        }
+    .container-lunarText {
+      font-size: 18px;
 
-        .container-text{
-            .work{
-                position: absolute;
-                top: -1px;
-                font-size: 12px;
-                right: 6px;
-                color: #f1d8d7;
-            }
+      .red {
+        color: #dd524b;
+      }
 
-            .rest{
-                position: absolute;
-                top: -1px;
-                font-size: 12px;
-                right: 6px;
-                color: #b7e0b2;
-            }
-        }
+      .green {
+        color: #4ca342;
+      }
+    }
+  }
 
-        .container-lunarText{
-            .red{
-                color: #f1d8d7;
-            }
-
-            .green{
-                color: #b7e0b2;
-            }
-        }
-
+  .flex__item--selected-head.flex__item--selected-tail {
+    .red {
+      color: #ffffff;
     }
 
+    .green {
+      color: #ffffff;
+    }
+
+    .week {
+      color: #ffffff;
+    }
+  }
+
+  .flex__item--blur {
+    .week {
+      color: #f1d8d7;
+    }
+
+    .container-text {
+      .work {
+        position: absolute;
+        top: -1px;
+        font-size: 12px;
+        right: 6px;
+        color: #f1d8d7;
+      }
+
+      .rest {
+        position: absolute;
+        top: -1px;
+        font-size: 12px;
+        right: 6px;
+        color: #b7e0b2;
+      }
+    }
+
+    .container-lunarText {
+      .red {
+        color: #f1d8d7;
+      }
+
+      .green {
+        color: #b7e0b2;
+      }
+    }
+  }
 }

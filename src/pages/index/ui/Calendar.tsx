@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2023-10-16 17:59:01
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-25 17:51:34
+ * @LastEditTime: 2023-10-27 09:03:21
  * @FilePath: \xut-calendar-vant-weapp\src\pages\index\ui\Calendar.tsx
  * @Description:
  *
@@ -15,11 +15,12 @@ import Calendar from '@/components/calendar/calendar'
 import CalendarComponent from '@/components/calendar'
 
 interface IProps {
+  marks: Array<Calendar.Mark>
   selectedDay: string
   onSelectDate?: (item: { value: Calendar.SelectedDate }) => void
 }
 
-const Index: FC<IProps> = ({ selectedDay, onSelectDate }) => {
+const Index: FC<IProps> = ({ marks, selectedDay, onSelectDate }) => {
   const lunar = useRecoilValue(calendar.$store.lunarStore)
   const monday = useRecoilValue(calendar.$store.mondayStore)
   const view = useRecoilValue(calendar.$store.compViewStore)
@@ -31,6 +32,7 @@ const Index: FC<IProps> = ({ selectedDay, onSelectDate }) => {
       view={view === 'week' ? 'week' : 'month'}
       currentDate={selectedDay}
       onSelectDate={onSelectDate}
+      marks={marks}
     ></CalendarComponent>
   )
 }

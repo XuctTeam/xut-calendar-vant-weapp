@@ -44,7 +44,6 @@ export default Unite(
           }
         }
       }).catch((err) => {
-        debugger
         console.log(err)
       })
     },

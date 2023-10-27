@@ -5,7 +5,7 @@ import { cacheGetSync } from '../../cache/cache'
 import codeMessage from './codeMessage'
 import { showFullScreenLoading, tryHideFullScreenLoading } from './serviceLoading'
 import port from './port'
-import { logout } from './utils'
+import logout from './utils'
 
 interface RequestTaskQuery {
   resolve: any

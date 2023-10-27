@@ -11,17 +11,12 @@ interface PluginArg {
 export function handleActive(args: PluginArg, item: Calendar.Item): Calendar.Item {
   const { selectedDate } = args
   const { _value } = item
-  debugger
-
   const { start, end } = selectedDate
 
   const dayjsEnd = dayjs(end)
   const dayjsStart = start ? dayjs(start) : dayjsEnd
 
   item.isSelected = _value.isSame(dayjsEnd) || _value.isSame(dayjsStart) || (_value.isAfter(dayjsStart) && _value.isBefore(dayjsEnd))
-  if (item.isSelected) {
-    debugger
-  }
 
   item.isSelectedHead = _value.isSame(dayjsStart)
   item.isSelectedTail = _value.isSame(dayjsEnd)

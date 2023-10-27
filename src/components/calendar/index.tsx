@@ -221,8 +221,6 @@ export default class AtCalendar extends React.Component<AtCalendarProps, Readonl
       stateValue = this.getSingleSelectState(dayjsDate)
     }
 
-    debugger
-
     this.setState(stateValue as AtCalendarState, () => {
       this.handleSelectedDate()
     })

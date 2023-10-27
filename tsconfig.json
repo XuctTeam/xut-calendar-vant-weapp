@@ -46,8 +46,7 @@
     "./lint-staged.config.js",
     "./stylelint.config.js",
     "./_antm.config.js",
-    "./antm.config.js",
-    "./linaria.config.js"
+    "./antm.config.js"
   ],
   "compileOnSave": false
 }

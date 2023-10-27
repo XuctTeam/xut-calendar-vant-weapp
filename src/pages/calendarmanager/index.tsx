@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-22 17:41:52
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-19 13:26:33
+ * @LastEditTime: 2023-10-27 08:53:18
  * @FilePath: \xut-calendar-vant-weapp\src\pages\calendarmanager\index.tsx
  * @Description:
  *
@@ -14,7 +14,6 @@ import { Empty, InfiniteScroll } from '@antmjs/vantui'
 import { View } from '@tarojs/components'
 import { useRecoilState } from 'recoil'
 import Container from '@/components/container'
-import { calendarStore } from '@/calendar/store/store'
 import calendar from '@/calendar'
 import { Calendar } from '@/calendar/api/interface'
 import { CalendarListBody } from './ui'
@@ -59,18 +58,12 @@ export default Unite(
           calendarId: calendar.id
         }
       })
-    },
-
-    async loadMore(): Promise<any> {
-      return new Promise(async (resolve) => {
-        resolve('complete')
-      })
     }
   },
 
   function ({ events }) {
-    const { editCalendar, loadMore } = events
-    const [calendars, setCalendarState] = useRecoilState(calendarStore)
+    const { editCalendar } = events
+    const [calendars, setCalendarState] = useRecoilState(calendar.$store.calendarStore)
     const usedNav = calendar.$hooks.useNav()
 
     events.setHooks({
@@ -84,15 +77,13 @@ export default Unite(
           <Empty description='~空空如也~' />
         ) : (
           <View className='list'>
-            <InfiniteScroll className='scroll' loadMore={loadMore} style={{ height: '100%' }}>
-              {calendars?.map((item: Calendar.IDavCalendar, index: number) => {
-                return (
-                  <View className='li' key={index}>
-                    <CalendarListBody item={item} editCalendar={editCalendar}></CalendarListBody>
-                  </View>
-                )
-              })}
-            </InfiniteScroll>
+            {calendars?.map((item: Calendar.IDavCalendar, index: number) => {
+              return (
+                <View className='li' key={index}>
+                  <CalendarListBody item={item} editCalendar={editCalendar}></CalendarListBody>
+                </View>
+              )
+            })}
           </View>
         )}
       </Container>

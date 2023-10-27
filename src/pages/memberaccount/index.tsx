@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-10 09:00:50
+ * @LastEditTime: 2023-10-27 08:46:33
  * @FilePath: \xut-calendar-vant-weapp\src\pages\memberaccount\index.tsx
  * @Description:
  *
@@ -16,7 +16,6 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import Taro from '@tarojs/taro'
 import Container from '@/components/container'
 import Avatar from '@/components/avatar'
-import { userInfoStore, userAuthInfoStore, calendarStore, groupRefreshTimeStore, componentRefreshTimeStore } from '@/calendar/store/store'
 import Images from '@/calendar/constants/images'
 import calendar from '@/calendar'
 import { UploadHeader } from './ui'
@@ -37,7 +36,7 @@ export default Unite(
       })
     },
 
-    modiftAvatar(url: string) {
+    modifyAvatar(url: string) {
       calendar.$api.user
         .updateAvatar(url)
         .then(() => {
@@ -116,17 +115,17 @@ export default Unite(
     }
   },
   function ({ state, events }) {
-    const back = calendar.$hooks.useBack({ to: 4 })
+    const [back] = calendar.$hooks.useBack({ to: 4 })
     const usedNav = calendar.$hooks.useNav()
-    const [userAuths, setUserAuthsState] = useRecoilState(userAuthInfoStore)
-    const [userInfoState, setUserInfoState] = useRecoilState(userInfoStore)
-    const setCalendarState = useSetRecoilState(calendarStore)
-    const setGroupRefreshTimeStore = useSetRecoilState(groupRefreshTimeStore)
-    const setComponentRefreshTimeStore = useSetRecoilState(componentRefreshTimeStore)
+    const [userAuths, setUserAuthsState] = useRecoilState(calendar.$store.userAuthInfoStore)
+    const [userInfoState, setUserInfoState] = useRecoilState(calendar.$store.userInfoStore)
+    const setCalendarState = useSetRecoilState(calendar.$store.calendarStore)
+    const setGroupRefreshTimeStore = useSetRecoilState(calendar.$store.groupRefreshTimeStore)
+    const setComponentRefreshTimeStore = useSetRecoilState(calendar.$store.componentRefreshTimeStore)
 
     const { avatar, name } = userInfoState || { avatar: Images.DEFAULT_AVATAR, name: '' }
     const { headerOpen, loading } = state
-    const { setHeaderOpen, modiftAvatar, to, logout } = events
+    const { setHeaderOpen, modifyAvatar: modifyAvatar, to, logout } = events
     const phoneAuth =
       userAuths && userAuths.length > 0
         ? userAuths.find((i) => i.identityType === 'phone')
@@ -210,7 +209,7 @@ export default Unite(
         <UploadHeader
           open={headerOpen}
           close={() => setHeaderOpen(false)}
-          updateAvatar={modiftAvatar}
+          updateAvatar={modifyAvatar}
           avatar={userInfoState && userInfoState.avatar ? userInfoState.avatar : Images.DEFAULT_AVATAR}
         ></UploadHeader>
       </Container>

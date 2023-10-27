@@ -2,7 +2,7 @@
  * @Author: Derek Xu
  * @Date: 2022-07-14 15:50:29
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-06-13 13:42:22
+ * @LastEditTime: 2023-10-27 08:53:38
  * @FilePath: \xut-calendar-vant-weapp\src\pages\addressgroupesedit\index.tsx
  * @Description:
  *
@@ -16,7 +16,6 @@ import { useFile, useToast } from 'taro-hooks'
 import Container from '@/components/container'
 import calendar from '@/calendar'
 import { IUploadInfo } from 'types/common'
-import { IGroup } from 'types/group'
 
 import './index.less'
 

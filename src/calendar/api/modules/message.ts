@@ -5,7 +5,7 @@
  * @LastEditTime: 2023-10-10 10:36:39
  * @LastEditors: Derek Xu
  */
-import httpRequest from '@/calendar/api/config'
+import httpRequest from '../request'
 
 export default {
   /**

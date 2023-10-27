@@ -74,9 +74,10 @@
         &-extra {
           .extra-marks {
             position: absolute;
-            bottom: 4px;
+            top: 0;
+            right: 10px;
             line-height: 0;
-            left: 50%;
+            color: $at-calendar-main-color !important;
             transform: translateX(-50%);
 
             .mark {
@@ -105,7 +106,7 @@
         }
 
         &--selected {
-          color: white;
+          color: #ffffff;
           background-color: rgba($color: $at-calendar-main-color, $alpha: 0.7);
 
           &-head {
@@ -119,9 +120,9 @@
           }
 
           /* stylelint-disable-next-line */
-          .extra-marks .mark {
-            background-color: white;
-          }
+          // .extra-marks .mark {
+          //   background-color: white;
+          // }
 
           &-head.flex__item--selected-tail {
             background-color: transparent;

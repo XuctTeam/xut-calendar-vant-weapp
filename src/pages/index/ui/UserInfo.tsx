@@ -4,13 +4,12 @@
  * @Autor: Derek Xu
  * @Date: 2021-12-02 22:46:09
  * @LastEditors: Derek Xu
- * @LastEditTime: 2023-10-19 14:28:27
+ * @LastEditTime: 2023-10-26 08:32:53
  */
 import Router from 'tarojs-router-next'
 import { ITouchEvent, View } from '@tarojs/components'
 import { useEffect, useState } from 'react'
 import { Cell, Checkbox, CheckboxGroup, Empty, Icon, Popup, Image } from '@antmjs/vantui'
-import PropTypes from 'prop-types'
 import Avatar from '@/components/avatar'
 import { Calendar } from '@/calendar/api/interface'
 
@@ -24,6 +23,8 @@ interface IPageOption {
   closePopup: () => void
   selected: (value: string[]) => void
 }
+
+const Logo = require('@/assets/logo.png')
 
 const CalendarPop: React.FC<IPageOption> = ({ calendars = [], open = false, avatar, name, hasLogin, phone, closePopup, selected }) => {
   const [showCalendars, setShowCalendars] = useState<Calendar.IDavCalendar[]>([])
@@ -63,7 +64,7 @@ const CalendarPop: React.FC<IPageOption> = ({ calendars = [], open = false, avat
             </View>
           </View>
           <View className='li logo'>
-            <Image round width='40px' height='40px' src={'@/assets/logo.png'} />
+            <Image round width='40px' height='40px' src={Logo} />
             <View className='notice'>
               <View>关注公主号</View>
               <View>才能获得消息提醒哦~</View>
@@ -97,15 +98,5 @@ const CalendarPop: React.FC<IPageOption> = ({ calendars = [], open = false, avat
     </Popup>
   )
 }
-// CalendarPop.propTypes = {
-//   calendars: PropTypes.array
-//   open: PropTypes.bool
-//   hasLogin: PropTypes.bool
-//   avatar: PropTypes.string
-//   name: PropTypes.string
-//   phone: PropTypes.string
-//   closePopup: PropTypes.func
-//   selected: PropTypes.func
-// }
 
 export default CalendarPop

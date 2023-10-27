@@ -255,6 +255,9 @@ export default Unite(
         title: '登录成功',
         duration: 1500
       })
+      const calendarResult = await calendar.$api.calendar.list()
+      this.hooks['setCalendarState'](calendarResult.data)
+
       setTimeout(() => {
         calendar.$hooks.back({
           to: 4

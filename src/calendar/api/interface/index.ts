@@ -37,6 +37,12 @@ export namespace User {
 }
 
 export namespace Calendar {
+  export type DateArg = string | number | Date
+
+  export interface Mark {
+    value: DateArg
+  }
+
   export interface IDavCalendar {
     id: string
     name: string
